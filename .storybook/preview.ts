@@ -1,4 +1,5 @@
-import type { Preview } from '@storybook/react-vite'
+import type { Preview } from '@storybook/react-vite';
+import '@frappe-components/design-system/theme.css';
 
 const preview: Preview = {
   parameters: {

@@ -10,7 +10,8 @@
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.js"
-    }
+    },
+    "./theme.css": "./src/theme.css"
   },
   "dependencies": {
     "react": "^19.1.0",
