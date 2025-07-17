@@ -1,0 +1,8 @@
+@import 'tailwindcss';
+
+@config '../../../tailwind.config.cjs';
+@custom-variant dark (&:is(.dark *));
+
+.dark{
+  color-scheme: dark;
+}
