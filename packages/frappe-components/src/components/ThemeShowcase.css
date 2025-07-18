@@ -1,12 +1,20 @@
 .theme-showcase {
   max-width: 1200px;
   margin: 0 auto;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .color-sample {
   width: 48px;
   height: 48px;
   border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.color-sample:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .color-showcase {
@@ -28,4 +36,13 @@
 .hover-demo:hover {
   background-color: var(--color-primary-400);
   transform: scale(1.05);
+}
+
+/* Dark mode specific styles */
+.dark .color-sample {
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.1);
+}
+
+.dark .color-sample:hover {
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
 }

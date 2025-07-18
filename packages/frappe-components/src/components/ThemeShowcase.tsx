@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./ThemeShowcase.css";
 
 /**
@@ -6,13 +6,104 @@ import "./ThemeShowcase.css";
  * Uses only static Tailwind classes to ensure compatibility with purging.
  */
 const ThemeShowcase: React.FC = () => {
+  const [isDark, setIsDark] = useState(false);
+
+  // Apply dark mode class to document root
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDark]);
+
+  const toggleDarkMode = () => {
+    setIsDark(!isDark);
+  };
+
   return (
     <div className="theme-showcase p-8 bg-background text-foreground">
-      <h1 className="text-3xl font-bold mb-6">Theme Tokens Showcase</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Theme Tokens Showcase</h1>
+        <button
+          onClick={toggleDarkMode}
+          className="px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600 transition-colors duration-200 flex items-center gap-2"
+        >
+          {isDark ? (
+            <>
+              <span>☀️</span>
+              Light Mode
+            </>
+          ) : (
+            <>
+              <span>🌙</span>
+              Dark Mode
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Dark Mode Demo Section */}
+      <section className="mb-10">
+        <h2 className="text-2xl font-semibold mb-4">Dark Mode Demo</h2>
+        <div className="bg-primary-50 dark:bg-primary-950 p-6 rounded-lg border border-primary-200 dark:border-primary-800 mb-4">
+          <h3 className="text-lg font-medium mb-3 text-primary-900 dark:text-primary-100">Adaptive Content</h3>
+          <p className="text-primary-700 dark:text-primary-300 mb-4">
+            This content automatically adapts to the current theme mode. The background, text, and border colors 
+            change based on the selected theme.
+          </p>
+          <div className="flex gap-4">
+            <div className="bg-background text-foreground p-4 rounded border border-gray-200 dark:border-gray-700">
+              <span className="text-sm font-medium">Background/Foreground</span>
+            </div>
+            <div className="bg-primary-500 text-white p-4 rounded">
+              <span className="text-sm font-medium">Primary Button</span>
+            </div>
+            <div className="bg-success-500 text-white p-4 rounded">
+              <span className="text-sm font-medium">Success</span>
+            </div>
+            <div className="bg-error-500 text-white p-4 rounded">
+              <span className="text-sm font-medium">Error</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white text-black p-6 rounded-lg border border-gray-200">
+            <h4 className="text-lg font-semibold mb-3">Light Theme Preview</h4>
+            <p className="text-gray-700 mb-4">This shows how content looks in light mode.</p>
+            <div className="flex gap-2 mb-3">
+              <div className="w-8 h-8 rounded" style={{ backgroundColor: '#eff6ff' }} title="Primary 50"></div>
+              <div className="w-8 h-8 rounded" style={{ backgroundColor: '#3b82f6' }} title="Primary 500"></div>
+              <div className="w-8 h-8 rounded" style={{ backgroundColor: '#172554' }} title="Primary 950"></div>
+            </div>
+            <span className="text-sm text-gray-500">Primary colors in light mode</span>
+          </div>
+          
+          <div className="bg-gray-900 text-white p-6 rounded-lg border border-gray-700">
+            <h4 className="text-lg font-semibold mb-3">Dark Theme Preview</h4>
+            <p className="text-gray-300 mb-4">This shows how content looks in dark mode.</p>
+            <div className="flex gap-2 mb-3">
+              <div className="w-8 h-8 rounded" style={{ backgroundColor: '#172554' }} title="Primary 50 (Dark)"></div>
+              <div className="w-8 h-8 rounded" style={{ backgroundColor: '#3b82f6' }} title="Primary 500 (Dark)"></div>
+              <div className="w-8 h-8 rounded" style={{ backgroundColor: '#eff6ff' }} title="Primary 950 (Dark)"></div>
+            </div>
+            <span className="text-sm text-gray-400">Primary colors in dark mode</span>
+          </div>
+        </div>
+      </section>
 
       {/* Colors Section */}
       <section className="mb-10">
         <h2 className="text-2xl font-semibold mb-4">Colors</h2>
+        
+        <div className="bg-info-50 dark:bg-info-950 border border-info-200 dark:border-info-800 p-4 rounded-lg mb-6">
+          <h3 className="text-info-900 dark:text-info-100 font-medium mb-2">🌓 Dark Mode Color Behavior</h3>
+          <p className="text-info-700 dark:text-info-300 text-sm">
+            In dark mode, color scales are inverted - what appears as "50" (lightest) in light mode becomes the darkest variant in dark mode, 
+            and "950" (darkest) becomes the lightest. This ensures proper contrast and readability in both themes.
+          </p>
+        </div>
 
         <div className="mb-6">
           <h3 className="text-xl font-medium mb-2">Primary</h3>
