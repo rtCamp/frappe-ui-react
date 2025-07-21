@@ -8,7 +8,9 @@
   ],
   "scripts": {
     "dev": "vite",
+    "dev:design-system": "npm run dev -w @frappe-components/design-system",
     "build": "tsc -b && vite build",
+    "build:design-system": "npm run build -w @frappe-components/design-system",
     "lint": "eslint .",
     "preview": "vite preview",
     "start": "storybook dev -p 6006",
@@ -41,10 +43,12 @@
     "eslint-plugin-storybook": "^9.0.17",
     "globals": "^16.3.0",
     "playwright": "^1.54.1",
+    "rimraf": "^5.0.5",
     "storybook": "^9.0.17",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
     "vite": "^7.0.4",
+    "vite-plugin-svgr": "^4.3.0",
     "vitest": "^3.2.4"
   }
 }

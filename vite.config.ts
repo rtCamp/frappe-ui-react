@@ -5,13 +5,14 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import tailwindcss from '@tailwindcss/vite'
+import svgr from 'vite-plugin-svgr';
 
 const __filename = fileURLToPath((import.meta as any).url);
 const __dirname = path.dirname(__filename);
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), svgr()],
   test: {
     projects: [{
       extends: true,

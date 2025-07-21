@@ -1,5 +1,5 @@
 {
-  "name": "frappe-components",
+  "name": "@frappe-components/frappe-components",
   "version": "0.0.0",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -12,8 +12,10 @@
       "require": "./dist/index.js"
     }
   },
-   "dependencies": {
+  "dependencies": {
+    "@headlessui/react": "^2.2.4",
+    "@popperjs/core": "^2.11.8",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
-   }
+  }
 }

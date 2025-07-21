@@ -16,5 +16,10 @@
   "dependencies": {
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc-watch",
+    "prebuild": "rimraf dist tsconfig.tsbuildinfo"
   }
 }
