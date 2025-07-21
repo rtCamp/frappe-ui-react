@@ -1,10 +1,10 @@
 /// <reference types="vitest/config" />
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
+import { fileURLToPath } from "url";
+import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
+import tailwindcss from "@tailwindcss/vite";
 
 const __filename = fileURLToPath((import.meta as any).url);
 const __dirname = path.dirname(__filename);
@@ -40,7 +40,11 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "packages/frappe-components/src"),
+      "@design-system": path.resolve(__dirname, "packages/design-system/src"),
+      "@frappe-components": path.resolve(
+        __dirname,
+        "packages/frappe-components/src"
+      ),
     },
   },
 });
