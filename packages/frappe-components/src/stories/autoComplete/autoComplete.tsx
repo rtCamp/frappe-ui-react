@@ -21,7 +21,6 @@ import type { Placement } from "@popperjs/core";
 import Popover from "../popover";
 import { Button } from "../button/Button";
 
-
 type OptionValue = string | number | boolean;
 
 export type Option = {
@@ -108,7 +107,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
   const sanitizeOptions = useCallback(
     (opts: AutocompleteOption[]): Option[] => {
-      if (!opts){
+      if (!opts) {
         return [];
       }
       return opts.map((option) => {
@@ -122,7 +121,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
   const filterOptions = useCallback(
     (opts: Option[]): Option[] => {
-      if (!query){
+      if (!query) {
         return opts;
       }
 
@@ -170,7 +169,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
   const findOption = useCallback(
     (option: AutocompleteOption): Option | undefined => {
-      if (!option){
+      if (!option) {
         return undefined;
       }
 
@@ -253,11 +252,11 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
       if (!selectedComboboxValue) {
         return false;
       }
-      
+
       if (!multiple) {
         return compareFn(selectedComboboxValue as Option, option);
       }
-      
+
       return (selectedComboboxValue as Option[]).some((v) =>
         compareFn(v, option)
       );
@@ -291,6 +290,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
       });
     }
   }, [showOptions]);
+  console.log(selectedComboboxValue);
 
   const comboboxInputId = useMemo(
     () => `combobox-input-${Math.random().toString(36).substring(2, 9)}`,
@@ -332,23 +332,25 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                   aria-hidden="true"
                 />
                 <div className="flex items-center overflow-hidden">
-                  {!multiple && showPrefix && (
-                    <img src={''} className="mr-2 h-4 w-4 rounded-full" />
-                  )}
                   <span
                     className={`truncate text-base leading-5 ${
-                      displayValue ? "text-(--ink-gray-8)" : "text-(--ink-gray-4)"
+                      displayValue
+                        ? "text-(--ink-gray-8)"
+                        : "text-(--ink-gray-4)"
                     }`}
                   >
                     {displayValue || placeholder || ""}
                   </span>
+                  {!multiple && showPrefix && displayValue && (
+                    <>
+                      <img src={selectedComboboxValue?.image ?? ''} className="ml-2 h-4 w-4 rounded-full" />
+                    </>
+                  )}
                 </div>
               </button>
             </div>
           )}
-          body={({
-            isOpen: isPopoverOpen,
-          }) =>
+          body={({ isOpen: isPopoverOpen }) =>
             isPopoverOpen && (
               <div className="relative mt-1 rounded-lg bg-surface-modal text-base shadow-2xl">
                 <ComboboxOptions
@@ -405,45 +407,46 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                             key={idx}
                             value={option}
                             disabled={(option as Option).disabled}
-                            className={({ focus }) =>`flex cursor-pointer items-center justify-between rounded px-2.5 py-1.5 text-base ${
-                              focus ? "bg-surface-gray-3" : ""
-                            } ${(option as Option).disabled ? "opacity-50" : ""}`}
+                            className={({ focus }) =>
+                              `flex cursor-pointer items-center justify-between rounded px-2.5 py-1.5 text-base ${
+                                focus ? "bg-surface-gray-3" : ""
+                              } ${
+                                (option as Option).disabled ? "opacity-50" : ""
+                              }`
+                            }
                           >
                             <>
-                                <div className="flex flex-1 gap-2 overflow-hidden items-center">
-                                  {multiple && (
+                              <div className="flex flex-1 gap-2 overflow-hidden items-center">
+                                {
+                                  <div className="flex flex-shrink-0">
+                                    {isOptionSelected(option as Option) ? (
+                                      <Check className="h-4 w-4 text-ink-gray-7" />
+                                    ) : (
+                                      <></>
+                                    )}
+                                    {showPrefix && (
                                       <img
                                         src={(option as Option).image}
                                         className="h-4 w-4 rounded-full"
                                       />
-                                    ) && (
-                                      <div className="flex flex-shrink-0">
-                                        {isOptionSelected(option as Option) ? (
-                                          <Check className="h-4 w-4 text-ink-gray-7" />
-                                        ) : (
-                                          <div className="h-4 w-4" />
-                                        )}
-                                        <img
-                                          src={(option as Option).image}
-                                          className="h-4 w-4 rounded-full"
-                                        />
-                                      </div>
-                                    )}
-                                  <span className="flex-1 truncate text-ink-gray-7">
-                                    {getLabel(option)}
-                                  </span>
-                                </div>
-
-                                {(option as Option)?.description && (
-                                  <div className="ml-2 flex-shrink-0">
-                                    {(option as Option)?.description && (
-                                      <div className="text-sm text-ink-gray-5">
-                                        {(option as Option).description}
-                                      </div>
                                     )}
                                   </div>
-                                )}
-                              </>
+                                }
+                                <span className="flex-1 truncate text-ink-gray-7">
+                                  {getLabel(option)}
+                                </span>
+                              </div>
+
+                              {(option as Option)?.description && (
+                                <div className="ml-2 flex-shrink-0">
+                                  {(option as Option)?.description && (
+                                    <div className="text-sm text-ink-gray-5">
+                                      {(option as Option).description}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </>
                           </ComboboxOption>
                         ))}
                       </div>

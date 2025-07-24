@@ -101,7 +101,7 @@ const meta: Meta<typeof Autocomplete> = {
 export default meta;
 type Story = StoryObj<typeof Autocomplete>;
 
-export const SingleSelect_SimpleOptions: Story = {
+export const SingleOption: Story = {
   render: (args) => {
     const [value, setValue] = useState<string | null>(null);
     return (
@@ -122,7 +122,7 @@ export const SingleSelect_SimpleOptions: Story = {
   },
 };
 
-export const SingleSelect_ObjectOptions: Story = {
+export const SingleOptionWithPrefixSlots: Story = {
   render: (args) => {
     const [value, setValue] = useState<string | null>(null);
     return (
@@ -130,6 +130,7 @@ export const SingleSelect_ObjectOptions: Story = {
         <Autocomplete
           {...args}
           modelValue={value}
+          showPrefix
           onChange={(_value) => {
             setValue(_value as string);
           }}
@@ -145,19 +146,19 @@ export const SingleSelect_ObjectOptions: Story = {
   },
 };
 
-export const MultiSelect_ObjectOptions: Story = {
+export const SingleOptionWithoutSearch: Story = {
   render: (args) => {
     const [values, setValues] = useState<string[]>([]);
     return (
       <div style={{ width: "450px" }}>
         <Autocomplete
           {...args}
+          hideSearch
           modelValue={values}
           onChange={(_value) => {
             setValues(_value as string[]);
           }}
           options={options}
-          multiple
           compareFn={(a, b) => a?.value === b?.value}
         />
       </div>
@@ -170,13 +171,38 @@ export const MultiSelect_ObjectOptions: Story = {
   },
 };
 
-export const GroupedOptions: Story = {
+export const MultipleOptions: Story = {
   render: (args) => {
     const [value, setValue] = useState<string | null>(null);
     return (
       <div style={{ width: "450px" }}>
         <Autocomplete
           {...args}
+          multiple
+          modelValue={value}
+          onChange={(_value) => {
+            setValue(_value as string);
+          }}
+          options={options}
+        />
+      </div>
+    );
+  },
+  args: {
+    options: options,
+    label: "Select Person",
+  },
+};
+
+export const MultipleOptionsWithoutSearch: Story = {
+  render: (args) => {
+    const [value, setValue] = useState<string | null>(null);
+    return (
+      <div style={{ width: "450px" }}>
+        <Autocomplete
+          {...args}
+          hideSearch
+          multiple
           modelValue={value}
           onChange={(_value) => {
             setValue(_value as string);
