@@ -86,7 +86,6 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   onUpdateModelValue,
   onUpdateQuery,
   onChange,
-  ...rest
 }) => {
   const [query, setQuery] = useState<string>("");
   const [showOptions, setShowOptions] = useState<boolean>(false);
@@ -303,41 +302,40 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
           show={showOptions}
           onUpdateShow={setShowOptions}
           placement={placement}
-          className={`w-full ${rest.className}`}
           popoverClass={bodyClasses}
           target={({ togglePopover: popoverToggle }) => (
             <div className="w-full space-y-1.5">
               {label && (
                 <label
                   htmlFor={comboboxInputId}
-                  className="block text-xs text-ink-gray-5"
+                  className="block text-xs text-(--ink-gray-5)"
                 >
                   {label}
                 </label>
               )}
               <button
                 type="button"
-                className={`flex h-7 w-full items-center justify-between gap-2 rounded bg-surface-gray-2 px-2 py-1 transition-colors hover:bg-surface-gray-3 border border-transparent focus:border-outline-gray-4 focus:outline-none focus:ring-2 focus:ring-outline-gray-3 ${
-                  isComboboxOpen ? "bg-surface-gray-3" : ""
+                className={`flex h-7 w-full items-center justify-between gap-2 rounded bg-(--surface-gray-2) px-2 py-1 transition-colors hover:bg-(--surface-gray-3) border border-transparent focus:border-(--outline-gray-4) focus:ring-2 focus:ring-(--outline-gray-3) focus:outline-none ${
+                  isComboboxOpen ? "bg-(--surface-gray-3)" : ""
                 }`}
                 onClick={popoverToggle}
               >
+                <ChevronDown
+                  className="h-4 w-4 text-ink-gray-5"
+                  aria-hidden="true"
+                />
                 <div className="flex items-center overflow-hidden">
                   {!multiple && showPrefix && (
                     <img src={''} className="mr-2 h-4 w-4 rounded-full" />
                   )}
                   <span
                     className={`truncate text-base leading-5 ${
-                      displayValue ? "text-ink-gray-8" : "text-ink-gray-4"
+                      displayValue ? "text-(--ink-gray-8)" : "text-(--ink-gray-4)"
                     }`}
                   >
                     {displayValue || placeholder || ""}
                   </span>
                 </div>
-                <ChevronDown
-                  className="h-4 w-4 text-ink-gray-5"
-                  aria-hidden="true"
-                />
               </button>
             </div>
           )}
@@ -358,7 +356,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                         <ComboboxInput
                           id={comboboxInputId}
                           ref={searchInputRef}
-                          className="form-input w-full focus:bg-surface-gray-3 hover:bg-surface-gray-4 text-ink-gray-8"
+                          className=" h-7 rounded border border-(--surface-gray-2) bg-(--surface-gray-2) py-1.5 pl-2 pr-2 text-base text-(--ink-gray-8) placeholder-(--ink-gray-4) transition-colors hover:border-(--outline-gray-modals) hover:bg-(--surface-gray-3) focus:border-(--outline-gray-4) focus:bg-(--surface-white) focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-(--outline-gray-3) w-full focus:bg-(--surface-gray-3) hover:bg-(--surface-gray-4) text-(--ink-gray-8)"
                           type="text"
                           displayValue={() => query}
                           onChange={(
@@ -369,10 +367,10 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                         />
                         <div className="absolute right-0 inline-flex h-7 w-7 items-center justify-center">
                           {loading ? (
-                            <LoadingIndicatorIcon className="h-4 w-4 text-ink-gray-5" />
+                            <LoadingIndicatorIcon className="h-4 w-4 text-(--ink-gray-5)" />
                           ) : (
                             <button type="button" onClick={clearAll}>
-                              <X className="w-4 text-ink-gray-8" />
+                              <X className="w-4 text-(--ink-gray-8)" />
                             </button>
                           )}
                         </div>

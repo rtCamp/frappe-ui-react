@@ -1,14 +1,25 @@
 // src/components/Popover/Popover.tsx
-import React, { useState, useRef, useEffect, useCallback, type ReactNode } from 'react';
-import { createPortal } from 'react-dom';
-import { createPopper, type Instance, type Placement } from '@popperjs/core';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  type ReactNode,
+} from "react";
+import { createPortal } from "react-dom";
+import {
+  createPopper,
+  popper,
+  type Instance,
+  type Placement,
+} from "@popperjs/core";
 
-const popoverRootId = 'frappeui-popper-root';
+const popoverRootId = "frappeui-popper-root";
 
 function getOrCreatePopoverRoot(): HTMLElement {
   let root = document.getElementById(popoverRootId);
   if (!root) {
-    root = document.createElement('div');
+    root = document.createElement("div");
     root.id = popoverRootId;
     document.body.appendChild(root);
   }
@@ -34,9 +45,11 @@ interface PopoverTransitionClasses {
 }
 
 // Props for the Popover component itself
-interface PopoverProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'onSelect'> { // Omit children and onSelect to redefine
+interface PopoverProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "children" | "onSelect"> {
+  // Omit children and onSelect to redefine
   show?: boolean;
-  trigger?: 'click' | 'hover';
+  trigger?: "click" | "hover";
   hoverDelay?: number;
   leaveDelay?: number;
   placement?: Placement;
@@ -52,11 +65,11 @@ interface PopoverProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'child
 
 const Popover: React.FC<PopoverProps> = ({
   show: showProp,
-  trigger = 'click',
+  trigger = "click",
   hoverDelay = 0,
   leaveDelay = 0,
-  placement = 'bottom-start',
-  popoverClass,
+  placement = "bottom-start",
+  popoverClass = "",
   transition = null,
   hideOnBlur = true,
   target,
@@ -68,7 +81,8 @@ const Popover: React.FC<PopoverProps> = ({
 }) => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [targetWidth, setTargetWidth] = useState<number | null>(null);
-  const [pointerOverTargetOrPopup, setPointerOverTargetOrPopup] = useState<boolean>(false);
+  const [pointerOverTargetOrPopup, setPointerOverTargetOrPopup] =
+    useState<boolean>(false);
 
   const referenceRef = useRef<HTMLDivElement>(null);
   const popperRef = useRef<HTMLDivElement>(null);
@@ -84,14 +98,20 @@ const Popover: React.FC<PopoverProps> = ({
   const setIsOpen = useCallback(
     (val: boolean) => {
       if (showPropPassed) {
-        if(onUpdateShow){onUpdateShow(val);}
+        if (onUpdateShow) {
+          onUpdateShow(val);
+        }
       } else {
         setShowPopup(val);
       }
       if (val === false) {
-         if(onClose){onClose();}
+        if (onClose) {
+          onClose();
+        }
       } else if (val === true) {
-        if(onOpen){onOpen();}
+        if (onOpen) {
+          onOpen();
+        }
       }
     },
     [showPropPassed, onUpdateShow, onClose, onOpen]
@@ -112,7 +132,7 @@ const Popover: React.FC<PopoverProps> = ({
 
   const togglePopover = useCallback(
     (flag?: boolean | React.MouseEvent) => {
-      const newFlag = typeof flag === 'boolean' ? flag : !isOpen;
+      const newFlag = typeof flag === "boolean" ? flag : !isOpen;
       if (newFlag) {
         open();
       } else {
@@ -128,16 +148,13 @@ const Popover: React.FC<PopoverProps> = ({
       clearTimeout(leaveTimer.current);
       leaveTimer.current = null;
     }
-    if (trigger === 'hover') {
+    if (trigger === "hover") {
       if (hoverDelay) {
-        hoverTimer.current = setTimeout(
-          () => {
-            if (pointerOverTargetOrPopup) {
-              open();
-            }
-          },
-          Number(hoverDelay) * 1000
-        );
+        hoverTimer.current = setTimeout(() => {
+          if (pointerOverTargetOrPopup) {
+            open();
+          }
+        }, Number(hoverDelay) * 1000);
       } else {
         open();
       }
@@ -150,19 +167,16 @@ const Popover: React.FC<PopoverProps> = ({
       clearTimeout(hoverTimer.current);
       hoverTimer.current = null;
     }
-    if (trigger === 'hover') {
+    if (trigger === "hover") {
       if (leaveTimer.current) {
         clearTimeout(leaveTimer.current);
       }
       if (leaveDelay) {
-        leaveTimer.current = setTimeout(
-          () => {
-            if (!pointerOverTargetOrPopup) {
-              close();
-            }
-          },
-          Number(leaveDelay) * 1000
-        );
+        leaveTimer.current = setTimeout(() => {
+          if (!pointerOverTargetOrPopup) {
+            close();
+          }
+        }, Number(leaveDelay) * 1000);
       } else {
         if (!pointerOverTargetOrPopup) {
           close();
@@ -172,7 +186,7 @@ const Popover: React.FC<PopoverProps> = ({
   }, [trigger, leaveDelay, close, pointerOverTargetOrPopup]);
 
   // Define a constant for the body container class (if used for sibling check)
-  const popoverContainerClass = 'body-container'; // This was used in Vue component's JS block
+  const popoverContainerClass = "body-container"; // This was used in Vue component's JS block
 
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
@@ -198,10 +212,16 @@ const Popover: React.FC<PopoverProps> = ({
       }
 
       // Check if another popover (sibling) was clicked
-      const clickedElementBody = clickedElement?.closest<HTMLElement>(`.${popoverContainerClass}`);
-      const currentPopoverBody = reference?.closest<HTMLElement>(`.${popoverContainerClass}`);
+      const clickedElementBody = clickedElement?.closest<HTMLElement>(
+        `.${popoverContainerClass}`
+      );
+      const currentPopoverBody = reference?.closest<HTMLElement>(
+        `.${popoverContainerClass}`
+      );
       const isSiblingClicked =
-        clickedElementBody && currentPopoverBody && clickedElementBody !== currentPopoverBody;
+        clickedElementBody &&
+        currentPopoverBody &&
+        clickedElementBody !== currentPopoverBody;
 
       if (isSiblingClicked) {
         close();
@@ -212,12 +232,12 @@ const Popover: React.FC<PopoverProps> = ({
 
   useEffect(() => {
     if (hideOnBlur) {
-      document.addEventListener('click', handleClickOutside);
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("click", handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
     return () => {
-      document.removeEventListener('click', handleClickOutside);
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
       if (hoverTimer.current) clearTimeout(hoverTimer.current);
       if (leaveTimer.current) clearTimeout(leaveTimer.current);
     };
@@ -226,18 +246,35 @@ const Popover: React.FC<PopoverProps> = ({
   // Effect to manage Popper.js instance
   useEffect(() => {
     if (isOpen && referenceRef.current && popperRef.current) {
-      popperInstance.current = createPopper(referenceRef.current, popperRef.current, {
-        placement,
-        modifiers: [
-          {
-            name: 'preventOverflow',
-            options: {
-              padding: 8,
+      popperInstance.current = createPopper(
+        referenceRef.current,
+        popperRef.current,
+        {
+          placement,
+          modifiers: [
+            {
+              name: "preventOverflow",
+              options: {
+                padding: 8,
+              },
             },
-          },
-        ],
-      });
-      // Initial update for correct positioning
+            {
+              name: "sameWidth",
+              enabled: true,
+              phase: "beforeWrite",
+              requires: ["computeStyles"],
+              fn: ({ state }) => {
+                state.styles.popper.width = `${state.rects.reference.width}px`;
+              },
+              effect: ({ state }) => {
+                state.elements.popper.style.width = `${
+                  state.elements.reference.getBoundingClientRect().width
+                }px`;
+              },
+            },
+          ],
+        }
+      );
       popperInstance.current.update();
     } else {
       popperInstance.current?.destroy();
@@ -261,25 +298,29 @@ const Popover: React.FC<PopoverProps> = ({
 
   // Watch for the `showProp` change from outside to control internal state
   useEffect(() => {
-    if (showProp !== undefined && showProp !== isOpen) { // Prevent unnecessary updates
+    if (showProp !== undefined && showProp !== isOpen) {
+      // Prevent unnecessary updates
       setIsOpen(showProp);
     }
   }, [showProp, setIsOpen, isOpen]);
 
   const popupTransitionTemplates: Record<string, PopoverTransitionClasses> = {
     default: {
-      enterActiveClass: 'transition duration-150 ease-out',
-      enterFromClass: 'translate-y-1 opacity-0',
-      enterToClass: 'translate-y-0 opacity-100',
-      leaveActiveClass: 'transition duration-150 ease-in',
-      leaveFromClass: 'translate-y-0 opacity-100',
-      leaveToClass: 'translate-y-1 opacity-0',
+      enterActiveClass: "transition duration-150 ease-out",
+      enterFromClass: "translate-y-1 opacity-0",
+      enterToClass: "translate-y-0 opacity-100",
+      leaveActiveClass: "transition duration-150 ease-in",
+      leaveFromClass: "translate-y-0 opacity-100",
+      leaveToClass: "translate-y-1 opacity-0",
     },
   };
 
-  const getTransitionClasses = (type: 'enter' | 'leave'): string => {
+  const getTransitionClasses = (type: "enter" | "leave"): string => {
     let classes: PopoverTransitionClasses = {};
-    if (typeof transition === 'string' && popupTransitionTemplates[transition]) {
+    if (
+      typeof transition === "string" &&
+      popupTransitionTemplates[transition]
+    ) {
       const template = popupTransitionTemplates[transition];
       classes = {
         enterActiveClass: template.enterActiveClass,
@@ -289,50 +330,68 @@ const Popover: React.FC<PopoverProps> = ({
         leaveFromClass: template.leaveFromClass,
         leaveToClass: template.leaveToClass,
       };
-    } else if (typeof transition === 'object' && transition) {
+    } else if (typeof transition === "object" && transition) {
       classes = transition;
     }
 
-    const activeClass = type === 'enter' ? classes.enterActiveClass : classes.leaveActiveClass;
-    const fromClass = type === 'enter' ? classes.enterFromClass : classes.leaveFromClass;
-    const toClass = type === 'enter' ? classes.enterToClass : classes.leaveToClass;
+    const activeClass =
+      type === "enter" ? classes.enterActiveClass : classes.leaveActiveClass;
+    const fromClass =
+      type === "enter" ? classes.enterFromClass : classes.leaveFromClass;
+    const toClass =
+      type === "enter" ? classes.enterToClass : classes.leaveToClass;
 
-    return [activeClass, fromClass, toClass].filter(Boolean).join(' ');
+    return [activeClass, fromClass, toClass].filter(Boolean).join(" ");
   };
 
-  const targetSlotContent = target({togglePopover, updatePosition, open, close, isOpen });
-  const bodySlotContent = body({ togglePopover, updatePosition, open, close, isOpen });
+  const targetSlotContent = target({
+    togglePopover,
+    updatePosition,
+    open,
+    close,
+    isOpen,
+  });
+  const bodySlotContent = body({
+    togglePopover,
+    updatePosition,
+    open,
+    close,
+    isOpen,
+  });
 
   return (
-    <div ref={referenceRef} {...rest}> {/* Apply rest props (like className) to the reference container */}
+    <div ref={referenceRef} {...rest}>
       <div
-        className={`flex ${rest.className}`}
-        onClick={trigger === 'click' ? togglePopover : undefined}
+        className="flex w-full"
+        onClick={trigger === "click" ? togglePopover : undefined}
         onFocusCapture={updatePosition}
         onKeyDown={updatePosition}
-        onMouseOver={trigger === 'hover' ? onMouseover : undefined}
-        onMouseLeave={trigger === 'hover' ? onMouseleave : undefined}
+        onMouseOver={trigger === "hover" ? onMouseover : undefined}
+        onMouseLeave={trigger === "hover" ? onMouseleave : undefined}
       >
         {targetSlotContent}
       </div>
 
       {createPortal(
-        <div
-          ref={popperRef}
-          style={{
-            ...popperInstance.current?.state?.styles?.popper ?? {},
-            minWidth: targetWidth ?? 0,
-          }}
-          data-popper-placement={popperInstance.current?.state?.placement || ''} // Apply data-popper-placement
-          className={`relative z-[100] ${popoverContainerClass} ${popoverClass}`}
-          onMouseOver={trigger === 'hover' ? onMouseover : undefined}
-          onMouseLeave={trigger === 'hover' ? onMouseleave : undefined}
-        >
-          {isOpen && (
-            <div className={getTransitionClasses(isOpen ? 'enter' : 'leave')}>
-              {bodySlotContent}
-            </div>
-          )}
+        <div style={{ width: targetWidth || "auto", height: "auto" }}>
+          <div
+            ref={popperRef}
+            style={{
+              ...(popperInstance.current?.state?.styles?.popper ?? {}),
+            }}
+            data-popper-placement={
+              popperInstance.current?.state?.placement || ""
+            }
+            className={`relative z-[100] ${popoverContainerClass} ${popoverClass}`}
+            onMouseOver={trigger === "hover" ? onMouseover : undefined}
+            onMouseLeave={trigger === "hover" ? onMouseleave : undefined}
+          >
+            {isOpen && (
+              <div className={getTransitionClasses(isOpen ? "enter" : "leave")}>
+                {bodySlotContent}
+              </div>
+            )}
+          </div>
         </div>,
         popperRoot
       )}
