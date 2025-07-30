@@ -41,7 +41,6 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@design-system": path.resolve(__dirname, "packages/design-system/src"),
       "@frappe-components": path.resolve(
         __dirname,
         "packages/frappe-components/src"

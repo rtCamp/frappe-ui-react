@@ -10,10 +10,12 @@
     ".": {
       "import": "./src/index.js",
       "require": "./src/index.js"
-    }
+    },
+    "./theme.css": "./src/theme.css"
   },
   "dependencies": {
     "@frappe-components/design-system": "^0.0.0",
+    "@popperjs/core": "^2.11.8",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   }

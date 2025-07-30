@@ -8,19 +8,22 @@
   ],
   "scripts": {
     "dev": "vite",
-    "dev:design-system": "npm run dev -w @frappe-components/design-system",
     "build": "tsc -b && vite build",
-    "build:design-system": "npm run build -w @frappe-components/design-system",
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.27.13",
+    "@headlessui/react": "^2.2.6",
     "@tailwindcss/vite": "^4.1.11",
+    "@tiptap/react": "^3.0.7",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "echarts": "^5.6.0",
+    "react-grid-layout": "^1.5.2"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.0.1",

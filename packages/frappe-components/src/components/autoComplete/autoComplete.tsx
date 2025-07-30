@@ -11,14 +11,14 @@ import {
   ComboboxOption,
   ComboboxOptions,
 } from "@headlessui/react";
+import type { Placement } from "@popperjs/core";
 import {
   LoadingIndicatorIcon,
   ChevronDown,
   Check,
   X,
-} from "@frappe-components/design-system";
-import type { Placement } from "@popperjs/core";
-import Popover from "../popover";
+} from "../../icons";
+import { Popover } from "../popover";
 import { Button } from "../button/Button";
 
 type OptionValue = string | number | boolean;

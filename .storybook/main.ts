@@ -24,10 +24,6 @@ const config: StorybookConfig = {
         ...config.resolve,
         alias: {
           ...config?.resolve?.alias,
-          "@design-system": path.resolve(
-            __dirname,
-            "../packages/design-system/src"
-          ),
           "@frappe-components": path.resolve(
             __dirname,
             "../packages/frappe-components/src"
