@@ -6,7 +6,7 @@ export interface DropdownOption {
   onClick?: () => void;
   route?: string;
   link?: string;
-  icon?: (props: Record<string, string>) => React.JSX.Element;
+  icon?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component?: ComponentType<any>;
   submenu?: DropdownOptions;

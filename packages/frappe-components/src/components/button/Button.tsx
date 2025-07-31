@@ -1,8 +1,8 @@
 import React, { useMemo, useCallback, type ReactNode } from 'react';
 import { useNavigate } from 'react-router';
-import { LoadingIndicatorIcon } from '../../icons';
 import type{ ButtonProps, ButtonSize, ButtonVariant, ThemeVariant } from './types';
 import { subtleClasses, solidClasses, outlineClasses, ghostClasses, focusClasses, disabledClassesMap } from './constants';
+import LoadingIndicator from '../loadingIndicator';
 
 const Button: React.FC<ButtonProps> = ({
   theme = 'gray',
@@ -126,7 +126,7 @@ const Button: React.FC<ButtonProps> = ({
       {...rest}
     >
       {loading ? (
-        <LoadingIndicatorIcon className={loadingIndicatorSizeClass} />
+        <LoadingIndicator className={loadingIndicatorSizeClass} />
       ) : (
         buttonContent
       )}

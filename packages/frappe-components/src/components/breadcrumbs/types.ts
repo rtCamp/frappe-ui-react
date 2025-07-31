@@ -4,6 +4,8 @@ export interface BreadcrumbItem {
   label: string;
   route?: string;
   onClick?: () => void;
+  prefixIcon?: ReactNode;
+  suffixIcon?: ReactNode;
 }
 
 export interface BreadcrumbsProps {

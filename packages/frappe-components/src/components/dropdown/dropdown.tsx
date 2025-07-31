@@ -4,7 +4,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import { Button } from '../button';
 import type { DropdownProps, DropdownOption, DropdownGroupOption, DropdownOptions } from './types';
-import { ChevronRight } from '../../icons';
+import FeatherIcon from '../featherIcon';
 
 const cssClasses = {
   dropdownContent:
@@ -89,7 +89,7 @@ const Dropdown: React.FC<DropdownProps> = ({
           const groupOption: DropdownGroupOption = {
             ...option,
             key: `group-${i}`,
-            items: filterAndNormalizeOptions(option.items), // Recursively filter and normalize
+            items: filterAndNormalizeOptions(option.items),
           } as DropdownGroupOption;
           groups.push(groupOption);
         } else {
@@ -129,7 +129,6 @@ const Dropdown: React.FC<DropdownProps> = ({
   }, [placement]);
 
   const renderDropdownItem = (item: DropdownOption) => {
-    const Icon = item.icon;
     if (item.component) {
       const CustomComponent = item.component;
       return <CustomComponent active={false} />;
@@ -138,9 +137,9 @@ const Dropdown: React.FC<DropdownProps> = ({
         <DropdownMenu.Sub>
           <DropdownMenu.SubTrigger asChild>
             <button className={cssClasses.submenuTrigger}>
-              {Icon && <Icon className={cssClasses.itemIcon} />}
+              {item.icon && <FeatherIcon name={item.icon} className={cssClasses.itemIcon} />}
               <span className={cssClasses.itemLabel}>{item.label}</span>
-              <ChevronRight name="chevron-right" className={cssClasses.chevronIcon} aria-hidden="true" />
+              <FeatherIcon name="chevron-right" className={cssClasses.chevronIcon} aria-hidden="true" />
             </button>
           </DropdownMenu.SubTrigger>
           <DropdownMenu.Portal>
@@ -154,7 +153,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                   )}
                   {submenuGroup.items.map((subItem) => (
                     <DropdownMenu.Item key={subItem.label} asChild onSelect={subItem.onClick}>
-                      {renderDropdownItem(subItem)} {/* Recursive call for sub-items */}
+                      {renderDropdownItem(subItem)}
                     </DropdownMenu.Item>
                   ))}
                 </div>
@@ -166,7 +165,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     } else {
       return (
         <button className={cssClasses.itemButton}>
-          {Icon && <Icon className={cssClasses.itemIcon} />}
+          {item.icon && <FeatherIcon name={item.icon} className={cssClasses.itemIcon} />}
           <span className={cssClasses.itemLabel}>{item.label}</span>
         </button>
       );

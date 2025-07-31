@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { MemoryRouter } from "react-router";
 import Button from "./button";
 import type { ButtonProps } from "./types";
-import { MemoryRouter } from "react-router";
 
 export default {
   title: "Components/Button",

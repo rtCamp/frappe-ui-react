@@ -1,9 +1,13 @@
-import React, { useMemo } from 'react';
-import { Link, useNavigate } from 'react-router';
-import useWindowSize from '../hooks/useWindowSize';
-import { Dropdown, type DropdownOption, type DropdownOptions } from '../dropdown';
-import { Button } from '../button';
-import type { BreadcrumbsProps, BreadcrumbItem } from './types';
+import React, { useCallback, useMemo } from "react";
+import { Link, useNavigate } from "react-router";
+import useWindowSize from "../hooks/useWindowSize";
+import {
+  Dropdown,
+  type DropdownOption,
+  type DropdownOptions,
+} from "../dropdown";
+import { Button } from "../button";
+import type { BreadcrumbsProps, BreadcrumbItem } from "./types";
 
 const ThreeDotsIcon: React.FC = () => (
   <svg
@@ -24,7 +28,7 @@ const ThreeDotsIcon: React.FC = () => (
   </svg>
 );
 
-const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, renderPrefix, renderSuffix }) => {
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
   const navigate = useNavigate();
   const { width } = useWindowSize();
 
@@ -57,6 +61,20 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, renderPrefix, renderSu
     return filteredItems.slice(-2);
   }, [width, filteredItems]);
 
+  const renderSuffix = useCallback((item: BreadcrumbItem) => {
+    if (!item.suffixIcon) {
+      return null;
+    }
+    return <span className="mr-1">{item.suffixIcon}</span>;
+  }, []);
+
+  const renderPrefix = useCallback((item: BreadcrumbItem) => {
+    if (!item.prefixIcon) {
+      return null;
+    }
+    return <span className="mr-1">{item.prefixIcon}</span>;
+  }, []);
+
   return (
     <div className="flex min-w-0 items-center">
       {dropdownItems.length > 0 && (
@@ -66,7 +84,10 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, renderPrefix, renderSu
               <ThreeDotsIcon />
             </Button>
           </Dropdown>
-          <span className="ml-1 mr-0.5 text-base text-(--ink-gray-4)" aria-hidden="true">
+          <span
+            className="ml-1 mr-0.5 text-base text-(--ink-gray-4)"
+            aria-hidden="true"
+          >
             /
           </span>
         </div>
@@ -76,10 +97,14 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, renderPrefix, renderSu
         {crumbs.map((item, i) => {
           const isLast = i === crumbs.length - 1;
           const commonClasses = `flex items-center rounded px-0.5 py-1 text-lg font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-(--outline-gray-3) ${
-            isLast ? 'text-(--ink-gray-9)' : 'text-(--ink-gray-5) hover:text-(--ink-gray-7)'
+            isLast
+              ? "text-(--ink-gray-9)"
+              : "text-(--ink-gray-5) hover:text-(--ink-gray-7)"
           }`;
 
-          const handleClick = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
+          const handleClick = (
+            e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>
+          ) => {
             if (item.onClick) {
               item.onClick();
             }
@@ -92,20 +117,31 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, renderPrefix, renderSu
           return (
             <React.Fragment key={item.label}>
               {item.route ? (
-                <Link to={item.route} onClick={handleClick} className={commonClasses}>
-                  {renderPrefix && renderPrefix(item)}
+                <Link
+                  to={item.route}
+                  onClick={handleClick}
+                  className={commonClasses}
+                >
+                  {renderPrefix(item)}
                   <span>{item.label}</span>
-                  {renderSuffix && renderSuffix(item)}
+                  {renderSuffix(item)}
                 </Link>
               ) : (
-                <button type="button" onClick={handleClick} className={commonClasses}>
-                  {renderPrefix && renderPrefix(item)}
+                <button
+                  type="button"
+                  onClick={handleClick}
+                  className={commonClasses}
+                >
+                  {renderPrefix(item)}
                   <span>{item.label}</span>
-                  {renderSuffix && renderSuffix(item)}
+                  {renderSuffix(item)}
                 </button>
               )}
               {!isLast && (
-                <span className="mx-0.5 text-base text-(--ink-gray-4)" aria-hidden="true">
+                <span
+                  className="mx-0.5 text-base text-(--ink-gray-4)"
+                  aria-hidden="true"
+                >
                   /
                 </span>
               )}

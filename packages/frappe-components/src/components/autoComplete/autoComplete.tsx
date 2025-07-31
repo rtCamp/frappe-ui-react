@@ -12,14 +12,10 @@ import {
   ComboboxOptions,
 } from "@headlessui/react";
 import type { Placement } from "@popperjs/core";
-import {
-  LoadingIndicatorIcon,
-  ChevronDown,
-  Check,
-  X,
-} from "../../icons";
 import { Popover } from "../popover";
 import { Button } from "../button";
+import LoadingIndicator from "../loadingIndicator";
+import FeatherIcon from "../featherIcon";
 
 type OptionValue = string | number | boolean;
 
@@ -142,7 +138,6 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
     }
 
     let processedGroups: AutocompleteOptionGroup[];
-    // Check if the first item in options array is an option group
     if (options.length > 0 && isOptionGroup(options[0])) {
       processedGroups = options as AutocompleteOptionGroup[];
     } else {
@@ -327,7 +322,8 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                 }`}
                 onClick={popoverToggle}
               >
-                <ChevronDown
+                <FeatherIcon
+                  name="chevron-down"
                   className="h-4 w-4 text-ink-gray-5"
                   aria-hidden="true"
                 />
@@ -376,10 +372,10 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                         />
                         <div className="absolute right-0 inline-flex h-7 w-7 items-center justify-center">
                           {loading ? (
-                            <LoadingIndicatorIcon className="h-4 w-4 text-(--ink-gray-5)" />
+                            <LoadingIndicator className="h-4 w-4 text-(--ink-gray-5)" />
                           ) : (
                             <button type="button" onClick={clearAll}>
-                              <X className="w-4 text-(--ink-gray-8)" />
+                              <FeatherIcon name="X" className="w-4 text-(--ink-gray-8)" />
                             </button>
                           )}
                         </div>
@@ -420,7 +416,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                                 {
                                   <div className="flex flex-shrink-0">
                                     {isOptionSelected(option as Option) ? (
-                                      <Check className="h-4 w-4 text-ink-gray-7" />
+                                      <FeatherIcon name="check" className="h-4 w-4 text-ink-gray-7" />
                                     ) : (
                                       <></>
                                     )}
