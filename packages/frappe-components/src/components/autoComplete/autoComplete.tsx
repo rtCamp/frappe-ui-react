@@ -375,7 +375,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                             <LoadingIndicator className="h-4 w-4 text-(--ink-gray-5)" />
                           ) : (
                             <button type="button" onClick={clearAll}>
-                              <FeatherIcon name="X" className="w-4 text-(--ink-gray-8)" />
+                              <FeatherIcon name="x" className="w-4 h-4 text-(--ink-gray-8)" />
                             </button>
                           )}
                         </div>
