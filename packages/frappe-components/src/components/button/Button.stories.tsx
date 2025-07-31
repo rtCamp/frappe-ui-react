@@ -108,7 +108,7 @@ export const Subtle: StoryObj<ButtonProps> = {
   ...ButtonTemplate,
   args: {
     label: "Subtle Button",
-    theme: "green",
+    theme: "gray",
     size: "md",
     variant: "subtle",
   },
@@ -118,8 +118,7 @@ export const Outline: StoryObj<ButtonProps> = {
   ...ButtonTemplate,
   args: {
     label: "Outline Button",
-    //@ts-expect-error -- this tests default fallback behaviour
-    theme: "orange",
+    theme: "gray",
     size: "md",
     variant: "outline",
   },

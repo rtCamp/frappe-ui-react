@@ -43,7 +43,7 @@ export const Solid: Story = {
   render: (args) => <Badge {...args} />,
   args: {
     label: 'Solid Badge',
-    theme: 'blue',
+    theme: 'gray',
     size: 'md',
     variant: 'solid',
   },
@@ -53,7 +53,7 @@ export const Subtle: Story = {
   render: (args) => <Badge {...args} />,
   args: {
     label: 'Subtle Badge',
-    theme: 'green',
+    theme: 'gray',
     size: 'md',
     variant: 'subtle',
   },
@@ -63,7 +63,7 @@ export const Outline: Story = {
   render: (args) => <Badge {...args} />,
   args: {
     label: 'Outline Badge',
-    theme: 'orange',
+    theme: 'gray',
     size: 'md',
     variant: 'outline',
   },
@@ -73,7 +73,7 @@ export const Ghost: Story = {
   render: (args) => <Badge {...args} />,
   args: {
     label: 'Ghost Badge',
-    theme: 'red',
+    theme: 'gray',
     size: 'md',
     variant: 'ghost',
   },

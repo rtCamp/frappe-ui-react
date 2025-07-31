@@ -120,7 +120,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
                 <Link
                   to={item.route}
                   onClick={handleClick}
-                  className={commonClasses}
+                  className={`${commonClasses} cursor-default`}
                 >
                   {renderPrefix(item)}
                   <span>{item.label}</span>
@@ -130,7 +130,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
                 <button
                   type="button"
                   onClick={handleClick}
-                  className={commonClasses}
+                  className={`${commonClasses} cursor-pointer`}
                 >
                   {renderPrefix(item)}
                   <span>{item.label}</span>
@@ -139,7 +139,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
               )}
               {!isLast && (
                 <span
-                  className="mx-0.5 text-base text-(--ink-gray-4)"
+                  className="mx-0.5 text-base text-(--ink-gray-4) select-none"
                   aria-hidden="true"
                 >
                   /
