@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import ThemeShowcase from "../components/ThemeShowcase";
+import ThemeShowcase from "./ThemeShowcase";
 
 const meta = {
   title: "Theme/ThemeShowcase",

@@ -1,5 +1,5 @@
 {
-  "name": "frappe-components",
+  "name": "@frappe-components/frappe-components",
   "version": "0.0.0",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -8,20 +8,24 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
+      "import": "./src/index.js",
+      "require": "./src/index.js"
     },
     "./theme.css": "./src/theme.css"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.13",
     "@headlessui/react": "^2.2.6",
-    "@tiptap/react": "^3.0.7",
+    "@popperjs/core": "^2.11.8",
+    "@radix-ui/react-dropdown-menu": "^2.1.15",
+    "@tailwindcss/vite": "^4.1.11",
     "echarts": "^5.6.0",
     "feather-icons": "^4.29.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-grid-layout": "^1.5.2"
+    "react-grid-layout": "^1.5.2",
+    "react-router": "^7.7.1",
+    "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
     "@types/feather-icons": "^4.29.4",
