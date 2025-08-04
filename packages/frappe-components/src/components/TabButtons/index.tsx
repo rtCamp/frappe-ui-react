@@ -1,6 +1,5 @@
-import React from "react";
 import { Radio, RadioGroup } from "@headlessui/react";
-import Button from "../Button";
+import { Button } from "../Button";
 
 // Define types for the tab button items
 interface TabButtonItem {

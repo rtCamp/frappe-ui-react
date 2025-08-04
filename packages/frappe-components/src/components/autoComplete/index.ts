@@ -1,0 +1,1 @@
+export { default as Autocomplete, type AutocompleteProps } from './autoComplete';

@@ -1,17 +1,19 @@
 import React from "react";
 
-import FeatherIcon from "../FeatherIcon";
-import LoadingIndicator from "../LoadingIndicator";
+import FeatherIcon from "../featherIcon";
+import LoadingIndicator from "../loadingIndicator";
+import { useNavigate } from "react-router";
 
-type Theme = "gray" | "blue" | "green" | "red";
-type Size = "sm" | "md" | "lg" | "xl" | "2xl";
-type Variant = "solid" | "subtle" | "outline" | "ghost";
-type ThemeVariant = `${Theme}-${Variant}`;
+export type ButtonTheme = "gray" | "blue" | "green" | "red";
+export type ButtonSize = "sm" | "md" | "lg" | "xl" | "2xl";
+export type ButtonVariant = "solid" | "subtle" | "outline" | "ghost";
+export type ButtonThemeVariant = `${ButtonTheme}-${ButtonVariant}`;
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  theme?: Theme;
-  size?: Size;
-  variant?: Variant;
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  theme?: ButtonTheme;
+  size?: ButtonSize;
+  variant?: ButtonVariant;
   label?: string;
   icon?: string | React.ComponentType<unknown>;
   iconLeft?: string | React.ComponentType<unknown>;
@@ -42,7 +44,7 @@ const Button = ({
   className,
   ...props
 }: ButtonProps) => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const isIconButton = Boolean(icon);
   const isDisabled = disabled || loading;
@@ -94,9 +96,9 @@ const Button = ({
     ghost: ghostClasses,
   }[variant];
 
-  const themeVariant: ThemeVariant = `${theme}-${variant}`;
+  const themeVariant: ButtonThemeVariant = `${theme}-${variant}`;
 
-  const disabledClassesMap: Record<ThemeVariant, string> = {
+  const disabledClassesMap: Record<ButtonThemeVariant, string> = {
     "gray-solid": "bg-surface-gray-2 text-ink-gray-4",
     "gray-subtle": "bg-surface-gray-2 text-ink-gray-4",
     "gray-outline":
@@ -167,11 +169,11 @@ const Button = ({
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (route) {
-      // navigate(route);
+      navigate(route);
       return;
     }
     if (link) {
-      // window.open(link, "_blank");
+      window.open(link, "_blank");
       return;
     }
     onClick?.(e);
