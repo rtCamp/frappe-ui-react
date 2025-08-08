@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useMemo } from "react";
-import debounce from "./debounce";
+import { debounce } from "../../utils";
 import type { TextareaProps } from "./types";
 
 export const Textarea: React.FC<TextareaProps> = ({
