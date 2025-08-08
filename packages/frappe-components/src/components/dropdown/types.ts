@@ -1,5 +1,5 @@
 import type { ReactNode, ComponentType } from "react";
-import { ButtonTheme } from "../Button/button";
+import { ButtonTheme } from "../button/button";
 import { ButtonProps } from "@headlessui/react";
 
 export interface DropdownOption {

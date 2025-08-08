@@ -6,7 +6,7 @@ import {
   type DropdownOption,
   type DropdownOptions,
 } from "../dropdown";
-import { Button } from "../Button";
+import { Button } from "../button";
 import type { BreadcrumbsProps, BreadcrumbItem } from "./types";
 
 const ThreeDotsIcon: React.FC = () => (

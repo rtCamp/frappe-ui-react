@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { action } from "storybook/actions";
 import { MemoryRouter } from "react-router";
 import Dropdown from "./dropdown";
-import { Button } from "../Button";
+import { Button } from "../button";
 import { DropdownOptions } from "./types";
 
 export default {
