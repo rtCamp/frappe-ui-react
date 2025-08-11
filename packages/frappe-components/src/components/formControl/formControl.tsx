@@ -49,7 +49,7 @@ const FormControl: React.FC<FormControlProps> = ({
         return (
           <Autocomplete
             options={controlAttrs.options as AutocompleteOption[]}
-            modelValue={controlAttrs.modelValue}
+            value={controlAttrs.modelValue}
             {...controlAttrs}
           />
         );

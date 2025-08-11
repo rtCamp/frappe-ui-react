@@ -18,7 +18,7 @@ import FeatherIcon from "../featherIcon";
 import type { AutocompleteOption, AutocompleteOptionGroup, AutocompleteProps, Option } from "./types";
 
 const Autocomplete: React.FC<AutocompleteProps> = ({
-  modelValue,
+  value,
   options,
   multiple = false,
   label,
@@ -154,20 +154,20 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   );
 
   const selectedComboboxValue = useMemo<Option | Option[] | null>(() => {
-    if (modelValue === null || modelValue === undefined) {
+    if (value === null || value === undefined) {
       return multiple ? [] : null;
     }
 
     if (!multiple) {
       return (
-        findOption(modelValue as AutocompleteOption) ||
-        makeOption(modelValue as AutocompleteOption)
+        findOption(value as AutocompleteOption) ||
+        makeOption(value as AutocompleteOption)
       );
     }
 
-    const values = Array.isArray(modelValue) ? modelValue : [];
+    const values = Array.isArray(value) ? value : [];
     return values.map((v) => findOption(v) || makeOption(v));
-  }, [modelValue, multiple, findOption, makeOption]);
+  }, [value, multiple, findOption, makeOption]);
 
   const handleComboboxChange = useCallback(
     (val: Option | Option[] | null) => {

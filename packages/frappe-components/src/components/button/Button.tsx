@@ -19,6 +19,7 @@ const Button: React.FC<ButtonProps> = ({
   suffixIcon,
   icon,
   children,
+  extraClassName,
   ...rest
 }) => {
   const navigate = useNavigate();
@@ -82,8 +83,9 @@ const Button: React.FC<ButtonProps> = ({
       isDisabled ? disabledClass : variantClass,
       focusClasses[theme],
       sizeClass,
+      extraClassName
     ].filter(Boolean).join(' ');
-  }, [theme, variant, size, isIconButton, isDisabled]);
+  }, [theme, variant, size, isIconButton, isDisabled, extraClassName]);
 
   const buttonContent: ReactNode = useMemo(() => {
     if (loading) {
@@ -104,7 +106,6 @@ const Button: React.FC<ButtonProps> = ({
       </>
     );
   }, [loading, loadingText, isIconButton, icon, prefixIcon, children, label, suffixIcon]);
-
 
   const loadingIndicatorSizeClass = useMemo(() => {
     return {

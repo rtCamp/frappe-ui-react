@@ -5,7 +5,6 @@ import type { SizeTypes } from '../../types';
 const Checkbox: React.FC<CheckboxProps> = ({
   size = 'sm',
   label,
-  checked,
   disabled = false,
   padding = false,
   value,
@@ -50,7 +49,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
     if(padding && size === 'md'){
         paddingClasses = 'px-3 py-2'
     }
-    console.log(paddingClasses, padding, size)
+
     const interactionClasses = padding && !disabled
       ? 'focus-within:bg-surface-gray-2 focus-within:ring-2 focus-within:ring-outline-gray-3 hover:bg-surface-gray-3 active:bg-surface-gray-4'
       : '';
@@ -62,8 +61,6 @@ const Checkbox: React.FC<CheckboxProps> = ({
     onChange?.(e.target.checked);
   },[onChange]);
 
-  const valueToUse = typeof checked === 'undefined' ? value : checked;
-  console.log(checked, valueToUse, value)
   return (
     <div className={wrapperClasses}>
       <input
