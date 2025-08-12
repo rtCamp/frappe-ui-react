@@ -40,7 +40,6 @@ const TabButtons = ({
               <Button
                 onClick={button.onClick}
                 disabled={button.disabled}
-                // Pass through other button props, but filter out props we handle specifically
                 {...Object.fromEntries(
                   Object.entries(button).filter(
                     ([key]) =>
@@ -61,7 +60,7 @@ const TabButtons = ({
                     : checked
                     ? "text-ink-gray-9 shadow"
                     : "text-ink-gray-7"
-                }`}
+                } cursor-pointer`}
               >
                 {!button.hideLabel && button.label && (
                   <span className="flex h-4 items-center">{button.label}</span>
