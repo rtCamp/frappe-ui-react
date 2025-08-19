@@ -3,6 +3,7 @@ import React from "react";
 export interface StoryLayoutConfig {
   type?: "single" | "grid" | "list";
   width?: number | string;
+  height?: number | string;
   iframe?: boolean;
 }
 
@@ -37,6 +38,7 @@ export const Story: React.FC<StoryProps> = ({
             : "repeat(auto-fit, minmax(300px, 1fr))",
           gap: "16px",
           alignItems: "start",
+          height: layout.height ? layout.height : "auto",
         };
       case "list":
         return {
@@ -45,6 +47,7 @@ export const Story: React.FC<StoryProps> = ({
           flexDirection: "column",
           gap: "12px",
           maxWidth: layout.width || "100%",
+          height: layout.height ? layout.height : "auto",
         };
       default:
         return {
@@ -53,6 +56,7 @@ export const Story: React.FC<StoryProps> = ({
           justifyContent: "center",
           alignItems: "center",
           maxWidth: layout.width || "100%",
+          height: layout.height ? layout.height : "auto",
         };
     }
   };

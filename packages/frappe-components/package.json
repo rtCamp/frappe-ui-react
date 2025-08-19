@@ -19,6 +19,7 @@
     "@popperjs/core": "^2.11.8",
     "@radix-ui/react-dropdown-menu": "^2.1.15",
     "@tailwindcss/vite": "^4.1.11",
+    "dayjs": "^1.11.13",
     "echarts": "^5.6.0",
     "feather-icons": "^4.29.2",
     "react": "^19.1.0",

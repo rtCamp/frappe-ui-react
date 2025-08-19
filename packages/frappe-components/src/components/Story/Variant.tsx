@@ -4,12 +4,18 @@ export interface VariantProps {
   title: string;
   description?: string;
   children: React.ReactNode;
+  flexAlign?: string;
+  flexJustify?: string;
+  minHeight?: number | string;
 }
 
 export const Variant: React.FC<VariantProps> = ({
   title,
   description,
   children,
+  flexAlign = "center",
+  flexJustify = "center",
+  minHeight = "80px",
 }) => {
   return (
     <div
@@ -55,9 +61,9 @@ export const Variant: React.FC<VariantProps> = ({
         style={{
           padding: "16px",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "80px",
+          alignItems: flexAlign,
+          justifyContent: flexJustify,
+          minHeight,
         }}
       >
         {children}
