@@ -4,7 +4,6 @@ import { Dialog, DialogOptions } from './dialog';
 import { Button } from '../button';
 import { Dropdown } from '../dropdown';
 import { Autocomplete, AutocompleteOption } from '../autoComplete';
-import FeatherIcon from '../featherIcon';
 import { MemoryRouter } from 'react-router';
 
 const meta: Meta<typeof Dialog> = {
@@ -164,8 +163,8 @@ export const WithInteractiveComponents: Story = {
         group: 'Advanced Options',
         key: 'group-1',
         items: [
-          { label: 'Advanced Option A', icon: 'Settings', onClick: () => setSelectedOption('Advanced Option A'), key: '1' },
-          { label: 'Advanced Option B', icon: 'Star', onClick: () => setSelectedOption('Advanced Option B'), key: '2' },
+          { label: 'Advanced Option A', icon: 'settings', onClick: () => setSelectedOption('Advanced Option A'), key: '1' },
+          { label: 'Advanced Option B', icon: 'star', onClick: () => setSelectedOption('Advanced Option B'), key: '2' },
         ],
       },
     ];
@@ -201,7 +200,7 @@ export const WithInteractiveComponents: Story = {
             <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">Select an option:</label>
               <Dropdown options={dropdownOptions} placement="left">
-                <Button variant="outline" suffix={<FeatherIcon name="chevron-down"  className="h-4 w-4 text-gray-500" />}>
+                <Button variant="outline" iconRight="chevron-down">
                   {selectedOption}
                 </Button>
               </Dropdown>

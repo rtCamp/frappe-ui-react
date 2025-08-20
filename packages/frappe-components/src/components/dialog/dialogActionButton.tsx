@@ -37,7 +37,7 @@ export const DialogActionButton = ({ action, close }: DialogActionButtonProps) =
     <Button
       {...action}
       style={{ cursor: "pointer" }}
-      extraClassName="w-full"
+      className="w-full"
       disabled={action.disabled || loading}
       loading={loading}
       onClick={handleClick}

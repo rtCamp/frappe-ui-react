@@ -270,15 +270,15 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
               {label && (
                 <label
                   htmlFor={comboboxInputId}
-                  className="block text-xs text-(--ink-gray-5)"
+                  className="block text-xs text-ink-gray-5"
                 >
                   {label}
                 </label>
               )}
               <button
                 type="button"
-                className={`flex h-7 w-full items-center justify-between gap-2 rounded bg-(--surface-gray-2) px-2 py-1 transition-colors hover:bg-(--surface-gray-3) border border-transparent focus:border-(--outline-gray-4) focus:ring-2 focus:ring-(--outline-gray-3) focus:outline-none ${
-                  isComboboxOpen ? "bg-(--surface-gray-3)" : ""
+                className={`flex h-7 w-full items-center justify-between gap-2 rounded bg-surface-gray-2 px-2 py-1 transition-colors hover:bg-surface-gray-3 border border-transparent focus:border-outline-gray-4 focus:ring-2 focus:ring-outline-gray-3 focus:outline-none ${
+                  isComboboxOpen ? "bg-surface-gray-3" : ""
                 }`}
                 onClick={popoverToggle}
               >
@@ -292,8 +292,8 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                   <span
                     className={`truncate text-base leading-5 ${
                       displayValue
-                        ? "text-(--ink-gray-8)"
-                        : "text-(--ink-gray-4)"
+                        ? "text-ink-gray-8"
+                        : "text-ink-gray-4"
                     }`}
                   >
                     {displayValue || placeholder || ""}
@@ -313,12 +313,12 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                   }`}
                 >
                   {!hideSearch && (
-                    <div className="sticky top-0 z-10 flex items-stretch space-x-1.5 bg-surface-modal py-1.5">
+                    <div className="sticky top-0 z-[100] flex items-stretch space-x-1.5 bg-surface-modal py-1.5">
                       <div className="relative w-full">
                         <ComboboxInput
                           id={comboboxInputId}
                           ref={searchInputRef}
-                          className=" h-7 rounded border border-(--surface-gray-2) bg-(--surface-gray-2) py-1.5 pl-2 pr-2 text-base text-(--ink-gray-8) placeholder-(--ink-gray-4) transition-colors hover:border-(--outline-gray-modals) hover:bg-(--surface-gray-3) focus:border-(--outline-gray-4) focus:bg-(--surface-white) focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-(--outline-gray-3) w-full focus:bg-(--surface-gray-3) hover:bg-(--surface-gray-4) text-(--ink-gray-8)"
+                          className=" h-7 rounded border border-surface-gray-2 bg-surface-gray-2 py-1.5 pl-2 pr-2 text-base text-ink-gray-8 placeholder-ink-gray-4 transition-colors hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:bg-surface-white focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 w-full focus:bg-surface-gray-3 hover:bg-surface-gray-4 text-ink-gray-8"
                           type="text"
                           displayValue={() => query}
                           onChange={(
@@ -329,12 +329,12 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                         />
                         <div className="absolute right-0 inline-flex h-7 w-7 items-center justify-center">
                           {loading ? (
-                            <LoadingIndicator className="h-4 w-4 text-(--ink-gray-5)" />
+                            <LoadingIndicator className="h-4 w-4 text-ink-gray-5" />
                           ) : (
                             <button type="button" onClick={clearAll}>
                               <FeatherIcon
                                 name="x"
-                                className="w-4 h-4 text-(--ink-gray-8)"
+                                className="w-4 h-4 text-ink-gray-8"
                               />
                             </button>
                           )}

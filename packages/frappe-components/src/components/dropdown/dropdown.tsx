@@ -2,7 +2,7 @@ import React, { useMemo, useCallback } from "react";
 import { useNavigate } from "react-router";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
-import { Button } from "../button";
+import { Button, ButtonProps } from "../button";
 import type {
   DropdownProps,
   DropdownOption,
@@ -48,20 +48,20 @@ const Dropdown: React.FC<DropdownProps> = ({
   );
 
   const getIconColor = (item: DropdownOption) =>
-    item.theme === "red" ? "text-(--ink-red-3)" : "text-(--ink-gray-6)";
+    item.theme === "red" ? "text-ink-red-3" : "text-ink-gray-6";
 
   const getTextColor = (item: DropdownOption) =>
-    item.theme === "red" ? "text-(--ink-red-3)" : "text-(--ink-gray-7)";
+    item.theme === "red" ? "text-ink-red-3" : "text-ink-gray-7";
 
   const getBackgroundColor = (item: DropdownOption) =>
     item.theme === "red"
-      ? "focus:bg-(--surface-red-3) data-[highlighted]:bg-(--surface-red-3) data-[state=open]:bg-(--surface-red-3)"
-      : "focus:bg-(--surface-gray-3) data-[highlighted]:bg-(--surface-gray-3) data-[state=open]:bg-(--surface-gray-3)";
+      ? "focus:bg-surface-red-3) data-[highlighted]:bg-surface-red-3) data-[state=open]:bg-surface-red-3"
+      : "focus:bg-surface-gray-3) data-[highlighted]:bg-surface-gray-3) data-[state=open]:bg-surface-gray-3";
 
   const getSubmenuBackgroundColor = (item: DropdownOption) =>
     getBackgroundColor(item) +
-    " data-[state=open]:bg-(--surface-" +
-    (item.theme === "red" ? "red-3)" : "gray-3)");
+    " data-[state=open]:bg-surface-" +
+    (item.theme === "red" ? "red-3" : "gray-3");
 
   const normalizeDropdownItem = useCallback(
     (option: DropdownOption): DropdownOption => {
@@ -164,7 +164,8 @@ const Dropdown: React.FC<DropdownProps> = ({
         <DropdownMenu.Sub>
           <DropdownMenu.SubTrigger asChild>
             <Button
-              prefixIcon={
+              variant="ghost"
+              iconLeft={() =>
                 item.icon && (
                   <FeatherIcon
                     name={item.icon}
@@ -172,7 +173,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                   />
                 )
               }
-              suffixIcon={
+              iconRight={() =>
                 <FeatherIcon
                   name="chevron-right"
                   className={cssClasses.chevronIcon}
@@ -218,19 +219,16 @@ const Dropdown: React.FC<DropdownProps> = ({
       );
     } else {
       return (
-        <Button
-          theme={item.theme}
-          prefixIcon={
-            item.icon && (
-              <FeatherIcon name={item.icon} className={cssClasses.itemIcon} />
-            )
-          }
+        <button
           className={`${cssClasses.itemButton} ${getTextColor(
             item
           )} ${getSubmenuBackgroundColor(item)}`}
         >
+          {item.icon && (
+              <FeatherIcon name={item.icon} className={cssClasses.itemIcon} />
+            )}
           <span className={cssClasses.itemLabel}>{item.label}</span>
-        </Button>
+        </button>
       );
     }
   };
@@ -241,7 +239,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         {children ? (
           React.cloneElement(children as React.ReactElement, { ...attrs })
         ) : (
-          <Button active={false} {...button} {...attrs}>
+          <Button {...button as ButtonProps} {...attrs}>
             {button?.label || "Options"}
           </Button>
         )}
@@ -249,7 +247,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className={`${cssClasses.dropdownContent} ${
+          className={`${cssClasses.dropdownContent} origin-top-left ${
             placement === "left"
               ? "origin-top-left"
               : placement === "right"
@@ -258,7 +256,7 @@ const Dropdown: React.FC<DropdownProps> = ({
           }`}
           side={contentSide}
           align={contentAlign}
-          sideOffset={4}
+          sideOffset={0}
         >
           {groups.map((group) => (
             <div key={group.key} className={cssClasses.groupContainer}>
