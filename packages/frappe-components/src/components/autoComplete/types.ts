@@ -22,7 +22,7 @@ export type AutocompleteOptionGroup = {
 export type AutocompleteOptions = AutocompleteOption[] | AutocompleteOptionGroup[];
 
 export interface AutocompleteProps {
-  modelValue: AutocompleteOption | AutocompleteOption[] | null | undefined;
+  value: AutocompleteOption | AutocompleteOption[] | null | undefined;
   options: AutocompleteOptions;
   multiple?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
