@@ -11,57 +11,14 @@ import {
   ComboboxOption,
   ComboboxOptions,
 } from "@headlessui/react";
-import type { Placement } from "@popperjs/core";
 import { Popover } from "../popover";
 import LoadingIndicator from "../loadingIndicator";
 import FeatherIcon from "../featherIcon";
+import type { AutocompleteOption, AutocompleteOptionGroup, AutocompleteProps, Option } from "./types";
 import { Button } from "../button";
 
-type OptionValue = string | number | boolean;
-
-export type Option = {
-  label: string;
-  value: OptionValue;
-  description?: string;
-  disabled?: boolean;
-  image?: string;
-};
-
-export type AutocompleteOption = OptionValue | Option;
-
-export type AutocompleteOptionGroup = {
-  group: string;
-  items: AutocompleteOption[];
-  hideLabel?: boolean;
-};
-
-type AutocompleteOptions = AutocompleteOption[] | AutocompleteOptionGroup[];
-
-export interface AutocompleteProps
-  extends Omit<
-    React.HTMLAttributes<HTMLDivElement>,
-    "children" | "onChange" | "value"
-  > {
-  modelValue: AutocompleteOption | AutocompleteOption[] | null | undefined;
-  options: AutocompleteOptions;
-  multiple?: boolean;
-  showPrefix?: boolean;
-  label?: string;
-  placeholder?: string;
-  loading?: boolean;
-  hideSearch?: boolean;
-  showFooter?: boolean;
-  maxOptions?: number;
-  compareFn?: (a: Option, b: Option) => boolean;
-  placement?: Placement;
-  bodyClasses?: string | string[] | { [key: string]: boolean };
-  onChange?: (
-    value: AutocompleteOption | AutocompleteOption[] | null | undefined
-  ) => void;
-}
-
 const Autocomplete: React.FC<AutocompleteProps> = ({
-  modelValue,
+  value,
   options,
   multiple = false,
   label,
@@ -69,7 +26,10 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   loading = false,
   hideSearch = false,
   showFooter = false,
-  showPrefix = false,
+  prefix,
+  suffix,
+  itemPrefix,
+  itemSuffix,
   maxOptions = 50,
   compareFn = (a: Option, b: Option) => a?.value === b?.value,
   placement = "bottom-start",
@@ -194,32 +154,32 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   );
 
   const selectedComboboxValue = useMemo<Option | Option[] | null>(() => {
-    if (modelValue === null || modelValue === undefined) {
+    if (value === null || value === undefined) {
       return multiple ? [] : null;
     }
 
     if (!multiple) {
       return (
-        findOption(modelValue as AutocompleteOption) ||
-        makeOption(modelValue as AutocompleteOption)
+        findOption(value as AutocompleteOption) ||
+        makeOption(value as AutocompleteOption)
       );
     }
 
-    const values = Array.isArray(modelValue) ? modelValue : [];
+    const values = Array.isArray(value) ? value : [];
     return values.map((v) => findOption(v) || makeOption(v));
-  }, [modelValue, multiple, findOption, makeOption]);
+  }, [value, multiple, findOption, makeOption]);
 
   const handleComboboxChange = useCallback(
     (val: Option | Option[] | null) => {
       setQuery("");
 
       if (!multiple) {
-        setShowOptions(false); // Close Popover when single item selected
+        setShowOptions(false);
       }
-      // Convert back to original modelValue format (value or array of values)
+
       const emittedValue = multiple
         ? (val as Option[]).map((o) => o.value)
-        : (val as Option)?.value ?? null; // If val is null, ensure emitted is null, not undefined
+        : (val as Option)?.value ?? null;
 
       if (onChange) {
         onChange(emittedValue);
@@ -285,7 +245,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
       });
     }
   }, [showOptions]);
-  console.log(selectedComboboxValue);
+
 
   const comboboxInputId = useMemo(
     () => `combobox-input-${Math.random().toString(36).substring(2, 9)}`,
@@ -310,15 +270,15 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
               {label && (
                 <label
                   htmlFor={comboboxInputId}
-                  className="block text-xs text-(--ink-gray-5)"
+                  className="block text-xs text-ink-gray-5"
                 >
                   {label}
                 </label>
               )}
               <button
                 type="button"
-                className={`flex h-7 w-full items-center justify-between gap-2 rounded bg-(--surface-gray-2) px-2 py-1 transition-colors hover:bg-(--surface-gray-3) border border-transparent focus:border-(--outline-gray-4) focus:ring-2 focus:ring-(--outline-gray-3) focus:outline-none ${
-                  isComboboxOpen ? "bg-(--surface-gray-3)" : ""
+                className={`flex h-7 w-full items-center justify-between gap-2 rounded bg-surface-gray-2 px-2 py-1 transition-colors hover:bg-surface-gray-3 border border-transparent focus:border-outline-gray-4 focus:ring-2 focus:ring-outline-gray-3 focus:outline-none ${
+                  isComboboxOpen ? "bg-surface-gray-3" : ""
                 }`}
                 onClick={popoverToggle}
               >
@@ -328,23 +288,17 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                   aria-hidden="true"
                 />
                 <div className="flex items-center overflow-hidden">
+                  {prefix && prefix(selectedComboboxValue)}
                   <span
                     className={`truncate text-base leading-5 ${
                       displayValue
-                        ? "text-(--ink-gray-8)"
-                        : "text-(--ink-gray-4)"
+                        ? "text-ink-gray-8"
+                        : "text-ink-gray-4"
                     }`}
                   >
                     {displayValue || placeholder || ""}
                   </span>
-                  {!multiple && showPrefix && displayValue && (
-                    <>
-                      <img
-                        src={selectedComboboxValue?.image ?? ""}
-                        className="ml-2 h-4 w-4 rounded-full"
-                      />
-                    </>
-                  )}
+                  {suffix && suffix(selectedComboboxValue)}
                 </div>
               </button>
             </div>
@@ -359,12 +313,12 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                   }`}
                 >
                   {!hideSearch && (
-                    <div className="sticky top-0 z-10 flex items-stretch space-x-1.5 bg-surface-modal py-1.5">
+                    <div className="sticky top-0 z-[100] flex items-stretch space-x-1.5 bg-surface-modal py-1.5">
                       <div className="relative w-full">
                         <ComboboxInput
                           id={comboboxInputId}
                           ref={searchInputRef}
-                          className=" h-7 rounded border border-(--surface-gray-2) bg-(--surface-gray-2) py-1.5 pl-2 pr-2 text-base text-(--ink-gray-8) placeholder-(--ink-gray-4) transition-colors hover:border-(--outline-gray-modals) hover:bg-(--surface-gray-3) focus:border-(--outline-gray-4) focus:bg-(--surface-white) focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-(--outline-gray-3) w-full focus:bg-(--surface-gray-3) hover:bg-(--surface-gray-4) text-(--ink-gray-8)"
+                          className=" h-7 rounded border border-surface-gray-2 bg-surface-gray-2 py-1.5 pl-2 pr-2 text-base text-ink-gray-8 placeholder-ink-gray-4 transition-colors hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:bg-surface-white focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 w-full focus:bg-surface-gray-3 hover:bg-surface-gray-4 text-ink-gray-8"
                           type="text"
                           displayValue={() => query}
                           onChange={(
@@ -375,12 +329,12 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                         />
                         <div className="absolute right-0 inline-flex h-7 w-7 items-center justify-center">
                           {loading ? (
-                            <LoadingIndicator className="h-4 w-4 text-(--ink-gray-5)" />
+                            <LoadingIndicator className="h-4 w-4 text-ink-gray-5" />
                           ) : (
                             <button type="button" onClick={clearAll}>
                               <FeatherIcon
                                 name="x"
-                                className="w-4 h-4 text-(--ink-gray-8)"
+                                className="w-4 h-4 text-ink-gray-8"
                               />
                             </button>
                           )}
@@ -419,31 +373,28 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                           >
                             <>
                               <div className="flex flex-1 gap-2 overflow-hidden items-center">
-                                {
+                                {(itemPrefix || multiple) && (
                                   <div className="flex flex-shrink-0">
-                                    {isOptionSelected(option as Option) ? (
+                                    {itemPrefix ? (
+                                      itemPrefix(option as AutocompleteOption)
+                                    ) : isOptionSelected(option as Option) ? (
                                       <FeatherIcon
                                         name="check"
                                         className="h-4 w-4 text-ink-gray-7"
                                       />
                                     ) : (
-                                      <></>
-                                    )}
-                                    {showPrefix && (
-                                      <img
-                                        src={(option as Option).image}
-                                        className="h-4 w-4 rounded-full"
-                                      />
+                                      <div className="h-4 w-4" />
                                     )}
                                   </div>
-                                }
+                                )}
                                 <span className="flex-1 truncate text-ink-gray-7">
                                   {getLabel(option)}
                                 </span>
                               </div>
 
-                              {(option as Option)?.description && (
+                              {itemSuffix && (
                                 <div className="ml-2 flex-shrink-0">
+                                  {itemSuffix(option as Option)}
                                   {(option as Option)?.description && (
                                     <div className="text-sm text-ink-gray-5">
                                       {(option as Option).description}

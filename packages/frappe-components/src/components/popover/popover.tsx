@@ -368,7 +368,7 @@ const Popover: React.FC<PopoverProps> = ({
       </div>
 
       {createPortal(
-        <div style={{ width: targetWidth || "auto", height: "auto" }}>
+        <div style={{ width: targetWidth || "auto", height: "auto",               zIndex: 99 }}>
           <div
             ref={popperRef}
             style={{
@@ -377,7 +377,7 @@ const Popover: React.FC<PopoverProps> = ({
             data-popper-placement={
               popperInstance.current?.state?.placement || ""
             }
-            className={`relative z-[100] ${popoverContainerClass} ${popoverClass}`}
+            className={`relative z-[100] ${popoverContainerClass} ${popoverClass} pointer-events-auto`}
             onMouseOver={trigger === "hover" ? onMouseover : undefined}
             onMouseLeave={trigger === "hover" ? onMouseleave : undefined}
           >

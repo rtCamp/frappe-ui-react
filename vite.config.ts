@@ -7,6 +7,7 @@ import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import svgr from 'vite-plugin-svgr';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const __filename = fileURLToPath((import.meta as any).url);
 const __dirname = path.dirname(__filename);
 

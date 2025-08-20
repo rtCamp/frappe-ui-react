@@ -1,137 +1,60 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Textarea } from "./index";
-import { Story, Variant } from "../Story";
+import { useState } from "react";
+import { Meta, StoryObj } from "@storybook/react-vite";
+import { TextareaProps } from "./types";
+import TextArea from "./textarea";
 
-const meta: Meta<typeof Textarea> = {
-  title: "Components/Textarea",
-  tags: ["autodocs"],
-  component: Textarea,
+export default {
+  title: 'Components/TextArea',
+  component: TextArea,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-};
-export default meta;
-
-type Story = StoryObj<typeof Textarea>;
-
-const sizes = ["sm", "md", "lg", "xl"] as const;
-
-export const SubtleVariant: Story = {
-  args: {
-    size: "sm",
-    variant: "subtle",
-    placeholder: "Type something...",
-    disabled: false,
-    value: "",
-    label: "Subtle Label",
-    className: "border border-gray-200 rounded",
-    rows: 3,
-    onChange: () => {},
-  },
-  render: (args) => (
-    <Story layout={{ type: "grid", width: 700 }}>
-      <Variant title="Subtle Variant">
-        <Textarea {...args} />
-      </Variant>
-    </Story>
-  ),
+  tags: ['autodocs'],
   argTypes: {
-    size: {
-      control: "select",
-      options: sizes,
-      description: "Textarea size",
-    },
-    variant: {
-      control: false,
-      description: "Visual style variant",
+    options: {
+      control: 'object',
+      description: 'Array of option objects ({ label, value, disabled? })',
     },
     value: {
-      control: "text",
-      description: "Textarea value",
+      control: 'text',
+      description: 'The currently selected value',
     },
-    placeholder: {
-      control: "text",
-      description: "Placeholder text",
-    },
-    label: {
-      control: "text",
-      description: "Label for textarea",
-    },
-    disabled: {
-      control: "boolean",
-      description: "Disable textarea",
-    },
-    rows: {
-      control: "number",
-      description: "Textarea rows",
-    },
-    onChange: {
-      action: "onChange",
-      description: "Callback when value changes",
-    },
-    className: {
-      control: "text",
-      description: "CSS classes for the Textarea container",
-    },
+  },
+} as Meta<typeof TextArea>;
+
+
+const Template: StoryObj<TextareaProps> = {
+  render: (args) => {
+    const [value, setValue] = useState(args.value || "");
+
+    return (
+      <div className="p-4 w-[300px]">
+        <TextArea
+          {...args}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+      </div>
+    );
   },
 };
 
-export const OutlineVariant: Story = {
+export const SubtleVariant = {
+  ...Template,
   args: {
-    size: "sm",
-    variant: "outline",
-    placeholder: "Type something...",
-    disabled: false,
+    type: 'text',
+    placeholder: 'Placeholder',
+    variant: 'subtle',
     value: "",
-    label: "Outline Label",
-    className: "border border-gray-200 rounded",
-    rows: 3,
-    onChange: () => {},
   },
-  render: (args) => (
-    <Story layout={{ type: "grid", width: 700 }}>
-      <Variant title="Outline Variant">
-        <Textarea {...args} />
-      </Variant>
-    </Story>
-  ),
-  argTypes: {
-    size: {
-      control: "select",
-      options: sizes,
-      description: "Textarea size",
-    },
-    variant: {
-      control: false,
-      description: "Visual style variant",
-    },
-    value: {
-      control: "text",
-      description: "Textarea value",
-    },
-    placeholder: {
-      control: "text",
-      description: "Placeholder text",
-    },
-    label: {
-      control: "text",
-      description: "Label for textarea",
-    },
-    disabled: {
-      control: "boolean",
-      description: "Disable textarea",
-    },
-    rows: {
-      control: "number",
-      description: "Textarea rows",
-    },
-    onChange: {
-      action: "onChange",
-      description: "Callback when value changes",
-    },
-    className: {
-      control: "text",
-      description: "CSS classes for the Textarea container",
-    },
+};
+
+export const OutlineVariant = {
+  ...Template,
+  args: {
+    type: 'number',
+    placeholder: 'Placeholder',
+    variant: 'outline',
+    value: "",
   },
 };

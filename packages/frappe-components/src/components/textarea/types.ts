@@ -1,13 +1,16 @@
+export type Size = 'sm' | 'md' | 'lg' | 'xl';
+export type Variant = 'subtle' | 'outline';
+
 export interface TextareaProps {
-  size?: "sm" | "md" | "lg" | "xl";
-  variant?: "subtle" | "outline";
+  label?: string;
+  size?: Size;
+  variant?: 'subtle' | 'outline';
   placeholder?: string;
   disabled?: boolean;
   id?: string;
   value?: string;
   debounce?: number;
   rows?: number;
-  label?: string;
-  onChange?: (value: string) => void;
-  className?: string;
+  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  htmlId?: string;
 }

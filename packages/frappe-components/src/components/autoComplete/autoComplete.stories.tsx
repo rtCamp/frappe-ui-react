@@ -41,7 +41,7 @@ const meta: Meta<typeof Autocomplete> = {
   component: Autocomplete,
   tags: ["autodocs"],
   argTypes: {
-    modelValue: {
+    value: {
       control: "object",
       description: "The currently selected value(s).",
     },
@@ -82,7 +82,7 @@ const meta: Meta<typeof Autocomplete> = {
       description: "CSS classes for the popover body.",
     },
     onChange: {
-      action: "update:modelValue",
+      action: "update:value",
       description: "Event when selection changes.",
     },
   },
@@ -108,7 +108,7 @@ export const SingleOption: Story = {
       <div style={{ width: "450px" }}>
         <Autocomplete
           {...args}
-          modelValue={value}
+          value={value}
           onChange={(_value) => {
             setValue(_value as string);
           }}
@@ -129,8 +129,9 @@ export const SingleOptionWithPrefixSlots: Story = {
       <div style={{ width: "450px" }}>
         <Autocomplete
           {...args}
-          modelValue={value}
-          showPrefix
+          value={value}
+          prefix={(value) =>  <img src={value?.image ?? ''} className="mr-2 h-4 w-4 rounded-full" />}
+          itemPrefix={(value) =>  <img src={value?.image ?? ''} className="ml-2 h-4 w-4 rounded-full" />}
           onChange={(_value) => {
             setValue(_value as string);
           }}
@@ -154,7 +155,7 @@ export const SingleOptionWithoutSearch: Story = {
         <Autocomplete
           {...args}
           hideSearch
-          modelValue={values}
+          value={values}
           onChange={(_value) => {
             setValues(_value as string[]);
           }}
@@ -179,7 +180,7 @@ export const MultipleOptions: Story = {
         <Autocomplete
           {...args}
           multiple
-          modelValue={value}
+          value={value}
           onChange={(_value) => {
             setValue(_value as string);
           }}
@@ -203,7 +204,7 @@ export const MultipleOptionsWithoutSearch: Story = {
           {...args}
           hideSearch
           multiple
-          modelValue={value}
+          value={value}
           onChange={(_value) => {
             setValue(_value as string);
           }}

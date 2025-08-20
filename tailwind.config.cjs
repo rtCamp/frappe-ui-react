@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
   darkMode: "class",
-  content: [path.resolve(__dirname, "./packages/**/src/**/*.{tsx,ts,js}")],
+  content: [path.resolve(__dirname, "./packages/**/src/**/*.{stories}.{tsx,ts,js}")],
   theme: {
     extend: {
       colors: {

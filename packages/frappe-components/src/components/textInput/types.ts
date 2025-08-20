@@ -1,28 +1,21 @@
-export type TextInputTypes =
-  | "text"
-  | "number"
-  | "email"
-  | "date"
-  | "datetime-local"
-  | "password"
-  | "search"
-  | "tel"
-  | "time"
-  | "url";
+import type { ReactNode } from "react";
+import { TextInputTypes } from "../../types";
 
 export interface TextInputProps {
   type?: TextInputTypes;
-  size?: "sm" | "md" | "lg" | "xl";
-  variant?: "subtle" | "outline";
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  variant?: 'subtle' | 'outline';
   placeholder?: string;
   disabled?: boolean;
-  id?: string;
+  htmlId?: string;
   value?: string | number;
   debounce?: number;
   required?: boolean;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  prefix?: (args?: any) => ReactNode;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  suffix?: (args?: any) => ReactNode;
   className?: string;
-  style?: React.CSSProperties;
-  prefix?: React.ReactNode;
-  suffix?: React.ReactNode;
-  onChange?: (value: string | number) => void;
-}
+  style?: Record<string, string | number | boolean>;
+};
