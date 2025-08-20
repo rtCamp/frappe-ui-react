@@ -81,22 +81,32 @@ export const Combobox: React.FC<ComboboxProps> = ({
       disabled={disabled}
     >
       <div className={`relative w-full ${className ?? ""}`}>
-        <ComboboxInput
-          className={`
-            w-full border border-surface-gray-2 rounded px-2 py-1 min-h-[25px] text-base bg-surface-white
-            placeholder-ink-gray-4 text-ink-gray-8
-            outline-none focus:border-outline-gray-4 focus:ring-2 focus:ring-outline-gray-3
-            transition-colors
-            disabled:bg-surface-gray-1 disabled:text-ink-gray-5
-          `}
-          displayValue={(val: string) => {
-            if (!val) return "";
-            const opt = allOptionsFlat.find((opt) => getValue(opt) === val);
-            return opt ? getLabel(opt) : "";
-          }}
-          placeholder={placeholder}
-          onChange={(e) => setQuery(e.target.value)}
-        />
+        <div className="relative w-full">
+          {/* Show icon in input if selected option has icon */}
+          {selectedOption && getIcon(selectedOption) && (
+            <span className="absolute left-2 top-1/2 -translate-y-1/2 flex items-center pointer-events-none z-10">
+              {getIcon(selectedOption)}
+            </span>
+          )}
+          <ComboboxInput
+            className={`
+              w-full border border-surface-gray-2 rounded
+              ${selectedOption && getIcon(selectedOption) ? "pl-8" : "pl-2"}
+              pr-2 py-1 min-h-[25px] text-base bg-surface-white
+              placeholder-ink-gray-4 text-ink-gray-8
+              outline-none focus:border-outline-gray-4 focus:ring-2 focus:ring-outline-gray-3
+              transition-colors
+              disabled:bg-surface-gray-1 disabled:text-ink-gray-5
+            `}
+            displayValue={(val: string) => {
+              if (!val) return "";
+              const opt = allOptionsFlat.find((opt) => getValue(opt) === val);
+              return opt ? getLabel(opt) : "";
+            }}
+            placeholder={placeholder}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </div>
         <ComboboxButton className="absolute inset-y-0 right-0 flex items-center pr-2 text-ink-gray-4">
           <svg width="16" height="16" viewBox="0 0 16 16">
             <path
