@@ -15,7 +15,7 @@ import type { Placement } from "@popperjs/core";
 import { Popover } from "../popover";
 import LoadingIndicator from "../loadingIndicator";
 import FeatherIcon from "../featherIcon";
-import { Button } from "../Button";
+import { Button } from "../button";
 
 type OptionValue = string | number | boolean;
 

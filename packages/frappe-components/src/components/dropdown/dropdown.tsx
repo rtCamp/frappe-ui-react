@@ -2,7 +2,7 @@ import React, { useMemo, useCallback } from "react";
 import { useNavigate } from "react-router";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
-import { Button } from "../Button";
+import { Button } from "../button";
 import type {
   DropdownProps,
   DropdownOption,

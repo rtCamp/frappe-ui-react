@@ -57,7 +57,7 @@ export const TabList = ({
             }}
             key={i}
             className={[
-              "focus:outline-none focus:transition-none flex items-center gap-1.5 text-base text-ink-gray-5 duration-300 ease-in-out hover:text-ink-gray-9",
+              "focus:outline-none focus:transition-none flex items-center gap-1.5 text-base text-ink-gray-5 duration-300 ease-in-out hover:text-ink-gray-9 cursor-pointer",
               selected ? "text-ink-gray-9" : "",
               vertical
                 ? "py-2.5 px-4 border-r border-transparent hover:border-outline-gray-3"
