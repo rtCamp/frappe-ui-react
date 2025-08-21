@@ -46,6 +46,7 @@ export const Default: StoryObj<CheckboxProps> = {
       <div className="p-2">
         <Checkbox
           {...args}
+          htmlId='abc'
           value={value}
           onChange={(_value) => {
             action('checked')(_value);

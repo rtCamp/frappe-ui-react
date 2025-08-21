@@ -185,7 +185,7 @@ export const Dialog = ({
                         </Title>
                       </div>
                       <Close asChild>
-                        <Button style={{ cursor: "pointer" }} variant="ghost" onClick={closeDialog}>
+                        <Button variant="ghost" onClick={closeDialog}>
                           <X className="h-4 w-4 text-ink-gray-9" />
                         </Button>
                       </Close>

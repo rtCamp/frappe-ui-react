@@ -3,6 +3,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+button, label, input {
+  @apply cursor-pointer hover:cursor-pointer;
+}
+
 @layer base {
   :root {
     /* Base Colors */

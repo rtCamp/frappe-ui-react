@@ -75,8 +75,8 @@ export const CustomContent: Story = {
           }}
           actions={
             <div className="flex justify-start flex-row-reverse gap-2">
-              <Button variant="solid" style={{ cursor: "pointer" }} onClick={() => setIsOpen(false)}>Save Changes</Button>
-              <Button variant="outline" style={{ cursor: "pointer" }} onClick={() => setIsOpen(false)}>Cancel</Button>
+              <Button variant="solid" onClick={() => setIsOpen(false)}>Save Changes</Button>
+              <Button variant="outline" onClick={() => setIsOpen(false)}>Cancel</Button>
             </div>
           }
         >
@@ -180,8 +180,8 @@ export const WithInteractiveComponents: Story = {
           }}
           actions={
             <div className="flex space-x-2">
-              <Button variant="solid" style={{ cursor: "pointer" }}  onClick={() => setIsOpen(false)}>Save Settings</Button>
-              <Button variant="outline" style={{ cursor: "pointer" }} onClick={() => setIsOpen(false)}>Cancel</Button>
+              <Button variant="solid" onClick={() => setIsOpen(false)}>Save Settings</Button>
+              <Button variant="outline" onClick={() => setIsOpen(false)}>Cancel</Button>
             </div>
           }
         >
