@@ -13,7 +13,7 @@ import FeatherIcon from "../featherIcon";
 
 const cssClasses = {
   dropdownContent:
-    "min-w-40 divide-y divide-outline-gray-modals rounded-lg bg-surface-modal shadow-2xl ring-1 ring-black focus:outline-none dropdown-content",
+    "min-w-40 divide-y divide-outline-gray-modals rounded-lg bg-surface-modal shadow-2xl ring-1 ring-black focus:outline-none dropdown-content border border-outline-gray-1",
   groupContainer: "p-1.5",
   groupLabel: "flex h-7 items-center px-2 text-sm font-medium",
   itemLabel: "whitespace-nowrap",
@@ -166,20 +166,23 @@ const Dropdown: React.FC<DropdownProps> = ({
             <Button
               variant="ghost"
               iconLeft={() =>
-                item.icon && (
+                item.icon &&
+                (typeof item.icon === "string" ? (
                   <FeatherIcon
                     name={item.icon}
                     className={`${cssClasses.itemIcon} ${getIconColor(item)}`}
                   />
-                )
+                ) : React.isValidElement(item.icon) ? (
+                  item.icon
+                ) : null)
               }
-              iconRight={() =>
+              iconRight={() => (
                 <FeatherIcon
                   name="chevron-right"
                   className={cssClasses.chevronIcon}
                   aria-hidden="true"
                 />
-              }
+              )}
               className={`${
                 cssClasses.submenuTrigger
               } ${getSubmenuBackgroundColor(item)}`}
@@ -224,9 +227,12 @@ const Dropdown: React.FC<DropdownProps> = ({
             item
           )} ${getSubmenuBackgroundColor(item)}`}
         >
-          {item.icon && (
+          {item.icon &&
+            (typeof item.icon === "string" ? (
               <FeatherIcon name={item.icon} className={cssClasses.itemIcon} />
-            )}
+            ) : React.isValidElement(item.icon) ? (
+              item.icon
+            ) : null)}
           <span className={cssClasses.itemLabel}>{item.label}</span>
         </button>
       );
@@ -239,7 +245,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         {children ? (
           React.cloneElement(children as React.ReactElement, { ...attrs })
         ) : (
-          <Button {...button as ButtonProps} {...attrs}>
+          <Button {...(button as ButtonProps)} {...attrs}>
             {button?.label || "Options"}
           </Button>
         )}

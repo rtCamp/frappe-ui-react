@@ -7,7 +7,7 @@ export interface DropdownOption {
   onClick?: () => void;
   route?: string;
   link?: string;
-  icon?: string;
+  icon?: string | ReactNode;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component?: ComponentType<any>;
   theme?: ButtonTheme;
