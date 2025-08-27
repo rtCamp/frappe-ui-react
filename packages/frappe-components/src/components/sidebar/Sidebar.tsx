@@ -1,8 +1,9 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import SidebarHeader from "./SidebarHeader";
 import SidebarSection from "./SidebarSection";
 import SidebarItem from "./SidebarItem";
 import { LucidePanelRightOpen } from "lucide-react";
+import { useMediaQuery } from "./useMediaQuery";
 
 export type SidebarHeaderProps = {
   title: string;
@@ -33,9 +34,12 @@ const Sidebar: React.FC<SidebarProps> = ({
   children,
   className = "",
 }) => {
+  // Internal collapse state
   const [internalCollapsed, setInternalCollapsed] = useState(false);
   const isControlled = typeof collapsedProp === "boolean";
   const isCollapsed = isControlled ? collapsedProp : internalCollapsed;
+
+  // Handle collapse state changes
   const setCollapsed = useCallback(
     (v: boolean) => {
       if (isControlled) {
@@ -47,17 +51,28 @@ const Sidebar: React.FC<SidebarProps> = ({
     [isControlled, onCollapseChange]
   );
 
-  // TODO: Responsive collapse (mobile) logic can be added here
+  // Responsive behavior - auto-collapse on small screens
+  const isMobile = useMediaQuery("(max-width: 640px)");
+
+  // Auto collapse sidebar on mobile
+  useEffect(() => {
+    if (isMobile && !isCollapsed) {
+      setCollapsed(true);
+    }
+  }, [isMobile, isCollapsed, setCollapsed]);
+
+  // Compute whether sidebar should be collapsed (either manually or due to mobile)
+  const shouldCollapse = isCollapsed || isMobile;
 
   return (
     <div
       className={`flex h-full flex-col flex-shrink-0 overflow-y-auto overflow-x-hidden border-r border-outline-gray-1 bg-surface-menu-bar transition-all duration-300 ease-in-out p-2 ${
-        isCollapsed ? "w-12" : "w-60"
+        shouldCollapse ? "w-12" : "w-60"
       } ${className}`}
     >
       {header && (
         <SidebarHeader
-          isCollapsed={isCollapsed}
+          isCollapsed={shouldCollapse}
           title={header.title}
           subtitle={header.subtitle}
           logo={header.logo}
@@ -65,15 +80,19 @@ const Sidebar: React.FC<SidebarProps> = ({
         >
           {/* header-logo slot */}
           {children &&
-            React.Children.map(children, (child: any) =>
-              child?.props?.slot === "header-logo" ? child : null
-            )}
+            React.Children.toArray(children).filter((child) => {
+              if (React.isValidElement(child)) {
+                const props = child.props as Record<string, unknown>;
+                return props && props.slot === "header-logo";
+              }
+              return false;
+            })}
         </SidebarHeader>
       )}
       {sections.map((section) => (
         <SidebarSection
           key={section.label}
-          isCollapsed={isCollapsed}
+          isCollapsed={shouldCollapse}
           setCollapsed={setCollapsed}
           {...section}
         />
@@ -81,17 +100,21 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className="mt-auto flex flex-col gap-2">
         {/* footer-items slot */}
         {children &&
-          React.Children.map(children, (child: any) =>
-            child?.props?.slot === "footer-items" ? child : null
-          )}
+          React.Children.toArray(children).filter((child) => {
+            if (React.isValidElement(child)) {
+              const props = child.props as Record<string, unknown>;
+              return props && props.slot === "footer-items";
+            }
+            return false;
+          })}
         <SidebarItem
-          label={isCollapsed ? "Expand" : "Collapse"}
-          onClick={() => setCollapsed(!isCollapsed)}
-          isCollapsed={isCollapsed}
+          label={shouldCollapse ? "Expand" : "Collapse"}
+          onClick={() => !isMobile && setCollapsed(!isCollapsed)} // Prevent toggling on mobile
+          isCollapsed={shouldCollapse}
           icon={
             <span
               className={`transition-transform duration-300 ease-in-out ${
-                isCollapsed ? "rotate-180" : ""
+                shouldCollapse ? "rotate-180" : ""
               }`}
             >
               <LucidePanelRightOpen size={16} className="text-ink-gray-6" />

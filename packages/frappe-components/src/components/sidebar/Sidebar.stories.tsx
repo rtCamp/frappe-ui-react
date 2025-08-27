@@ -16,16 +16,53 @@ import {
   LucideUsers,
 } from "lucide-react";
 import { MemoryRouter } from "react-router";
+import { Meta, StoryObj } from "@storybook/react-vite/*";
 
-export default {
-  title: "Components/Sidebar/CRM",
+const meta: Meta<typeof Sidebar> = {
+  title: "Components/Sidebar",
+  tags: ["autodocs"],
+  parameters: {
+    layout: "padded",
+  },
+  argTypes: {
+    header: {
+      control: "object",
+      description: "Header configuration for the sidebar.",
+    },
+    sections: {
+      control: "object",
+      description: "Sections configuration for the sidebar.",
+    },
+    collapsed: {
+      control: "boolean",
+      description: "Whether the sidebar is collapsed.",
+    },
+    onCollapseChange: {
+      action: "onCollapseChange",
+      description:
+        "Callback function triggered when the sidebar collapse state changes.",
+    },
+    children: {
+      control: "object",
+      description: "Child elements to be rendered inside the sidebar.",
+    },
+    className: {
+      control: "text",
+      description: "Custom CSS class name for the sidebar.",
+    },
+  },
   component: Sidebar,
 };
 
+export default meta;
+type Story = StoryObj<typeof meta>;
+
 const toggleTheme = () => {
-  const currentTheme = document.documentElement.getAttribute("data-theme");
+  const container = document.getElementById("sidebar-container");
+  if (!container) return;
+  const currentTheme = container.getAttribute("data-theme");
   const newTheme = currentTheme === "dark" ? "light" : "dark";
-  document.documentElement.setAttribute("data-theme", newTheme);
+  container.setAttribute("data-theme", newTheme);
 };
 
 const crmSidebar = {
@@ -70,42 +107,42 @@ const crmSidebar = {
         {
           label: "Leads",
           icon: <LucideUsers size={16} className="text-ink-gray-6" />,
-          to: "/leads",
+          to: "",
         },
         {
           label: "Deals",
           icon: <LucideBriefcase size={16} className="text-ink-gray-6" />,
-          to: "/deals",
+          to: "",
         },
         {
           label: "Contacts",
           icon: <LucideUserCheck size={16} className="text-ink-gray-6" />,
-          to: "/contacts",
+          to: "",
         },
         {
           label: "Organizations",
           icon: <LucideBuilding size={16} className="text-ink-gray-6" />,
-          to: "/organizations",
+          to: "",
         },
         {
           label: "Notes",
           icon: <LucideClipboard size={16} className="text-ink-gray-6" />,
-          to: "/notes",
+          to: "",
         },
         {
           label: "Tasks",
           icon: <LucideCheckSquare size={16} className="text-ink-gray-6" />,
-          to: "/tasks",
+          to: "",
         },
         {
           label: "Call Logs",
           icon: <LucidePhone size={16} className="text-ink-gray-6" />,
-          to: "/call-logs",
+          to: "",
         },
         {
           label: "Email Templates",
           icon: <LucideMail size={16} className="text-ink-gray-6" />,
-          to: "/email-templates",
+          to: "",
         },
       ],
     },
@@ -116,33 +153,42 @@ const crmSidebar = {
         {
           label: "My Open Deals",
           icon: <LucideLink size={16} className="text-ink-gray-6" />,
-          to: "/my-open-deals",
+          to: "",
         },
         {
           label: "Partnership Deals",
           icon: <LucideLink size={16} className="text-ink-gray-6" />,
-          to: "/partnership-deals",
+          to: "",
         },
         {
           label: "Unassigned Deals",
           icon: <LucideLink size={16} className="text-ink-gray-6" />,
-          to: "/unassigned-deals",
+          to: "",
         },
         {
           label: "Enterprise Pipeline",
           icon: <LucideLink size={16} className="text-ink-gray-6" />,
-          to: "/enterprise-pipeline",
+          to: "",
         },
       ],
     },
   ],
 };
 
-export const CRM = () => (
-  <div className="flex h-screen w-full flex-col bg-surface-white shadow">
-    <MemoryRouter>
-      <Sidebar header={crmSidebar.header} sections={crmSidebar.sections} />
-    </MemoryRouter>
-  </div>
-);
-CRM.storyName = "Sidebar";
+export const SidebarExample: Story = {
+  render: () => (
+    <div
+      className="flex h-screen w-full flex-col bg-surface-white shadow"
+      data-theme="light"
+      id="sidebar-container"
+    >
+      <MemoryRouter>
+        <Sidebar header={crmSidebar.header} sections={crmSidebar.sections} />
+      </MemoryRouter>
+    </div>
+  ),
+  parameters: {
+    layout: { type: "grid", width: "80%" },
+  },
+  name: "Sidebar",
+};
