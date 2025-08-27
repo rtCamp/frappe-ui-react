@@ -1,7 +1,6 @@
 import React from "react";
 import Button from "../button/Button";
 import { Tooltip } from "../tooltip";
-import { useSidebarCollapsed } from "./Sidebar";
 
 export type SidebarItemProps = {
   label: string;
@@ -9,8 +8,8 @@ export type SidebarItemProps = {
   suffix?: React.ReactNode;
   to?: string;
   isActive?: boolean;
-  isCollapsed?: boolean;
   onClick?: () => void;
+  isCollapsed: boolean;
 };
 
 const SidebarItem: React.FC<SidebarItemProps> = ({
@@ -19,12 +18,9 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   suffix,
   to,
   isActive,
-  isCollapsed: isCollapsedProp,
   onClick,
+  isCollapsed = false,
 }) => {
-  const { isCollapsed } = useSidebarCollapsed();
-  const collapsed = isCollapsedProp ?? isCollapsed;
-
   function handleClick() {
     if (onClick) {
       onClick();
@@ -43,9 +39,13 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
       }`}
       variant="ghost"
     >
-      <div className="flex w-full items-center justify-between transition-all ease-in-out px-2 py-1">
+      <div
+        className={`flex w-full items-center justify-between transition-all ease-in-out py-1 ${
+          !isCollapsed ? "px-2" : "px-0"
+        }`}
+      >
         <div className="flex items-center truncate">
-          <Tooltip text={label} placement="right" disabled={!collapsed}>
+          <Tooltip text={label} placement="right" disabled={!isCollapsed}>
             <span className="grid flex-shrink-0 place-items-center w-4 h-4">
               {icon &&
                 (typeof icon === "string" ? (
@@ -55,26 +55,28 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
                 ) : null)}
             </span>
           </Tooltip>
-          <Tooltip
-            text={label}
-            placement="right"
-            disabled={collapsed}
-            hoverDelay={1.5}
-          >
-            <span
-              className={`flex-1 flex-shrink-0 truncate text-sm transition-all ease-in-out ${
-                collapsed
-                  ? "ml-0 w-0 overflow-hidden opacity-0"
-                  : "ml-2 w-auto opacity-100"
-              }`}
+          {!isCollapsed && (
+            <Tooltip
+              text={label}
+              placement="right"
+              disabled={isCollapsed}
+              hoverDelay={1.5}
             >
-              {label}
-            </span>
-          </Tooltip>
+              <span
+                className={`flex-1 flex-shrink-0 truncate text-sm transition-all ease-in-out ${
+                  isCollapsed
+                    ? "ml-0 w-0 overflow-hidden opacity-0"
+                    : "ml-2 w-auto opacity-100"
+                }`}
+              >
+                {label}
+              </span>
+            </Tooltip>
+          )}
         </div>
         <div
           className={`transition-all ease-in-out ${
-            collapsed
+            isCollapsed
               ? "ml-0 w-0 overflow-hidden opacity-0"
               : "ml-auto w-auto opacity-100"
           }`}
