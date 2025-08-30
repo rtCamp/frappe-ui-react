@@ -1419,61 +1419,6 @@ const ThemeShowcase: React.FC = () => {
               your project alongside your custom tokens.
             </p>
 
-            <div className="default-token-search">
-              <input
-                type="text"
-                placeholder="Filter tokens..."
-                className="default-token-search-input"
-                onChange={(e) => {
-                  // Get all token items
-                  const tokenItems = document.querySelectorAll(
-                    ".default-token-item"
-                  );
-                  const searchTerm = e.target.value.toLowerCase();
-
-                  // Filter token items based on search
-                  tokenItems.forEach((item) => {
-                    const tokenName =
-                      item
-                        .querySelector(".default-token-name")
-                        ?.textContent?.toLowerCase() || "";
-                    const tokenValue =
-                      item
-                        .querySelector(".default-token-value")
-                        ?.textContent?.toLowerCase() || "";
-
-                    if (
-                      tokenName.includes(searchTerm) ||
-                      tokenValue.includes(searchTerm)
-                    ) {
-                      (item as HTMLElement).style.display = "";
-                    } else {
-                      (item as HTMLElement).style.display = "none";
-                    }
-                  });
-
-                  // Hide/show category headers based on visible items
-                  const categories = document.querySelectorAll(
-                    ".default-token-category"
-                  );
-                  categories.forEach((category) => {
-                    const items = category.querySelectorAll(
-                      ".default-token-item"
-                    );
-                    const hasVisibleItems = Array.from(items).some(
-                      (item) => (item as HTMLElement).style.display !== "none"
-                    );
-
-                    if (hasVisibleItems) {
-                      (category as HTMLElement).style.display = "";
-                    } else {
-                      (category as HTMLElement).style.display = "none";
-                    }
-                  });
-                }}
-              />
-            </div>
-
             <div className="default-token-categories-wrapper">
               {defaultTailwindTokens.map((category) => (
                 <div key={category.name} className="default-token-category">
