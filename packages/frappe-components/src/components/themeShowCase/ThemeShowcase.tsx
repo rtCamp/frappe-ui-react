@@ -39,8 +39,623 @@ type RadiusToken = {
   value: string;
 };
 
+// Types for default Tailwind tokens
+type DefaultToken = {
+  name: string;
+  value: string;
+  isDefault?: boolean;
+};
+
+type DefaultTokenCategory = {
+  name: string;
+  tokens: DefaultToken[];
+};
+
 const ThemeShowcase: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("colors");
+
+  // Default Tailwind tokens that aren't customized in the config
+  const defaultTailwindTokens: DefaultTokenCategory[] = [
+    // Original categories
+    {
+      name: "Default Widths",
+      tokens: [
+        { name: "w-auto", value: "auto", isDefault: true },
+        { name: "w-1/2", value: "50%", isDefault: true },
+        { name: "w-1/3", value: "33.333333%", isDefault: true },
+        { name: "w-2/3", value: "66.666667%", isDefault: true },
+        { name: "w-1/4", value: "25%", isDefault: true },
+        { name: "w-2/4", value: "50%", isDefault: true },
+        { name: "w-3/4", value: "75%", isDefault: true },
+        { name: "w-1/5", value: "20%", isDefault: true },
+        { name: "w-2/5", value: "40%", isDefault: true },
+        { name: "w-3/5", value: "60%", isDefault: true },
+        { name: "w-4/5", value: "80%", isDefault: true },
+        { name: "w-1/6", value: "16.666667%", isDefault: true },
+        { name: "w-full", value: "100%", isDefault: true },
+        { name: "w-screen", value: "100vw", isDefault: true },
+        { name: "w-min", value: "min-content", isDefault: true },
+        { name: "w-max", value: "max-content", isDefault: true },
+        { name: "w-fit", value: "fit-content", isDefault: true },
+      ],
+    },
+    {
+      name: "Min/Max Width",
+      tokens: [
+        { name: "min-w-0", value: "0px", isDefault: true },
+        { name: "min-w-full", value: "100%", isDefault: true },
+        { name: "min-w-min", value: "min-content", isDefault: true },
+        { name: "min-w-max", value: "max-content", isDefault: true },
+        { name: "min-w-fit", value: "fit-content", isDefault: true },
+        { name: "max-w-0", value: "0rem", isDefault: true },
+        { name: "max-w-none", value: "none", isDefault: true },
+        { name: "max-w-xs", value: "20rem", isDefault: true },
+        { name: "max-w-sm", value: "24rem", isDefault: true },
+        { name: "max-w-md", value: "28rem", isDefault: true },
+        { name: "max-w-lg", value: "32rem", isDefault: true },
+        { name: "max-w-xl", value: "36rem", isDefault: true },
+        { name: "max-w-2xl", value: "42rem", isDefault: true },
+        { name: "max-w-3xl", value: "48rem", isDefault: true },
+        { name: "max-w-4xl", value: "56rem", isDefault: true },
+        { name: "max-w-5xl", value: "64rem", isDefault: true },
+        { name: "max-w-6xl", value: "72rem", isDefault: true },
+        { name: "max-w-7xl", value: "80rem", isDefault: true },
+        { name: "max-w-full", value: "100%", isDefault: true },
+        { name: "max-w-min", value: "min-content", isDefault: true },
+        { name: "max-w-max", value: "max-content", isDefault: true },
+        { name: "max-w-fit", value: "fit-content", isDefault: true },
+        { name: "max-w-prose", value: "65ch", isDefault: true },
+        { name: "max-w-screen-sm", value: "640px", isDefault: true },
+        { name: "max-w-screen-md", value: "768px", isDefault: true },
+        { name: "max-w-screen-lg", value: "1024px", isDefault: true },
+        { name: "max-w-screen-xl", value: "1280px", isDefault: true },
+        { name: "max-w-screen-2xl", value: "1536px", isDefault: true },
+      ],
+    },
+    {
+      name: "Default Heights",
+      tokens: [
+        { name: "h-auto", value: "auto", isDefault: true },
+        { name: "h-1/2", value: "50%", isDefault: true },
+        { name: "h-1/3", value: "33.333333%", isDefault: true },
+        { name: "h-2/3", value: "66.666667%", isDefault: true },
+        { name: "h-1/4", value: "25%", isDefault: true },
+        { name: "h-2/4", value: "50%", isDefault: true },
+        { name: "h-3/4", value: "75%", isDefault: true },
+        { name: "h-full", value: "100%", isDefault: true },
+        { name: "h-screen", value: "100vh", isDefault: true },
+        { name: "h-min", value: "min-content", isDefault: true },
+        { name: "h-max", value: "max-content", isDefault: true },
+        { name: "h-fit", value: "fit-content", isDefault: true },
+      ],
+    },
+    {
+      name: "Min/Max Height",
+      tokens: [
+        { name: "min-h-0", value: "0px", isDefault: true },
+        { name: "min-h-full", value: "100%", isDefault: true },
+        { name: "min-h-screen", value: "100vh", isDefault: true },
+        { name: "min-h-min", value: "min-content", isDefault: true },
+        { name: "min-h-max", value: "max-content", isDefault: true },
+        { name: "min-h-fit", value: "fit-content", isDefault: true },
+        { name: "max-h-0", value: "0px", isDefault: true },
+        { name: "max-h-full", value: "100%", isDefault: true },
+        { name: "max-h-screen", value: "100vh", isDefault: true },
+        { name: "max-h-min", value: "min-content", isDefault: true },
+        { name: "max-h-max", value: "max-content", isDefault: true },
+        { name: "max-h-fit", value: "fit-content", isDefault: true },
+      ],
+    },
+    {
+      name: "Default Flex Properties",
+      tokens: [
+        { name: "flex-row", value: "row", isDefault: true },
+        { name: "flex-row-reverse", value: "row-reverse", isDefault: true },
+        { name: "flex-col", value: "column", isDefault: true },
+        { name: "flex-col-reverse", value: "column-reverse", isDefault: true },
+        { name: "flex-wrap", value: "wrap", isDefault: true },
+        { name: "flex-wrap-reverse", value: "wrap-reverse", isDefault: true },
+        { name: "flex-nowrap", value: "nowrap", isDefault: true },
+        { name: "flex-1", value: "1 1 0%", isDefault: true },
+        { name: "flex-auto", value: "1 1 auto", isDefault: true },
+        { name: "flex-initial", value: "0 1 auto", isDefault: true },
+        { name: "flex-none", value: "none", isDefault: true },
+      ],
+    },
+    {
+      name: "Flex Direction/Alignment",
+      tokens: [
+        { name: "items-start", value: "flex-start", isDefault: true },
+        { name: "items-end", value: "flex-end", isDefault: true },
+        { name: "items-center", value: "center", isDefault: true },
+        { name: "items-baseline", value: "baseline", isDefault: true },
+        { name: "items-stretch", value: "stretch", isDefault: true },
+        { name: "justify-start", value: "flex-start", isDefault: true },
+        { name: "justify-end", value: "flex-end", isDefault: true },
+        { name: "justify-center", value: "center", isDefault: true },
+        { name: "justify-between", value: "space-between", isDefault: true },
+        { name: "justify-around", value: "space-around", isDefault: true },
+        { name: "justify-evenly", value: "space-evenly", isDefault: true },
+        { name: "content-center", value: "center", isDefault: true },
+        { name: "content-start", value: "flex-start", isDefault: true },
+        { name: "content-end", value: "flex-end", isDefault: true },
+        { name: "content-between", value: "space-between", isDefault: true },
+        { name: "content-around", value: "space-around", isDefault: true },
+        { name: "content-evenly", value: "space-evenly", isDefault: true },
+      ],
+    },
+    {
+      name: "Default Grid Properties",
+      tokens: [
+        {
+          name: "grid-cols-1",
+          value: "repeat(1, minmax(0, 1fr))",
+          isDefault: true,
+        },
+        {
+          name: "grid-cols-2",
+          value: "repeat(2, minmax(0, 1fr))",
+          isDefault: true,
+        },
+        {
+          name: "grid-cols-3",
+          value: "repeat(3, minmax(0, 1fr))",
+          isDefault: true,
+        },
+        {
+          name: "grid-cols-4",
+          value: "repeat(4, minmax(0, 1fr))",
+          isDefault: true,
+        },
+        {
+          name: "grid-cols-5",
+          value: "repeat(5, minmax(0, 1fr))",
+          isDefault: true,
+        },
+        {
+          name: "grid-cols-6",
+          value: "repeat(6, minmax(0, 1fr))",
+          isDefault: true,
+        },
+        { name: "grid-cols-none", value: "none", isDefault: true },
+        { name: "col-auto", value: "auto", isDefault: true },
+        { name: "col-span-1", value: "span 1 / span 1", isDefault: true },
+        { name: "col-span-2", value: "span 2 / span 2", isDefault: true },
+        { name: "col-span-3", value: "span 3 / span 3", isDefault: true },
+        { name: "col-span-full", value: "1 / -1", isDefault: true },
+      ],
+    },
+    {
+      name: "Grid Rows & Auto Flow",
+      tokens: [
+        {
+          name: "grid-rows-1",
+          value: "repeat(1, minmax(0, 1fr))",
+          isDefault: true,
+        },
+        {
+          name: "grid-rows-2",
+          value: "repeat(2, minmax(0, 1fr))",
+          isDefault: true,
+        },
+        {
+          name: "grid-rows-3",
+          value: "repeat(3, minmax(0, 1fr))",
+          isDefault: true,
+        },
+        {
+          name: "grid-rows-4",
+          value: "repeat(4, minmax(0, 1fr))",
+          isDefault: true,
+        },
+        {
+          name: "grid-rows-5",
+          value: "repeat(5, minmax(0, 1fr))",
+          isDefault: true,
+        },
+        {
+          name: "grid-rows-6",
+          value: "repeat(6, minmax(0, 1fr))",
+          isDefault: true,
+        },
+        { name: "grid-rows-none", value: "none", isDefault: true },
+        { name: "row-auto", value: "auto", isDefault: true },
+        { name: "row-span-1", value: "span 1 / span 1", isDefault: true },
+        { name: "row-span-2", value: "span 2 / span 2", isDefault: true },
+        { name: "row-span-3", value: "span 3 / span 3", isDefault: true },
+        { name: "row-span-full", value: "1 / -1", isDefault: true },
+        { name: "grid-flow-row", value: "row", isDefault: true },
+        { name: "grid-flow-col", value: "column", isDefault: true },
+        { name: "grid-flow-dense", value: "dense", isDefault: true },
+        { name: "grid-flow-row-dense", value: "row dense", isDefault: true },
+        { name: "grid-flow-col-dense", value: "column dense", isDefault: true },
+      ],
+    },
+    {
+      name: "Default Position Properties",
+      tokens: [
+        { name: "static", value: "static", isDefault: true },
+        { name: "fixed", value: "fixed", isDefault: true },
+        { name: "absolute", value: "absolute", isDefault: true },
+        { name: "relative", value: "relative", isDefault: true },
+        { name: "sticky", value: "sticky", isDefault: true },
+      ],
+    },
+    {
+      name: "Position Placement",
+      tokens: [
+        { name: "top-0", value: "0px", isDefault: true },
+        { name: "top-auto", value: "auto", isDefault: true },
+        { name: "top-1/2", value: "50%", isDefault: true },
+        { name: "top-1/3", value: "33.333333%", isDefault: true },
+        { name: "top-2/3", value: "66.666667%", isDefault: true },
+        { name: "top-1/4", value: "25%", isDefault: true },
+        { name: "top-full", value: "100%", isDefault: true },
+        { name: "right-0", value: "0px", isDefault: true },
+        { name: "right-auto", value: "auto", isDefault: true },
+        { name: "right-1/2", value: "50%", isDefault: true },
+        { name: "right-full", value: "100%", isDefault: true },
+        { name: "bottom-0", value: "0px", isDefault: true },
+        { name: "bottom-auto", value: "auto", isDefault: true },
+        { name: "bottom-1/2", value: "50%", isDefault: true },
+        { name: "bottom-full", value: "100%", isDefault: true },
+        { name: "left-0", value: "0px", isDefault: true },
+        { name: "left-auto", value: "auto", isDefault: true },
+        { name: "left-1/2", value: "50%", isDefault: true },
+        { name: "left-full", value: "100%", isDefault: true },
+        { name: "inset-0", value: "0px", isDefault: true },
+        { name: "inset-auto", value: "auto", isDefault: true },
+        { name: "inset-x-0", value: "0px 0px", isDefault: true },
+        { name: "inset-x-auto", value: "auto", isDefault: true },
+        { name: "inset-y-0", value: "0px 0px", isDefault: true },
+        { name: "inset-y-auto", value: "auto", isDefault: true },
+      ],
+    },
+    {
+      name: "Default Display Properties",
+      tokens: [
+        { name: "block", value: "block", isDefault: true },
+        { name: "inline-block", value: "inline-block", isDefault: true },
+        { name: "inline", value: "inline", isDefault: true },
+        { name: "flex", value: "flex", isDefault: true },
+        { name: "inline-flex", value: "inline-flex", isDefault: true },
+        { name: "grid", value: "grid", isDefault: true },
+        { name: "inline-grid", value: "inline-grid", isDefault: true },
+        { name: "hidden", value: "none", isDefault: true },
+        { name: "table", value: "table", isDefault: true },
+        { name: "inline-table", value: "inline-table", isDefault: true },
+        { name: "table-caption", value: "table-caption", isDefault: true },
+        { name: "table-cell", value: "table-cell", isDefault: true },
+        { name: "table-column", value: "table-column", isDefault: true },
+        {
+          name: "table-column-group",
+          value: "table-column-group",
+          isDefault: true,
+        },
+        {
+          name: "table-footer-group",
+          value: "table-footer-group",
+          isDefault: true,
+        },
+        {
+          name: "table-header-group",
+          value: "table-header-group",
+          isDefault: true,
+        },
+        { name: "table-row-group", value: "table-row-group", isDefault: true },
+        { name: "table-row", value: "table-row", isDefault: true },
+        { name: "flow-root", value: "flow-root", isDefault: true },
+        { name: "contents", value: "contents", isDefault: true },
+        { name: "list-item", value: "list-item", isDefault: true },
+      ],
+    },
+    {
+      name: "Default Font Weight",
+      tokens: [
+        { name: "font-thin", value: "100", isDefault: true },
+        { name: "font-extralight", value: "200", isDefault: true },
+        { name: "font-light", value: "300", isDefault: true },
+        { name: "font-normal", value: "400", isDefault: true },
+        { name: "font-medium", value: "500", isDefault: true },
+        { name: "font-semibold", value: "600", isDefault: true },
+        { name: "font-bold", value: "700", isDefault: true },
+        { name: "font-extrabold", value: "800", isDefault: true },
+        { name: "font-black", value: "900", isDefault: true },
+      ],
+    },
+    {
+      name: "Default Line Heights",
+      tokens: [
+        { name: "leading-none", value: "1", isDefault: true },
+        { name: "leading-tight", value: "1.25", isDefault: true },
+        { name: "leading-snug", value: "1.375", isDefault: true },
+        { name: "leading-normal", value: "1.5", isDefault: true },
+        { name: "leading-relaxed", value: "1.625", isDefault: true },
+        { name: "leading-loose", value: "2", isDefault: true },
+        { name: "leading-3", value: ".75rem", isDefault: true },
+        { name: "leading-4", value: "1rem", isDefault: true },
+        { name: "leading-5", value: "1.25rem", isDefault: true },
+        { name: "leading-6", value: "1.5rem", isDefault: true },
+        { name: "leading-7", value: "1.75rem", isDefault: true },
+        { name: "leading-8", value: "2rem", isDefault: true },
+        { name: "leading-9", value: "2.25rem", isDefault: true },
+        { name: "leading-10", value: "2.5rem", isDefault: true },
+      ],
+    },
+    {
+      name: "Default Letter Spacing",
+      tokens: [
+        { name: "tracking-tighter", value: "-0.05em", isDefault: true },
+        { name: "tracking-tight", value: "-0.025em", isDefault: true },
+        { name: "tracking-normal", value: "0em", isDefault: true },
+        { name: "tracking-wide", value: "0.025em", isDefault: true },
+        { name: "tracking-wider", value: "0.05em", isDefault: true },
+        { name: "tracking-widest", value: "0.1em", isDefault: true },
+      ],
+    },
+    {
+      name: "Default Text Properties",
+      tokens: [
+        { name: "text-left", value: "left", isDefault: true },
+        { name: "text-center", value: "center", isDefault: true },
+        { name: "text-right", value: "right", isDefault: true },
+        { name: "text-justify", value: "justify", isDefault: true },
+        { name: "text-uppercase", value: "uppercase", isDefault: true },
+        { name: "text-lowercase", value: "lowercase", isDefault: true },
+        { name: "text-capitalize", value: "capitalize", isDefault: true },
+        { name: "whitespace-normal", value: "normal", isDefault: true },
+        { name: "whitespace-nowrap", value: "nowrap", isDefault: true },
+        { name: "whitespace-pre", value: "pre", isDefault: true },
+        { name: "whitespace-pre-line", value: "pre-line", isDefault: true },
+        { name: "whitespace-pre-wrap", value: "pre-wrap", isDefault: true },
+      ],
+    },
+    {
+      name: "Gap Spacing",
+      tokens: [
+        { name: "gap-0", value: "0px", isDefault: true },
+        { name: "gap-px", value: "1px", isDefault: true },
+        { name: "gap-0.5", value: "0.125rem", isDefault: true },
+        { name: "gap-1", value: "0.25rem", isDefault: true },
+        { name: "gap-1.5", value: "0.375rem", isDefault: true },
+        { name: "gap-2", value: "0.5rem", isDefault: true },
+        { name: "gap-2.5", value: "0.625rem", isDefault: true },
+        { name: "gap-3", value: "0.75rem", isDefault: true },
+        { name: "gap-3.5", value: "0.875rem", isDefault: true },
+        { name: "gap-4", value: "1rem", isDefault: true },
+        { name: "gap-5", value: "1.25rem", isDefault: true },
+        { name: "gap-6", value: "1.5rem", isDefault: true },
+        { name: "gap-7", value: "1.75rem", isDefault: true },
+        { name: "gap-8", value: "2rem", isDefault: true },
+        { name: "gap-9", value: "2.25rem", isDefault: true },
+        { name: "gap-10", value: "2.5rem", isDefault: true },
+        { name: "gap-11", value: "2.75rem", isDefault: true },
+        { name: "gap-12", value: "3rem", isDefault: true },
+      ],
+    },
+    {
+      name: "Padding & Margin",
+      tokens: [
+        { name: "p-0", value: "0px", isDefault: true },
+        { name: "p-px", value: "1px", isDefault: true },
+        { name: "p-1", value: "0.25rem", isDefault: true },
+        { name: "p-2", value: "0.5rem", isDefault: true },
+        { name: "p-3", value: "0.75rem", isDefault: true },
+        { name: "p-4", value: "1rem", isDefault: true },
+        { name: "p-5", value: "1.25rem", isDefault: true },
+        { name: "p-6", value: "1.5rem", isDefault: true },
+        { name: "p-8", value: "2rem", isDefault: true },
+        { name: "p-10", value: "2.5rem", isDefault: true },
+        { name: "p-12", value: "3rem", isDefault: true },
+        { name: "p-16", value: "4rem", isDefault: true },
+        { name: "p-20", value: "5rem", isDefault: true },
+        { name: "m-0", value: "0px", isDefault: true },
+        { name: "m-px", value: "1px", isDefault: true },
+        { name: "m-1", value: "0.25rem", isDefault: true },
+        { name: "m-2", value: "0.5rem", isDefault: true },
+        { name: "m-3", value: "0.75rem", isDefault: true },
+        { name: "m-4", value: "1rem", isDefault: true },
+        { name: "m-5", value: "1.25rem", isDefault: true },
+        { name: "m-6", value: "1.5rem", isDefault: true },
+        { name: "m-8", value: "2rem", isDefault: true },
+        { name: "m-10", value: "2.5rem", isDefault: true },
+        { name: "m-auto", value: "auto", isDefault: true },
+      ],
+    },
+    {
+      name: "Z-Index",
+      tokens: [
+        { name: "z-0", value: "0", isDefault: true },
+        { name: "z-10", value: "10", isDefault: true },
+        { name: "z-20", value: "20", isDefault: true },
+        { name: "z-30", value: "30", isDefault: true },
+        { name: "z-40", value: "40", isDefault: true },
+        { name: "z-50", value: "50", isDefault: true },
+        { name: "z-auto", value: "auto", isDefault: true },
+      ],
+    },
+    {
+      name: "Default Border Width",
+      tokens: [
+        { name: "border-0", value: "0px", isDefault: true },
+        { name: "border", value: "1px", isDefault: true },
+        { name: "border-2", value: "2px", isDefault: true },
+        { name: "border-4", value: "4px", isDefault: true },
+        { name: "border-8", value: "8px", isDefault: true },
+        { name: "border-x-0", value: "0px", isDefault: true },
+        { name: "border-x", value: "1px", isDefault: true },
+        { name: "border-x-2", value: "2px", isDefault: true },
+        { name: "border-x-4", value: "4px", isDefault: true },
+        { name: "border-x-8", value: "8px", isDefault: true },
+        { name: "border-y-0", value: "0px", isDefault: true },
+        { name: "border-y", value: "1px", isDefault: true },
+        { name: "border-y-2", value: "2px", isDefault: true },
+        { name: "border-y-4", value: "4px", isDefault: true },
+        { name: "border-y-8", value: "8px", isDefault: true },
+      ],
+    },
+    {
+      name: "Border Styles",
+      tokens: [
+        { name: "border-solid", value: "solid", isDefault: true },
+        { name: "border-dashed", value: "dashed", isDefault: true },
+        { name: "border-dotted", value: "dotted", isDefault: true },
+        { name: "border-double", value: "double", isDefault: true },
+        { name: "border-hidden", value: "hidden", isDefault: true },
+        { name: "border-none", value: "none", isDefault: true },
+      ],
+    },
+    {
+      name: "Default Opacity",
+      tokens: [
+        { name: "opacity-0", value: "0", isDefault: true },
+        { name: "opacity-5", value: "0.05", isDefault: true },
+        { name: "opacity-10", value: "0.1", isDefault: true },
+        { name: "opacity-20", value: "0.2", isDefault: true },
+        { name: "opacity-25", value: "0.25", isDefault: true },
+        { name: "opacity-30", value: "0.3", isDefault: true },
+        { name: "opacity-40", value: "0.4", isDefault: true },
+        { name: "opacity-50", value: "0.5", isDefault: true },
+        { name: "opacity-60", value: "0.6", isDefault: true },
+        { name: "opacity-70", value: "0.7", isDefault: true },
+        { name: "opacity-75", value: "0.75", isDefault: true },
+        { name: "opacity-80", value: "0.8", isDefault: true },
+        { name: "opacity-90", value: "0.9", isDefault: true },
+        { name: "opacity-95", value: "0.95", isDefault: true },
+        { name: "opacity-100", value: "1", isDefault: true },
+      ],
+    },
+    {
+      name: "Default Scale Transform",
+      tokens: [
+        { name: "scale-0", value: "0", isDefault: true },
+        { name: "scale-50", value: ".5", isDefault: true },
+        { name: "scale-75", value: ".75", isDefault: true },
+        { name: "scale-90", value: ".9", isDefault: true },
+        { name: "scale-95", value: ".95", isDefault: true },
+        { name: "scale-100", value: "1", isDefault: true },
+        { name: "scale-105", value: "1.05", isDefault: true },
+        { name: "scale-110", value: "1.1", isDefault: true },
+        { name: "scale-125", value: "1.25", isDefault: true },
+        { name: "scale-150", value: "1.5", isDefault: true },
+      ],
+    },
+    {
+      name: "Default Rotate Transform",
+      tokens: [
+        { name: "rotate-0", value: "0deg", isDefault: true },
+        { name: "rotate-1", value: "1deg", isDefault: true },
+        { name: "rotate-2", value: "2deg", isDefault: true },
+        { name: "rotate-3", value: "3deg", isDefault: true },
+        { name: "rotate-6", value: "6deg", isDefault: true },
+        { name: "rotate-12", value: "12deg", isDefault: true },
+        { name: "rotate-45", value: "45deg", isDefault: true },
+        { name: "rotate-90", value: "90deg", isDefault: true },
+        { name: "rotate-180", value: "180deg", isDefault: true },
+        { name: "-rotate-1", value: "-1deg", isDefault: true },
+        { name: "-rotate-2", value: "-2deg", isDefault: true },
+        { name: "-rotate-3", value: "-3deg", isDefault: true },
+        { name: "-rotate-6", value: "-6deg", isDefault: true },
+        { name: "-rotate-12", value: "-12deg", isDefault: true },
+        { name: "-rotate-45", value: "-45deg", isDefault: true },
+        { name: "-rotate-90", value: "-90deg", isDefault: true },
+        { name: "-rotate-180", value: "-180deg", isDefault: true },
+      ],
+    },
+    {
+      name: "Default Transition Properties",
+      tokens: [
+        { name: "transition-none", value: "none", isDefault: true },
+        {
+          name: "transition-all",
+          value: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+          isDefault: true,
+        },
+        {
+          name: "transition",
+          value:
+            "color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+          isDefault: true,
+        },
+        {
+          name: "transition-colors",
+          value:
+            "color, background-color, border-color, text-decoration-color, fill, stroke 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+          isDefault: true,
+        },
+        {
+          name: "transition-opacity",
+          value: "opacity 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+          isDefault: true,
+        },
+        {
+          name: "transition-shadow",
+          value: "box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+          isDefault: true,
+        },
+        {
+          name: "transition-transform",
+          value: "transform 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+          isDefault: true,
+        },
+      ],
+    },
+    {
+      name: "Default Duration/Timing",
+      tokens: [
+        { name: "duration-75", value: "75ms", isDefault: true },
+        { name: "duration-100", value: "100ms", isDefault: true },
+        { name: "duration-150", value: "150ms", isDefault: true },
+        { name: "duration-200", value: "200ms", isDefault: true },
+        { name: "duration-300", value: "300ms", isDefault: true },
+        { name: "duration-500", value: "500ms", isDefault: true },
+        { name: "duration-700", value: "700ms", isDefault: true },
+        { name: "duration-1000", value: "1000ms", isDefault: true },
+        { name: "ease-linear", value: "linear", isDefault: true },
+        {
+          name: "ease-in",
+          value: "cubic-bezier(0.4, 0, 1, 1)",
+          isDefault: true,
+        },
+        {
+          name: "ease-out",
+          value: "cubic-bezier(0, 0, 0.2, 1)",
+          isDefault: true,
+        },
+        {
+          name: "ease-in-out",
+          value: "cubic-bezier(0.4, 0, 0.2, 1)",
+          isDefault: true,
+        },
+      ],
+    },
+    {
+      name: "Default Animation",
+      tokens: [
+        { name: "animate-none", value: "none", isDefault: true },
+        {
+          name: "animate-spin",
+          value: "spin 1s linear infinite",
+          isDefault: true,
+        },
+        {
+          name: "animate-ping",
+          value: "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
+          isDefault: true,
+        },
+        {
+          name: "animate-pulse",
+          value: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+          isDefault: true,
+        },
+        {
+          name: "animate-bounce",
+          value: "bounce 1s infinite",
+          isDefault: true,
+        },
+      ],
+    },
+  ];
 
   const colorCategories: ColorCategory[] = [
     {
@@ -554,6 +1169,12 @@ const ThemeShowcase: React.FC = () => {
         >
           Border Radius
         </button>
+        <button
+          className={activeTab === "default-tokens" ? "active" : ""}
+          onClick={() => setActiveTab("default-tokens")}
+        >
+          Default Tailwind
+        </button>
       </div>
 
       <div className="showcase-content">
@@ -785,6 +1406,107 @@ const ThemeShowcase: React.FC = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === "default-tokens" && (
+          <div className="default-tokens">
+            <h2>Default Tailwind Tokens</h2>
+            <p className="default-tokens-intro">
+              These are Tailwind's default tokens that haven't been customized
+              in your theme configuration. They're still available to use in
+              your project alongside your custom tokens.
+            </p>
+
+            <div className="default-token-search">
+              <input
+                type="text"
+                placeholder="Filter tokens..."
+                className="default-token-search-input"
+                onChange={(e) => {
+                  // Get all token items
+                  const tokenItems = document.querySelectorAll(
+                    ".default-token-item"
+                  );
+                  const searchTerm = e.target.value.toLowerCase();
+
+                  // Filter token items based on search
+                  tokenItems.forEach((item) => {
+                    const tokenName =
+                      item
+                        .querySelector(".default-token-name")
+                        ?.textContent?.toLowerCase() || "";
+                    const tokenValue =
+                      item
+                        .querySelector(".default-token-value")
+                        ?.textContent?.toLowerCase() || "";
+
+                    if (
+                      tokenName.includes(searchTerm) ||
+                      tokenValue.includes(searchTerm)
+                    ) {
+                      (item as HTMLElement).style.display = "";
+                    } else {
+                      (item as HTMLElement).style.display = "none";
+                    }
+                  });
+
+                  // Hide/show category headers based on visible items
+                  const categories = document.querySelectorAll(
+                    ".default-token-category"
+                  );
+                  categories.forEach((category) => {
+                    const items = category.querySelectorAll(
+                      ".default-token-item"
+                    );
+                    const hasVisibleItems = Array.from(items).some(
+                      (item) => (item as HTMLElement).style.display !== "none"
+                    );
+
+                    if (hasVisibleItems) {
+                      (category as HTMLElement).style.display = "";
+                    } else {
+                      (category as HTMLElement).style.display = "none";
+                    }
+                  });
+                }}
+              />
+            </div>
+
+            <div className="default-token-categories-wrapper">
+              {defaultTailwindTokens.map((category) => (
+                <div key={category.name} className="default-token-category">
+                  <h3>{category.name}</h3>
+                  <div className="default-token-grid">
+                    {category.tokens.map((token) => (
+                      <div key={token.name} className="default-token-item">
+                        <div className="default-token-info">
+                          <span className="default-token-name">
+                            {token.name}
+                          </span>
+                          <span className="default-token-value">
+                            {token.value}
+                          </span>
+                          {token.isDefault && (
+                            <span className="default-badge">
+                              Tailwind Default
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="default-token-note">
+              <p>
+                This is a comprehensive list of Tailwind's default tokens that
+                are still available for use in your project. You can use them
+                alongside your custom tokens to create consistent designs.
+              </p>
             </div>
           </div>
         )}
