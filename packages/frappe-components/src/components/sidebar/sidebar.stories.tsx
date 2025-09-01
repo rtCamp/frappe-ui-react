@@ -60,9 +60,10 @@ type Story = StoryObj<typeof meta>;
 const toggleTheme = () => {
   const container = document.getElementById("sidebar-container");
   if (!container) return;
-  const currentTheme = container.getAttribute("data-theme");
+  const currentTheme = container.classList.contains("dark") ? "dark" : "light";
   const newTheme = currentTheme === "dark" ? "light" : "dark";
-  container.setAttribute("data-theme", newTheme);
+  container.classList.remove(currentTheme);
+  container.classList.add(newTheme);
 };
 
 const crmSidebar = {
@@ -179,7 +180,6 @@ export const SidebarExample: Story = {
   render: () => (
     <div
       className="flex h-screen w-full flex-col bg-surface-white shadow"
-      data-theme="light"
       id="sidebar-container"
     >
       <MemoryRouter>

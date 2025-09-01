@@ -616,11 +616,11 @@ button, label, input {
     --ink-gray-2: var(--color-dark-gray-200);
     --ink-gray-3: var(--color-dark-gray-300);
     --ink-gray-4: var(--color-dark-gray-400);
-    --ink-gray-5: var(--color-gray-500);
-    --ink-gray-6: var(--color-gray-400);
-    --ink-gray-7: var(--color-gray-200);
-    --ink-gray-8: var(--color-gray-100);
-    --ink-gray-9: var(--color-gray-50);
+    --ink-gray-5: #999999;
+    --ink-gray-6: #c7c7c7;
+    --ink-gray-7: #ededed;
+    --ink-gray-8: #f3f3f3;
+    --ink-gray-9: #f8f8f8;
     --ink-red-1: var(--color-dark-red-50);
     --ink-red-2: var(--color-dark-red-100);
     --ink-red-3: var(--color-dark-red-200);
@@ -647,7 +647,7 @@ button, label, input {
     --surface-gray-4: var(--color-dark-gray-600);
     --surface-gray-5: var(--color-dark-gray-500);
     --surface-gray-6: var(--color-dark-gray-400);
-    --surface-gray-7: var(--color-gray-50);
+    --surface-gray-7: #f8f8f8;
     --surface-red-1: var(--color-dark-red-900);
     --surface-red-2: var(--color-dark-red-800);
     --surface-red-3: var(--color-dark-red-700);
