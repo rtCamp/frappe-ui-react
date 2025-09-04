@@ -269,7 +269,7 @@ type Story = StoryObj<typeof ListView>;
 export const SimpleList: Story = {
   render: (args) => {
     return (
-      <div className="h-[250px]">
+      <div >
         <MemoryRouter>
           <ListView
             {...args}
@@ -296,7 +296,7 @@ export const SimpleList: Story = {
 export const CustomList: Story = {
   render: (args) => {
     return (
-      <div className="h-[250px]">
+      <div >
         <MemoryRouter>
         <ListView
           {...args}
@@ -402,7 +402,7 @@ export const CustomList: Story = {
 export const GroupedRows: Story = {
   render: (args) => {
     return (
-      <div className="h-[250px]">
+      <div >
         <MemoryRouter>
           <ListView
             {...args}
@@ -436,7 +436,7 @@ export const CellSlot: Story = {
     };
 
     return (
-      <div className="h-[250px]">
+      <div >
         <ListView
           {...args}
           columns={simple_columns}
@@ -466,7 +466,7 @@ export const CellSlot: Story = {
 export const EmptyList: Story = {
   render: (args) => {
     return (
-      <div className="h-[250px]">
+      <div >
         <MemoryRouter>
           <ListView
             {...args}
