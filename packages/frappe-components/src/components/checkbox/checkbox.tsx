@@ -10,6 +10,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   value,
   onChange,
   htmlId,
+  extraClasses = ''
 }) => {
   const labelClasses = useMemo(() => {
     const sizeClasses:string  = {
@@ -37,8 +38,8 @@ const Checkbox: React.FC<CheckboxProps> = ({
       md: 'w-4 h-4',
     }[size as keyof SizeTypes];
 
-    return `rounded-sm mt-[1px] ${baseClasses} ${interactionClasses} ${sizeClasses}`;
-  }, [disabled, padding, size]);
+    return `rounded-sm mt-[1px] ${extraClasses} ${baseClasses} ${interactionClasses} ${sizeClasses}`;
+  }, [disabled, padding, size, extraClasses]);
 
   const wrapperClasses = useMemo(() => {
     let paddingClasses = '';
