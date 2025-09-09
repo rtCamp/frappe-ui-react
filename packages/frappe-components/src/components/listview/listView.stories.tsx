@@ -211,33 +211,33 @@ const custom_rows = [
   {
     id: 1,
     name: {
-      label: 'John Doe',
-      image: 'https://avatars.githubusercontent.com/u/499550',
+      label: "John Doe",
+      image: "https://avatars.githubusercontent.com/u/499550",
     },
-    email: 'john@doe.com',
+    email: "john@doe.com",
     status: {
-      label: 'Active',
-      bg_color: 'bg-surface-green-3',
+      label: "Active",
+      bg_color: "bg-surface-green-3",
     },
     role: {
-      label: 'Developer',
-      color: 'green',
+      label: "Developer",
+      color: "green",
     },
   },
   {
     id: 2,
     name: {
-      label: 'Jane Doe',
-      image: 'https://avatars.githubusercontent.com/u/499120',
+      label: "Jane Doe",
+      image: "https://avatars.githubusercontent.com/u/499120",
     },
-    email: 'jane@doe.com',
+    email: "jane@doe.com",
     status: {
-      label: 'Inactive',
-      bg_color: 'bg-surface-red-5',
+      label: "Inactive",
+      bg_color: "bg-surface-red-5",
     },
     role: {
-      label: 'HR',
-      color: 'red',
+      label: "HR",
+      color: "red",
     },
   },
 ];
@@ -269,7 +269,7 @@ type Story = StoryObj<typeof ListView>;
 export const SimpleList: Story = {
   render: (args) => {
     return (
-      <div >
+      <div>
         <MemoryRouter>
           <ListView
             {...args}
@@ -296,93 +296,96 @@ export const SimpleList: Story = {
 export const CustomList: Story = {
   render: (args) => {
     return (
-      <div >
+      <div>
         <MemoryRouter>
-        <ListView
-          {...args}
-          columns={custom_columns}
-          rows={custom_rows}
-          rowKey="id"
-        >
-          <>
-            <ListHeader>
-              {custom_columns.map((column, index) => (
-                <ListHeaderItem key={column.key} item={column}>
-                  <div className={`flex items-center gap-2 ${index === 0 ? 'ml-4' : ''}`}>
-                    <FeatherIcon name={column.icon} className="h-4 w-4" />
-                    <span>{column.label}</span>
+          <ListView
+            {...args}
+            columns={custom_columns}
+            rows={custom_rows}
+            rowKey="id"
+          >
+            <>
+              <ListHeader>
+                {custom_columns.map((column, index) => (
+                  <ListHeaderItem key={column.key} item={column}>
+                    <div
+                      className={`flex items-center gap-2 ${
+                        index === 0 ? "ml-4" : ""
+                      }`}
+                    >
+                      <FeatherIcon name={column.icon} className="h-4 w-4" />
+                      <span>{column.label}</span>
+                    </div>
+                  </ListHeaderItem>
+                ))}
+              </ListHeader>
+              <ListRows>
+                {custom_rows.map((row) => (
+                  <ListRow key={row.id} row={row}>
+                    {custom_columns.map((column, index) => {
+                      //@ts-expects-error
+                      const item = row[column.key];
+                      return (
+                        <div className={`${index === 0 ? "ml-4" : ""}`}>
+                          <ListRowItem
+                            key={column.key}
+                            column={column}
+                            row={row}
+                            item={item}
+                            prefix={
+                              <>
+                                {column.key === "status" && (
+                                  <div
+                                    className="h-3 w-3 rounded-full"
+                                    style={{ backgroundColor: item.bg_color }}
+                                  />
+                                )}
+                                {column.key === "name" && (
+                                  <Avatar
+                                    shape="circle"
+                                    image={item.image}
+                                    size="sm"
+                                    label={item.label}
+                                  />
+                                )}
+                              </>
+                            }
+                          >
+                            <>
+                              {column.key === "role" ? (
+                                <Badge
+                                  variant="subtle"
+                                  theme={item.color}
+                                  size="md"
+                                  label={item.label}
+                                />
+                              ) : (
+                                <span className="font-medium text-ink-gray-7">
+                                  {item.label || item}
+                                </span>
+                              )}
+                            </>
+                          </ListRowItem>
+                        </div>
+                      );
+                    })}
+                  </ListRow>
+                ))}
+              </ListRows>
+              <ListSelectBanner>
+                {({ unselectAll }) => (
+                  <div className="flex w-full justify-between">
+                    <Button variant="ghost" label="Delete" />
+                    <Button
+                      variant="ghost"
+                      label="Unselect all"
+                      onClick={unselectAll}
+                    />
                   </div>
-                </ListHeaderItem>
-              ))}
-            </ListHeader>
-            <ListRows>
-              {custom_rows.map((row) => (
-                <ListRow key={row.id} row={row}>
-                  {custom_columns.map((column, index) => {
-                    //@ts-expects-error
-                    const item = row[column.key];
-                    return (
-                      <div className={`${index === 0 ? 'ml-4' : ''}`}>
-                      <ListRowItem
-                        key={column.key}
-                        column={column}
-                        row={row}
-                        item={item}
-                        prefix={
-                          <>
-                            {column.key === "status" && (
-                              <div
-                                className="h-3 w-3 rounded-full"
-                                style={{ backgroundColor: item.bg_color }}
-                              />
-                            )}
-                            {column.key === "name" && (
-                              <Avatar
-                                shape="circle"
-                                image={item.image}
-                                size="sm"
-                                label={item.label}
-                              />
-                            )}
-                          </>
-                        }
-                      >
-                        <>
-
-                        {column.key === "role" ? (
-                          <Badge
-                            variant="subtle"
-                            theme={item.color}
-                            size="md"
-                            label={item.label}
-                          />
-                        ) : (
-                          <span className="font-medium text-ink-gray-7">
-                            {item.label || item}
-                          </span>
-                        )}
-                        </>
-                      </ListRowItem>
-                      </div>
-                    );
-                  })}
-                </ListRow>
-              ))}
-            </ListRows>
-            <ListSelectBanner>
-              {({ unselectAll }) => (
-                <div className="flex w-full justify-between">
-                  <Button variant="ghost" label="Delete" />
-                  <Button
-                    variant="ghost"
-                    label="Unselect all"
-                    onClick={unselectAll}
-                  />
-                </div>
-              )}
-            </ListSelectBanner>
-          </>
-        </ListView>
+                )}
+              </ListSelectBanner>
+            </>
+          </ListView>
         </MemoryRouter>
       </div>
     );
@@ -402,7 +405,7 @@ export const CustomList: Story = {
 export const GroupedRows: Story = {
   render: (args) => {
     return (
-      <div >
+      <div>
         <MemoryRouter>
           <ListView
             {...args}
@@ -436,27 +439,29 @@ export const CellSlot: Story = {
     };
 
     return (
-      <div >
-        <ListView
-          {...args}
-          columns={simple_columns}
-          rows={simple_rows}
-          rowKey="id"
-          options={{
-            options: {
-              selectable: true,
-              showTooltip: true,
-              resizeColumn: true,
-            },
-            slots: {
-              cell: CustomCell,
-            },
-            emptyState: {
-              title: "No records found",
-              description: "Create a new record to get started",
-            },
-          }}
-        />
+      <div>
+        <MemoryRouter>
+          <ListView
+            {...args}
+            columns={simple_columns}
+            rows={simple_rows}
+            rowKey="id"
+            options={{
+              options: {
+                selectable: true,
+                showTooltip: true,
+                resizeColumn: true,
+              },
+              slots: {
+                cell: CustomCell,
+              },
+              emptyState: {
+                title: "No records found",
+                description: "Create a new record to get started",
+              },
+            }}
+          />
+        </MemoryRouter>
       </div>
     );
   },
@@ -466,7 +471,7 @@ export const CellSlot: Story = {
 export const EmptyList: Story = {
   render: (args) => {
     return (
-      <div >
+      <div>
         <MemoryRouter>
           <ListView
             {...args}
