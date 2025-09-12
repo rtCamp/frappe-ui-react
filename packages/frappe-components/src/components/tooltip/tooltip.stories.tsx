@@ -15,9 +15,30 @@ const meta: Meta<typeof Tooltip> = {
     placement: {
       control: "select",
       options: ["top", "right", "bottom", "left"],
+			description: "Placement of the tooltip relative to the trigger",
     },
     children: {
       control: false,
+			description: "Element that triggers the tooltip on hover",
+    },
+    body: {
+      description: "Custom content to render inside the tooltip",
+    },
+    text: {
+      control: "text",
+      description: "Text content of the tooltip",
+    },
+    hoverDelay: {
+      control: "number",
+      description: "Delay in seconds before showing the tooltip on hover",
+    },
+    disabled: {
+      control: "boolean",
+      description: "If true, the tooltip is disabled",
+    },
+    arrowClass: {
+      control: "text",
+      description: "Custom CSS classes for the tooltip arrow",
     },
   },
   args: {
@@ -41,8 +62,8 @@ export const WithText: Story = {
   args: {
     text: "This action cannot be undone",
     hoverDelay: 1,
-    placement: 'top',
-    body: null
+    placement: "top",
+    body: null,
   },
 };
 
@@ -76,11 +97,11 @@ export const WithCustomContent: Story = {
   args: {
     ...WithText.args,
     text: "disabled tooltip",
-    arrowClass: 'fill-surface-white',
+    arrowClass: "fill-surface-white",
     body: (
       <div className="min-w-[6rem] rounded bg-surface-white px-2 py-1 text-xs text-ink-gray-9 shadow-xl">
-       test 
-    </div>
-    )
+        test
+      </div>
+    ),
   },
 };

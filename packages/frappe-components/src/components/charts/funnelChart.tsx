@@ -3,7 +3,7 @@ import { useFunnelChartOptions } from './hooks';
 import ChartWrapper from './charts';
 import type { DonutChartConfig } from './types';
 
-interface FunnelChartProps {
+export interface FunnelChartProps {
   config: DonutChartConfig;
 }
 

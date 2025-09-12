@@ -13,10 +13,19 @@ export default {
       description:
         "An array of breadcrumb items, each with a label, optional route, and optional onClick.",
     },
+    renderPrefix: {
+      description:
+        "Function to render a prefix element for each breadcrumb item.",
+    },
+    renderSuffix: {
+      description:
+        "Function to render a suffix element for each breadcrumb item.",
+    },
   },
   parameters: {
-    layout: "padded",
+    layout: "centered",
   },
+  tags: ["autodocs"],
 } as Meta<typeof Breadcrumbs>;
 
 const BreadcrumbsTemplate: StoryObj<BreadcrumbsProps> = {

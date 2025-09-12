@@ -3,7 +3,7 @@ import { useDonutChartOptions } from './hooks';
 import ChartWrapper from './charts';
 import type { DonutChartConfig } from './types';
 
-interface DonutChartProps {
+export interface DonutChartProps {
   config: DonutChartConfig;
 }
 

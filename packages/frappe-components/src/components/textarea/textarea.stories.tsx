@@ -4,24 +4,68 @@ import { TextareaProps } from "./types";
 import TextArea from "./textarea";
 
 export default {
-  title: 'Components/TextArea',
+  title: "Components/TextArea",
   component: TextArea,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
-    options: {
-      control: 'object',
-      description: 'Array of option objects ({ label, value, disabled? })',
+    label: { control: "text", description: "Label for the textarea" },
+    placeholder: {
+      control: "text",
+      description: "Placeholder text for the textarea",
     },
-    value: {
-      control: 'text',
-      description: 'The currently selected value',
+    disabled: {
+      control: "boolean",
+      description: "If true, disables the textarea",
+    },
+    variant: {
+      control: { type: "select", options: ["outline", "subtle"] },
+      description: "Visual variant of the textarea",
+    },
+    size: {
+      control: { type: "select", options: ["sm", "md", "lg"] },
+      description: "Size of the textarea",
+    },
+    id: { control: "text", description: "HTML id attribute for the textarea" },
+    value: { control: "text", description: "Current value of the textarea" },
+    rows: {
+      control: "number",
+      description: "Number of visible text lines for the textarea",
+    },
+    onChange: {
+      action: "changed",
+      description: "Callback function when the textarea value changes",
+    },
+    debounce: {
+      control: "number",
+      description: "Debounce time in milliseconds for the onChange event",
+    },
+    type: {
+      control: {
+        type: "select",
+        options: [
+          "text",
+          "number",
+          "email",
+          "date",
+          "datetime-local",
+          "password",
+          "search",
+          "tel",
+          "time",
+          "url",
+        ],
+      },
+      description: "Type of the text input",
+    },
+    htmlId: {
+      control: "text",
+      description: "HTML id attribute for the text input",
     },
   },
 } as Meta<typeof TextArea>;
-
 
 const Template: StoryObj<TextareaProps> = {
   render: (args) => {
@@ -42,9 +86,9 @@ const Template: StoryObj<TextareaProps> = {
 export const SubtleVariant = {
   ...Template,
   args: {
-    type: 'text',
-    placeholder: 'Placeholder',
-    variant: 'subtle',
+    type: "text",
+    placeholder: "Placeholder",
+    variant: "subtle",
     value: "",
   },
 };
@@ -52,9 +96,9 @@ export const SubtleVariant = {
 export const OutlineVariant = {
   ...Template,
   args: {
-    type: 'number',
-    placeholder: 'Placeholder',
-    variant: 'outline',
+    type: "number",
+    placeholder: "Placeholder",
+    variant: "outline",
     value: "",
   },
 };

@@ -1,7 +1,6 @@
 import { Radio, RadioGroup } from "@headlessui/react";
 import { Button } from "../button";
 
-// Define types for the tab button items
 interface TabButtonItem {
   label: string;
   value: string | number;
@@ -12,7 +11,7 @@ interface TabButtonItem {
   [key: string]: unknown;
 }
 
-// Define props for the TabButtons component
+
 interface TabButtonsProps {
   buttons: TabButtonItem[];
   value: string | number;

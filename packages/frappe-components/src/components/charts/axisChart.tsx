@@ -3,7 +3,7 @@ import { useAxisChartOptions } from './hooks';
 import ChartWrapper from './charts';
 import type { AxisChartConfig } from './types';
 
-interface AxisChartProps {
+export interface AxisChartProps {
   config: AxisChartConfig;
 }
 

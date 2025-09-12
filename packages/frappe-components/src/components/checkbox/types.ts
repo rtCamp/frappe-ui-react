@@ -7,4 +7,5 @@ export interface CheckboxProps {
   value?: boolean;
   onChange?: (val: boolean) => void;
   htmlId?: string;
+  extraClasses?: string;
 }

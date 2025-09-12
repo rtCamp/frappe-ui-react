@@ -5,19 +5,28 @@ import type { StoryObj } from "@storybook/react-vite";
 export default {
   title: "Components/Avatar",
   component: Avatar,
+  parameters: {
+    layout: "centered",
+  },
   argTypes: {
     size: {
       control: {
         type: "select",
         options: ["xs", "sm", "md", "lg", "xl", "2xl", "3xl"],
       },
+      description: "Size of the avatar",
     },
     shape: {
-      control: { type: "select", options: ["circle", "square"] },
+      control: {
+        type: "select",
+        options: ["circle", "square"],
+      },
+      description: "Shape of the avatar",
     },
-    label: { control: "text" },
-    image: { control: "text" },
+    label: { control: "text", description: "Initials or text to display" },
+    image: { control: "text", description: "URL of the avatar image" },
   },
+  tags: ["autodocs"],
 };
 
 type Story = StoryObj<typeof Avatar>;

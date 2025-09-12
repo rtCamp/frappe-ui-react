@@ -1,1 +1,1 @@
-export { default as FileUploader } from "./fileuploader";
+export { default as FileUploader, type FileUploaderProps } from "./fileuploader";

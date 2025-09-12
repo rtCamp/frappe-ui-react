@@ -2,7 +2,6 @@ import { Meta, StoryObj } from "@storybook/react-vite/*";
 import { useState } from "react";
 
 import TabButtons from ".";
-import { Story, Variant } from "../Story";
 import { MemoryRouter } from "react-router";
 
 const meta: Meta<typeof TabButtons> = {
@@ -23,7 +22,7 @@ const meta: Meta<typeof TabButtons> = {
     },
   },
   parameters: {
-    layout: "padded",
+    layout: "centered",
   },
   component: TabButtons,
 };
@@ -36,24 +35,16 @@ export const TabButtonsExample: Story = {
     const [currentTab, setCurrentTab] = useState<string>("mytasks");
 
     return (
-      <Story layout={{ type: "grid", width: "80%" }}>
-        <Variant title="Tab Buttons">
-          <MemoryRouter>
-            <TabButtons
-              buttons={[
-                { label: "Tasks assigned to me", value: "mytasks" },
-                { label: "Tasks created by me", value: "created" },
-              ]}
-              value={currentTab}
-              onChange={(value) => setCurrentTab(value as string)}
-            />
-          </MemoryRouter>
-        </Variant>
-      </Story>
+      <MemoryRouter>
+        <TabButtons
+          buttons={[
+            { label: "Tasks assigned to me", value: "mytasks" },
+            { label: "Tasks created by me", value: "created" },
+          ]}
+          value={currentTab}
+          onChange={(value) => setCurrentTab(value as string)}
+        />
+      </MemoryRouter>
     );
   },
-  parameters: {
-    layout: { type: "grid", width: "80%" },
-  },
-  name: "Tab Buttons",
 };

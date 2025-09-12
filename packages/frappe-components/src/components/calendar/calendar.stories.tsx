@@ -10,15 +10,23 @@ const meta: Meta<typeof Calendar> = {
   title: "Components/Calendar",
   component: Calendar,
   parameters: {
-    layout: "fullscreen",
+    layout: "centered",
   },
   argTypes: {
     config: {
       createNewEvent: { action: "create" },
       updateEventState: { action: "update" },
       deleteEvent: { action: "delete" },
+      description: "Configuration object for the calendar",
+    },
+    events: {
+      description: "Array of calendar events to display",
+    },
+    header: {
+      description: "Custom header component for the calendar",
     },
   },
+  tags: ["autodocs"],
 };
 
 export default meta;
@@ -32,7 +40,7 @@ const config = {
   redundantCellHeight: 100,
   hourHeight: 50,
   enableShortcuts: false,
-    timeFormat: '12h',
+  timeFormat: "12h",
 };
 
 const getCurrentMonthYear = () => {

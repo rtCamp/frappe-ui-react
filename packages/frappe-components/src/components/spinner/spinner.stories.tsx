@@ -1,22 +1,33 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import Spinner from './spinner';
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import Spinner from "./spinner";
 
 const meta: Meta<typeof Spinner> = {
-  title: 'Components/Spinner',
+  title: "Components/Spinner",
   component: Spinner,
+  parameters: {
+    layout: "centered",
+  },
   decorators: [
     (Story) => (
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', width: '300px' }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "2rem",
+          width: "300px",
+        }}
+      >
         <Story />
       </div>
     ),
   ],
   argTypes: {
     className: {
-      control: 'text',
-      description: 'Custom CSS classes for sizing and styling.',
+      control: "text",
+      description: "Custom CSS classes for sizing and styling.",
     },
   },
+  tags: ["autodocs"],
 };
 
 export default meta;
@@ -39,12 +50,12 @@ export const Default: Story = {
 
 export const Small: Story = {
   args: {
-    className: 'w-4 h-4',
+    className: "w-4 h-4",
   },
 };
 
 export const Large: Story = {
   args: {
-    className: 'w-8 h-8',
+    className: "w-8 h-8",
   },
 };

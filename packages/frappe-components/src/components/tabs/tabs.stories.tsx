@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Tabs } from "./index";
 import FeatherIcon from "../featherIcon";
-import { Story, Variant } from "../Story";
 
 const meta: Meta<typeof Tabs> = {
   title: "Components/Tabs",
@@ -9,6 +8,34 @@ const meta: Meta<typeof Tabs> = {
   component: Tabs,
   parameters: {
     layout: "centered",
+  },
+  argTypes: {
+    tabs: {
+      control: false,
+      description: "Array of tab objects to display",
+    },
+    tabIndex: {
+      control: "number",
+      name: "Tab Index",
+      description: "Currently selected tab index",
+    },
+    onTabChange: {
+      action: "onTabChange",
+      description: "Callback when tab changes",
+    },
+    className: {
+      control: "text",
+      description: "CSS classes for the Tabs container",
+    },
+    vertical: {
+      control: "boolean",
+      name: "Vertical",
+      description: "Display tabs vertically",
+    },
+    children: {
+      control: false,
+      description: "Content inside the Tabs component",
+    },
   },
 };
 export default meta;
@@ -61,13 +88,7 @@ export const WithoutIcon: Story = {
     onTabChange: () => {},
     className: "border border-outline-gray-1 rounded",
   },
-  render: (args) => (
-    <Story layout={{ width: 900 }}>
-      <Variant title="Tabs without Icon">
-        <Tabs {...args} />
-      </Variant>
-    </Story>
-  ),
+  render: (args) => <Tabs {...args} />,
   argTypes: {
     tabs: { control: false, description: "Array of tab objects to display." },
     tabIndex: {
@@ -93,13 +114,7 @@ export const WithIcon: Story = {
     onTabChange: () => {},
     className: "border border-outline-gray-1 rounded",
   },
-  render: (args) => (
-    <Story layout={{ width: 900 }}>
-      <Variant title="Tabs with Icon">
-        <Tabs {...args} />
-      </Variant>
-    </Story>
-  ),
+  render: (args) => <Tabs {...args} />,
   argTypes: {
     tabs: {
       control: false,
@@ -129,13 +144,7 @@ export const VerticalWithIcon: Story = {
     vertical: true,
     className: "border border-outline-gray-1 rounded",
   },
-  render: (args) => (
-    <Story layout={{ width: 900 }}>
-      <Variant title="Vertical Tabs with Icon">
-        <Tabs {...args} />
-      </Variant>
-    </Story>
-  ),
+  render: (args) => <Tabs {...args} />,
   argTypes: {
     tabs: {
       control: false,

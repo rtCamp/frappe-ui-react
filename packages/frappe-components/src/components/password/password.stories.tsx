@@ -7,13 +7,24 @@ export default {
   title: "Components/Password",
   component: Password,
   argTypes: {
-
-    value: { control: "text" },
-    placeholder: { control: "text" },
+    value: {
+      control: "text",
+      description: "The current value of the password input.",
+    },
+    placeholder: {
+      control: "text",
+      description: "Placeholder text for the password input.",
+    },
+    onChange: {
+      action: "changed",
+      description: "Event handler called when the value changes.",
+    },
+    prefix: { description: "Element to display at the start of the input." },
   },
   parameters: {
     layout: "centered",
   },
+  tags: ["autodocs"],
 } as Meta<typeof Password>;
 
 const Template: StoryObj<PasswordProps> = {

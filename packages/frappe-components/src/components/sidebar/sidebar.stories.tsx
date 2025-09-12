@@ -187,8 +187,4 @@ export const SidebarExample: Story = {
       </MemoryRouter>
     </div>
   ),
-  parameters: {
-    layout: { type: "grid", width: "80%" },
-  },
-  name: "Sidebar",
 };

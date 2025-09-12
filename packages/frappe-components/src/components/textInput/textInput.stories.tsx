@@ -6,24 +6,85 @@ import { Avatar } from "../avatar";
 import FeatherIcon from "../featherIcon";
 
 export default {
-  title: 'Components/TextInput',
+  title: "Components/TextInput",
   component: TextInput,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
-    options: {
-      control: 'object',
-      description: 'Array of option objects ({ label, value, disabled? })',
+    type: {
+      control: {
+        type: "select",
+        options: [
+          "text",
+          "number",
+          "email",
+          "date",
+          "datetime-local",
+          "password",
+          "search",
+          "tel",
+          "time",
+          "url",
+        ],
+      },
+      description: "Type of the text input",
+    },
+    size: {
+      control: { type: "select", options: ["sm", "md", "lg"] },
+      description: "Size of the text input",
+    },
+    variant: {
+      control: { type: "select", options: ["outline", "subtle"] },
+      description: "Visual variant of the text input",
+    },
+    disabled: {
+      control: "boolean",
+      description: "If true, disables the text input",
+    },
+    placeholder: {
+      control: "text",
+      description: "Placeholder text for the text input",
+    },
+    htmlId: {
+      control: "text",
+      description: "HTML id attribute for the text input",
     },
     value: {
-      control: 'text',
-      description: 'The currently selected value',
+      control: "text",
+      description: "Current value of the text input",
+    },
+    debounce: {
+      control: "number",
+      description: "Debounce time in milliseconds for the onChange event",
+    },
+    required: {
+      control: "boolean",
+      description: "If true, marks the text input as required",
+    },
+    onChange: {
+      action: "changed",
+      description: "Callback function when the input value changes",
+    },
+    prefix: {
+      control: false,
+      description: "Function to render a prefix element inside the input",
+    },
+    suffix: {
+      control: false,
+      description: "Function to render a suffix element inside the input",
+    },
+    className: {
+      control: "text",
+      description: "Custom CSS classes for the text input",
+    },
+    style: {
+      control: "object",
+      description: "Inline styles for the text input",
     },
   },
 } as Meta<typeof TextInput>;
-
 
 const Template: StoryObj<TextInputProps> = {
   render: (args) => {
@@ -44,8 +105,8 @@ const Template: StoryObj<TextInputProps> = {
 export const Text = {
   ...Template,
   args: {
-    type: 'text',
-    placeholder: 'Placeholder',
+    type: "text",
+    placeholder: "Placeholder",
     value: "",
   },
 };
@@ -53,8 +114,8 @@ export const Text = {
 export const Number = {
   ...Template,
   args: {
-    type: 'number',
-    placeholder: 'Placeholder',
+    type: "number",
+    placeholder: "Placeholder",
     value: "",
   },
 };
@@ -62,8 +123,8 @@ export const Number = {
 export const Email = {
   ...Template,
   args: {
-    type: 'email',
-    placeholder: 'Placeholder',
+    type: "email",
+    placeholder: "Placeholder",
     value: "",
   },
 };
@@ -71,15 +132,15 @@ export const Email = {
 export const Date = {
   ...Template,
   args: {
-    type: 'date',
-    placeholder: 'Placeholder',
+    type: "date",
+    placeholder: "Placeholder",
     value: "",
   },
 };
 export const DateTimeLocal = {
   ...Template,
   args: {
-    type: 'datetime-local',
+    type: "datetime-local",
     value: "",
   },
 };
@@ -87,8 +148,8 @@ export const DateTimeLocal = {
 export const Password = {
   ...Template,
   args: {
-    type: 'password',
-    placeholder: 'Placeholder',
+    type: "password",
+    placeholder: "Placeholder",
     value: "",
   },
 };
@@ -96,8 +157,8 @@ export const Password = {
 export const Search = {
   ...Template,
   args: {
-    type: 'search',
-    placeholder: 'Placeholder',
+    type: "search",
+    placeholder: "Placeholder",
     value: "",
   },
 };
@@ -105,8 +166,8 @@ export const Search = {
 export const Telephone = {
   ...Template,
   args: {
-    type: 'tel',
-    placeholder: 'Placeholder',
+    type: "tel",
+    placeholder: "Placeholder",
     value: "",
   },
 };
@@ -114,7 +175,7 @@ export const Telephone = {
 export const Time = {
   ...Template,
   args: {
-    type: 'time',
+    type: "time",
     value: "",
   },
 };
@@ -122,8 +183,8 @@ export const Time = {
 export const Url = {
   ...Template,
   args: {
-    type: 'url',
-    placeholder: 'Placeholder',
+    type: "url",
+    placeholder: "Placeholder",
     value: "",
   },
 };
@@ -131,12 +192,9 @@ export const Url = {
 export const PrefixSlotIcon = {
   ...Template,
   args: {
-    type: 'url',
-    placeholder: 'Placeholder',
-    prefix: () => <FeatherIcon
-        className="w-4"
-        name="search"
-      />,
+    type: "url",
+    placeholder: "Placeholder",
+    prefix: () => <FeatherIcon className="w-4" name="search" />,
     value: "",
   },
 };
@@ -144,12 +202,9 @@ export const PrefixSlotIcon = {
 export const SuffixSlotIcon = {
   ...Template,
   args: {
-    type: 'url',
-    placeholder: 'Placeholder',
-    suffix: () => <FeatherIcon
-        className="w-4"
-        name="search"
-      />,
+    type: "url",
+    placeholder: "Placeholder",
+    suffix: () => <FeatherIcon className="w-4" name="search" />,
     value: "",
   },
 };
@@ -157,9 +212,14 @@ export const SuffixSlotIcon = {
 export const PrefixSlotAvatar = {
   ...Template,
   args: {
-    type: 'url',
-    placeholder: 'Placeholder',
-    prefix: () => <Avatar shape="circle" image="https://avatars.githubusercontent.com/u/499550?s=60&v=4" />,
+    type: "url",
+    placeholder: "Placeholder",
+    prefix: () => (
+      <Avatar
+        shape="circle"
+        image="https://avatars.githubusercontent.com/u/499550?s=60&v=4"
+      />
+    ),
     value: "",
   },
 };

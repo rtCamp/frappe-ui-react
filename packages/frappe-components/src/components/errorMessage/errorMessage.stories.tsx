@@ -1,38 +1,40 @@
-import { Meta, StoryObj  } from '@storybook/react-vite';
-import ErrorMessage from './errorMessage';
-import { ErrorMessageProps } from './types';
+import { Meta, StoryObj } from "@storybook/react-vite";
+import ErrorMessage from "./errorMessage";
+import { ErrorMessageProps } from "./types";
 
 export default {
-  title: 'Components/ErrorMessage',
+  title: "Components/ErrorMessage",
   component: ErrorMessage,
   argTypes: {
     message: {
-      control: 'text',
-      description: 'The error message to display, can be a string or an Error object.',
+      control: "text",
+      description:
+        "The error message to display, can be a string or an Error object.",
     },
   },
   parameters: {
-    layout: 'padded',
+    layout: "centered",
   },
+  tags: ["autodocs"],
 } as Meta<typeof ErrorMessage>;
 
 export const StringMessage: StoryObj<ErrorMessageProps> = {
   render: (args) => <ErrorMessage {...args} />,
   args: {
-    message: 'Invalid value',
+    message: "Invalid value",
   },
 };
 
 export const ErrorObject: StoryObj<ErrorMessageProps> = {
   render: (args) => <ErrorMessage {...args} />,
   args: {
-    message: new Error('There was an error'),
+    message: new Error("There was an error"),
   },
 };
 
 export const FalsyValue: StoryObj<ErrorMessageProps> = {
   render: (args) => <ErrorMessage {...args} />,
   args: {
-    message: '',
+    message: "",
   },
 };

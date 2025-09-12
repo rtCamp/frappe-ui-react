@@ -1,10 +1,10 @@
-export type Size = 'sm' | 'md' | 'lg' | 'xl';
-export type Variant = 'subtle' | 'outline';
+export type TextAreaSize = 'sm' | 'md' | 'lg' | 'xl';
+export type TextAreaVariant = 'subtle' | 'outline';
 
 export interface TextareaProps {
   label?: string;
-  size?: Size;
-  variant?: 'subtle' | 'outline';
+  size?: TextAreaSize;
+  variant?: TextAreaVariant;
   placeholder?: string;
   disabled?: boolean;
   id?: string;

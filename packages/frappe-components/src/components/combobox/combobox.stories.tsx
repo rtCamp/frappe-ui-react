@@ -1,7 +1,6 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Combobox } from "./index";
-import { Story, Variant } from "../Story";
 
 const meta: Meta<typeof Combobox> = {
   title: "Components/Combobox",
@@ -9,6 +8,33 @@ const meta: Meta<typeof Combobox> = {
   component: Combobox,
   parameters: {
     layout: "centered",
+  },
+  argTypes: {
+    options: {
+      control: "object",
+      description:
+        "Array of options (strings or objects) to display in the combobox",
+    },
+    value: {
+      control: "text",
+      description: "Currently selected value",
+    },
+    placeholder: {
+      control: "text",
+      description: "Placeholder text when no value is selected",
+    },
+    disabled: {
+      control: "boolean",
+      description: "Whether the combobox is disabled",
+    },
+    onChange: {
+      action: "changed",
+      description: "Event handler called when the selected value changes",
+    },
+    className: {
+      control: "text",
+      description: "Additional CSS classes to apply to the combobox container",
+    },
   },
 };
 export default meta;
@@ -104,10 +130,8 @@ export const SimpleStringOptions: Story = {
   render: (args) => {
     const [val, setVal] = React.useState("");
     return (
-      <Story layout={{ type: "grid", width: 400 }}>
-        <Variant title="Simple String Options">
-          <div className="flex flex-col w-full">
-            <label className="block text-sm font-medium mb-2 text-ink-gray-9">
+          <div className="flex flex-col w-80">
+            <label className="block text-sm font-medium mb-2">
               Simple Options
             </label>
             <Combobox {...args} value={val} onChange={setVal} />
@@ -115,8 +139,6 @@ export const SimpleStringOptions: Story = {
               Selected: {val || "None"}
             </div>
           </div>
-        </Variant>
-      </Story>
     );
   },
 };
@@ -131,10 +153,8 @@ export const ObjectOptions: Story = {
   render: (args) => {
     const [val, setVal] = React.useState("");
     return (
-      <Story layout={{ type: "grid", width: 400 }}>
-        <Variant title="Object Options">
-          <div className="flex flex-col w-full">
-            <label className="block text-sm font-medium mb-2 text-ink-gray-9">
+          <div className="flex flex-col w-80">
+            <label className="block text-sm font-medium mb-2">
               Object Options
             </label>
             <Combobox {...args} value={val} onChange={setVal} />
@@ -142,8 +162,6 @@ export const ObjectOptions: Story = {
               Selected: {val || "None"}
             </div>
           </div>
-        </Variant>
-      </Story>
     );
   },
 };
@@ -159,10 +177,8 @@ export const WithIcons: Story = {
   render: (args) => {
     const [val, setVal] = React.useState("");
     return (
-      <Story layout={{ type: "grid", width: 400 }}>
-        <Variant title="Options with Icons">
-          <div className="flex flex-col w-full">
-            <label className="block text-sm font-medium mb-2 text-ink-gray-9">
+          <div className="flex flex-col w-80">
+            <label className="block text-sm font-medium mb-2">
               Options with Icons
             </label>
             <Combobox {...args} value={val} onChange={setVal} />
@@ -170,8 +186,6 @@ export const WithIcons: Story = {
               Selected: {val || "None"}
             </div>
           </div>
-        </Variant>
-      </Story>
     );
   },
 };
@@ -187,10 +201,8 @@ export const Grouped: Story = {
   render: (args) => {
     const [val, setVal] = React.useState("");
     return (
-      <Story layout={{ type: "grid", width: 400 }}>
-        <Variant title="Grouped Options">
-          <div className="flex flex-col w-full">
-            <label className="block text-sm font-medium mb-2 text-ink-gray-9">
+          <div className="flex flex-col w-80">
+            <label className="block text-sm font-medium mb-2">
               Grouped Options
             </label>
             <Combobox {...args} value={val} onChange={setVal} />
@@ -198,8 +210,7 @@ export const Grouped: Story = {
               Selected: {val || "None"}
             </div>
           </div>
-        </Variant>
-      </Story>
+
     );
   },
 };
@@ -213,16 +224,12 @@ export const DisabledState: Story = {
     onChange: () => {},
   },
   render: (args) => (
-    <Story layout={{ type: "grid", width: 400 }}>
-      <Variant title="Disabled State">
-        <div className="flex flex-col w-full">
-          <label className="block text-sm font-medium mb-2 text-ink-gray-9">
+        <div className="flex flex-col w-80">
+          <label className="block text-sm font-medium mb-2">
             Disabled Combobox
           </label>
           <Combobox {...args} />
         </div>
-      </Variant>
-    </Story>
   ),
 };
 
@@ -237,10 +244,8 @@ export const PreselectedValue: Story = {
   render: (args) => {
     const [val, setVal] = React.useState("john-doe");
     return (
-      <Story layout={{ type: "grid", width: 400 }}>
-        <Variant title="Pre-selected Value">
-          <div className="flex flex-col w-full">
-            <label className="block text-sm font-medium mb-2 text-ink-gray-9">
+          <div className="flex flex-col w-80">
+            <label className="block text-sm font-medium mb-2">
               Pre-selected Value
             </label>
             <Combobox {...args} value={val} onChange={setVal} />
@@ -248,8 +253,6 @@ export const PreselectedValue: Story = {
               Selected: {val || "None"}
             </div>
           </div>
-        </Variant>
-      </Story>
     );
   },
 };
@@ -259,8 +262,6 @@ export const PreselectedValue: Story = {
 export const MultipleSelection: Story = {
   name: "Multiple Selection (Not Implemented)",
   render: () => (
-    <Story layout={{ type: "grid", width: 400 }}>
-      <Variant title="Multiple Selection - Simple">
         <div className="p-4">
           <label className="block text-sm font-medium mb-2 text-ink-gray-9">
             Multiple Simple Options
@@ -269,8 +270,6 @@ export const MultipleSelection: Story = {
             Not implemented in this Combobox
           </div>
         </div>
-      </Variant>
-    </Story>
   ),
 };
 
@@ -286,10 +285,8 @@ export const ComplexObject: Story = {
     const [val, setVal] = React.useState("");
     const selected = complexObjects.find((o) => o.value === val);
     return (
-      <Story layout={{ type: "grid", width: 400 }}>
-        <Variant title="Complex Objects (Display Value Demo)">
-          <div className="flex flex-col w-full">
-            <label className="block text-sm font-medium mb-2 text-ink-gray-9">
+          <div className="flex flex-col w-80">
+            <label className="block text-sm font-medium mb-2">
               Complex Objects
             </label>
             <Combobox {...args} value={val} onChange={setVal} />
@@ -303,8 +300,6 @@ export const ComplexObject: Story = {
               )}
             </div>
           </div>
-        </Variant>
-      </Story>
     );
   },
 };

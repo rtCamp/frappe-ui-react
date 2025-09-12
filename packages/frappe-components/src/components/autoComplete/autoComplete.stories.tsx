@@ -40,6 +40,9 @@ const meta: Meta<typeof Autocomplete> = {
   title: "Components/Autocomplete",
   component: Autocomplete,
   tags: ["autodocs"],
+  parameters: {
+    layout: "centered",
+  },
   argTypes: {
     value: {
       control: "object",
@@ -84,6 +87,22 @@ const meta: Meta<typeof Autocomplete> = {
     onChange: {
       action: "update:value",
       description: "Event when selection changes.",
+    },
+    prefix: {
+      control: false,
+      description: "Function to render a prefix element inside the input",
+    },
+    suffix: {
+      control: false,
+      description: "Function to render a suffix element inside the input",
+    },
+    itemPrefix: {
+      control: false,
+      description: "Function to render a prefix element inside each option",
+    },
+    itemSuffix: {
+      control: false,
+      description: "Function to render a suffix element inside each option",
     },
   },
   args: {
@@ -130,8 +149,18 @@ export const SingleOptionWithPrefixSlots: Story = {
         <Autocomplete
           {...args}
           value={value}
-          prefix={(value) =>  <img src={value?.image ?? ''} className="mr-2 h-4 w-4 rounded-full" />}
-          itemPrefix={(value) =>  <img src={value?.image ?? ''} className="ml-2 h-4 w-4 rounded-full" />}
+          prefix={(value) => (
+            <img
+              src={value?.image ?? ""}
+              className="mr-2 h-4 w-4 rounded-full"
+            />
+          )}
+          itemPrefix={(value) => (
+            <img
+              src={value?.image ?? ""}
+              className="ml-2 h-4 w-4 rounded-full"
+            />
+          )}
           onChange={(_value) => {
             setValue(_value as string);
           }}

@@ -1,2 +1,2 @@
-export { default as Password} from './password';
+export { default as Password } from './password';
 export * from './types';

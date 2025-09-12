@@ -69,6 +69,11 @@ export default {
       description:
         "Content rendered inside the button. Overrides `label` prop.",
     },
+    iconLeft: { control: "text", description: "Left side icon for the button" },
+    iconRight: {
+      control: "text",
+      description: "Right side icon for the button",
+    },
   },
   parameters: {
     layout: "centered",

@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { MemoryRouter } from "react-router";
 import { DatePicker, DateTimePicker, DateRangePicker } from "./index";
-import { Story, Variant } from "../Story";
 import { useState } from "react";
 
 const meta: Meta = {
@@ -33,8 +32,6 @@ export const Date: DatePickerStory = {
     const [dateValue, setDateValue] = useState("");
     return (
       <MemoryRouter>
-        <Story layout={{ type: "grid", width: 700 }}>
-          <Variant title="Date Picker">
             <DatePicker
               {...args}
               value={dateValue}
@@ -42,8 +39,6 @@ export const Date: DatePickerStory = {
                 setDateValue(Array.isArray(val) ? val[0] || "" : val)
               }
             />
-          </Variant>
-        </Story>
       </MemoryRouter>
     );
   },
@@ -73,8 +68,6 @@ export const DateTime: DateTimePickerStory = {
     const [dateTimeValue, setDateTimeValue] = useState("");
     return (
       <MemoryRouter>
-        <Story layout={{ type: "grid", width: 700 }}>
-          <Variant title="Date Time Picker">
             <DateTimePicker
               {...args}
               value={dateTimeValue}
@@ -82,8 +75,6 @@ export const DateTime: DateTimePickerStory = {
                 setDateTimeValue(Array.isArray(val) ? val[0] || "" : val)
               }
             />
-          </Variant>
-        </Story>
       </MemoryRouter>
     );
   },
@@ -114,8 +105,6 @@ export const DateRange: DateRangePickerStory = {
     const [dateRangeValue, setDateRangeValue] = useState(["", ""]);
     return (
       <MemoryRouter>
-        <Story layout={{ type: "grid", width: 700 }}>
-          <Variant title="Date Range Picker">
             <DateRangePicker
               {...args}
               value={dateRangeValue}
@@ -123,8 +112,6 @@ export const DateRange: DateRangePickerStory = {
                 setDateRangeValue(Array.isArray(val) ? val : [val, ""])
               }
             />
-          </Variant>
-        </Story>
       </MemoryRouter>
     );
   },

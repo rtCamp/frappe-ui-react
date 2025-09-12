@@ -1,7 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import Progress from "./progress";
-import { Story, Variant } from "../Story";
 
 const meta: Meta<typeof Progress> = {
   title: "Components/Progress",
@@ -57,11 +56,9 @@ const sizes = ["sm", "md", "lg", "xl"] as const;
 
 export const Label: ProgressStory = {
   render: (args: React.ComponentProps<typeof Progress>) => (
-    <Story layout={{ type: "grid", width: 500 }}>
-      <Variant title="Label">
-        <Progress {...args} label="Progress" />
-      </Variant>
-    </Story>
+    <div className="w-80">
+      <Progress {...args} label="Progress" />
+    </div>
   ),
   args: {
     value: 50,
@@ -75,19 +72,17 @@ export const Label: ProgressStory = {
 
 export const Hint: ProgressStory = {
   render: (args: React.ComponentProps<typeof Progress>) => (
-    <Story layout={{ type: "grid", width: 500 }}>
-      <Variant title="Hint">
-        <Progress
-          {...args}
-          label="Progress"
-          hint={
-            <span className="text-base font-medium text-ink-gray-4">
-              {args.value}%
-            </span>
-          }
-        />
-      </Variant>
-    </Story>
+    <div className="w-80">
+      <Progress
+        {...args}
+        label="Progress"
+        hint={
+          <span className="text-base font-medium text-ink-gray-4">
+            {args.value}%
+          </span>
+        }
+      />
+    </div>
   ),
   args: {
     value: 50,
@@ -98,11 +93,9 @@ export const Hint: ProgressStory = {
 
 export const Intervals: ProgressStory = {
   render: (args: React.ComponentProps<typeof Progress>) => (
-    <Story layout={{ type: "grid", width: 500 }}>
-      <Variant title="Intervals">
-        <Progress {...args} label="Progress" intervals intervalCount={5} />
-      </Variant>
-    </Story>
+    <div className="w-80">
+      <Progress {...args} label="Progress" intervals intervalCount={5} />
+    </div>
   ),
   args: {
     value: 50,

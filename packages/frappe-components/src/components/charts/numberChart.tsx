@@ -6,7 +6,7 @@ interface RenderPropHelpers {
   formatValue: typeof formatValue;
 }
 
-interface NumberChartProps {
+export interface NumberChartProps {
   config: NumberChartConfig;
   body?: React.ReactNode;
   title?: React.ReactNode;
