@@ -26,15 +26,15 @@ const NumberChart: React.FC<NumberChartProps> = ({
 
   const getDeltaColorClass = () => {
     if (config.negativeIsBetter) {
-      return isDeltaPositive ? 'text-red-500' : 'text-green-500';
+      return isDeltaPositive ? 'text-ink-red-3' : 'text-green-500';
     }
-    return isDeltaPositive ? 'text-green-500' : 'text-red-500';
+    return isDeltaPositive ? 'text-ink-green-2' : 'text-ink-red-3';
   };
 
   const defaultContent = (
     <div className="flex w-full flex-col">
       {title || (
-        <span className="truncate text-sm font-medium text-gray-500">
+        <span className="truncate text-sm font-medium text-ink-gray-5">
           {config.title}
         </span>
       )}
@@ -42,7 +42,7 @@ const NumberChart: React.FC<NumberChartProps> = ({
       {subtitle ? (
         subtitle({ formatValue })
       ) : (
-        <div className="flex-1 flex-shrink-0 truncate text-[24px] font-semibold leading-10 text-gray-600">
+        <div className="flex-1 flex-shrink-0 truncate text-[24px] font-semibold leading-10 text-ink-gray-6">
           {config.prefix}
           {formatValue(config.value, 1, true)}
           {config.suffix}
@@ -68,7 +68,7 @@ const NumberChart: React.FC<NumberChartProps> = ({
 
   return (
     <div
-      className={`flex max-h-[140px] items-center gap-2 overflow-hidden bg-surface-gray-1 px-6 pt-5 text-gray-800 ${
+      className={`flex max-h-[140px] items-center gap-2 overflow-hidden bg-surface-gray-1 px-6 pt-5 text-ink-gray-8 ${
         hasDelta ? 'pb-6' : 'pb-3'
       }`}
     >

@@ -112,4 +112,5 @@ export interface ChartsWrapperProps {
     click: (params: any) => void;
   };
   error?: string;
+  theme?: 'light' | 'dark';
 }
