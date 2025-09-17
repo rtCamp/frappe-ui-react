@@ -177,20 +177,19 @@ export const DateTimePicker: React.FC<DatePickerProps> = ({
         <div className="w-fit select-none text-base text-ink-gray-9 divide-y divide-outline-gray-modals rounded-lg bg-surface-modal shadow-2xl border border-gray-200 focus:outline-none">
           {/* Month Switcher */}
           <div className="flex items-center p-1 text-ink-gray-4">
-            <Button className="h-7 w-7" onClick={prevMonth}>
+            <Button className="h-7 w-7" onClick={prevMonth} variant="ghost">
               {"<"}
             </Button>
             <div className="flex-1 text-center text-base font-medium text-ink-gray-6">
               {formattedMonth}
             </div>
-            <Button className="h-7 w-7" onClick={nextMonth}>
+            <Button className="h-7 w-7" onClick={nextMonth} variant="ghost">
               {">"}
             </Button>
           </div>
           {/* Date Time Input and Now button */}
           <div className="flex items-center justify-center gap-1 p-1">
             <TextInput
-              className="text-sm"
               type="text"
               value={dateValue}
               onChange={(val) => updateDate(String(val))}
@@ -234,9 +233,9 @@ export const DateTimePicker: React.FC<DatePickerProps> = ({
                         date.getMonth() !== currentMonth - 1
                           ? "text-ink-gray-3"
                           : "text-ink-gray-9"
-                      } ${isToday ? "font-extrabold text-ink-gray-9" : ""} ${
-                        getDateValue(date) === dateValue
-                          ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                      } ${isToday ? " font-extrabold text-ink-gray-9" : ""} ${
+                        getDateValue(date) === dateValue.split(" ")[0]
+                          ? " bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
                           : ""
                       }`}
                       onClick={() => {

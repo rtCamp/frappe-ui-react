@@ -80,12 +80,12 @@ export const CalendarWeekly = ({ weeklyDates }: CalendarWeeklyProps) => {
               className={clsx(
                 "relative p-2 text-center text-sm",
                 isToday(date)
-                  ? "font-semibold text-gray-800"
-                  : "font-normal text-gray-600"
+                  ? "font-semibold text-ink-gray-8"
+                  : "font-normal text-ink-gray-6"
               )}
             >
               {isToday(date) && (
-                <div className="absolute left-1/2 -translate-x-1/2 top-0 h-0.5 w-5 bg-gray-700" />
+                <div className="absolute left-1/2 -translate-x-1/2 top-0 h-0.5 w-5 bg-ink-gray-7" />
               )}
               {parseDateWithDay(date)}
             </div>
@@ -94,7 +94,7 @@ export const CalendarWeekly = ({ weeklyDates }: CalendarWeeklyProps) => {
       </div>
 
       <div
-        className="relative flex h-full flex-col overflow-auto border-gray-200"
+        className="relative flex h-full flex-col overflow-auto border-ink-gray-2"
         ref={gridRef}
       >
         <div className="flex">
@@ -137,7 +137,7 @@ export const CalendarWeekly = ({ weeklyDates }: CalendarWeeklyProps) => {
                     }
                     allDayCellsRef.current[idx] = el;
                   }}
-                  className="flex w-full flex-col gap-1 border-b border-r border-gray-200 p-1 transition-all"
+                  className="flex w-full flex-col gap-1 border-b border-r border-ink-gray-2 p-1 transition-all"
                 >
                   {!isCollapsed
                     ? (fullDayEvents[parseDate(date)] || []).map(
@@ -166,7 +166,7 @@ export const CalendarWeekly = ({ weeklyDates }: CalendarWeeklyProps) => {
               {weeklyDates.map((date) => (
                 <div
                   key={date.toISOString()}
-                  className="relative w-full border-r border-gray-200"
+                  className="relative w-full border-r border-ink-gray-2"
                   data-date-attr={date.toISOString()}
                 >
                   {timeArray.map((time, i) => (
@@ -179,7 +179,7 @@ export const CalendarWeekly = ({ weeklyDates }: CalendarWeeklyProps) => {
                     >
                       <div
                         className={clsx(
-                          "w-full border-b border-gray-200",
+                          "w-full border-b border-ink-gray-2",
                           i === timeArray.length - 1 && "border-b-0"
                         )}
                         style={{ height: `${hourHeight}px` }}

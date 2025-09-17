@@ -263,7 +263,7 @@ export const MultipleSelection: Story = {
   name: "Multiple Selection (Not Implemented)",
   render: () => (
         <div className="p-4">
-          <label className="block text-sm font-medium mb-2">
+          <label className="block text-sm font-medium mb-2 text-ink-gray-9">
             Multiple Simple Options
           </label>
           <div className="text-sm text-gray-600">

@@ -32,7 +32,7 @@ export const Tree: React.FC<TreeProps> = ({
       style={{ height: options.rowHeight }}
       onClick={toggleCollapsed}
     >
-      <div>
+      <div className="text-ink-gray-6">
         {/* Icon slot */}
         {renderIcon ? (
           renderIcon({ hasChildren, isCollapsed })
@@ -46,7 +46,7 @@ export const Tree: React.FC<TreeProps> = ({
       {renderLabel ? (
         renderLabel({ node, hasChildren, isCollapsed })
       ) : (
-        <div className={`text-base truncate ${hasChildren ? "" : "pl-3.5"}`}>
+        <div className={`text-base text-ink-gray-8 truncate ${hasChildren ? "" : "pl-3.5"}`}>
           {node.label}
         </div>
       )}
@@ -63,7 +63,7 @@ export const Tree: React.FC<TreeProps> = ({
           {options.showIndentationGuides && (
             <div
               style={{ paddingLeft: linePadding }}
-              className="border-r border-gray-200"
+              className="border-r border-outline-gray-1"
             />
           )}
           <ul className="w-full" style={{ paddingLeft: options.indentWidth }}>

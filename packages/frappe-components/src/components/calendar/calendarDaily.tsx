@@ -30,12 +30,12 @@ export const CalendarDaily = () => {
 
   return (
     <div className="h-[90%] min-h-[500px] min-w-[600px]">
-      <p className="pb-2 text-base font-semibold text-gray-800">
+      <p className="pb-2 text-base font-semibold text-ink-gray-8">
         {parseDateWithDay(currentDate.toDate(), true)}
       </p>
       <div
         className={clsx(
-          "flex h-full w-full overflow-y-scroll border-gray-200",
+          "flex h-full w-full overflow-y-scroll border-ink-gray-2",
           config.noBorder ? 'border-t' : 'border border-r-0'
         )}
         ref={gridRef}
@@ -47,9 +47,9 @@ export const CalendarDaily = () => {
         </div>
 
         <div className="grid h-full w-full grid-cols-1 pb-2">
-          <div className="calendar-column relative border-r border-l border-gray-200">
+          <div className="calendar-column relative border-r border-l border-ink-gray-2">
             <div
-              className="flex w-full flex-wrap gap-2 overflow-y-auto border-b border-gray-200 p-1 transition-all"
+              className="flex w-full flex-wrap gap-2 overflow-y-auto border-b border-ink-gray-2 p-1 transition-all"
               style={{ minHeight: `${config.redundantCellHeight}px` }}
             >
               {(fullDayEvents[parsedCurrentDate] || []).map((event, idx) => (
@@ -64,12 +64,12 @@ export const CalendarDaily = () => {
               {timeArray.map(time => (
                 <div
                   key={time}
-                  className="relative flex text-gray-800"
+                  className="relative flex text-ink-gray-8"
                   data-time-attr={time}
                   onDoubleClick={(e) => handleCellDblClick(e, currentDate.toDate(), time)}
                 >
                   <div
-                    className="w-full border-b border-gray-200"
+                    className="w-full border-b border-ink-gray-2"
                     style={{ height: `${hourHeight}px` }}
                   />
                 </div>

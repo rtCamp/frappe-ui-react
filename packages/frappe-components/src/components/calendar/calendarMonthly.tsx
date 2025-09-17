@@ -55,12 +55,12 @@ export const CalendarMonthly = () => {
     <div className="flex flex-1 flex-col overflow-y-auto">
       <div className="grid w-full grid-cols-7 py-2">
         {daysList.map(day => (
-          <span key={day} className="text-center text-base text-gray-500">{day}</span>
+          <span key={day} className="text-center text-base text-ink-gray-5">{day}</span>
         ))}
       </div>
       <div
         className={clsx(
-          "grid w-full flex-1 grid-cols-7 border-gray-200",
+          "grid w-full flex-1 grid-cols-7 border-ink-gray-2",
           currentMonthDates.length > 35 ? 'grid-rows-6' : 'grid-rows-5',
           config.noBorder ? 'border-t' : 'border'
         )}
@@ -78,10 +78,10 @@ export const CalendarMonthly = () => {
               <div
                 className={clsx(
                   'flex h-full w-full flex-col items-center gap-1 font-normal',
-                  isCurrentMonthDate(date) ? 'text-gray-700' : 'text-gray-300'
+                  isCurrentMonthDate(date) ? 'text-ink-gray-7' : 'text-ink-gray-3'
                 )}
               >
-                <span className={clsx("text-xs", isToday(date) && "flex items-center justify-center h-6 w-6 rounded-full bg-blue-600 text-white font-semibold")}>
+                <span className={clsx("text-xs", isToday(date) && "flex items-center justify-center h-6 w-6 rounded-full bg-surface-blue-3 text-surface-white font-semibold")}>
                   {date.getDate()}
                 </span>
                 <div className="w-full">

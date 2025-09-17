@@ -57,7 +57,7 @@ export const Calendar = ({ events: initialEvents = [], config: initialConfig = {
           <CustomHeader {...headerProps} />
         ) : (
           <div className="mb-2 flex justify-between">
-            <span className="text-lg font-medium text-gray-800">
+            <span className="text-lg font-medium text-ink-gray-8">
               {headerProps.currentMonthYear}
             </span>
             <div className="flex gap-x-1">

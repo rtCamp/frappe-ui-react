@@ -1,9 +1,9 @@
 import type { DatePickerProps } from "./types";
 import { useDatePicker } from "./useDatePicker";
 import { getDate, getDateValue } from "./utils";
-import { TextInput } from "../textInput";
 import { Popover } from "../popover";
 import { Button } from "../button";
+import { TextInput } from "../textInput";
 
 export const DatePicker: React.FC<DatePickerProps> = ({
   value,
@@ -47,23 +47,22 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         <div className="absolute z-10 mt-1 w-fit select-none text-base text-ink-gray-9 divide-y divide-outline-gray-modals rounded-lg bg-surface-modal shadow-2xl border border-gray-200">
           {/* Month Switcher */}
           <div className="flex items-center p-1 text-ink-gray-4">
-            <Button className="h-7 w-7" onClick={prevMonth}>
+            <Button className="h-7 w-7" onClick={prevMonth} variant="ghost">
               {"<"}
             </Button>
             <div className="flex-1 text-center text-base font-medium text-ink-gray-6">
               {formattedMonth}
             </div>
-            <Button className="h-7 w-7" onClick={nextMonth}>
+            <Button className="h-7 w-7" onClick={nextMonth} variant="ghost">
               {">"}
             </Button>
           </div>
           {/* Date Input and Today */}
           <div className="flex items-center justify-center gap-1 p-1">
             <TextInput
-              className="text-sm"
               type="text"
               value={dateValue && formatter ? formatter(dateValue) : dateValue}
-              onChange={(val) => selectDate(getDate(String(val)))}
+              onChange={(e) => selectDate(getDate(String(e.target.value)))}
             />
             <Button
               className="text-sm"
@@ -99,18 +98,17 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                     date.getMonth() === today.getMonth() &&
                     date.getFullYear() === today.getFullYear() &&
                     date.getMonth() === currentMonth - 1;
+                  const isSelected = dateValue === val;
                   return (
                     <div
                       key={val}
                       className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded hover:bg-surface-gray-2 ${
                         isToday ? "font-extrabold text-ink-gray-9" : ""
+                      } ${isSelected ? "bg-surface-gray-2" : ""} ${
+                        date.getMonth() !== currentMonth - 1
+                          ? "text-ink-gray-4"
+                          : ""
                       }`}
-                      style={{
-                        color:
-                          date.getMonth() !== currentMonth - 1
-                            ? "#A0AEC0"
-                            : "#1A202C",
-                      }}
                       onClick={() => selectDate(date, true)}
                     >
                       {date.getDate()}

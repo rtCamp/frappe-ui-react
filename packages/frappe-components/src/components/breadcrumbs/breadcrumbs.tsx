@@ -76,7 +76,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
   }, []);
 
   return (
-    <div className="flex min-w-0 items-center">
+    <div className="flex min-w-0 items-center bg-surface-gray-1">
       {dropdownItems.length > 0 && (
         <div className="h-7">
           <Dropdown options={dropdownItems as unknown as DropdownOptions}>

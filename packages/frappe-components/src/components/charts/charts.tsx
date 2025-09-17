@@ -8,6 +8,7 @@ const ChartsWrapper: React.FC<ChartsWrapperProps> = ({
   options,
   events,
   error,
+  theme = 'light',
 }) => {
   
   const chartRef = useRef<HTMLDivElement>(null);
@@ -18,7 +19,7 @@ const ChartsWrapper: React.FC<ChartsWrapperProps> = ({
         return;
     }
 
-    chartInstance.current = init(chartRef.current, 'light', { renderer: 'svg' });
+    chartInstance.current = init(chartRef.current, theme, { renderer: 'svg' });
 
     if (events?.click) {
       chartInstance.current.on('click', events.click);

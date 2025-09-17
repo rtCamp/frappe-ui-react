@@ -30,17 +30,17 @@ export const EventModalContent = ({
   onDelete,
 }: EventModalContentProps) => {
   return (
-    <div className="w-80 rounded bg-white p-4 text-gray-800 shadow-lg">
-      <div className="flex flex-row-reverse gap-3 text-gray-500">
-        <button onClick={onClose} className="hover:text-gray-800">
+    <div className="w-80 rounded bg-surface-white p-4 text-ink-gray-8 shadow-lg">
+      <div className="flex flex-row-reverse gap-3 text-ink-gray-5">
+        <button onClick={onClose} className="hover:text-ink-gray-8">
           <X size={16} />
         </button>
         {isEditMode && (
           <>
-            <button onClick={onEdit} className="hover:text-gray-800">
+            <button onClick={onEdit} className="hover:text-ink-gray-8">
               <Edit2 size={16} />
             </button>
-            <button onClick={onDelete} className="hover:text-gray-800">
+            <button onClick={onDelete} className="hover:text-ink-gray-8">
               <Trash2 size={16} />
             </button>
           </>
@@ -53,18 +53,18 @@ export const EventModalContent = ({
 
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
-            <CalendarIcon size={16} className="text-gray-500" />
+            <CalendarIcon size={16} className="text-ink-gray-5" />
             <span className="text-sm">{parseDateEventPopupFormat(date)}</span>
           </div>
           {calendarEvent.participant && (
             <div className="flex items-center gap-2">
-              <User size={16} className="text-gray-500" />
+              <User size={16} className="text-ink-gray-5" />
               <span className="text-sm">{calendarEvent.participant}</span>
             </div>
           )}
           {calendarEvent.from_time && calendarEvent.to_time && (
             <div className="flex items-center gap-2">
-              <Clock size={16} className="text-gray-500" />
+              <Clock size={16} className="text-ink-gray-5" />
               <span className="text-sm">
                 {calendarEvent.from_time} - {calendarEvent.to_time}
               </span>
@@ -72,7 +72,7 @@ export const EventModalContent = ({
           )}
           {calendarEvent.venue && (
             <div className="flex items-center gap-2">
-              <MapPin size={16} className="text-gray-500" />
+              <MapPin size={16} className="text-ink-gray-5" />
               <span className="text-sm">{calendarEvent.venue}</span>
             </div>
           )}

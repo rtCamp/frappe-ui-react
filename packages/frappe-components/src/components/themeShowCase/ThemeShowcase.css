@@ -15,13 +15,7 @@
   max-width: var(--showcase-max-width);
   margin: 0 auto;
   min-height: 100vh;
-}
-
-.dark {
-  --showcase-card-bg: var(--surface-gray-6);
-  --showcase-card-border: var(--outline-gray-3);
-  --showcase-font-color: var(--ink-gray-1);
-  background-color: var(--surface-gray-7);
+  background-color: var(--surface-gray-1);
 }
 
 .showcase-header {
@@ -54,16 +48,6 @@
   background-color: var(--surface-gray-3);
 }
 
-.dark .theme-toggle-button {
-  background-color: var(--surface-gray-5);
-  color: var(--ink-gray-1);
-  border-color: var(--outline-gray-3);
-}
-
-.dark .theme-toggle-button:hover {
-  background-color: var(--surface-gray-4);
-}
-
 .showcase-tabs {
   display: flex;
   gap: 0.5rem;
@@ -92,22 +76,6 @@
   border-color: var(--showcase-tab-active-border);
 }
 
-.dark .showcase-tabs button {
-  background-color: var(--surface-gray-6);
-  color: var(--ink-gray-3);
-  border-color: var(--outline-gray-4);
-}
-
-.dark .showcase-tabs button:hover {
-  background-color: var(--surface-gray-5);
-}
-
-.dark .showcase-tabs button.active {
-  background-color: var(--surface-blue-3);
-  color: var(--ink-blue-1);
-  border-color: var(--ink-blue-2);
-}
-
 .showcase-content {
   padding: 1.5rem;
   background-color: var(--showcase-card-bg);
@@ -119,7 +87,7 @@
 .showcase-content h2 {
   font-size: var(--text-xl-size);
   font-weight: 600;
-  margin-top: 0;
+  margin-top: 1.5rem;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--showcase-card-border);
@@ -162,11 +130,6 @@
   border: 1px solid var(--showcase-card-border);
   border-top: none;
   border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-}
-
-.dark .swatch-info {
-  background-color: var(--surface-gray-6);
-  border-color: var(--outline-gray-4);
 }
 
 .swatch-name {
@@ -219,10 +182,6 @@
   border-radius: var(--radius-sm);
 }
 
-.dark .font-size-example {
-  background-color: var(--surface-gray-6);
-}
-
 .font-size-details {
   font-size: var(--text-xs-size);
   display: flex;
@@ -268,11 +227,6 @@
   border-radius: var(--radius-sm);
 }
 
-.dark .spacing-box {
-  background-color: var(--surface-blue-3);
-  border-color: var(--outline-blue-1);
-}
-
 .spacing-info {
   text-align: center;
   font-size: var(--text-xs-size);
@@ -306,10 +260,6 @@
   background-color: var(--surface-white);
   border-radius: var(--radius-md);
   margin-bottom: 1rem;
-}
-
-.dark .shadow-example {
-  background-color: var(--surface-gray-6);
 }
 
 .shadow-info {
@@ -348,11 +298,6 @@
   background-color: var(--surface-blue-2);
   border: 1px solid var(--outline-blue-1);
   margin: 0 auto 1rem;
-}
-
-.dark .radius-example {
-  background-color: var(--surface-blue-3);
-  border-color: var(--outline-blue-1);
 }
 
 .radius-info {
@@ -428,11 +373,6 @@
   box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
 }
 
-.dark .default-token-search-input {
-  background-color: var(--surface-gray-6);
-  color: var(--ink-gray-1);
-}
-
 .default-token-categories-wrapper {
   max-height: 800px;
   overflow-y: auto;
@@ -470,11 +410,6 @@
   color: var(--ink-blue-2);
 }
 
-.dark .default-token-category h3 {
-  background-color: var(--surface-gray-6);
-  color: var(--ink-blue-1);
-}
-
 .default-token-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -494,10 +429,6 @@
   box-shadow: var(--shadow-sm);
 }
 
-.dark .default-token-item {
-  background-color: var(--surface-gray-6);
-}
-
 .default-token-info {
   display: flex;
   flex-direction: column;
@@ -508,10 +439,6 @@
   font-size: var(--text-sm-size);
   margin-bottom: 0.5rem;
   color: var(--ink-blue-2);
-}
-
-.dark .default-token-name {
-  color: var(--ink-blue-1);
 }
 
 .default-token-value {
@@ -533,22 +460,12 @@
   align-self: flex-start;
 }
 
-.dark .default-badge {
-  background-color: var(--surface-blue-3);
-  color: var(--ink-blue-1);
-}
-
 .default-token-note {
   margin-top: 2rem;
   padding: 1rem;
   background-color: var(--surface-amber-1);
   border-left: 4px solid var(--outline-amber-1);
   border-radius: var(--radius-sm);
-}
-
-.dark .default-token-note {
-  background-color: var(--surface-amber-3);
-  border-left-color: var(--outline-amber-2);
 }
 
 .default-token-note p {

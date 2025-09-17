@@ -31,7 +31,7 @@ export default {
 const BreadcrumbsTemplate: StoryObj<BreadcrumbsProps> = {
   render: (args) => (
     <MemoryRouter>
-      <div className="p-4 bg-white rounded-lg shadow-sm">
+      <div className="p-4 bg-surface-gray-1 rounded-lg shadow-sm">
         <Breadcrumbs {...args} />
       </div>
     </MemoryRouter>

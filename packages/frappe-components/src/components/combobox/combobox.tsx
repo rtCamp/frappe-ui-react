@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   Combobox as ComboboxRoot,
   ComboboxInput,
@@ -67,12 +67,21 @@ export const Combobox: React.FC<ComboboxProps> = ({
       );
   }, [options, query]);
 
-  const handleChange = (val: string | null) => {
-    const selected = val
-      ? allOptionsFlat.find((opt) => getValue(opt) === val) || null
-      : null;
-    onChange?.(val, selected);
-  };
+  const handleChange = useCallback(
+    (val: string | null) => {
+      const selected = val
+        ? allOptionsFlat.find((opt) => getValue(opt) === val) || null
+        : null;
+      onChange?.(val, selected);
+    },
+    [allOptionsFlat, onChange]
+  );
+
+  const displayValue = useCallback((val: string) => {
+    if (!val) return "";
+    const opt = allOptionsFlat.find((opt) => getValue(opt) === val);
+    return opt ? getLabel(opt) : "";
+  }, [allOptionsFlat]);
 
   return (
     <ComboboxRoot
@@ -98,13 +107,11 @@ export const Combobox: React.FC<ComboboxProps> = ({
               transition-colors
               disabled:bg-surface-gray-1 disabled:text-ink-gray-5
             `}
-            displayValue={(val: string) => {
-              if (!val) return "";
-              const opt = allOptionsFlat.find((opt) => getValue(opt) === val);
-              return opt ? getLabel(opt) : "";
-            }}
+            displayValue={displayValue}
+            value={query}
             placeholder={placeholder}
             onChange={(e) => setQuery(e.target.value)}
+            autoComplete="off"
           />
         </div>
         <ComboboxButton className="absolute inset-y-0 right-0 flex items-center pr-2 text-ink-gray-4">
@@ -141,7 +148,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
                     disabled={isDisabled(option)}
                     className={({ active, selected, disabled }) =>
                       `
-                        flex items-center gap-2 px-2 py-1 text-base cursor-pointer truncate
+                        text-ink-gray-8 flex items-center gap-2 px-2 py-1 text-base cursor-pointer truncate 
                         ${disabled ? "opacity-50" : ""}
                         ${active ? "bg-surface-gray-3" : ""}
                         ${selected ? "font-bold" : ""}
@@ -175,7 +182,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
                 disabled={isDisabled(opt as SimpleOption)}
                 className={({ active, selected, disabled }) =>
                   `
-                    flex items-center gap-2 px-2 py-1 text-base cursor-pointer truncate
+                    text-ink-gray-8 flex items-center gap-2 px-2 py-1 text-base cursor-pointer truncate
                     ${disabled ? "opacity-50" : ""}
                     ${active ? "bg-surface-gray-3" : ""}
                     ${selected ? "font-bold" : ""}

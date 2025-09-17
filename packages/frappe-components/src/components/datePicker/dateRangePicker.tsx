@@ -188,26 +188,24 @@ export const DateRangePicker: React.FC<DatePickerProps> = ({
         <div className="w-fit select-none text-base text-ink-gray-9 divide-y divide-outline-gray-modals rounded-lg bg-surface-modal shadow-2xl border border-gray-200 focus:outline-none">
           {/* Month Switcher */}
           <div className="flex items-center p-1 text-ink-gray-4">
-            <Button className="h-7 w-7" onClick={prevMonth}>
+            <Button className="h-7 w-7" onClick={prevMonth} variant="ghost">
               {"<"}
             </Button>
             <div className="flex-1 text-center text-base font-medium text-ink-gray-6">
               {formattedMonth}
             </div>
-            <Button className="h-7 w-7" onClick={nextMonth}>
+            <Button className="h-7 w-7" onClick={nextMonth} variant="ghost">
               {">"}
             </Button>
           </div>
           {/* Date Range Inputs */}
           <div className="flex items-center justify-center gap-1 p-1">
             <TextInput
-              className="w-28 text-sm"
               type="text"
               value={fromDate ? fromDate.slice(0, 10) : ""}
               onChange={(val) => setFromDate(String(val).slice(0, 10))}
             />
             <TextInput
-              className="w-28 text-sm"
               type="text"
               value={toDate ? toDate.slice(0, 10) : ""}
               onChange={(val) => setToDate(String(val).slice(0, 10))}

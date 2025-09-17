@@ -392,9 +392,18 @@ button, label, input {
     --surface-blue-2: var(--color-blue-100);
     --surface-blue-3: var(--color-blue-600);
     --surface-orange-1: var(--color-orange-100);
+    --surface-orange-2: var(--color-orange-600);
     --surface-violet-1: var(--color-violet-100);
+    --surface-violet-2: var(--color-violet-600);
+    --surface-purple-1: var(--color-purple-100);
+    --surface-purple-2: var(--color-purple-600);
+    --surface-yellow-1: var(--color-yellow-100);
+    --surface-teal-1: var(--color-teal-100);
+    --surface-teal-2: var(--color-teal-600);
     --surface-cyan-1: var(--color-cyan-100);
+    --surface-cyan-2: var(--color-cyan-600);
     --surface-pink-1: var(--color-pink-100);
+    --surface-pink-2: var(--color-pink-600);
     --surface-menu-bar: var(--color-gray-50);
     --surface-cards: var(--color-white);
     --surface-modal: var(--color-white);
@@ -610,7 +619,7 @@ button, label, input {
     --color-gray-900: var(--color-dark-gray-100);
 
     /* Override semantic colors for dark theme */
-    --ink-white: var(--color-white);
+    --ink-white: var(--color-dark-gray-900);
     --ink-gray-1: var(--color-dark-gray-100);
     --ink-gray-2: var(--color-dark-gray-200);
     --ink-gray-3: var(--color-dark-gray-300);
@@ -660,13 +669,22 @@ button, label, input {
     --surface-amber-1: var(--color-dark-amber-900);
     --surface-amber-2: var(--color-dark-amber-800);
     --surface-amber-3: var(--color-dark-amber-700);
+    --surface-yellow-1: var(--color-dark-yellow-100);
+    --surface-teal-1: var(--color-dark-teal-100);
+    --surface-teal-2: var(--color-dark-teal-600);
     --surface-blue-1: var(--color-dark-blue-900);
     --surface-blue-2: var(--color-dark-blue-800);
     --surface-blue-3: var(--color-dark-blue-700);
     --surface-orange-1: var(--color-dark-orange-900);
+    --surface-orange-2: var(--color-dark-orange-600);
     --surface-violet-1: var(--color-dark-violet-900);
+    --surface-violet-1: var(--color-dark-violet-600);
+    --surface-purple-1: var(--color-dark-purple-100);
+    --surface-purple-2: var(--color-dark-purple-600);
     --surface-cyan-1: var(--color-dark-cyan-900);
+    --surface-cyan-2: var(--color-dark-cyan-600);
     --surface-pink-1: var(--color-dark-pink-900);
+    --surface-pink-2: var(--color-dark-pink-600);
     --surface-menu-bar: var(--color-dark-gray-800);
     --surface-cards: var(--color-dark-gray-700);
     --surface-modal: var(--color-dark-gray-650);

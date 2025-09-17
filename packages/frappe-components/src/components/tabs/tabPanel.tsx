@@ -16,7 +16,7 @@ export const TabPanel = ({ tabs, tabIndex }: TabPanelProps) => {
             tabIndex === i ? "" : "hidden",
           ].join(" ")}
         >
-          <div className="p-5">{tab.content}</div>
+          <div className="p-5 text-ink-gray-8">{tab.content}</div>
         </div>
       ))}
     </div>

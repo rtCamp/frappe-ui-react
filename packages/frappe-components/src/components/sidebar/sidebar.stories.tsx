@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import Sidebar from "./sidebar";
 import {
   LucideBell,
@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { MemoryRouter } from "react-router";
 import { Meta, StoryObj } from "@storybook/react-vite/*";
+import { useDarkMode } from "storybook-dark-mode";
+import { noop } from "../../utils";
 
 const meta: Meta<typeof Sidebar> = {
   title: "Components/Sidebar",
@@ -57,15 +59,6 @@ const meta: Meta<typeof Sidebar> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const toggleTheme = () => {
-  const container = document.getElementById("sidebar-container");
-  if (!container) return;
-  const currentTheme = container.classList.contains("dark") ? "dark" : "light";
-  const newTheme = currentTheme === "dark" ? "light" : "dark";
-  container.classList.remove(currentTheme);
-  container.classList.add(newTheme);
-};
-
 const crmSidebar = {
   header: {
     title: "Frappe CRM",
@@ -75,7 +68,7 @@ const crmSidebar = {
       {
         label: "Toggle Theme",
         icon: <LucideMoon size={16} className="text-ink-gray-6 mr-2" />,
-        onClick: toggleTheme,
+        onClick: noop,
       },
       {
         label: "Help",
@@ -177,14 +170,62 @@ const crmSidebar = {
 };
 
 export const SidebarExample: Story = {
-  render: () => (
-    <div
-      className="flex h-screen w-full flex-col bg-surface-white shadow"
-      id="sidebar-container"
-    >
-      <MemoryRouter>
-        <Sidebar header={crmSidebar.header} sections={crmSidebar.sections} />
-      </MemoryRouter>
-    </div>
-  ),
+  render: () => {
+    const mode = useDarkMode() ? "dark" : "light";
+
+    const toggleTheme = useCallback(() => {
+      const container = document.getElementById("sidebar-container");
+      if (!container) return;
+
+      const bodyHasDark = mode === "dark";
+      const containerHasDark = container.classList.contains("dark");
+
+      // Sync container's dark class with body
+      if (bodyHasDark !== containerHasDark) {
+        if (bodyHasDark) {
+          container.classList.add("dark");
+        } else {
+          container.classList.remove("dark");
+        }
+      }
+
+      // Toggle theme
+      if (bodyHasDark) {
+        const button = parent.document.querySelector(
+          '[title="Change theme to light mode"]'
+        ) as HTMLButtonElement;
+        if (button) button.click();
+
+        container.classList.remove("dark");
+      } else {
+        const button = parent.document.querySelector(
+          '[title="Change theme to dark mode"]'
+        ) as HTMLButtonElement;
+        if (button) button.click();
+
+        container.classList.add("dark");
+      }
+    }, [mode]);
+
+    return (
+      <div
+        className="flex h-screen w-full flex-col bg-surface-white shadow"
+        id="sidebar-container"
+      >
+        <MemoryRouter>
+          <Sidebar
+            header={{
+              ...crmSidebar.header,
+              menuItems: crmSidebar.header.menuItems.map((item) =>
+                item.label === "Toggle Theme"
+                  ? { ...item, onClick: toggleTheme }
+                  : item
+              ),
+            }}
+            sections={crmSidebar.sections}
+          />
+        </MemoryRouter>
+      </div>
+    );
+  },
 };
