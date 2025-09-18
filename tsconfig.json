@@ -2,13 +2,13 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@frappe-components/*": ["packages/frappe-components/src/*"]
+      "@frappe-ui-react/*": ["packages/frappe-ui-react/src/*"]
     }
   },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" },
-    { "path": "./packages/frappe-components/tsconfig.json" }
+    { "path": "./packages/frappe-ui-react/tsconfig.json" }
   ]
 }

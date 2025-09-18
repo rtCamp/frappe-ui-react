@@ -42,9 +42,9 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@frappe-components": path.resolve(
+      "@frappe-ui-react": path.resolve(
         __dirname,
-        "packages/frappe-components/src"
+        "packages/frappe-ui-react/src"
       ),
     },
   },

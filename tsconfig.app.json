@@ -28,7 +28,7 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@frappe-components/*": ["packages/frappe-components/src/*"]
+      "@frappe-ui-react/*": ["packages/frappe-ui-react/src/*"]
     }
   },
   "exclude": ["packages/*/node_modules/**"]

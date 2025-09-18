@@ -1,5 +1,5 @@
 import type { Preview } from "@storybook/react-vite";
-import "@frappe-components/theme.css";
+import "@frappe-ui-react/theme.css";
 import ModeDecorator from "./modeDecorator";
 
 const preview: Preview = {
