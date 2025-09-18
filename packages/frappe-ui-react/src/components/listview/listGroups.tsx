@@ -12,20 +12,27 @@ const ListGroups: React.FC<ListGroupsProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState<{[index: number]: {collapsed: boolean}}>({});
 
   useEffect(() => {
-    if(!list || !list.rows){
+    if (!list || !list.rows) {
       return;
     }
-  
-    setCollapsed(list.rows.reduce((acc,_, index) => {
-        acc[index] = {
-          collapsed: false,
+    setCollapsed((prev) => {
+      const next: typeof prev = { ...prev };
+      list.rows.forEach((_, index) => {
+        if (index >= Object.keys(next).length) {
+          next[index] = { collapsed: false };
         }
-      return acc;
-    }, {}));
-  }, [list])
+      });
+
+      Object.keys(next).forEach((key) => {
+        if (Number(key) >= list.rows.length) {
+          delete next[Number(key)];
+        }
+      });
+      return next;
+    });
+  }, [list, list?.rows?.length]);
 
   const rowsToRender = useMemo(() => {
-    console.log(list)
     if(!list || !list.rows){
       return [];
     }
