@@ -1,69 +1,49 @@
-# React + TypeScript + Vite
+# Frappe UI React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frappe UI React is a component library designed for rapid UI development using React 19 and Tailwind 4. It is inspired by the original [frappe-ui](https://github.com/frappe/frappe-ui), offering a similar aesthetic for a consistent user experience. However, we are not limited to a one-to-one port and also provide a growing collection of custom-built components to give developers more power and flexibility.
 
-Currently, two official plugins are available:
+## Under the Hood
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [TailwindCSS](https://github.com/tailwindlabs/tailwindcss): Utility first CSS Framework to build design system based UI.
+- [Headless UI](https://github.com/tailwindlabs/headlessui): Unstyled and accessible UI components.
+- [Radix UI](https://github.com/radix-ui/themes): Unstyled and accessible UI components.
+- [TipTap](https://github.com/ueberdosis/tiptap): ProseMirror based rich-text editor with a Vue API.
+- [dayjs](https://github.com/iamkun/dayjs): Minimal javascript library for working with dates.
 
-## Expanding the ESLint configuration
+## Links
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- [Documentation](https://frappeui.com)
+- [Community](https://github.com/rtCamp/frappe-ui-react/discussions)
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Prerequisites
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- Node.js v20
+- TailwindCSS v4
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Usage
+
+```sh
+npm install @frappe-components/frappe-ui-react
+# or
+yarn add @frappe-components/frappe-ui-react
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Now, import the required components in your React app:
 
 ```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+import { Button } from "@frappe-components/frappe-ui-react";
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+function App() {
+  return (
+    <div className="app-container">
+      <Button 
+        label="Default Button"
+        theme= "gray"
+        size= "md"
+        variant= "subtle" />
+    </div>
+  );
+}
+
+export default App;
 ```
