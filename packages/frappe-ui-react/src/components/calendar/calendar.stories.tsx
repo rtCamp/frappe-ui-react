@@ -43,69 +43,78 @@ const config = {
   timeFormat: "12h",
 };
 
-const getCurrentMonthYear = () => {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  return `${year}-${month}`;
-};
-
-const currentMonthYear = getCurrentMonthYear();
-
 const events: CalendarEvent[] = [
   {
-    id: "EDU-CSH-2024-00091",
+
     title: "English by Ryan Mathew",
     participant: "Ryan Mathew",
+    id: "EDU-CSH-2024-00091",
     venue: "CNF-ROOM-2024-00001",
-    fromDate: `${currentMonthYear}-02 16:30:00`,
-    toDate: `${currentMonthYear}-02 17:30:00`,
+    fromDate: "2025-09-02",
+    toDate: "2025-09-02",
+    fromTime: "16:30",
+    toTime: "17:30",
     color: "violet",
   },
   {
-    id: "EDU-CSH-2024-00092",
+
     title: "English by Ryan Mathew",
     participant: "Ryan Mathew",
+    id: "EDU-CSH-2024-00092",
     venue: "CNF-ROOM-2024-00002",
-    fromDate: `${currentMonthYear}-04 13:30:00`,
-    toDate: `${currentMonthYear}-04 17:30:00`,
+    fromDate: "2025-09-04",
+    toDate: "2025-09-04",
+    fromTime: "13:30",
+    toTime: "17:30",
     color: "green",
   },
   {
-    id: "EDU-CSH-2024-00093",
+
     title: "English by Sheldon",
     participant: "Sheldon",
+    id: "EDU-CSH-2024-00093",
     venue: "CNF-ROOM-2024-00001",
-    fromDate: `${currentMonthYear}-16 10:30:00`,
-    toDate: `${currentMonthYear}-16 11:30:00`,
+    fromDate: "2025-09-16",
+    toDate: "2025-09-16",
+    fromTime: "10:30",
+    toTime: "11:30",
     color: "blue",
   },
   {
-    id: "EDU-CSH-2024-00094",
+
     title: "English by Ryan Mathew",
     participant: "Ryan Mathew",
+    id: "EDU-CSH-2024-00094",
     venue: "CNF-ROOM-2024-00001",
-    fromDate: `${currentMonthYear}-21 16:30:00`,
-    toDate: `${currentMonthYear}-21 17:30:00`,
+    fromDate: "2025-09-21",
+    toDate: "2025-09-21",
+    fromTime: "16:30",
+    toTime: "17:30",
     color: "red",
   },
   {
-    id: "#htrht41",
-    title: "Google Meet with John",
+    title: "Google Meet with John ",
+
     participant: "John",
+    id: "#htrht41",
     venue: "Google Meet",
-    fromDate: `${currentMonthYear}-11 00:00:00`,
-    toDate: `${currentMonthYear}-11 23:59:59`,
+    fromDate: "2025-09-11",
+    toDate: "2025-09-11",
+    fromTime: "00:00",
+    toTime: "02:00",
     color: "amber",
     isFullDay: true,
   },
   {
-    id: "#htrht42",
+
     title: "Zoom Meet with Sheldon",
     participant: "Sheldon",
+    id: "#htrht42",
     venue: "Google Meet",
-    fromDate: `${currentMonthYear}-07 00:00:00`,
-    toDate: `${currentMonthYear}-07 23:59:59`,
+    fromDate: "2025-09-07",
+    toDate: "2025-09-07",
+    fromTime: "00:00",
+    toTime: "02:00",
     color: "amber",
     isFullDay: true,
   },
@@ -143,7 +152,9 @@ export const CustomHeader: Story = {
     }) => (
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold text-ink-gray-1">{currentMonthYear}</h1>
+          <h1 className="text-xl font-bold text-ink-gray-1">
+            {currentMonthYear}
+          </h1>
           <div className="flex items-center gap-1 text-ink-gray-1">
             <button
               onClick={decrement}
@@ -186,9 +197,15 @@ export const CustomClickEvents: Story = {
     config: {
       ...config,
       allowCustomClickEvents: true,
-      onClick: action("onClick"),
-      onDblClick: action("onDblClick"),
-      onCellDblClick: action("onCellDblClick"),
+      onClick: () => {
+        console.log("Cell clicked");
+      },
+      onDblClick: () => {
+        console.log("Cell double clicked");
+      },
+      onCellDblClick: () => {
+        console.log("Cell double clicked");
+      },
     },
     events,
   },

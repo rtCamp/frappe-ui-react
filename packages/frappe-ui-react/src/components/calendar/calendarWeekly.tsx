@@ -24,7 +24,7 @@ interface CalendarWeeklyProps {
 export const CalendarWeekly = ({ weeklyDates }: CalendarWeeklyProps) => {
   const { handleCellDblClick } = useContext(CalendarContext);
   const { events, config } = useContext(CalendarContext);
-  const { timedEvents, fullDayEvents } = useCalendarData(events);
+  const { timedEvents, fullDayEvents } = useCalendarData(events, 'Week');
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showCollapsable, setShowCollapsable] = useState(false);

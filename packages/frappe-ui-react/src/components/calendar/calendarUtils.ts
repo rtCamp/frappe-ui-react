@@ -224,3 +224,20 @@ export function formatTime(time: string, format: '12h' | '24h'): string {
   }
   return time;
 }
+
+export function sortMonthlyEvents(events: CalendarEvent[]) {
+  const fullDayEvents = events.filter((event) => event.isFullDay)
+  const timedEvents = events
+    .filter((event) => !event.isFullDay)
+    .sort((a, b) =>
+      a.fromTime !== b.fromTime
+        ? calculateMinutes(a.fromTime) > calculateMinutes(b.fromTime)
+          ? 1
+          : -1
+        : calculateMinutes(a.toTime) > calculateMinutes(b.toTime)
+          ? 1
+          : -1,
+    )
+
+  return [...fullDayEvents, ...timedEvents]
+}

@@ -31,7 +31,9 @@ export interface CalendarConfig {
   deleteEvent?: (eventId: string | number) => void;
   onClick?: (data: { event: MouseEvent, calendarEvent: CalendarEvent }) => void;
   onDblClick?: (data: { event: MouseEvent, calendarEvent: CalendarEvent }) => void;
-  onCellDblClick?: (data: { event: MouseEvent, calendarEvent: CalendarEvent }) => void;
+  onCellDblClick?: (data: { event: MouseEvent, date: Date,
+	time: string,
+	view: "Day" | "Week" | "Month"}) => void;
   handleCellDblClick?: (event: MouseEvent) => void;
 }
 

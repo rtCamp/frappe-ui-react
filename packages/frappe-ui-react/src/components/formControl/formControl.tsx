@@ -43,6 +43,9 @@ const FormControl: React.FC<FormControlProps> = ({
             size={size}
             variant={variant}
             options={controlAttrs.options as (string | SelectOption)[]}
+						onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              controlAttrs.onChange?.(e.target.value);
+            }}
           />
         );
       case 'autocomplete':

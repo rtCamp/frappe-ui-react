@@ -45,6 +45,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
 
   // For filtering/search
   const [query, setQuery] = useState("");
+
   const filteredOptions = useMemo(() => {
     if (!query) return options;
     const match = (opt: SimpleOption) =>
@@ -73,15 +74,19 @@ export const Combobox: React.FC<ComboboxProps> = ({
         ? allOptionsFlat.find((opt) => getValue(opt) === val) || null
         : null;
       onChange?.(val, selected);
+      setQuery(val || "");
     },
     [allOptionsFlat, onChange]
   );
 
-  const displayValue = useCallback((val: string) => {
-    if (!val) return "";
-    const opt = allOptionsFlat.find((opt) => getValue(opt) === val);
-    return opt ? getLabel(opt) : "";
-  }, [allOptionsFlat]);
+  const displayValue = useCallback(
+    (val: string) => {
+      if (!val) return "";
+      const opt = allOptionsFlat.find((opt) => getValue(opt) === val);
+      return opt ? getLabel(opt) : "";
+    },
+    [allOptionsFlat]
+  );
 
   return (
     <ComboboxRoot

@@ -10,9 +10,9 @@ import { useCalendarData } from './hooks/useCalendarData';
 
 export const CalendarMonthly = () => {
   const { events, currentMonthDates, currentDate, config } = useContext(CalendarContext);
-  const { updateEventState, handleCellDblClick, setActiveView, setCurrentDate } = useContext(CalendarContext);
+  const { updateEventState, setActiveView, setCurrentDate } = useContext(CalendarContext);
   
-  const { timedEvents } = useCalendarData(events);
+  const { timedEvents } = useCalendarData(events, 'Month');
 
   const maxEventsInCell = useMemo(() => (currentMonthDates.length > 35 ? 1 : 2), [currentMonthDates]);
 
@@ -73,7 +73,7 @@ export const CalendarMonthly = () => {
               className="overflow-y-auto border-t border-l border-gray-200 p-1"
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => handleDrop(e, date)}
-              onDoubleClick={(e) => handleCellDblClick(e, date)}
+              onDoubleClick={(e) => config.onCellDblClick(e, date)}
             >
               <div
                 className={clsx(

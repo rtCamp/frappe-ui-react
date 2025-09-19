@@ -39,6 +39,26 @@ export const useCalendar = (initialConfig: Partial<CalendarConfig>, initialEvent
     }
   }, [config]);
 
+    const openNewEventModal = useCallback((date: Date, time?: string) => {
+      setNewEventInfo({ date, from_time: time });
+      setShowEventModal(true);
+  }, []);
+
+  const handleCellDblClick = useCallback((event: React.MouseEvent<Element, MouseEvent>, date: Date, time: string) => {
+    const data = {
+        event,
+        date,
+        time,
+        view: activeView as 'Month' | 'Day' | 'Week'
+    }
+
+    if(config.onCellDblClick){
+      config.onCellDblClick(data)
+    }
+
+    openNewEventModal(date, time);
+  }, [activeView, config, openNewEventModal])
+
   const updateEventState = useCallback((updatedEvent: CalendarEvent) => {
     setEvents(prev => prev.map(e => e.id === updatedEvent.id ? updatedEvent : e));
     if(config.updateEventState){
@@ -52,11 +72,6 @@ export const useCalendar = (initialConfig: Partial<CalendarConfig>, initialEvent
       config.deleteEvent(eventId);
     }
   }, [config]);
-
-  const openNewEventModal = useCallback((date: Date, time?: string) => {
-      setNewEventInfo({ date, from_time: time });
-      setShowEventModal(true);
-  }, []);
 
   const currentMonth = currentDate.month();
   const currentYear = currentDate.year();
@@ -123,6 +138,7 @@ export const useCalendar = (initialConfig: Partial<CalendarConfig>, initialEvent
       decrement,
       createNewEvent,
       updateEventState,
+      handleCellDblClick,
       deleteEvent,
       openNewEventModal,
       setShowEventModal
