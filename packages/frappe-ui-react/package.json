@@ -1,5 +1,5 @@
 {
-  "name": "@frappe-ui-react/frappe-ui-react",
+  "name": "@rtcamp/frappe-ui-react",
   "version": "0.0.0",
   "main": "dist/index.js",
   "module": "dist/index.js",
