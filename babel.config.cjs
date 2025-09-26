@@ -23,12 +23,13 @@ module.exports = function (api) {
         '@babel/preset-react',
         {
           development: !isProduction,
+          runtime: 'automatic',
         },
       ],
       '@babel/preset-typescript',
     ],
     plugins: [
-      ['@babel/plugin-transform-react-jsx'],
+      ['@babel/plugin-transform-react-jsx', {runtime: 'automatic'}],
       ['babel-plugin-styled-components'],
     ],
     sourceMaps: true,
