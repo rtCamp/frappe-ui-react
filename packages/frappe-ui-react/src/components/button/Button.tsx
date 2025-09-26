@@ -171,6 +171,7 @@ const Button = ({
           className={slotClasses}
           aria-label={ariaLabel}
           aria-hidden={!ariaLabel}
+          role="svg"
         />
       );
     }
