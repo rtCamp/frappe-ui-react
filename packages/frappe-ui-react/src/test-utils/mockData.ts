@@ -1,4 +1,4 @@
-import { AutocompleteOption, AutocompleteOptionGroup } from "../types";
+import { AutocompleteOption, AutocompleteOptionGroup } from "../components/autoComplete/types";
 
 export const simpleOptions: AutocompleteOption[] = [
   { label: 'Apple', value: 'a' },

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import Autocomplete from '../autoComplete';
-import { simpleOptions, groupedOptions } from './mockData';
+import { simpleOptions, groupedOptions } from '../../../test-utils/mockData';
 import { MemoryRouter } from 'react-router';
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
