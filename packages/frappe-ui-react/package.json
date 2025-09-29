@@ -14,7 +14,6 @@
     "./theme.css": "./src/theme.css"
   },
   "scripts": {
-    "prepare": "husky install",
     "dev": "vite",
     "build": "tsc -b"
   },
