@@ -341,7 +341,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                         ref={searchInputRef}
                         className=" h-7 w-full py-1.5 pl-2 pr-2 outline-none"
                         type="text"
-                        data-testid="combobox-input"
+                        data-testid="autocomplete"
                         displayValue={() => query}
                         onChange={(
                           event: React.ChangeEvent<HTMLInputElement>

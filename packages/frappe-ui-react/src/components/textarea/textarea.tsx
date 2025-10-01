@@ -120,6 +120,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           id={htmlId}
           value={value}
           onChange={handleChange}
+					data-testid="textarea"
         />
       </div>
     );

@@ -120,6 +120,7 @@ const Select: React.FC<SelectProps> = ({
         id={htmlId}
         value={value}
         onChange={handleChange}
+				data-testid="select"
       >
         {placeholder && !value && (
         <option />
