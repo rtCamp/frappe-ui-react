@@ -20,6 +20,8 @@ import { DragHandle, Item } from "./sortableItem/sortableItem";
 export interface BaseItem {
   id: UniqueIdentifier;
   title: string;
+  isWidgetOpen: boolean
+  toggle: ()=> void
   Widget: ()=> JSX.Element;
 }
 
