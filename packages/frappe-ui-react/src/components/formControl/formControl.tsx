@@ -1,20 +1,20 @@
-import React, { useMemo } from 'react';
-import { FormControlProps } from './types';
-import { Autocomplete } from '../autoComplete';
-import { Checkbox } from '../checkbox';
-import { TextInput } from '../textInput';
-import type{ SizeTypes } from '../../types';
-import FormLabel from '../formLabel';
-import Textarea from '../textarea/textarea';
-import { Select, type SelectOption } from '../select';
-import { AutocompleteOption } from '../autoComplete';
+import React, { useMemo } from "react";
+import { FormControlProps } from "./types";
+import { Autocomplete } from "../autoComplete";
+import { Checkbox } from "../checkbox";
+import { TextInput } from "../textInput";
+import type { SizeTypes } from "../../types";
+import FormLabel from "../formLabel";
+import Textarea from "../textarea/textarea";
+import { Select, type SelectOption } from "../select";
+import { AutocompleteOption } from "../autoComplete";
 
 const FormControl: React.FC<FormControlProps> = ({
   label,
   description,
-  type = 'text',
-  size = 'sm',
-  variant = 'subtle',
+  type = "text",
+  size = "sm",
+  variant = "subtle",
   required = false,
   htmlId,
   ...attrs
@@ -27,15 +27,15 @@ const FormControl: React.FC<FormControlProps> = ({
 
   const descriptionClasses = useMemo(() => {
     const sizeClasses = {
-      sm: 'text-xs',
-      md: 'text-base',
+      sm: "text-xs",
+      md: "text-base",
     }[size as keyof SizeTypes];
     return `${sizeClasses} text-ink-gray-5`;
   }, [size]);
 
   const renderControl = () => {
     switch (type) {
-      case 'select':
+      case "select":
         return (
           <Select
             htmlId={htmlId}
@@ -43,12 +43,12 @@ const FormControl: React.FC<FormControlProps> = ({
             size={size}
             variant={variant}
             options={controlAttrs.options as (string | SelectOption)[]}
-						onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
               controlAttrs.onChange?.(e.target.value);
             }}
           />
         );
-      case 'autocomplete':
+      case "autocomplete":
         return (
           <Autocomplete
             options={controlAttrs.options as AutocompleteOption[]}
@@ -56,7 +56,7 @@ const FormControl: React.FC<FormControlProps> = ({
             {...controlAttrs}
           />
         );
-      case 'textarea':
+      case "textarea":
         return (
           <Textarea
             htmlId={htmlId}
@@ -65,7 +65,7 @@ const FormControl: React.FC<FormControlProps> = ({
             variant={variant}
           />
         );
-      case 'checkbox':
+      case "checkbox":
         return (
           <Checkbox
             htmlId={htmlId}
@@ -88,15 +88,21 @@ const FormControl: React.FC<FormControlProps> = ({
     }
   };
 
-  if (type === 'checkbox') {
+  if (type === "checkbox") {
     return renderControl();
   }
 
   return (
-    <div className={`space-y-1.5 ${attrs.className || ''}`} style={attrs.style}>
-      {label && <FormLabel label={label} size={size} id={htmlId} required={required} />}
+    <div
+      className={`space-y-1.5 ${attrs.className || ""}`}
+      style={attrs.style}
+      data-testid="form-control"
+    >
+      {label && (
+        <FormLabel label={label} size={size} id={htmlId} required={required} />
+      )}
       {renderControl()}
-      {(description && <p className={descriptionClasses}>{description}</p>)}
+      {description && <p className={descriptionClasses}>{description}</p>}
     </div>
   );
 };

@@ -104,7 +104,7 @@ describe('Autocomplete Component', () => {
       await userEvent.click(screen.getByRole('button', {name: "Toggle options"}));
 
       await userEvent.click(screen.getByRole('button', {name: "Clear"}));
-      expect(screen.getByTestId('combobox-input')).toHaveValue('');
+      expect(screen.getByTestId('autocomplete')).toHaveValue('');
     });
   });
   

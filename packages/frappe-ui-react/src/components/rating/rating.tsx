@@ -66,6 +66,7 @@ const Rating: React.FC<RatingProps> = ({
             >
               <FeatherIcon
                 name="star"
+                data-testid="star-icon"
                 className={iconClassList[index - 1]}
                 // Optionally, add aria-label or role for accessibility
               />

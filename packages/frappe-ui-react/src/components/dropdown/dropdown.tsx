@@ -169,7 +169,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                 item.icon &&
                 (typeof item.icon === "string" ? (
                   <FeatherIcon
-                    name={item.icon as FeatherIconProps['name']}
+                    name={item.icon as FeatherIconProps["name"]}
                     className={`${cssClasses.itemIcon} ${getIconColor(item)}`}
                   />
                 ) : React.isValidElement(item.icon) ? (
@@ -229,7 +229,10 @@ const Dropdown: React.FC<DropdownProps> = ({
         >
           {item.icon &&
             (typeof item.icon === "string" ? (
-              <FeatherIcon name={item.icon as FeatherIconProps['name']} className={cssClasses.itemIcon} />
+              <FeatherIcon
+                name={item.icon as FeatherIconProps["name"]}
+                className={cssClasses.itemIcon}
+              />
             ) : React.isValidElement(item.icon) ? (
               item.icon
             ) : null)}
@@ -272,13 +275,11 @@ const Dropdown: React.FC<DropdownProps> = ({
                 </DropdownMenu.Label>
               )}
               {group.items.map((item) => (
-                <DropdownMenu.Item
-                  key={item.label}
-                  asChild
-                  onSelect={item.onClick}
-                >
-                  {renderDropdownItem(item)}
-                </DropdownMenu.Item>
+                <div data-testid="dropdown-item" key={item.label}>
+                  <DropdownMenu.Item asChild onSelect={item.onClick}>
+                    {renderDropdownItem(item)}
+                  </DropdownMenu.Item>
+                </div>
               ))}
             </div>
           ))}

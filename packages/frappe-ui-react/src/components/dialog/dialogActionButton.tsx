@@ -1,8 +1,11 @@
-import { useState } from 'react';
-import { Button, } from '../button';
-import { DialogActionButtonProps } from './types';
+import { useState } from "react";
+import { Button } from "../button";
+import { DialogActionButtonProps } from "./types";
 
-export const DialogActionButton = ({ action, close }: DialogActionButtonProps) => {
+export const DialogActionButton = ({
+  action,
+  close,
+}: DialogActionButtonProps) => {
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
@@ -26,6 +29,7 @@ export const DialogActionButton = ({ action, close }: DialogActionButtonProps) =
       disabled={action.disabled || loading}
       loading={loading}
       onClick={handleClick}
+      data-testid="dialog-action"
     >
       {action.label}
     </Button>
