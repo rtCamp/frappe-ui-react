@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { WidgetContainer } from "./index";
-import { WidgetDropArea } from "./widget";
 
 import {title as quicklinksTitle , Widget as QuicklinksWidget} from "./widget-quicklinks"
 import {title as greetingTitle , Widget as GreetingWidget} from "./widget-greet"
+import { WidgetList } from "./widgetList";
 
 const WIDGETS = [
   { id: 1, title: quicklinksTitle, Widget: QuicklinksWidget },
@@ -26,7 +26,7 @@ export const Default: Story = {
     title: "Quick Links"
   },
   render: () => (
-    <WidgetDropArea widgets={WIDGETS}/>
+    <WidgetList widgets={WIDGETS}/>
   ),
   argTypes: {
     title: { control: "text", description: "Title for the widget" },

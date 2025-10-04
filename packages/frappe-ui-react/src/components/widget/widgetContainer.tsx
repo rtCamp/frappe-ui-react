@@ -1,15 +1,12 @@
 import { createContext, useContext, useMemo } from "react";
-import type { CSSProperties, PropsWithChildren } from "react";
+import type { CSSProperties } from "react";
 import type {
   DraggableSyntheticListeners,
-  UniqueIdentifier
 } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-
-interface Props {
-  id: UniqueIdentifier;
-}
+import { WidgetContainerProps } from "./widgetList";
+import { DownSolid } from "../../icons";
 
 interface Context {
   attributes: Record<string, any>;
@@ -23,7 +20,13 @@ const SortableItemContext = createContext<Context>({
   ref() { }
 });
 
-export function Item({ children, id }: PropsWithChildren<Props>) {
+export function WidgetContainer({
+  id,
+  title,
+  Widget,
+  isWidgetOpen,
+  toggle
+}: WidgetContainerProps) {
   const {
     attributes,
     isDragging,
@@ -49,8 +52,19 @@ export function Item({ children, id }: PropsWithChildren<Props>) {
 
   return (
     <SortableItemContext.Provider value={context}>
-      <li className="flex flex-col px-5 py-[18px] shadow-[0_0_0_1px_rgba(63,63,68,0.05),0_1px_3px_0_rgba(34,33,81,0.15)] rounded box-border list-none" ref={setNodeRef} style={style}>
-        {children}
+      <li className="flex flex-col px-2 py-1.5 rounded-lg border border-black list-none" ref={setNodeRef} style={style}>
+        <div className='w-full flex justify-between cursor-pointer px-2 py-1.5'>
+          <DragHandle title={title} />
+          <button onClick={toggle}>
+            <DownSolid className={`${isWidgetOpen && "rotate-180"}`} />
+          </button>
+        </div>
+        {/* Separator */}
+        <hr className={`${!isWidgetOpen && "hidden"} my-2 border-t border-outline-gray-1`} />
+        {/* Content */}
+        <div className={`${!isWidgetOpen && "hidden"}`} >
+          <Widget />
+        </div>
       </li>
     </SortableItemContext.Provider>
   );
@@ -61,8 +75,8 @@ export function DragHandle({ title }: { title: string }) {
 
   {/* TODO: Use icon button. Blocked by issue #38 */ }
   return (
-    <button className="text-ink-gray-8 active:bg-surface-gray-4" {...attributes} {...listeners} ref={ref}>
-      <h2 className="text-ink-gray-8">
+    <button className="text-black font-normal" {...attributes} {...listeners} ref={ref}>
+      <h2>
         {title}
       </h2>
     </button>
