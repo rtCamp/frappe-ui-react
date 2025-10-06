@@ -1,5 +1,13 @@
 import React, { useMemo } from "react";
-import { Root, Portal, Overlay, Content, Close, Description, Title} from "@radix-ui/react-dialog";
+import {
+  Root,
+  Portal,
+  Overlay,
+  Content,
+  Close,
+  Description,
+  Title,
+} from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import clsx from "clsx";
 import { Button } from "../button";
@@ -96,7 +104,7 @@ const Dialog = ({
       <Portal>
         <Overlay
           className="dialog-overlay fixed inset-0 bg-black-overlay-200 backdrop-filter backdrop-blur-[12px] overflow-y-auto z-[11]"
-          data-dialog={'dialog'}
+          data-dialog={"dialog"}
           onAnimationEnd={() => !open && onAfterLeave?.()}
         >
           <div
@@ -138,7 +146,7 @@ const Dialog = ({
                             )}
                           >
                             <FeatherIcon
-                              name={icon.name as FeatherIconProps['name']}
+                              name={icon.name as FeatherIconProps["name"]}
                               className={clsx("h-4 w-4", dialogIconClasses)}
                               aria-hidden="true"
                             />
@@ -146,14 +154,23 @@ const Dialog = ({
                         )}
                         <Title asChild>
                           {typeof title === "string" ? (
-                            <h3 className="text-2xl font-semibold leading-6 text-ink-gray-9">
-                            { title || "Untitled"}
-                          </h3>
-                          ): title && title()}
+                            <h3
+                              className="text-2xl font-semibold leading-6 text-ink-gray-9"
+                              data-testid="dialog-title"
+                            >
+                              {title || "Untitled"}
+                            </h3>
+                          ) : (
+                            title && title()
+                          )}
                         </Title>
                       </div>
                       <Close asChild>
-                        <Button variant="ghost" onClick={closeDialog}>
+                        <Button
+                          variant="ghost"
+                          onClick={closeDialog}
+                          data-testid="dialog-close"
+                        >
                           <X className="h-4 w-4 text-ink-gray-9" />
                         </Button>
                       </Close>
@@ -163,7 +180,10 @@ const Dialog = ({
                       ? children
                       : message && (
                           <Description asChild>
-                            <p className="text-p-base text-ink-gray-7">
+                            <p
+                              className="text-p-base text-ink-gray-7"
+                              data-testid="dialog-description"
+                            >
                               {message}
                             </p>
                           </Description>
@@ -197,4 +217,4 @@ const Dialog = ({
   );
 };
 
-export default Dialog
+export default Dialog;

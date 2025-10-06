@@ -1,19 +1,11 @@
-import { useEffect } from "react";
-import { useDarkMode } from "storybook-dark-mode";
+import { withThemeByClassName } from '@storybook/addon-themes';
 
-const ModeDecorator = (Story) => {
-  const mode = useDarkMode() ? "dark" : "light";
-
-  useEffect(() => {
-    document.body.className = `${mode} bg-surface-white min-h-screen`;
-    const docsStory = document.querySelector(".docs-story");
-
-    if (docsStory) {
-      docsStory.className = `${mode} bg-surface-white`;
-    }
-  }, [mode]);
-
-  return <Story />;
-};
-
-export default ModeDecorator;
+export const decorators = [
+  withThemeByClassName({
+    themes: {
+      light: '', // Class name for light mode
+      dark: 'dark',  // Class name for dark mode
+    },
+    defaultTheme: 'light', // Default theme
+  }),
+];

@@ -93,7 +93,11 @@ const FormControl: React.FC<FormControlProps> = ({
   }
 
   return (
-    <div className={`space-y-1.5 ${attrs.className || ""}`} style={attrs.style}>
+    <div
+      className={`space-y-1.5 ${attrs.className || ""}`}
+      style={attrs.style}
+      data-testid="form-control"
+    >
       {label && (
         <FormLabel label={label} size={size} id={htmlId} required={required} />
       )}

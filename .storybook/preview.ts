@@ -1,9 +1,9 @@
 import type { Preview } from "@storybook/react-vite";
+import {decorators} from "./modeDecorator";
 import "@rtcamp/frappe-ui-react/theme.css";
-import ModeDecorator from "./modeDecorator";
 
 const preview: Preview = {
-  decorators: [ModeDecorator],
+  decorators,
   parameters: {
     controls: {
       matchers: {

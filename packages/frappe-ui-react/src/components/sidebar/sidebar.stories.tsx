@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import Sidebar from "./sidebar";
 import {
   LucideBell,
@@ -8,7 +8,6 @@ import {
   LucideClipboard,
   LucideLink,
   LucideMail,
-  LucideMoon,
   LucidePhone,
   LucideSettings,
   LucideUser,
@@ -16,9 +15,7 @@ import {
   LucideUsers,
 } from "lucide-react";
 import { MemoryRouter } from "react-router";
-import { Meta, StoryObj } from "@storybook/react-vite/*";
-import { useDarkMode } from "storybook-dark-mode";
-import { noop } from "../../utils";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof Sidebar> = {
   title: "Components/Sidebar",
@@ -65,11 +62,6 @@ const crmSidebar = {
     subtitle: "Jane Doe",
     logo: "https://raw.githubusercontent.com/frappe/crm/develop/.github/logo.svg",
     menuItems: [
-      {
-        label: "Toggle Theme",
-        icon: <LucideMoon size={16} className="text-ink-gray-6 mr-2" />,
-        onClick: noop,
-      },
       {
         label: "Help",
         to: "/help",
@@ -171,42 +163,6 @@ const crmSidebar = {
 
 export const SidebarExample: Story = {
   render: () => {
-    const mode = useDarkMode() ? "dark" : "light";
-
-    const toggleTheme = useCallback(() => {
-      const container = document.getElementById("sidebar-container");
-      if (!container) return;
-
-      const bodyHasDark = mode === "dark";
-      const containerHasDark = container.classList.contains("dark");
-
-      // Sync container's dark class with body
-      if (bodyHasDark !== containerHasDark) {
-        if (bodyHasDark) {
-          container.classList.add("dark");
-        } else {
-          container.classList.remove("dark");
-        }
-      }
-
-      // Toggle theme
-      if (bodyHasDark) {
-        const button = parent.document.querySelector(
-          '[title="Change theme to light mode"]'
-        ) as HTMLButtonElement;
-        if (button) button.click();
-
-        container.classList.remove("dark");
-      } else {
-        const button = parent.document.querySelector(
-          '[title="Change theme to dark mode"]'
-        ) as HTMLButtonElement;
-        if (button) button.click();
-
-        container.classList.add("dark");
-      }
-    }, [mode]);
-
     return (
       <div
         className="flex h-screen w-full flex-col bg-surface-white shadow"
@@ -216,11 +172,6 @@ export const SidebarExample: Story = {
           <Sidebar
             header={{
               ...crmSidebar.header,
-              menuItems: crmSidebar.header.menuItems.map((item) =>
-                item.label === "Toggle Theme"
-                  ? { ...item, onClick: toggleTheme }
-                  : item
-              ),
             }}
             sections={crmSidebar.sections}
           />

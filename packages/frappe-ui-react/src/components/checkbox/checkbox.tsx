@@ -75,6 +75,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
         id={htmlId}
         checked={Boolean(value)}
         onChange={handleChange}
+        data-testid="checkbox"
       />
       {label && (
         <label className={labelClasses} htmlFor={htmlId}>

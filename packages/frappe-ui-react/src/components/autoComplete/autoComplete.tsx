@@ -194,7 +194,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   }, [value, multiple, findOption, makeOption]);
 
   const handleComboboxChange = useCallback(
-    (val: Option | Option[] | null  | null[]) => {
+    (val: Option | Option[] | null | null[]) => {
       if (!val) {
         return;
       }
@@ -205,11 +205,11 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
         setShowOptions(false);
       }
 
-      const emittedValue: OptionValue | OptionValue[] | null= multiple
-        ? (val as Option[]).map((o) => o.value) as OptionValue[]
+      const emittedValue: OptionValue | OptionValue[] | null = multiple
+        ? ((val as Option[]).map((o) => o.value) as OptionValue[])
         : (val as Option)?.value ?? null;
-      
-      if(!emittedValue){
+
+      if (!emittedValue) {
         return;
       }
 
@@ -293,6 +293,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
       onChange={handleComboboxChange}
       multiple={multiple}
       by={compareFn}
+      data-testid="autocomplete-component"
     >
       {({ open: isComboboxOpen }) => (
         <Popover
@@ -349,7 +350,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                         ref={searchInputRef}
                         className=" h-7 w-full py-1.5 pl-2 pr-2 outline-none"
                         type="text"
-                        data-testid="combobox-input"
+                        data-testid="autocomplete"
                         displayValue={() => query}
                         onChange={(
                           event: React.ChangeEvent<HTMLInputElement>

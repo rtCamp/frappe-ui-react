@@ -36,7 +36,11 @@ const Password: React.FC<PasswordProps> = ({ value, ...attrs }) => {
       value={value}
       {...attrs}
       ref={inputRef}
-      prefix={ attrs?.prefix ? () => attrs?.prefix && <div slot="prefix">{attrs?.prefix()}</div> : undefined}
+      prefix={
+        attrs?.prefix
+          ? () => attrs?.prefix && <div slot="prefix">{attrs?.prefix()}</div>
+          : undefined
+      }
       suffix={() => {
         return (
           <Tooltip
@@ -60,6 +64,7 @@ const Password: React.FC<PasswordProps> = ({ value, ...attrs }) => {
             <div>
               {showEye && (
                 <div
+                  data-testid="eye-icon"
                   className="h-3 w-3 cursor-pointer mr-1"
                   onClick={() => setShow(!show)}
                 >
@@ -74,8 +79,7 @@ const Password: React.FC<PasswordProps> = ({ value, ...attrs }) => {
           </Tooltip>
         );
       }}
-    >
-    </FormControl>
+    ></FormControl>
   );
 };
 
