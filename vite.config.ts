@@ -13,13 +13,6 @@ const __dirname = path.dirname(__filename);
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
   plugins: [react(), tailwindcss(), svgr({ include: "**/*.svg?react" })],
-  build: {
-    lib: {
-      entry: path.resolve(__dirname, "packages/frappe-ui-react/src/index.ts"),
-      name: "frappe-ui-react",
-      fileName: (format) => `frappe-ui-react.${format}.js`,
-    },
-  },
   test: {
     projects: [
       {
