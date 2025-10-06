@@ -1,0 +1,1 @@
+.form-control-prefix select{padding-left:2.2rem!important;text-transform:capitalize!important}.calendar-column{position:relative}.calendar-column :before{content:attr(data-time-attr);position:absolute;left:-45px;top:-9px;font-size:12px;font-weight:400}
