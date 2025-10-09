@@ -3,6 +3,8 @@ name: Publish To Github Pages
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 env:
   CI: false
@@ -35,7 +37,12 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: |
-          npm ci
+          ls 
+          pwd 
+          rm -rf **/node_modules
+          rm -rf package-lock.json
+          npm install || true
+
       - name: Build Storybook
         run: |
           npm run build-storybook
