@@ -3,6 +3,9 @@ name: Publish To Github Pages
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
 
 env:
   CI: false
