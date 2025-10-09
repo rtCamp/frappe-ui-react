@@ -13,17 +13,12 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
-    permissions:
-      contents: "read"
-      id-token: "write"
-      pages: "write"
-      actions: "write"
-      checks: "write"
-      deployments: "write"
     strategy:
       matrix:
         node-version: [20.x]
