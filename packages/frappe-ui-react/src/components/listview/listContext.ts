@@ -1,5 +1,5 @@
-import { createContext } from 'react';
-import type { ButtonVariant } from '../button';
+import { createContext } from "react";
+import type { ButtonVariant } from "../button";
 
 export interface ListOptionsProps {
   emptyState?: {
@@ -12,11 +12,15 @@ export interface ListOptionsProps {
     };
   };
   slots?: {
-    'group-header'?: React.ComponentType<{ group: any }>;
-    cell?: React.ComponentType<{ row: any; column: any; item: any; align: string }>;
+    "group-header"?: React.ComponentType<{ group: any }>;
+    cell?: React.ComponentType<{
+      row: any;
+      column: any;
+      item: any;
+      align: string;
+    }>;
   };
   options: {
-    getRowRoute?: (row: any) => string;
     onRowClick?: (row: any, event: React.MouseEvent) => void;
     enableActive?: boolean;
     rowHeight?: string | number;
@@ -38,8 +42,13 @@ export interface ListOptions {
     };
   };
   slots?: {
-    'group-header'?: React.ComponentType<{ group: any }>;
-    cell?: React.ComponentType<{ row: any; column: any; item: any; align: string }>;
+    "group-header"?: React.ComponentType<{ group: any }>;
+    cell?: React.ComponentType<{
+      row: any;
+      column: any;
+      item: any;
+      align: string;
+    }>;
   };
   rows: any[];
   rowKey: string;
@@ -47,7 +56,6 @@ export interface ListOptions {
   activeRow: { value: any };
   columns: any[];
   options: {
-    getRowRoute?: (row: any) => string;
     onRowClick?: (row: any, event: React.MouseEvent) => void;
     enableActive?: boolean;
     rowHeight?: string | number;
@@ -67,4 +75,6 @@ export interface ListContextType {
   options?: ListOptions;
 }
 
-export const ListContext = createContext<ListContextType>({options: undefined});
+export const ListContext = createContext<ListContextType>({
+  options: undefined,
+});

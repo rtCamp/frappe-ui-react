@@ -15,7 +15,6 @@ export interface ButtonProps
   loading?: boolean;
   loadingText?: string;
   disabled?: boolean;
-  route?: string;
   link?: string;
   children?: React.ReactNode;
 }

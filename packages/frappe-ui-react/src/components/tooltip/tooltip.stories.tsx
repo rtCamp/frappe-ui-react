@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import Tooltip from "./tooltip";
 import { Button } from "../button";
-import { MemoryRouter } from "react-router";
 
 const meta: Meta<typeof Tooltip> = {
   title: "Components/Tooltip",
@@ -52,11 +51,9 @@ type Story = StoryObj<typeof meta>;
 export const WithText: Story = {
   render: (args) => {
     return (
-      <MemoryRouter>
         <Tooltip text={args.text} hoverDelay={args.hoverDelay}>
           <Button theme="red">Delete</Button>
         </Tooltip>
-      </MemoryRouter>
     );
   },
   args: {
@@ -70,11 +67,9 @@ export const WithText: Story = {
 export const Disabled: Story = {
   render: (args) => {
     return (
-      <MemoryRouter>
         <Tooltip {...args}>
           <Button theme="red">Delete</Button>
         </Tooltip>
-      </MemoryRouter>
     );
   },
   args: {
@@ -87,11 +82,9 @@ export const Disabled: Story = {
 export const WithCustomContent: Story = {
   render: (args) => {
     return (
-      <MemoryRouter>
         <Tooltip {...args}>
           <Button theme="red">Delete</Button>
         </Tooltip>
-      </MemoryRouter>
     );
   },
   args: {

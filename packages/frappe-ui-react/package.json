@@ -49,7 +49,6 @@
     "react-dom": "^19.1.0",
     "react-grid-layout": "^1.5.2",
     "react-quill-new": "^3.6.0",
-    "react-router": "^7.7.1",
     "styled-components": "^6.1.19",
     "tailwindcss": "^4.1.11"
   },

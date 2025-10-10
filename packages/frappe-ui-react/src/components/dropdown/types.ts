@@ -5,7 +5,6 @@ import { ButtonTheme } from "../button";
 export interface DropdownOption {
   label: string;
   onClick?: () => void;
-  route?: string;
   link?: string;
   icon?: string | ReactNode;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

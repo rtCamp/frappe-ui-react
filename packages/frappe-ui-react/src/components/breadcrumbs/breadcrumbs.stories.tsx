@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import Breadcrumbs from "./breadcrumbs";
-import { BreadcrumbsProps } from "./types";
+import { type BreadcrumbsProps } from "./types";
 import { action } from "storybook/actions";
-import { MemoryRouter } from "react-router";
 
 export default {
   title: "Components/Breadcrumbs",
@@ -11,7 +10,7 @@ export default {
     items: {
       control: "object",
       description:
-        "An array of breadcrumb items, each with a label, optional route, and optional onClick.",
+        "An array of breadcrumb items, each with a label, and optional onClick.",
     },
     renderPrefix: {
       description:
@@ -30,32 +29,10 @@ export default {
 
 const BreadcrumbsTemplate: StoryObj<BreadcrumbsProps> = {
   render: (args) => (
-    <MemoryRouter>
-      <div className="p-4 bg-surface-gray-1 rounded-lg shadow-sm">
-        <Breadcrumbs {...args} />
-      </div>
-    </MemoryRouter>
+    <div className="p-4 bg-surface-gray-1 rounded-lg shadow-sm">
+      <Breadcrumbs {...args} />
+    </div>
   ),
-};
-
-export const WithRouteOption: StoryObj<BreadcrumbsProps> = {
-  ...BreadcrumbsTemplate,
-  args: {
-    items: [
-      {
-        label: "Home",
-        route: "/",
-      },
-      {
-        label: "Views",
-        route: "/components",
-      },
-      {
-        label: "List",
-        route: "/components/breadcrumbs",
-      },
-    ],
-  },
 };
 
 export const WithOnClickOption: StoryObj<BreadcrumbsProps> = {
@@ -85,17 +62,14 @@ export const WithPrefixSlot: StoryObj<BreadcrumbsProps> = {
       {
         label: "Home",
         suffixIcon: "🏡",
-        route: "/",
       },
       {
         label: "Views",
         suffixIcon: "🏞️",
-        route: "/components",
       },
       {
         label: "List",
         suffixIcon: "📃",
-        route: "/components/breadcrumbs",
       },
     ],
   },

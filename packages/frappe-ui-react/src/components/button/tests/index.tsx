@@ -1,14 +1,11 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { BrowserRouter } from 'react-router';
 import Button from '../button';
 
 describe('Button Component', () => {
     const renderButton = (props = {}) => {
         return render(
-            <BrowserRouter>
-                <Button {...props} />
-            </BrowserRouter>
+					<Button {...props} />
         );
     };
 
@@ -21,7 +18,7 @@ describe('Button Component', () => {
         const { rerender } = renderButton({ label: 'Button', theme: 'blue', variant: 'solid' });
         expect(screen.getByText('Button').parentElement).toHaveClass('bg-blue-500');
 
-        rerender(<BrowserRouter><Button label="Button" theme="red" variant="subtle" /></BrowserRouter>);
+        rerender(<Button label="Button" theme="red" variant="subtle" />);
         expect(screen.getByText('Button').parentElement).toHaveClass('bg-surface-red-2');
     });
 
@@ -49,13 +46,6 @@ describe('Button Component', () => {
     it('renders as disabled', () => {
         renderButton({ label: 'Disabled', disabled: true });
         expect(screen.getByText('Disabled').parentElement).toHaveAttribute('disabled');
-    });
-
-    it('handles navigation when route prop is provided', () => {
-        renderButton({ label: 'Navigate', route: '/dashboard' });
-        const button = screen.getByText('Navigate');
-        fireEvent.click(button);
-        // Navigation testing would require more complex setup with router testing utilities
     });
 
     it('opens link in new tab when link prop is provided', () => {

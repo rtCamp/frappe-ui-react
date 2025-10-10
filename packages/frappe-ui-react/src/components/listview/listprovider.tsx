@@ -21,7 +21,6 @@ export const ListProvider: React.FC<ListProviderProps> = ({
 
   const mergedOptions = useMemo(() => {
     return {
-      getRowRoute: options.options.getRowRoute,
       onRowClick: options.options.onRowClick,
       showTooltip:
         options.options.showTooltip !== undefined
@@ -51,10 +50,7 @@ export const ListProvider: React.FC<ListProviderProps> = ({
   }, [options]);
 
   const showGroupedRows = useMemo(
-    () =>
-      rows.every(
-        (row) => row.group && row.rows && Array.isArray(row.rows)
-      ),
+    () => rows.every((row) => row.group && row.rows && Array.isArray(row.rows)),
     [rows]
   );
 
@@ -65,8 +61,7 @@ export const ListProvider: React.FC<ListProviderProps> = ({
 
     if (showGroupedRows) {
       return (
-        selections.size ===
-        rows.reduce((acc, row) => acc + row.rows.length, 0)
+        selections.size === rows.reduce((acc, row) => acc + row.rows.length, 0)
       );
     }
 
@@ -108,7 +103,7 @@ export const ListProvider: React.FC<ListProviderProps> = ({
   useMemo(() => {
     if (selections.size > 0) {
       setActiveRow({
-        value: null
+        value: null,
       });
     }
   }, [selections.size]);

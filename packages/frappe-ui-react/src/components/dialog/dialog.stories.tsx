@@ -4,7 +4,6 @@ import Dialog from "./dialog";
 import { Button } from "../button";
 import { Dropdown } from "../dropdown";
 import { Autocomplete, AutocompleteOption } from "../autoComplete";
-import { MemoryRouter } from "react-router";
 import { DialogOptions } from "./types";
 
 const meta: Meta<typeof Dialog> = {
@@ -12,17 +11,15 @@ const meta: Meta<typeof Dialog> = {
   component: Dialog,
   decorators: [
     (Story) => (
-      <MemoryRouter>
-        <div
-          style={{
-            display: "grid",
-            gap: "1rem",
-            gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-          }}
-        >
-          <Story />
-        </div>
-      </MemoryRouter>
+			<div
+				style={{
+					display: "grid",
+					gap: "1rem",
+					gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+				}}
+			>
+				<Story />
+			</div>
     ),
   ],
   parameters: {

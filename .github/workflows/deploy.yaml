@@ -1,49 +1,58 @@
-name: Publish To Github Pages
+name: Deploy Storybook to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+    branches: [ main ]
+  workflow_dispatch:
 
-env:
-  CI: false
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          ls 
+          pwd 
+          rm -rf **/node_modules
+          rm -rf package-lock.json
+          npm install || true
+
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './storybook-static'
+
+  deploy:
+    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
-    permissions:
-      contents: "read"
-      id-token: "write"
-      pages: "write"
-      actions: "write"
-      checks: "write"
-      deployments: "write"
-    strategy:
-      matrix:
-        node-version: [18.x]
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Node
-        uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
-        with:
-          node-version-file: ".nvmrc"
-          cache: npm
-      - name: Install dependencies
-        run: |
-          npm ci
-      - name: Build Storybook
-        run: |
-          npm run build-storybook
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./storybook-static
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

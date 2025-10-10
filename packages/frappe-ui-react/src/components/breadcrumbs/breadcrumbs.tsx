@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from "react";
-import { Link, useNavigate } from "react-router";
 import useWindowSize from "../hooks/useWindowSize";
 import {
   Dropdown,
@@ -29,7 +28,6 @@ const ThreeDotsIcon: React.FC = () => (
 );
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
-  const navigate = useNavigate();
   const { width } = useWindowSize();
 
   const filteredItems = useMemo(() => {
@@ -45,16 +43,13 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
         if (item.onClick) {
           item.onClick();
         }
-        if (item.route) {
-          navigate(item.route);
-        }
       };
       return {
         label: item.label,
         onClick: onClick,
       };
     });
-  }, [width, filteredItems, navigate]);
+  }, [width, filteredItems]);
 
   const crumbs: BreadcrumbItem[] = useMemo(() => {
     if (width > 640) return filteredItems;
@@ -109,34 +104,22 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
               item.onClick();
             }
 
-            if (!item.route && item.onClick) {
+            if (item.onClick) {
               e.preventDefault();
             }
           };
 
           return (
             <React.Fragment key={item.label}>
-              {item.route ? (
-                <Link
-                  to={item.route}
-                  onClick={handleClick}
-                  className={`${commonClasses} cursor-default`}
-                >
-                  {renderPrefix(item)}
-                  <span>{item.label}</span>
-                  {renderSuffix(item)}
-                </Link>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleClick}
-                  className={`${commonClasses} cursor-pointer`}
-                >
-                  {renderPrefix(item)}
-                  <span>{item.label}</span>
-                  {renderSuffix(item)}
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={handleClick}
+                className={`${commonClasses} cursor-pointer`}
+              >
+                {renderPrefix(item)}
+                <span>{item.label}</span>
+                {renderSuffix(item)}
+              </button>
               {!isLast && (
                 <span
                   className="mx-0.5 text-base text-(--ink-gray-4) select-none"

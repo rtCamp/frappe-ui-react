@@ -1,7 +1,6 @@
 import { useToasts } from "./useToast";
 import ToastProvider from "./toastProvider";
 import { Button } from "../button";
-import { MemoryRouter } from "react-router";
 import { Meta } from "@storybook/react-vite/*";
 
 export default {
@@ -40,7 +39,6 @@ const ToastTriggerComponent = () => {
 
   return (
     <div className="flex flex-col gap-4 p-8">
-      <MemoryRouter>
         <Button onClick={() => toast.success("This is a success message!")}>
           Show Success Toast
         </Button>
@@ -48,7 +46,6 @@ const ToastTriggerComponent = () => {
           Show Error Toast
         </Button>
         <Button onClick={handlePromise}>Show Promise Toast</Button>
-      </MemoryRouter>
     </div>
   );
 };

@@ -2,7 +2,6 @@ import { Meta, StoryObj } from "@storybook/react-vite/*";
 import { useState } from "react";
 
 import TabButtons from ".";
-import { MemoryRouter } from "react-router";
 
 const meta: Meta<typeof TabButtons> = {
   title: "Components/TabButtons",
@@ -35,7 +34,6 @@ export const TabButtonsExample: Story = {
     const [currentTab, setCurrentTab] = useState<string>("mytasks");
 
     return (
-      <MemoryRouter>
         <TabButtons
           buttons={[
             { label: "Tasks assigned to me", value: "mytasks" },
@@ -44,7 +42,6 @@ export const TabButtonsExample: Story = {
           value={currentTab}
           onChange={(value) => setCurrentTab(value as string)}
         />
-      </MemoryRouter>
     );
   },
 };

@@ -1,5 +1,4 @@
 import React, { useMemo, useCallback } from "react";
-import { useNavigate } from "react-router";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 import { Button, ButtonProps } from "../button";
@@ -32,20 +31,13 @@ const Dropdown: React.FC<DropdownProps> = ({
   children,
   ...attrs
 }) => {
-  const navigate = useNavigate();
-
-  const handleItemClick = useCallback(
-    (item: DropdownOption) => {
-      if (item.route) {
-        navigate(item.route);
-      } else if (item.link) {
-        window.open(item.link, "_blank");
-      } else if (item.onClick) {
-        item.onClick();
-      }
-    },
-    [navigate]
-  );
+  const handleItemClick = useCallback((item: DropdownOption) => {
+    if (item.link) {
+      window.open(item.link, "_blank");
+    } else if (item.onClick) {
+      item.onClick();
+    }
+  }, []);
 
   const getIconColor = (item: DropdownOption) =>
     item.theme === "red" ? "text-ink-red-3" : "text-ink-gray-6";

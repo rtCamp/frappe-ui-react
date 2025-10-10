@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { MemoryRouter } from "react-router";
 import Button from "./button";
 import { ButtonProps } from "./types";
 
@@ -40,10 +39,6 @@ export default {
       control: "boolean",
       description: "If true, disables the button.",
     },
-    route: {
-      control: "text",
-      description: "Internal route for navigation (uses react-router-dom).",
-    },
     link: {
       control: "text",
       description: "External URL for navigation (opens in new tab).",
@@ -82,11 +77,9 @@ export default {
 
 const ButtonTemplate: StoryObj<ButtonProps> = {
   render: (args) => (
-    <MemoryRouter initialEntries={["/"]}>
       <div className="p-4">
         <Button {...args} />
       </div>
-    </MemoryRouter>
   ),
 };
 

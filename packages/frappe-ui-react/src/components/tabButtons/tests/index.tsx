@@ -1,8 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom"
+import "@testing-library/jest-dom";
 import TabButtons from "../index";
-import { MemoryRouter } from "react-router";
 
 describe("TabButtons", () => {
   const buttons = [
@@ -12,11 +11,7 @@ describe("TabButtons", () => {
   ];
 
   it("renders all tab buttons", () => {
-    render(
-      <MemoryRouter>
-        <TabButtons buttons={buttons} value="1" onChange={() => {}} />
-      </MemoryRouter>
-    );
+    render(<TabButtons buttons={buttons} value="1" onChange={() => {}} />);
     expect(screen.getByText("Tab 1")).toBeInTheDocument();
     expect(screen.getByText("Tab 2")).toBeInTheDocument();
     expect(screen.getByText("Tab 3")).toBeInTheDocument();
@@ -24,22 +19,14 @@ describe("TabButtons", () => {
 
   it("calls onChange when a tab is clicked", () => {
     const handleChange = jest.fn();
-    render(
-      <MemoryRouter>
-        <TabButtons buttons={buttons} value="1" onChange={handleChange} />
-      </MemoryRouter>
-    );
+    render(<TabButtons buttons={buttons} value="1" onChange={handleChange} />);
     fireEvent.click(screen.getByText("Tab 2"));
     expect(handleChange).toHaveBeenCalledWith("2");
   });
 
   it("does not call onChange when a disabled tab is clicked", () => {
     const handleChange = jest.fn();
-    render(
-      <MemoryRouter>
-        <TabButtons buttons={buttons} value="1" onChange={handleChange} />
-      </MemoryRouter>
-    );
+    render(<TabButtons buttons={buttons} value="1" onChange={handleChange} />);
     fireEvent.click(screen.getByText("Tab 3"));
     expect(handleChange).not.toHaveBeenCalledWith("3");
   });
@@ -50,9 +37,7 @@ describe("TabButtons", () => {
       { label: "Tab 2", value: "2" },
     ];
     render(
-      <MemoryRouter>
-        <TabButtons buttons={customButtons} value="2" onChange={() => {}} />
-      </MemoryRouter>
+      <TabButtons buttons={customButtons} value="2" onChange={() => {}} />
     );
     expect(screen.queryByText("Tab 1")).not.toBeInTheDocument();
     expect(screen.getByText("Tab 2")).toBeInTheDocument();

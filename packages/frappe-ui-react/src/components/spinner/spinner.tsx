@@ -1,4 +1,4 @@
-import './Spinner.css';
+import './spinner.css';
 
 interface SpinnerProps {
   className?: string;

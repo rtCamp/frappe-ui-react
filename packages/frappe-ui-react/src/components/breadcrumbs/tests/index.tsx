@@ -1,25 +1,17 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Breadcrumbs from '../breadcrumbs';
-import * as router from 'react-router';
-
-const BrowserRouter = router.BrowserRouter;
 
 describe('Breadcrumbs', () => {
-    const mockNavigate = jest.fn();
-    jest.spyOn(router, 'useNavigate').mockReturnValue(mockNavigate);
-
     it('renders breadcrumb items correctly', () => {
         const items = [
-            { label: 'Home', route: '/' },
-            { label: 'Products', route: '/products' },
-            { label: 'Details', route: '/products/details' }
+            { label: 'Home' },
+            { label: 'Products'},
+            { label: 'Details' }
         ];
 
         render(
-            <BrowserRouter>
-                <Breadcrumbs items={items} />
-            </BrowserRouter>
+					<Breadcrumbs items={items} />
         );
 
         items.forEach(item => {
@@ -34,28 +26,11 @@ describe('Breadcrumbs', () => {
         ];
 
         render(
-            <BrowserRouter>
-                <Breadcrumbs items={items} />
-            </BrowserRouter>
+					<Breadcrumbs items={items} />
         );
 
         fireEvent.click(screen.getByText('Home'));
         expect(onClickMock).toHaveBeenCalled();
-    });
-
-    it('navigates when route is provided', () => {
-        const items = [
-            { label: 'Home', route: '/home' }
-        ];
-
-        render(
-            <BrowserRouter>
-                <Breadcrumbs items={items} />
-            </BrowserRouter>
-        );
-
-        fireEvent.click(screen.getByText('Home'));
-        expect(mockNavigate).not.toHaveBeenCalled(); // Link handles navigation
     });
 
     it('renders prefix and suffix icons', () => {
@@ -68,9 +43,7 @@ describe('Breadcrumbs', () => {
         ];
 
         render(
-            <BrowserRouter>
-                <Breadcrumbs items={items} />
-            </BrowserRouter>
+					<Breadcrumbs items={items} />
         );
 
         expect(screen.getByTestId('prefix')).toBeInTheDocument();

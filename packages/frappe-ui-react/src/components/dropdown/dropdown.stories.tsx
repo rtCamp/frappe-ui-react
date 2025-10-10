@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { action } from "storybook/actions";
-import { MemoryRouter } from "react-router";
 import Dropdown from "./dropdown";
 import { Button } from "../button";
 import { DropdownOptions } from "./types";
@@ -197,11 +196,9 @@ const submenuActions: DropdownOptions = [
 
 const DropdownTemplate: StoryObj<typeof Dropdown> = {
   render: (args) => (
-    <MemoryRouter>
       <div className="p-4 flex justify-center items-center h-40">
         <Dropdown {...args} />
       </div>
-    </MemoryRouter>
   ),
 };
 

@@ -2,7 +2,6 @@ import type{ ReactNode } from 'react';
 
 export interface BreadcrumbItem {
   label: string;
-  route?: string;
   onClick?: () => void;
   prefixIcon?: ReactNode;
   suffixIcon?: ReactNode;

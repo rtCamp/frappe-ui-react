@@ -14,7 +14,6 @@ import {
   LucideUserCheck,
   LucideUsers,
 } from "lucide-react";
-import { MemoryRouter } from "react-router";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof Sidebar> = {
@@ -168,14 +167,12 @@ export const SidebarExample: Story = {
         className="flex h-screen w-full flex-col bg-surface-white shadow"
         id="sidebar-container"
       >
-        <MemoryRouter>
           <Sidebar
             header={{
               ...crmSidebar.header,
             }}
             sections={crmSidebar.sections}
           />
-        </MemoryRouter>
       </div>
     );
   },

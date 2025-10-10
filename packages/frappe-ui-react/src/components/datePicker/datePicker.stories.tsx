@@ -1,5 +1,4 @@
 import { Meta, StoryObj } from "@storybook/react-vite";
-import { MemoryRouter } from "react-router";
 import { DatePicker, DateTimePicker, DateRangePicker } from "./index";
 import { useState } from "react";
 
@@ -31,15 +30,13 @@ export const Date: DatePickerStory = {
   render: (args) => {
     const [dateValue, setDateValue] = useState("");
     return (
-      <MemoryRouter>
-            <DatePicker
-              {...args}
-              value={dateValue}
-              onChange={(val) =>
-                setDateValue(Array.isArray(val) ? val[0] || "" : val)
-              }
-            />
-      </MemoryRouter>
+			<DatePicker
+				{...args}
+				value={dateValue}
+				onChange={(val) =>
+					setDateValue(Array.isArray(val) ? val[0] || "" : val)
+				}
+			/>
     );
   },
   argTypes: {
@@ -67,15 +64,13 @@ export const DateTime: DateTimePickerStory = {
   render: (args) => {
     const [dateTimeValue, setDateTimeValue] = useState("");
     return (
-      <MemoryRouter>
-            <DateTimePicker
-              {...args}
-              value={dateTimeValue}
-              onChange={(val) =>
-                setDateTimeValue(Array.isArray(val) ? val[0] || "" : val)
-              }
-            />
-      </MemoryRouter>
+			<DateTimePicker
+				{...args}
+				value={dateTimeValue}
+				onChange={(val) =>
+					setDateTimeValue(Array.isArray(val) ? val[0] || "" : val)
+				}
+			/>
     );
   },
   argTypes: {
@@ -104,15 +99,13 @@ export const DateRange: DateRangePickerStory = {
   render: (args) => {
     const [dateRangeValue, setDateRangeValue] = useState(["", ""]);
     return (
-      <MemoryRouter>
-            <DateRangePicker
-              {...args}
-              value={dateRangeValue}
-              onChange={(val) =>
-                setDateRangeValue(Array.isArray(val) ? val : [val, ""])
-              }
-            />
-      </MemoryRouter>
+			<DateRangePicker
+				{...args}
+				value={dateRangeValue}
+				onChange={(val) =>
+					setDateRangeValue(Array.isArray(val) ? val : [val, ""])
+				}
+			/>
     );
   },
   argTypes: {

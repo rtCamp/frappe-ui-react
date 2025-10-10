@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import Autocomplete from '../autoComplete';
 import { simpleOptions, groupedOptions } from '../../../test-utils/mockData';
-import { MemoryRouter } from 'react-router';
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
     observe: jest.fn(),
@@ -133,13 +132,13 @@ describe('Autocomplete Component', () => {
 
      test('MS-03 & MS-04: Uses "Select All" and "Clear All" from footer', async () => {
         const onChange = jest.fn();
-        const { rerender } = render(<MemoryRouter><Autocomplete options={simpleOptions} onChange={onChange} multiple showFooter value={[]} /></MemoryRouter>);
+        const { rerender } = render(<Autocomplete options={simpleOptions} onChange={onChange} multiple showFooter value={[]} />);
         await userEvent.click(screen.getByRole('button', {name: "Toggle options"}));
 
         await userEvent.click(screen.getByRole('button', { name: 'Select All' }));
         expect(onChange).toHaveBeenCalledWith(['a', 'b', 'c']);
 
-        rerender(<MemoryRouter><Autocomplete options={simpleOptions} onChange={onChange} multiple showFooter value={['a','b','c']} /></MemoryRouter>);
+        rerender(<Autocomplete options={simpleOptions} onChange={onChange} multiple showFooter value={['a','b','c']} />);
         await userEvent.click(screen.getByRole('button', { name: 'Clear All' }));
         expect(onChange).toHaveBeenLastCalledWith([]);
      });

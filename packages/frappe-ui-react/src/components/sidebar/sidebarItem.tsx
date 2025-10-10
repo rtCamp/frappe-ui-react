@@ -27,7 +27,6 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
     if (onClick) {
       onClick();
     } else if (to) {
-      // Use react-router for navigation if needed
       window.location.href = to;
     }
   }

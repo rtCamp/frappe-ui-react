@@ -1,5 +1,4 @@
 import { Meta, StoryObj } from "@storybook/react-vite";
-import { MemoryRouter } from "react-router";
 
 import ListView from "./listView";
 import { Avatar } from "../avatar";
@@ -270,21 +269,19 @@ export const SimpleList: Story = {
   render: (args) => {
     return (
       <div>
-        <MemoryRouter>
-          <ListView
-            {...args}
-            columns={simple_columns}
-            rows={simple_rows}
-            rowKey="id"
-          />
-        </MemoryRouter>
+        <ListView
+          {...args}
+          columns={simple_columns}
+          rows={simple_rows}
+          rowKey="id"
+        />
       </div>
     );
   },
   args: {
     options: {
       options: {
-        getRowRoute: (row) => `/users/${row.id}`,
+        onRowClick: (row) => `/users/${row.id}`,
         selectable: true,
         showTooltip: true,
         resizeColumn: true,
@@ -297,96 +294,94 @@ export const CustomList: Story = {
   render: (args) => {
     return (
       <div>
-        <MemoryRouter>
-          <ListView
-            {...args}
-            columns={custom_columns}
-            rows={custom_rows}
-            rowKey="id"
-          >
-            <>
-              <ListHeader>
-                {custom_columns.map((column, index) => (
-                  <ListHeaderItem key={column.key} item={column}>
-                    <div
-                      className={`flex items-center gap-2 ${
-                        index === 0 ? "ml-4" : ""
-                      }`}
-                    >
-                      <FeatherIcon name={column.icon} className="h-4 w-4" />
-                      <span>{column.label}</span>
-                    </div>
-                  </ListHeaderItem>
-                ))}
-              </ListHeader>
-              <ListRows>
-                {custom_rows.map((row) => (
-                  <ListRow key={row.id} row={row}>
-                    {custom_columns.map((column, index) => {
-                      //@ts-expects-error
-                      const item = row[column.key];
-                      return (
-                        <div className={`${index === 0 ? "ml-4" : ""}`}>
-                          <ListRowItem
-                            key={column.key}
-                            column={column}
-                            row={row}
-                            item={item}
-                            prefix={
-                              <>
-                                {column.key === "status" && (
-                                  <div
-                                    className="h-3 w-3 rounded-full"
-                                    style={{ backgroundColor: item.bg_color }}
-                                  />
-                                )}
-                                {column.key === "name" && (
-                                  <Avatar
-                                    shape="circle"
-                                    image={item.image}
-                                    size="sm"
-                                    label={item.label}
-                                  />
-                                )}
-                              </>
-                            }
-                          >
+        <ListView
+          {...args}
+          columns={custom_columns}
+          rows={custom_rows}
+          rowKey="id"
+        >
+          <>
+            <ListHeader>
+              {custom_columns.map((column, index) => (
+                <ListHeaderItem key={column.key} item={column}>
+                  <div
+                    className={`flex items-center gap-2 ${
+                      index === 0 ? "ml-4" : ""
+                    }`}
+                  >
+                    <FeatherIcon name={column.icon} className="h-4 w-4" />
+                    <span>{column.label}</span>
+                  </div>
+                </ListHeaderItem>
+              ))}
+            </ListHeader>
+            <ListRows>
+              {custom_rows.map((row) => (
+                <ListRow key={row.id} row={row}>
+                  {custom_columns.map((column, index) => {
+                    //@ts-expects-error
+                    const item = row[column.key];
+                    return (
+                      <div className={`${index === 0 ? "ml-4" : ""}`}>
+                        <ListRowItem
+                          key={column.key}
+                          column={column}
+                          row={row}
+                          item={item}
+                          prefix={
                             <>
-                              {column.key === "role" ? (
-                                <Badge
-                                  variant="subtle"
-                                  theme={item.color}
-                                  size="md"
+                              {column.key === "status" && (
+                                <div
+                                  className="h-3 w-3 rounded-full"
+                                  style={{ backgroundColor: item.bg_color }}
+                                />
+                              )}
+                              {column.key === "name" && (
+                                <Avatar
+                                  shape="circle"
+                                  image={item.image}
+                                  size="sm"
                                   label={item.label}
                                 />
-                              ) : (
-                                <span className="font-medium text-ink-gray-7">
-                                  {item.label || item}
-                                </span>
                               )}
                             </>
-                          </ListRowItem>
-                        </div>
-                      );
-                    })}
-                  </ListRow>
-                ))}
-              </ListRows>
-              <ListSelectBanner>
-                {({ unselectAll }) => (
-                  <div className="flex w-full justify-between">
-                    <Button variant="ghost" label="Delete" />
-                    <Button
-                      variant="ghost"
-                      label="Unselect all"
-                      onClick={unselectAll}
-                    />
-                  </div>
-                )}
-              </ListSelectBanner>
-            </>
-          </ListView>
-        </MemoryRouter>
+                          }
+                        >
+                          <>
+                            {column.key === "role" ? (
+                              <Badge
+                                variant="subtle"
+                                theme={item.color}
+                                size="md"
+                                label={item.label}
+                              />
+                            ) : (
+                              <span className="font-medium text-ink-gray-7">
+                                {item.label || item}
+                              </span>
+                            )}
+                          </>
+                        </ListRowItem>
+                      </div>
+                    );
+                  })}
+                </ListRow>
+              ))}
+            </ListRows>
+            <ListSelectBanner>
+              {({ unselectAll }) => (
+                <div className="flex w-full justify-between">
+                  <Button variant="ghost" label="Delete" />
+                  <Button
+                    variant="ghost"
+                    label="Unselect all"
+                    onClick={unselectAll}
+                  />
+                </div>
+              )}
+            </ListSelectBanner>
+          </>
+        </ListView>
       </div>
     );
   },
@@ -406,22 +401,20 @@ export const GroupedRows: Story = {
   render: (args) => {
     return (
       <div>
-        <MemoryRouter>
-          <ListView
-            {...args}
-            columns={group_columns}
-            rows={grouped_rows}
-            rowKey="id"
-            options={{
-              options: {
-                selectable: true,
-                showTooltip: true,
-                resizeColumn: true,
-                getRowRoute: (row) => `/users/${row.id}`,
-              },
-            }}
-          />
-        </MemoryRouter>
+        <ListView
+          {...args}
+          columns={group_columns}
+          rows={grouped_rows}
+          rowKey="id"
+          options={{
+            options: {
+              selectable: true,
+              showTooltip: true,
+              resizeColumn: true,
+              onRowClick: (row) => `/users/${row.id}`,
+            },
+          }}
+        />
       </div>
     );
   },
@@ -440,28 +433,26 @@ export const CellSlot: Story = {
 
     return (
       <div>
-        <MemoryRouter>
-          <ListView
-            {...args}
-            columns={simple_columns}
-            rows={simple_rows}
-            rowKey="id"
-            options={{
-              options: {
-                selectable: true,
-                showTooltip: true,
-                resizeColumn: true,
-              },
-              slots: {
-                cell: CustomCell,
-              },
-              emptyState: {
-                title: "No records found",
-                description: "Create a new record to get started",
-              },
-            }}
-          />
-        </MemoryRouter>
+        <ListView
+          {...args}
+          columns={simple_columns}
+          rows={simple_rows}
+          rowKey="id"
+          options={{
+            options: {
+              selectable: true,
+              showTooltip: true,
+              resizeColumn: true,
+            },
+            slots: {
+              cell: CustomCell,
+            },
+            emptyState: {
+              title: "No records found",
+              description: "Create a new record to get started",
+            },
+          }}
+        />
       </div>
     );
   },
@@ -472,30 +463,28 @@ export const EmptyList: Story = {
   render: (args) => {
     return (
       <div>
-        <MemoryRouter>
-          <ListView
-            {...args}
-            columns={simple_columns}
-            rows={[]}
-            rowKey="id"
-            options={{
-              options: {
-                selectable: true,
-                showTooltip: true,
-                resizeColumn: true,
+        <ListView
+          {...args}
+          columns={simple_columns}
+          rows={[]}
+          rowKey="id"
+          options={{
+            options: {
+              selectable: true,
+              showTooltip: true,
+              resizeColumn: true,
+            },
+            emptyState: {
+              title: "No records found",
+              description: "Create a new record to get started",
+              button: {
+                label: "New Record",
+                variant: "solid",
+                onClick: () => console.log("New Record"),
               },
-              emptyState: {
-                title: "No records found",
-                description: "Create a new record to get started",
-                button: {
-                  label: "New Record",
-                  variant: "solid",
-                  onClick: () => console.log("New Record"),
-                },
-              },
-            }}
-          />
-        </MemoryRouter>
+            },
+          }}
+        />
       </div>
     );
   },

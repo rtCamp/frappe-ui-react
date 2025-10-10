@@ -1,7 +1,6 @@
 import { Button } from "../button";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import FileUploader from "./fileuploader";
-import { MemoryRouter } from "react-router";
 
 const meta: Meta<typeof FileUploader> = {
   title: "Components/FileUploader",
@@ -55,7 +54,6 @@ const onSuccess = (file: unknown) => {
 
 export const Default: Story = {
   render: () => (
-        <MemoryRouter>
           <FileUploader
             fileTypes={["image/*"]}
             validateFile={validateFileFunction}
@@ -67,7 +65,6 @@ export const Default: Story = {
               </Button>
             )}
           </FileUploader>
-        </MemoryRouter>
       
   ),
 };
