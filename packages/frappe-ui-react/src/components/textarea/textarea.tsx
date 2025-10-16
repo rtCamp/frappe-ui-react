@@ -20,6 +20,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       rows = 3,
       htmlId,
       placeholder,
+      extraClasses = '',
+      ...props
     },
     ref
   ) => {
@@ -65,7 +67,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
       const textColor = disabled ? 'text-ink-gray-5' : 'text-ink-gray-8';
 
-      return `resize-y transition-colors w-full block outline-none ${sizeClasses} ${paddingClasses} ${variantClasses} ${textColor}`;
+      return `resize-y transition-colors w-full block outline-none ${sizeClasses} ${paddingClasses} ${variantClasses} ${textColor} ${extraClasses}`;
     }, [size, disabled, variant]);
 
     const labelClasses = useMemo(() => {
@@ -121,6 +123,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           value={value}
           onChange={handleChange}
 					data-testid="textarea"
+          {...props}
         />
       </div>
     );

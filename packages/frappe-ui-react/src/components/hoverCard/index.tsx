@@ -6,7 +6,7 @@ import { Root, Trigger, Content, type HoverCardContentProps } from "@radix-ui/re
 /**
  * Internal dependencies.
  */
-import { mergeClassNames } from "../../utils/mergeClassnames";
+import { mergeClassNames } from "../../utils";
 
 const HoverCard = Root;
 

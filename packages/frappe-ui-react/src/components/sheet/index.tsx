@@ -7,7 +7,7 @@ import { cva } from "class-variance-authority";
 /**
  * Internal dependencies.
  */
-import { mergeClassNames } from "../../utils/mergeClassnames";
+import { mergeClassNames } from "../../utils";
 import { Dialog } from "../dialog";
 
 const sheetVariants = cva(
