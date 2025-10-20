@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import Comment from './comment';
-import CommentForm from './commentForm';
-import type { CommentData } from './types';
+import { useState } from "react";
+import Comment from "./comment";
+import CommentForm from "./commentForm";
+import type { CommentData } from "./types";
+import { MessageCircle } from "lucide-react";
 
 const CURRENT_USER = {
-  name: 'Current User',
-  avatarUrl: 'https://i.pravatar.cc/40?img=4',
+  name: "Current User",
+  avatarUrl: "https://i.pravatar.cc/40?img=4",
 };
 
 function addReplyToTree(
@@ -31,9 +32,8 @@ function addReplyToTree(
   });
 }
 type CommentsProp = {
-    initialComments: CommentData[];
-}
-
+  initialComments: CommentData[];
+};
 
 function Comments({ initialComments = [] }: CommentsProp) {
   const [comments, setComments] = useState<CommentData[]>(initialComments);
@@ -42,7 +42,7 @@ function Comments({ initialComments = [] }: CommentsProp) {
     const newComment: CommentData = {
       id: Date.now(),
       author: CURRENT_USER,
-      timestamp: 'Just now',
+      timestamp: "Just now",
       text: text,
       replies: [],
     };
@@ -53,7 +53,7 @@ function Comments({ initialComments = [] }: CommentsProp) {
     const newReply: CommentData = {
       id: Date.now(),
       author: CURRENT_USER,
-      timestamp: 'Just now',
+      timestamp: "Just now",
       text: text,
       replies: [],
     };
@@ -64,21 +64,31 @@ function Comments({ initialComments = [] }: CommentsProp) {
   };
 
   return (
-
-    <div className="max-w-3xl mx-auto bg-white border border-gray-200 rounded-lg p-6 my-10">
+    <div className="flex flex-col flex-1 overflow-y-auto">
       <h1 className="text-xl font-semibold mb-4">Comments</h1>
 
-      <CommentForm buttonText="Comment" onSubmit={handleAddComment} />
-      
-      <hr className="border-t border-gray-100 my-6" />
+      {comments.length === 0 && (
+        <CommentForm buttonText="Comment" onSubmit={handleAddComment} />
+      )}
 
-      <div className="space-y-4">
-        {comments.map((comment) => (
-          <Comment
-            key={comment.id}
-            comment={comment}
-            onAddReply={handleAddReply}
-          />
+      <div className="space-y-4 relative">
+        {comments.map((comment, index) => (
+          <div className="activity grid grid-cols-[30px_minmax(auto,_1fr)] gap-2 mb-4">
+            <div
+              className={`z-0 relative flex justify-center before:absolute before:left-[50%] before:-z-[1] before:top-0 before:border-l before:border-outline-gray-modals ${
+                index != comments.length ? "before:h-full" : "before:h-4"
+              }`}
+            >
+              <div className="flex h-8 w-7 items-center justify-center bg-gray-100 rounded-full">
+                <MessageCircle className="text-ink-gray-8 w-4 h-4" />
+              </div>
+            </div>
+            <Comment
+              key={comment.id}
+              comment={comment}
+              onAddReply={handleAddReply}
+            />
+          </div>
         ))}
       </div>
     </div>

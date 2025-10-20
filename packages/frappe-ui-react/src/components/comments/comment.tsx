@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
-import CommentForm from './commentForm';
-import type { CommentData } from './types';
+import React, { useState } from "react";
+import CommentForm from "./commentForm";
+import type { CommentData } from "./types";
+import { Avatar } from "../avatar";
+import { Button } from "../button";
+import { MessageSquareText, ReplyIcon } from "lucide-react";
 
 interface CommentProps {
   comment: CommentData;
@@ -13,7 +16,10 @@ function parseMentions(text: string): React.ReactNode[] {
 
   return parts.map((part, index) =>
     mentionRegex.test(part) ? (
-      <strong key={index} className="text-blue-600 font-semibold bg-blue-50 rounded px-0.5">
+      <strong
+        key={index}
+        className="text-blue-600 font-semibold bg-blue-50 rounded px-0.5"
+      >
         {part}
       </strong>
     ) : (
@@ -32,33 +38,42 @@ function Comment({ comment, onAddReply }: CommentProps) {
 
   return (
     <div className="comment-container">
-      <div className="flex items-start">
-        <img
-          src={comment.author.avatarUrl}
-          alt={comment.author.name}
-          className="w-9 h-9 rounded-full mr-3 flex-shrink-0"
-        />
-        <div className="flex-1">
-          <div className="text-sm mb-1">
-            <strong className="font-semibold mr-1">{comment.author.name}</strong>
+      <div className="border p-2 rounded-lg border-gray-200 flex flex-col mb-4 w-full">
+        <div className="flex items-center justify-between m-1">
+          <span className="flex items-center">
+            <Avatar
+              image={comment.author.avatarUrl}
+              label={comment.author.name}
+            />
+            <span className="ml-2">{comment.author.name}&nbsp;</span>
+            <span className="text-muted">commented</span>
             <span className="text-gray-500 text-xs">· {comment.timestamp}</span>
-          </div>
-          <div className="text-[15px] leading-relaxed whitespace-pre-wrap">
-            {parseMentions(comment.text)}
-          </div>
-          <div className="mt-2 flex items-center gap-1">
-            <button
-              className="bg-transparent border-none px-2 py-1 text-gray-600 text-xs font-semibold rounded cursor-pointer hover:bg-gray-100"
-              onClick={() => setIsReplying(!isReplying)}
-            >
-              Reply
-            </button>
-            <button className="bg-transparent border-none px-2 py-1 text-gray-600 text-xs font-semibold rounded cursor-pointer hover:bg-gray-100">
-              Edit
-            </button>
-            <button className="bg-transparent border-none p-1 text-gray-600 cursor-pointer ml-auto">
-              ...
-            </button>
+          </span>
+          <span className="flex flex-shrink-0">
+            <div className="mt-2 flex items-center gap-1">
+              <Button variant="ghost" size="sm">
+                Edit
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                iconLeft={() => <ReplyIcon className="w-3 h-3" />}
+                onClick={() => setIsReplying(!isReplying)}
+              >
+                Reply
+              </Button>
+              <button className="bg-transparent border-none p-1 text-gray-600 cursor-pointer ml-auto">
+                ...
+              </button>
+            </div>
+          </span>
+        </div>
+        <hr className="mt-1 mb-3.5 ml-9.5 border-t border-outline-gray-modals"/>
+        <div className="flex items-start">
+          <div className="flex-1">
+            <div className="text-[15px] leading-relaxed whitespace-pre-wrap">
+              {parseMentions(comment.text)}
+            </div>
           </div>
         </div>
       </div>
@@ -69,17 +84,23 @@ function Comment({ comment, onAddReply }: CommentProps) {
         </div>
       )}
 
-      {comment.replies && comment.replies.length > 0 && (
-        <div className="ml-6 pl-6 relative border-l-2 border-gray-200 mt-3 space-y-4">
-          {comment.replies.map((reply) => (
-            <Comment
-              key={reply.id}
-              comment={reply}
-              onAddReply={onAddReply}
-            />
-          ))}
-        </div>
-      )}
+      {comment.replies &&
+        comment.replies.length > 0 &&
+        comment.replies.map((reply, index) => (
+          <div className="activity grid grid-cols-[30px_minmax(auto,_1fr)] gap-2">
+            <div
+              className={`z-0 relative flex justify-center before:absolute before:left-[50%] before:-z-[1] before:top-0 before:border-l before:border-outline-gray-modals ${
+                index != comment.replies.length ? "before:h-full" : "before:h-4"
+              }`}
+            >
+              <div className="flex h-8 w-7 items-center justify-center bg-gray-100 rounded-full">
+                <MessageSquareText className="text-ink-gray-8 w-4 h-4" />
+              </div>
+            </div>
+
+            <Comment key={reply.id} comment={reply} onAddReply={onAddReply} />
+          </div>
+        ))}
     </div>
   );
 }
