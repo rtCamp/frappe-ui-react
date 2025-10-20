@@ -11,22 +11,9 @@ import {
   SheetDescription,
   SheetClose,
 } from './';
-
-const Button = (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
-  <button
-    {...props}
-    className="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 bg-gray-800 text-white hover:bg-gray-700"
-  />
-);
-const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
-  <input
-    {...props}
-    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-  />
-);
-const Label = (props: React.LabelHTMLAttributes<HTMLLabelElement>) => (
-  <label {...props} className="text-sm font-medium leading-none" />
-);
+import { Button } from '../button';
+import FormLabel from '../formLabel';
+import { TextInput } from '../textInput';
 
 const meta: Meta<typeof SheetContent> = {
   title: 'Components/Sheet',
@@ -67,16 +54,12 @@ export const Default: Story = {
         </SheetHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value="John Doe" className="col-span-3" />
+            <FormLabel label="Name" id="name"/>
+            <TextInput htmlId="name" value="John Doe" className="col-span-3" />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@johndoe" className="col-span-3" />
+            <FormLabel label='Username' id="username" />
+            <TextInput htmlId="username" value="@johndoe" className="col-span-3" />
           </div>
         </div>
         <SheetFooter>
