@@ -80,5 +80,9 @@
     ],
     "*.(xml|xml.dist)": "prettier --write",
     "*.yml": "prettier --write"
+  },
+  "dependencies": {
+    "@rtcamp/frappe-ui-react": "^1.0.0-beta.0",
+    "classnames": "^2.5.1"
   }
 }
