@@ -25,6 +25,7 @@ export interface TextEditorProps extends ReactQuill.ReactQuillProps {
   onChange: (value: string) => void;
   value?: string;
   placeholder?: string;
+  editingAreaRef?: React.RefObject<HTMLDivElement>;
 }
 
 Quill.register("modules/imageResize", ImageResize);
