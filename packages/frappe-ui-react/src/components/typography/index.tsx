@@ -1,7 +1,17 @@
 import React, { ElementType, HTMLAttributes } from "react";
-import { mergeClassNames } from "../../utils";
 
-type Variant = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "large" | "small" | "muted";
+type Variant =
+  | "h1"
+  | "h2"
+  | "h3"
+  | "h4"
+  | "h5"
+  | "h6"
+  | "p"
+  | "large"
+  | "small"
+  | "muted";
+
 export type TypographyProps = {
   variant?: Variant;
   children: React.ReactNode;
@@ -46,7 +56,12 @@ const Typography = ({
   const Tag = as || tags[variant];
 
   return (
-    <Tag className={mergeClassNames("text-primary", sizeClasses, className)} {...props}>
+    <Tag
+      className={`text-primary ${sizeClasses} ${
+        className ? `${className}` : ""
+      }`}
+      {...props}
+    >
       {children}
     </Tag>
   );
