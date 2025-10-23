@@ -343,39 +343,41 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
             isPopoverOpen && (
               <div className="relative mt-1 rounded-lg bg-surface-modal text-base shadow-2xl">
                 {!hideSearch && (
-                  <div className="sticky top-0 z-[100] flex items-stretch space-x-1.5 bg-surface-modal py-1.5 rounded-lg">
-                    <div className="relative w-full rounded flex mx-2 border border-surface-gray-2 bg-surface-gray-2 text-base text-ink-gray-8 placeholder-ink-gray-4 transition-colors hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:bg-surface-white focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 focus:bg-surface-gray-3 hover:bg-surface-gray-4 text-ink-gray-8 cursor-pointer">
-                      <ComboboxInput
-                        id={comboboxInputId}
-                        ref={searchInputRef}
-                        className=" h-7 w-full py-1.5 pl-2 pr-2 outline-none"
-                        type="text"
-                        data-testid="autocomplete"
-                        displayValue={() => query}
-                        onChange={(
-                          event: React.ChangeEvent<HTMLInputElement>
-                        ) => setQuery(event.target.value)}
-                        autoComplete="off"
-                        placeholder="Search"
-                      />
-                      <div className="inline-flex h-7 w-7 items-center justify-center">
-                        {loading ? (
-                          <LoadingIndicator
-                            data-testid="loading-indicator"
-                            className="h-4 w-4 text-ink-gray-5"
-                          />
-                        ) : (
-                          <button
-                            type="button"
-                            aria-label="Clear"
-                            onClick={clearAll}
-                          >
-                            <FeatherIcon
-                              name="x"
-                              className="w-4 h-4 text-ink-gray-8"
+                  <div>
+                    <div className="sticky top-0 z-[100] flex items-stretch space-x-1.5 bg-surface-modal py-1.5 rounded-lg">
+                      <div className="relative w-full rounded flex mx-2 border border-surface-gray-2 bg-surface-gray-2 text-base text-ink-gray-8 placeholder-ink-gray-4 transition-colors hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:bg-surface-white focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 focus:bg-surface-gray-3 hover:bg-surface-gray-4 text-ink-gray-8 cursor-pointer">
+                        <ComboboxInput
+                          id={comboboxInputId}
+                          ref={searchInputRef}
+                          className=" h-7 w-full py-1.5 pl-2 pr-2 outline-none"
+                          type="text"
+                          data-testid="autocomplete"
+                          displayValue={() => query}
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => setQuery(event.target.value)}
+                          autoComplete="off"
+                          placeholder="Search"
+                        />
+                        <div className="inline-flex h-7 w-7 items-center justify-center">
+                          {loading ? (
+                            <LoadingIndicator
+                              data-testid="loading-indicator"
+                              className="h-4 w-4 text-ink-gray-5"
                             />
-                          </button>
-                        )}
+                          ) : (
+                            <button
+                              type="button"
+                              aria-label="Clear"
+                              onClick={clearAll}
+                            >
+                              <FeatherIcon
+                                name="x"
+                                className="w-4 h-4 text-ink-gray-8"
+                              />
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
