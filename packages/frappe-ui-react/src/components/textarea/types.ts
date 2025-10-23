@@ -12,5 +12,7 @@ export interface TextareaProps {
   debounce?: number;
   rows?: number;
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  extraClasses?: string;
   htmlId?: string;
 }
