@@ -15,14 +15,18 @@ npm install @frappe-ui-react/frappe-ui-react
 yarn add @frappe-ui-react/frappe-ui-react
 ```
 
-Now, import the required components in your React app:
+Now, you can use the package in the following page:
+
+index.css:
 
 ```css
 @import @frappe-ui-react/theme.css
 ```
 
-```js
+app.tsx:
 
+```js
+import './index.css';
 import { Button } from "@frappe-ui-react/frappe-ui-react";
 
 
