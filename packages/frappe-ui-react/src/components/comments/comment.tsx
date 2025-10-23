@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import CommentForm from "./commentForm";
 import type { CommentData } from "./types";
 import { Avatar } from "../avatar";
@@ -8,6 +8,7 @@ import { MessageSquareText, ReplyIcon } from "lucide-react";
 interface CommentProps {
   comment: CommentData;
   onAddReply: (parentId: number, text: string) => void;
+  handleEditComment: (id: number, text: string) => void;
 }
 
 function parseMentions(text: string): React.ReactNode[] {
@@ -23,18 +24,26 @@ function parseMentions(text: string): React.ReactNode[] {
         {part}
       </strong>
     ) : (
-      part
+      <>
+      <span dangerouslySetInnerHTML={{__html: part}}/>
+      </>
     )
   );
 }
 
-function Comment({ comment, onAddReply }: CommentProps) {
+function Comment({ comment, onAddReply, handleEditComment }: CommentProps) {
   const [isReplying, setIsReplying] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  const handleReplySubmit = (text: string): void => {
-    onAddReply(comment.id, text);
-    setIsReplying(false);
-  };
+  const handleReplySubmit = useCallback((text: string): void => {
+    if (isReplying) {
+      onAddReply(comment.id, text);      
+      setIsReplying(false);
+    }else{
+      handleEditComment(comment.id, text);
+      setIsEditing(false);
+    }
+  }, [comment.id, handleEditComment, isReplying, onAddReply]);
 
   return (
     <div className="comment-container">
@@ -50,12 +59,13 @@ function Comment({ comment, onAddReply }: CommentProps) {
           </span>
           <span className="flex flex-shrink-0">
             <div className="mt-2 flex items-center gap-1">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" onClick={() => setIsEditing(true)} disabled={isReplying}>
                 Edit
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
+                disabled={isEditing}
                 iconLeft={() => <ReplyIcon className="w-3 h-3" />}
                 onClick={() => setIsReplying(!isReplying)}
               >
@@ -70,7 +80,7 @@ function Comment({ comment, onAddReply }: CommentProps) {
         <hr className="mt-1 mb-3.5 ml-9.5 border-t border-outline-gray-modals"/>
         <div className="flex items-start">
           <div className="flex-1">
-            <div className="text-[15px] text-gray-900 leading-relaxed whitespace-pre-wrap">
+            <div className="text-[15px] pl-10.5 text-gray-900 leading-relaxed whitespace-pre-wrap">
               {parseMentions(comment.text)}
             </div>
           </div>
@@ -80,6 +90,12 @@ function Comment({ comment, onAddReply }: CommentProps) {
       {isReplying && (
         <div className="ml-[48px] mt-3">
           <CommentForm buttonText="Reply" onSubmit={handleReplySubmit} />
+        </div>
+      )}
+
+      {isEditing && (
+        <div className="ml-[48px] mt-3">
+          <CommentForm buttonText="Edit" onSubmit={handleReplySubmit} value={comment.text} />
         </div>
       )}
 
@@ -97,7 +113,7 @@ function Comment({ comment, onAddReply }: CommentProps) {
               </div>
             </div>
 
-            <Comment key={reply.id} comment={reply} onAddReply={onAddReply} />
+            <Comment key={reply.id} comment={reply} onAddReply={onAddReply} handleEditComment={handleEditComment} />
           </div>
         ))}
     </div>

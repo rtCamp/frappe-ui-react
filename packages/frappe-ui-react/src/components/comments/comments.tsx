@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { MessageCircle } from "lucide-react";
+
 import Comment from "./comment";
 import CommentForm from "./commentForm";
 import type { CommentData } from "./types";
-import { MessageCircle } from "lucide-react";
 
 const CURRENT_USER = {
   name: "Current User",
@@ -33,35 +34,73 @@ function addReplyToTree(
 }
 type CommentsProp = {
   initialComments: CommentData[];
+  onCommentAdded?: (comment: CommentData) => void;
+  onCommentEdited?: (comment: CommentData) => void;
+  onCommentReplied?: (comment: CommentData, parentId: number) => void;
 };
 
-function Comments({ initialComments = [] }: CommentsProp) {
+function Comments({
+  initialComments = [],
+  onCommentAdded,
+  onCommentEdited,
+  onCommentReplied,
+}: CommentsProp) {
   const [comments, setComments] = useState<CommentData[]>(initialComments);
 
-  const handleAddComment = (text: string): void => {
-    const newComment: CommentData = {
-      id: Date.now(),
-      author: CURRENT_USER,
-      timestamp: "Just now",
-      text: text,
-      replies: [],
-    };
-    setComments([...comments, newComment]);
-  };
+  const handleAddComment = useCallback(
+    (text: string): void => {
+      const newComment: CommentData = {
+        id: Date.now(),
+        author: CURRENT_USER,
+        timestamp: "Just now",
+        text: text,
+        replies: [],
+      };
+      setComments([...comments, newComment]);
+            if (onCommentAdded) {
+        onCommentAdded(newComment);
+      }
+    },
+    [comments, onCommentAdded]
+  );
 
-  const handleAddReply = (parentId: number, text: string): void => {
-    const newReply: CommentData = {
-      id: Date.now(),
-      author: CURRENT_USER,
-      timestamp: "Just now",
-      text: text,
-      replies: [],
-    };
+  const handleEditComment = useCallback(
+    (id: number, text: string): void => {
+      setComments((currentComments) => {
+        return currentComments.map((comment) => {
+          if (comment.id === id) {
+            if (onCommentEdited) {
+              onCommentEdited({ ...comment, text });
+            }
+            return { ...comment, text };
+          }
+          return comment;
+        });
+      });
+    },
+    [onCommentEdited]
+  );
 
-    setComments((currentComments) =>
-      addReplyToTree(currentComments, parentId, newReply)
-    );
-  };
+  const handleAddReply = useCallback(
+    (parentId: number, text: string): void => {
+      const newReply: CommentData = {
+        id: Date.now(),
+        author: CURRENT_USER,
+        timestamp: "Just now",
+        text: text,
+        replies: [],
+      };
+
+      if (onCommentReplied) {
+        onCommentReplied(newReply, parentId);
+      }
+
+      setComments((currentComments) =>
+        addReplyToTree(currentComments, parentId, newReply)
+      );
+    },
+    [onCommentReplied]
+  );
 
   return (
     <div className="flex flex-col flex-1 overflow-y-auto">
@@ -84,6 +123,7 @@ function Comments({ initialComments = [] }: CommentsProp) {
               </div>
             </div>
             <Comment
+              handleEditComment={handleEditComment}
               key={comment.id}
               comment={comment}
               onAddReply={handleAddReply}
