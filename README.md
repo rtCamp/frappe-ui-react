@@ -10,9 +10,9 @@ Frappe UI React is a component library designed for rapid UI development using R
 ## Usage
 
 ```bash
-npm install @frappe-ui-react/frappe-ui-react
+npm install @rtcamp/frappe-ui-react
 # or
-yarn add @frappe-ui-react/frappe-ui-react
+yarn add @rtcamp/frappe-ui-react
 ```
 
 ### Now, you can use the package in the following page
@@ -27,7 +27,7 @@ yarn add @frappe-ui-react/frappe-ui-react
 
 ```js
 import './index.css';
-import { Button } from "@frappe-ui-react/frappe-ui-react";
+import { Button } from "@rtcamp/frappe-ui-react";
 
 
 function App() {
