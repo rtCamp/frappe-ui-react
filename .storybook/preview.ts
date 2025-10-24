@@ -1,4 +1,5 @@
 import type { Preview } from "@storybook/react-vite";
+import './preview-styles.css';
 import "@rtcamp/frappe-ui-react/theme.css";
 
 import { decorators } from "./modeDecorator";

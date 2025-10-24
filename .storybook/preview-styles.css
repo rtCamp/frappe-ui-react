@@ -1,0 +1,21 @@
+ #storybook-docs, 
+ #storybook-docs .sbdocs-title, 
+ #storybook-docs > .sbdocs > .sbdocs > h1  {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+ }
+
+ #storybook-docs .sbdocs-title, 
+ #storybook-docs > .sbdocs > .sbdocs > h1  {
+    font-weight: 800;
+    font-size: 36px;
+ }
+
+ #storybook-docs .sbdocs-content p {
+    font-size: 16px;
+ }
+
+ #storybook-docs .sbdocs-content h2 {
+   font-weight: 800;
+   font-size: 24px;
+ }
