@@ -17,4 +17,5 @@ addons.setConfig({
     colorSecondary: 'rgb(153, 153, 153)',
     fontBase: '"Inter", sans-serif',
   }),
+  panelPosition: 'right', // Options: 'bottom' (default), 'right'
 });
