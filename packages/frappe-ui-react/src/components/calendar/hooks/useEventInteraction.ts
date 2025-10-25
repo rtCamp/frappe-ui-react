@@ -121,8 +121,6 @@ export const useEventInteraction = (
         return;
       }
 
-      preventClickRef.current = true;
-      setIsResizing(true);
       const startY = _event.clientY;
       const initialHeight = eventRef.current.offsetHeight;
       let finalEndTime = updatedEvent.to_time;
@@ -131,7 +129,8 @@ export const useEventInteraction = (
         if (!eventRef.current || !event.from_time) {
           return;
         }
-
+        preventClickRef.current = true;
+        setIsResizing(true);
         const minuteHeight = config.hourHeight / 60;
         const height_15_min = minuteHeight * 15;
         const deltaY = moveEvent.clientY - startY;
@@ -165,7 +164,6 @@ export const useEventInteraction = (
   const handleRepositionMouseDown = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
-      preventClickRef.current = true;
       const startY = e.clientY;
       let finalEventState = { ...updatedEvent };
 
@@ -173,7 +171,7 @@ export const useEventInteraction = (
         if (!event.from_time || !event.to_time) {
           return;
         }
-
+        preventClickRef.current = true;
         setIsRepositioning(true);
         setPopoverOpen(false);
 

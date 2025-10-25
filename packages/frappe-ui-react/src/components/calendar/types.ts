@@ -41,6 +41,7 @@ export interface CalendarConfig {
     view: "Day" | "Week" | "Month";
   }) => void;
   handleCellDblClick?: (event: MouseEvent) => void;
+  noBorder?: boolean;
 }
 
 export interface CalendarEventProps {

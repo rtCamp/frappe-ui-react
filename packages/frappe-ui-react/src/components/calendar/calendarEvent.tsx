@@ -134,10 +134,11 @@ export const CalendarEvent = ({
         ref={eventRef}
         draggable="true"
         className={clsx(
-          "h-min-[18px] rounded-lg p-2 transition-all duration-75 cursor-pointer",
+          "mx-px shadow rounded h-min-[6px] rounded-lg p-2 transition-all duration-75 cursor-pointer shrink-0 w-[90%]",
           extraClassName,
           colorMap[event?.color ?? "blue"]?.background_color || "bg-green-100",
           activeView !== "Month" && "shadow-lg absolute",
+          event.isFullDay && "relative",
           isPopoverOpen && "!z-20 drop-shadow-xl"
         )}
         style={eventStyles}

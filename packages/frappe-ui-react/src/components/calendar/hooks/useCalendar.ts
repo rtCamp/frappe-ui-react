@@ -13,6 +13,7 @@ export const useCalendar = (
     () => ({
       defaultMode: "Month",
       isEditMode: false,
+      noBorder: false,
     }),
     []
   );

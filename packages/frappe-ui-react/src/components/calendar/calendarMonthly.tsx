@@ -72,7 +72,7 @@ export const CalendarMonthly = () => {
       </div>
       <div
         className={clsx(
-          "grid w-full flex-1 grid-cols-7 border-ink-gray-2",
+          "grid w-full flex-1 grid-cols-7 border-gray-200",
           currentMonthDates.length > 35 ? "grid-rows-6" : "grid-rows-5",
           config.noBorder ? "border-t" : "border"
         )}
