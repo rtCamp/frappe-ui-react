@@ -19,15 +19,16 @@ export const useCalendarData = (events: CalendarEvent[], view = "") => {
       }
     } else {
       for (const [key, value] of Object.entries(groupByDate)) {
-        value
+        let _value = value;
+        _value = value
           .filter((event) => !event.isFullDay)
           .map((task) => {
             task.startTime = calculateMinutes(task.fromTime);
             task.endTime = calculateMinutes(task.toTime);
             return task;
-          })
-          .sort((a, b) => a.startTime - b.startTime);
-        sortedArray[key] = findOverlappingEventsCount(value);
+          });
+          _value.sort((a, b) => a.startTime - b.startTime);
+        sortedArray[key] = findOverlappingEventsCount(_value);
       }
     }
     return sortedArray;

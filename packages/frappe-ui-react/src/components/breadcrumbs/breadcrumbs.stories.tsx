@@ -29,9 +29,7 @@ export default {
 
 const BreadcrumbsTemplate: StoryObj<BreadcrumbsProps> = {
   render: (args) => (
-    <div className="p-4 bg-surface-gray-1 rounded-lg shadow-sm">
-      <Breadcrumbs {...args} />
-    </div>
+    <Breadcrumbs {...args} />
   ),
 };
 

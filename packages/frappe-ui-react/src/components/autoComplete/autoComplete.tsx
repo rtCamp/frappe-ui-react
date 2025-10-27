@@ -50,7 +50,9 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 }) => {
   const [query, setQuery] = useState<string>("");
   const [showOptions, setShowOptions] = useState<boolean>(false);
+
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const cancelRef = useRef<HTMLDivElement>(null);
 
   const isOption = useCallback(
     (option: AutocompleteOption): option is Option => {
@@ -270,7 +272,11 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   const clearAll = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      handleComboboxChange(multiple ? [] : null);
+      if(multiple){
+        handleComboboxChange([]);
+      }else{
+        setQuery("");
+      }
     },
     [multiple, handleComboboxChange]
   );
@@ -355,11 +361,26 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                         displayValue={() => query}
                         onChange={(
                           event: React.ChangeEvent<HTMLInputElement>
-                        ) => setQuery(event.target.value)}
+                        ) => {
+                          cancelRef.current?.removeAttribute("inert");
+                          cancelRef.current?.removeAttribute("aria-hidden");
+                          setQuery(event.target.value);
+                        }}
                         autoComplete="off"
+                        onBlur={() => {
+                          cancelRef.current?.removeAttribute("inert");
+                          cancelRef.current?.removeAttribute("aria-hidden");
+                        }}
                         placeholder="Search"
                       />
-                      <div className="inline-flex h-7 w-7 items-center justify-center">
+                      <div
+                        ref={cancelRef}
+                        className="inline-flex h-7 w-7 items-center justify-center"
+                        onMouseEnter={() => {
+                          cancelRef.current?.removeAttribute("inert");
+                          cancelRef.current?.removeAttribute("aria-hidden");
+                        }}
+                      >
                         {loading ? (
                           <LoadingIndicator
                             data-testid="loading-indicator"

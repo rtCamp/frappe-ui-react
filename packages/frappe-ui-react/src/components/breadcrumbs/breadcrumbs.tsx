@@ -71,7 +71,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
   }, []);
 
   return (
-    <div className="flex min-w-0 items-center bg-surface-gray-1">
+    <div className="flex min-w-0 items-center">
       {dropdownItems.length > 0 && (
         <div className="h-7">
           <Dropdown options={dropdownItems as unknown as DropdownOptions}>
@@ -80,7 +80,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
             </Button>
           </Dropdown>
           <span
-            className="ml-1 mr-0.5 text-base text-(--ink-gray-4)"
+            className="ml-1 mr-0.5 text-base text-ink-gray-4"
             aria-hidden="true"
           >
             /
@@ -91,10 +91,10 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
       <div className="flex min-w-0 items-center overflow-hidden text-ellipsis whitespace-nowrap">
         {crumbs.map((item, i) => {
           const isLast = i === crumbs.length - 1;
-          const commonClasses = `flex items-center rounded px-0.5 py-1 text-lg font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-(--outline-gray-3) ${
+          const commonClasses = `flex items-center rounded px-0.5 py-1 text-lg font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3 ${
             isLast
-              ? "text-(--ink-gray-9)"
-              : "text-(--ink-gray-5) hover:text-(--ink-gray-7)"
+              ? "text-ink-gray-9"
+              : "text-ink-gray-5 hover:text-ink-gray-7"
           }`;
 
           const handleClick = (
@@ -122,7 +122,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
               </button>
               {!isLast && (
                 <span
-                  className="mx-0.5 text-base text-(--ink-gray-4) select-none"
+                  className="mx-0.5 text-base text-ink-gray-4 select-none"
                   aria-hidden="true"
                 >
                   /
