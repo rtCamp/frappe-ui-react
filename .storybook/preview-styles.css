@@ -19,3 +19,7 @@
    font-weight: 800;
    font-size: 24px;
  }
+
+ .dark body {
+	 background-color: #171717 !important;
+ }
