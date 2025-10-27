@@ -36,7 +36,7 @@ const Switch: React.FC<SwitchProps> = ({
     "disabled:cursor-not-allowed disabled:bg-surface-gray-3",
     value
       ? "bg-surface-gray-7 enabled:hover:bg-surface-gray-6 active:bg-surface-gray-5 group-hover:enabled:bg-surface-gray-6"
-      : "bg-surface-gray-4 enabled:hover:bg-gray-400 active:bg-gray-500 group-hover:enabled:bg-gray-400",
+      : "bg-surface-gray-4 enabled:hover:bg-gray-800 active:bg-gray-500 group-hover:enabled:bg-gray-800",
     size === "md" ? "h-5 w-8 border-[3px]" : "h-4 w-[26px] border-2",
   ].join(" ");
 
@@ -75,7 +75,7 @@ const Switch: React.FC<SwitchProps> = ({
       );
       classes.push(size === "md" ? "px-3 py-1.5" : "px-2.5 py-1.5");
     } else if (switchType === SwitchVariant.WITH_LABEL_AND_DESCRIPTION) {
-      classes.push("items-start");
+      classes.push("group items-start");
       classes.push(size === "md" ? "space-x-3.5" : "space-x-2.5");
     }
     return classes.join(" ");

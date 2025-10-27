@@ -27,7 +27,7 @@ const TabButtons = ({
 }: TabButtonsProps) => {
   return (
     <RadioGroup value={value} onChange={onChange} className={className}>
-      <div className="flex space-x-0.5 rounded-md bg-surface-gray-2 h-7 items-center px-[1px] text-sm">
+      <div className="flex space-x-0.5 rounded-md bg-surface-gray-2 h-7 items-center px-[1px] text-sm border border-gray-200">
         {buttons.map((button) => (
           <Radio
             key={button.value || button.label}
