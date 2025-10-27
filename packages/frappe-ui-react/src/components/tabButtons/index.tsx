@@ -58,7 +58,7 @@ const TabButtons = ({
                     ? ""
                     : checked
                     ? "text-ink-gray-9 shadow"
-                    : "text-ink-gray-7"
+                    : "!text-ink-gray-5"
                 } cursor-pointer`}
               >
                 {!button.hideLabel && button.label && (
