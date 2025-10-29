@@ -81,5 +81,8 @@
     ],
     "*.(xml|xml.dist)": "prettier --write",
     "*.yml": "prettier --write"
+  },
+  "dependencies": {
+    "react-docgen-typescript": "^2.4.0"
   }
 }
