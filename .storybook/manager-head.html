@@ -70,3 +70,15 @@
   }
 
 </style>
+
+<script>
+  var observer = new MutationObserver(function(mutations) {
+    if (document.title.match(/Storybook$/)) {
+      document.title = "Frappe UI React";
+    }
+  }).observe(document.querySelector("title"), {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+</script>
