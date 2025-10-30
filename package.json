@@ -11,7 +11,7 @@
     "build": "npm run build -w @rtcamp/frappe-ui-react",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
+    "build-storybook": "storybook build; cp .storybook/public/favicon.svg storybook-static/",
     "test:unit": "jest --config=tests/unitTest.jest.config.cjs",
     "lint": "npm-run-all --parallel lint:*",
     "lint:js": "eslint .",
