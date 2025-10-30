@@ -6,9 +6,7 @@ import FileUploader from "./fileuploader";
 const meta: Meta<typeof FileUploader> = {
   title: "Components/FileUploader",
   component: FileUploader,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
   argTypes: {
     fileTypes: {

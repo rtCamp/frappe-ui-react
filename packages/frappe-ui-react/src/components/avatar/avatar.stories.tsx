@@ -5,9 +5,7 @@ import type { StoryObj } from "@storybook/react-vite";
 export default {
   title: "Components/Avatar",
   component: Avatar,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   argTypes: {
     size: {
       control: {

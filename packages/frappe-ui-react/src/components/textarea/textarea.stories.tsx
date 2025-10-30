@@ -6,9 +6,7 @@ import TextArea from "./textarea";
 export default {
   title: "Components/TextArea",
   component: TextArea,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
   argTypes: {
     label: { control: "text", description: "Label for the textarea" },

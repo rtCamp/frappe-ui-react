@@ -8,9 +8,7 @@ import { CheckboxProps } from "./types";
 export default {
   title: "Components/Checkbox",
   component: Checkbox,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   argTypes: {
     label: {
       control: "text",

@@ -5,9 +5,7 @@ import { useState } from "react";
 const meta: Meta<typeof TextEditor> = {
   title: "Components/TextEditor",
   component: TextEditor,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   argTypes: {
     allowImageUpload: {
       control: "boolean",

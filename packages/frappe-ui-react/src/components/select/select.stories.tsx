@@ -6,9 +6,7 @@ import Select from "./select";
 export default {
   title: "Components/Select",
   component: Select,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
   argTypes: {
     size: {

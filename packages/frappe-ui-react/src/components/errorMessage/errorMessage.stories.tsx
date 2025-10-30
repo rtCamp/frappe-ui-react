@@ -12,9 +12,7 @@ export default {
         "The error message to display, can be a string or an Error object.",
     },
   },
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
 } as Meta<typeof ErrorMessage>;
 

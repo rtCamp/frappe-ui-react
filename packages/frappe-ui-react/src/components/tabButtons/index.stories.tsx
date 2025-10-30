@@ -20,9 +20,7 @@ const meta: Meta<typeof TabButtons> = {
       description: "Function called when the selected tab changes.",
     },
   },
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   component: TabButtons,
 };
 

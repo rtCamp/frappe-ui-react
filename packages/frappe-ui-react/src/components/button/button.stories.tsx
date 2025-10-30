@@ -71,9 +71,7 @@ export default {
       description: "Right side icon for the button",
     },
   },
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
 } as Meta<typeof Button>;
 
 const ButtonTemplate: StoryObj<ButtonProps> = {

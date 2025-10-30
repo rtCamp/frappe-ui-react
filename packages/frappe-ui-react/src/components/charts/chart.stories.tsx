@@ -196,9 +196,7 @@ const funnelConfig: FunnelChartConfig = {
 
 const meta: Meta<typeof NumberChart> = {
   title: "Components/Charts",
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   argTypes: {
     config: {
       control: "object",
@@ -215,7 +213,7 @@ const meta: Meta<typeof NumberChart> = {
 export default meta;
 
 export const NumberCharts: StoryObj<NumberChartProps> = {
-  render: (_args) => (
+  render: () => (
     <div className="flex gap-2 p-4">
       <NumberChart config={numberChart1Config} />
       <NumberChart config={numberChart2Config} />

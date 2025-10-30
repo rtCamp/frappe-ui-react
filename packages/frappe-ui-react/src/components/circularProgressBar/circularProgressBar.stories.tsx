@@ -38,9 +38,7 @@ export default {
       description: "Visual variant of the progress bar.",
     },
   },
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
 } as Meta<typeof CircularProgressBar>;
 

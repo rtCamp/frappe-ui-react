@@ -8,9 +8,7 @@ import FeatherIcon from "../featherIcon";
 export default {
   title: "Components/TextInput",
   component: TextInput,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
   argTypes: {
     type: {

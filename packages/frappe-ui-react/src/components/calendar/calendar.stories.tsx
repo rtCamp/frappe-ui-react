@@ -7,9 +7,7 @@ import TabButtons from "../tabButtons";
 const meta: Meta<typeof Calendar> = {
   title: "Components/Calendar",
   component: Calendar,
-  parameters: {
-    layout: "fullscreen",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "fullscreen" },
   argTypes: {
     config: {
       createNewEvent: { action: "create" },

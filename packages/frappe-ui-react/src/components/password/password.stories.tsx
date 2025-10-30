@@ -21,9 +21,7 @@ export default {
     },
     prefix: { description: "Element to display at the start of the input." },
   },
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
 } as Meta<typeof Password>;
 

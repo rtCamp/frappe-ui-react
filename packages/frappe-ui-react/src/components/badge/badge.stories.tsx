@@ -37,9 +37,7 @@ export default {
       description: "Alternative to label prop, rendered as children",
     },
   },
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
 } as Meta<typeof Badge>;
 

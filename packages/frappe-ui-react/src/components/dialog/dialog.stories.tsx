@@ -22,9 +22,7 @@ const meta: Meta<typeof Dialog> = {
       </div>
     ),
   ],
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
   argTypes: {
     open: {

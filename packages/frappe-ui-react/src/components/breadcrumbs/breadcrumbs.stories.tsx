@@ -21,9 +21,7 @@ export default {
         "Function to render a suffix element for each breadcrumb item.",
     },
   },
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
 } as Meta<typeof Breadcrumbs>;
 

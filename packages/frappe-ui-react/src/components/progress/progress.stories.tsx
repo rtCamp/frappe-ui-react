@@ -6,9 +6,7 @@ const meta: Meta<typeof Progress> = {
   title: "Components/Progress",
   tags: ["autodocs"],
   component: Progress,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   argTypes: {
     value: {
       control: { type: "range", min: 0, max: 100 },

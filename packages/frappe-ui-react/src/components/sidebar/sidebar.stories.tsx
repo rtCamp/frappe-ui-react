@@ -20,9 +20,7 @@ import Sidebar from "./sidebar";
 const meta: Meta<typeof Sidebar> = {
   title: "Components/Sidebar",
   tags: ["autodocs"],
-  parameters: {
-    layout: "padded",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "padded" },
   argTypes: {
     header: {
       control: "object",

@@ -4,9 +4,7 @@ import Spinner from "./spinner";
 const meta: Meta<typeof Spinner> = {
   title: "Components/Spinner",
   component: Spinner,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   decorators: [
     (Story) => (
       <div

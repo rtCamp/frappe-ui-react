@@ -7,9 +7,7 @@ const meta: Meta<typeof Rating> = {
   title: "Components/Rating",
   tags: ["autodocs"],
   component: Rating,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   argTypes: {
     value: {
       control: { type: "number", min: 0, max: 5 },

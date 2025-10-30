@@ -40,9 +40,7 @@ const meta: Meta<typeof Autocomplete> = {
   title: "Components/Autocomplete",
   component: Autocomplete,
   tags: ["autodocs"],
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   argTypes: {
     value: {
       control: "object",

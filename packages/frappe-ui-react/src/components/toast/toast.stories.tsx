@@ -6,6 +6,8 @@ import { Button } from "../button";
 
 export default {
   title: "Components/Toast",
+  parameters: { docs: { source: { type: "code" } }, layout: "centered" },
+	tags: ["autodocs"],
   decorators: [
     (Story) => (
       <ToastProvider>
@@ -15,7 +17,7 @@ export default {
   ],
 } as Meta<typeof ToastProvider>;
 
-const ToastTriggerComponent = () => {
+export const Default = () => {
   const toast = useToasts();
 
   const handlePromise = () => {
@@ -50,5 +52,3 @@ const ToastTriggerComponent = () => {
     </div>
   );
 };
-
-export const Default = () => <ToastTriggerComponent />;

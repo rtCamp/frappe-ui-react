@@ -28,9 +28,7 @@ export default {
       description: "Custom trigger element for the dropdown.",
     },
   },
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
 } as Meta<typeof Dropdown>;
 

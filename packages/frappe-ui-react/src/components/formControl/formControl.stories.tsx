@@ -7,9 +7,7 @@ import { useState } from "react";
 const meta: Meta<typeof FormControl> = {
   title: "Components/FormControl",
   component: FormControl,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
   argTypes: {
     variant: {

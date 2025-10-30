@@ -5,9 +5,7 @@ const meta: Meta<typeof Tree> = {
   title: "Components/Tree",
   tags: ["autodocs"],
   component: Tree,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
 };
 export default meta;
 
