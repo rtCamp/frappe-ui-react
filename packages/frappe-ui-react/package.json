@@ -23,8 +23,10 @@
     "./tailwind/preset": "./src/utils/tailwind.config.js"
   },
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsc -b && npm run copy-assets",
+    "copy-assets": "node scripts/copy-assets.js",
     "publish:local": "npm publish --registry http://localhost:4873",
+    "unpublish:local": "npm unpublish --registry http://localhost:4873",
     "publish:remote": "npm publish"
   },
   "dependencies": {
