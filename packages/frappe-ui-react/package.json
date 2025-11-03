@@ -27,7 +27,7 @@
     "copy-assets": "node scripts/copy-assets.js",
     "publish:local": "npm publish --registry http://localhost:4873",
     "unpublish:local": "npm unpublish --registry http://localhost:4873 --force",
-    "publish:remote": "npm publish"
+    "publish:remote": "npm publish --access public"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.13",
