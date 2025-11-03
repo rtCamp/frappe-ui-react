@@ -7,7 +7,13 @@ const meta: Meta<typeof Combobox> = {
   title: "Components/Combobox",
   tags: ["autodocs"],
   component: Combobox,
-  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
+  parameters: {
+    docs: {
+      source: { type: "dynamic" },
+      story: { height: "300px" },
+    },
+    layout: "centered",
+  },
   argTypes: {
     options: {
       control: "object",
