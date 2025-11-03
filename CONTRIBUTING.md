@@ -1,8 +1,7 @@
-# Contributing to Frappe-UI-React
+# Contributing to Frappe UI React
 
-If you're reading this, you're awesome!
-Thank you for being a part of the community and helping us make these projects great.
-Here are a few guidelines that will help you along the way.
+Welcome! We're excited that you're interested in contributing to our Frappe React component library.
+This guide will walk you through everything you need to know to get started.
 
 ## Summary
 
@@ -21,11 +20,11 @@ Here are a few guidelines that will help you along the way.
 ## Code of conduct
 
 We have adopted the [Contributor Covenant](https://www.contributor-covenant.org/) as our code of conduct, and we expect project participants to adhere to it.
-Please read [the full text](https://github.com/frappe-ui-react/.github/blob/master/CODE_OF_CONDUCT.md) to understand what actions will and will not be tolerated.
+Please read [the full text](https://github.com/rtCamp/frappe-ui-react/blob/main/CODE_OF_CONDUCT.md) to understand what actions will and will not be tolerated.
 
 ## A large spectrum of contributions
 
-There are many ways to contribute to the library, and writing code is only one part of the story—[documentation improvements](#contributing-to-the-documentation) can be just as important as code changes.
+There are many ways to contribute to Frappe UI React, and writing code is only one part of the story—[documentation improvements](#contributing-to-the-documentation) can be just as important as code changes.
 If you have an idea for an improvement to the code or the docs, we encourage you to open an issue as a first step, to discuss your proposed changes with the maintainers before proceeding.
 
 ## Your first pull request
@@ -33,7 +32,7 @@ If you have an idea for an improvement to the code or the docs, we encourage you
 Working on your first pull request? You can learn how in this free video series: [How to Contribute to an Open Source Project on GitHub](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github).
 
 Get started with [good first issues](https://github.com/rtCamp/frappe-ui-react/issues?q=is:open+is:issue+label:"good+first+issue"), which have a limited scope and a working solution that's already been discussed.
-This makes them ideal for newer developers, or those who are new to these libraries and want to see how the contribution process works.
+This makes them ideal for newer developers, or those who are new to this library and want to see how the contribution process works.
 
 We also have a list of [ready to take issues](https://github.com/rtCamp/frappe-ui-react/issues?q=is:open+is:issue+label:"ready+to+take"), which are issues that have already been at least partially resolved in discussion, to the point that it's clear what to do next.
 These issues are great for developers who want to reduce their chances of falling down a rabbit hole in search of a solution.
@@ -49,7 +48,7 @@ If there has been no activity on the issue for 7 to 14 days, then it's safe to a
 
 ## Sending a pull request
 
-MUI Core projects are community-driven, so pull requests are always welcome, but before working on a large change, it's best to open an issue first to discuss it with the maintainers.
+Frappe UI React is a community-driven project, so pull requests are always welcome, but before working on a large change, it's best to open an issue first to discuss it with the maintainers.
 
 When in doubt, keep your pull requests small.
 For the best chances of being accepted, don't bundle more than one feature or bug fix per PR.
@@ -60,21 +59,19 @@ It's often best to create two smaller PRs rather than one big one.
 2. Clone the fork to your local machine and add the upstream remote:
 
 ```bash
-git clone https://github.com/rtCamp/frappe-ui-react.git
+git clone https://github.com/<your-username>/frappe-ui-react.git
 cd frappe-ui-react
 git remote add upstream https://github.com/rtCamp/frappe-ui-react.git
 ```
 
-<!-- #target-branch-reference -->
-
 3. Synchronize your local `main` branch with the upstream one:
 
 ```bash
-git checkout master
-git pull upstream master
+git checkout main
+git pull upstream main
 ```
 
-4. Install the dependencies with pnpm (yarn or npm aren't supported):
+4. Install the dependencies with npm:
 
 ```bash
 npm install
@@ -92,7 +89,7 @@ git checkout -b [fix/feat/chore/hotfix]/branch-topic
 git push -u origin HEAD
 ```
 
-7. Go to [the repository](https://github.com/rtCamp/frappe-ui-react.git) and open a pull request.
+7. Go to [the repository](https://github.com/rtCamp/frappe-ui-react) and open a pull request.
 
 The core team actively monitors for new pull requests.
 We will review your PR and either merge it, request changes to it, or close it with an explanation.
@@ -105,24 +102,22 @@ If any of these checks fail, refer to [CI checks and how to fix them](#ci-checks
 
 Make sure the following is true:
 
-<!-- #target-branch-reference -->
-
-- The branch is targeted at `develop` for ongoing development. All tests are passing. Code that lands in `develop` must be compatible with the latest stable release. It may contain additional features but no breaking changes. We should be able to release a new minor version from the tip of `develop` at any time.
+- The branch is targeted at `main` for ongoing development. All tests are passing. Code that lands in `main` must be compatible with the latest stable release. It may contain additional features but no breaking changes. We should be able to release a new minor version from the tip of `main` at any time.
 - If a feature is being added:
   - If the result was already achievable with the core library, you've explained why this feature needs to be added to the core.
-  - If this is a common use case, you've added an example to the documentation.
-- If adding new features or modifying existing ones, you've included tests to confirm the new behavior. You can read more about our test setup in our test README.
+  - If this is a common use case, you've added an example to the Storybook documentation.
+- If adding new features or modifying existing ones, you've included tests to confirm the new behavior.
 - If props were added or prop types were changed, you've updated the TypeScript declarations.
 - The branch is not [behind its target branch](https://docs.github.com/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/keeping-your-pull-request-in-sync-with-the-base-branch).
-- If you have included a visual component make sure to add a storybook file with possible variations.
+- If you have included a visual component make sure to add a Storybook story with possible variations.
 
 We will only merge a PR when all tests pass.
 The following statements must be true:
 
-- The code is formatted. If the code was changed, run `npm prettier`.
-- The code is linted. If the code was changed, run `npm eslint`.
-- The code is type-safe. If TypeScript sources or declarations were changed, run `npm typescript` to confirm that the check passes.
-- The pull request title follows the pattern `[product-name][Component] Imperative commit message`. (See: [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/) for a great explanation).
+- The code is formatted. If the code was changed, run `npm run lint:js:fix`.
+- The code is linted. If the code was changed, run `npm run lint:js`.
+- The code is type-safe. If TypeScript sources or declarations were changed, run `npm run lint:types` to confirm that the check passes.
+- The pull request title follows the pattern `[Component/Area] Imperative commit message`. (See: [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/) for a great explanation).
 
 Don't worry if you miss a step—the Continuous Integration will run a thorough set of tests on your commits, and the maintainers of the project can assist you if you run into problems.
 
@@ -133,38 +128,38 @@ This makes it easier to understand where the PR is coming from, and also speeds 
 ### CI checks and how to fix them
 
 If any of the checks fail, click on the **Details** link and review the logs of the build to find out why it failed.
-For CircleCI, you need to log in first.
-No further permissions are required to view the build logs.
 The following sections give an overview of what each check is responsible for.
 
-#### Continuous Releases
+#### Testing
 
-This task publishes a preview for the packages to pkg.pr.new. It should not fail in isolation. Use it to test more complex scenarios.
+This runs the unit tests for the components. Make sure all tests pass before submitting your PR.
 
-#### codecov/project
+#### Linting and Type Checking
 
-This monitors coverage of the tests.
-A reduction in coverage isn't necessarily bad, but it's always appreciated if it can be improved.
+This ensures code quality and type safety:
+- ESLint checks for code style and potential issues
+- TypeScript compiler checks for type errors
+- Prettier ensures consistent code formatting
 
-#### Misc
+#### Build
 
-There are various other checks done by Netlify to validate the integrity of the docs.
-Click on **Details** to find out more about them.
+This ensures the package can be built successfully for distribution.
 
 ### Coding style
 
 Please follow the coding style of the project.
 It uses Prettier and ESLint, so if possible, enable linting in your editor to get real-time feedback.
 
-- `npm prettier` reformats the code.
-- `npm eslint` runs the linting rules.
+- `npm run lint:js:fix` reformats the code and fixes linting issues.
+- `npm run lint:js` runs the linting rules.
+- `npm run lint:types` checks TypeScript types.
 
 When you submit a PR, these checks are run again by our continuous integration tools, but hopefully your code is already clean!
 
 ## Contributing to the documentation
 
-Contributing to open-source docs involves a lot more than just fixing typos—developers frequently request more in-depth explanations of component features, and this requires both coding and technical writing to accomplish.
-Every documentation PR will be reviewed by an editor following [MUI's writing style guide](https://mui-org.notion.site/Writing-style-guide-2a957a4168a54d47b14bae026d06a24b), and if you plan to contribute regularly, you should familiarize yourself with this guide to speed up the editing process.
+Contributing to open-source documentation involves a lot more than just fixing typos—developers frequently request more in-depth explanations of component features, and this requires both coding and technical writing to accomplish.
+Every documentation PR will be reviewed to ensure clarity and consistency with the project's documentation standards.
 
 ### How to find docs issues to work on
 
@@ -176,29 +171,60 @@ Or [follow this link directly to the results of that search](https://github.com/
 
 ### How to add a new demo to the docs
 
-The following steps explain how to add a new demo to the docs using the Button component as an example:
+The following steps explain how to add a new demo to the Storybook documentation using the Button component as an example:
 
-#### 1. Add a new component file to the directory
+#### 1. Add a new story file to the component directory
 
-Add the new file to the component's corresponding directory...
+Add the new file to the component's corresponding directory:
 
 ```bash
-packages/frappe-ui-react/src/components/button
+packages/frappe-ui-react/src/components/button/
 ```
 
-...and give it a name: how about `buttons.stories.tsx`?
+...and give it a name: how about `Button.stories.tsx`?
 
-#### 2. Write the demo code
+#### 2. Write the story code
 
-We use TypeScript with storybook to document our components.
-We prefer demos written in TypeScript (using the `.tsx` file format).
+We use Storybook to document our components with interactive examples.
+We prefer stories written in TypeScript (using the `.tsx` file format).
+
+Here's an example structure:
+
+```typescript
+import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from './Button';
+
+const meta: Meta<typeof Button> = {
+  title: 'Components/Button',
+  component: Button,
+  parameters: {
+    layout: 'centered',
+  },
+  tags: ['autodocs'],
+};
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    label: 'Button',
+  },
+};
+```
+
+#### 3. Test your story
+
+Run Storybook locally to ensure your new story appears and works correctly:
+
+```bash
+npm run storybook
+```
 
 #### 4. Submit your PR
 
 Now you're ready to [open a PR](#sending-a-pull-request) to add your new demo to the docs.
 
-Check out [this Toggle Button demo PR](https://github.com/rtCamp/frappe-ui-react/pull/35) for an example of what your new and edited files should look like when opening your own demo PR.
-
 ## License
 
-By contributing your code to the [rtcamp/frappe-ui-react](https://github.com/rtCamp/frappe-ui-react) GitHub repository, you agree to license your contribution under the [MIT license](/LICENSE).
+By contributing your code to the [rtCamp/frappe-ui-react](https://github.com/rtCamp/frappe-ui-react) GitHub repository, you agree to license your contribution under the [MIT license](/LICENSE).
