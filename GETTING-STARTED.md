@@ -7,58 +7,32 @@ Frappe UI React is a modern component library designed for building frontend app
 
 ## Usage
 
-You can set up frappe-ui-react in the following simple steps.
+You can quickly setup frappe-ui-react using [frappe-ui-react-starter](https://github.com/rtCamp/frappe-ui-react-starter). If you already have a Frappe app for which you want to build a frontend you can start with Step 2.
+
+## Step 0: Create frappe app.
+
+```bash
+bench new-app frappe-app
+```
 
 ### Step 1: Installation
 
 Install the package using npm.
 
 ```bash
-npm install @rtcamp/frappe-ui-react
+cd apps/frappe-app
+
+# Sets up a React project with frappe-ui-react in the frontend directory.
+npx degit rtCamp/frappe-ui-react-starter frontend
 ```
 
-### Step 2: Configuration
+### Step 2: Start dev server
 
-**Option 1 (Recommended):** If you already have a Tailwind configuration, import the tailwind configuration from `frappe-ui-react` and use it as a preset or extend your existing configuration.
-
-```js
-// tailwind.config.js in your project
-module.exports = {
-  presets: [
-    require('@rtcamp/frappe-ui-react/tailwind/preset')
-  ],
-  // Additional configuration...
-}
-```
-
-**Option 2:** Import the theme CSS directly into your project (e.g., in `index.css`).
-
-```css
-@import '@rtcamp/frappe-ui-react/theme.css';
-```
-
-### Step 3: Import and Use Components
-
-You can now import components and use them in your project.
-
-```jsx
-import './index.css';
-import { Button } from "@rtcamp/frappe-ui-react";
-
-function App() {
-  return (
-    <div className="app-container">
-      <Button 
-        label="Default Button"
-        theme="gray"
-        size="md"
-        variant="subtle" 
-      />
-    </div>
-  );
-}
-
-export default App;
+```bash
+cd frontend
+nvm use # To insure you have correct node version.
+pnpm install
+pnpm dev
 ```
 
 ## Under the Hood
