@@ -147,13 +147,15 @@ export const SingleOptionWithPrefixSlots: Story = {
         <Autocomplete
           {...args}
           value={value}
-          prefix={(value) => (
+          prefix={(value) => ( 
+            value?.image &&
             <img
               src={value?.image ?? ""}
               className="mr-2 h-4 w-4 rounded-full"
             />
           )}
           itemPrefix={(value) => (
+            value?.image &&
             <img
               src={value?.image ?? ""}
               className="ml-2 h-4 w-4 rounded-full"
