@@ -8,6 +8,13 @@
   "author": {
     "name": "rtCamp"
   },
+  "files": [
+    "dist/",
+    "dist-types/",
+    "package.json",
+    "README.md",
+    "tsconfig.json"
+  ],
   "license": "MIT",
   "private": false,
   "sideEffects": false,
@@ -19,12 +26,12 @@
       "require": "./dist/index.js",
       "types": "./dist-types/index.d.ts"
     },
-    "./theme.css": "./src/theme.css",
-    "./tailwind/preset": "./src/utils/tailwind.config.js"
+    "./theme": "./dist/theme.css",
+    "./tailwind/preset": "./dist/utils/tailwind.config.cjs"
   },
   "scripts": {
     "build": "tsc -b && npm run copy-assets",
-    "copy-assets": "node scripts/copy-assets.js",
+    "copy-assets": "node scripts/copy-assets.js && cp ../../tailwind.config.cjs  dist/utils/tailwind.config.cjs && cp ../../tailwindExtend.json  dist/utils/tailwindExtend.json",
     "publish:local": "npm publish --registry http://localhost:4873",
     "unpublish:local": "npm unpublish --registry http://localhost:4873 --force",
     "publish:remote": "npm publish"
