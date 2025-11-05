@@ -65,6 +65,9 @@ export const useCalendar = (
       date: Date,
       time: string
     ) => {
+      if (event.target !== event.currentTarget) {
+        return;
+      }
       const data = {
         event,
         date,

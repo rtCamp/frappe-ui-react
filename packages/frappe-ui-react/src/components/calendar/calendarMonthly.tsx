@@ -85,7 +85,6 @@ export const CalendarMonthly = () => {
               className="overflow-y-auto border-t border-l border-gray-200 p-1"
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => handleDrop(e, date)}
-              onDoubleClick={(e) => handleCellDblClick(e, date.toLocaleDateString("en-CA"))}
             >
               <div
                 className={clsx(
@@ -94,6 +93,7 @@ export const CalendarMonthly = () => {
                     ? "text-ink-gray-7"
                     : "text-ink-gray-3"
                 )}
+                onDoubleClick={(e) => handleCellDblClick(e, date.toLocaleDateString("en-CA"))}
               >
                 <span
                   className={clsx(
