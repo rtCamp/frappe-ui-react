@@ -173,6 +173,7 @@ export const useCalendar = (
       deleteEvent,
       openNewEventModal,
       setShowEventModal,
+      setCurrentDate,
     },
   };
 };

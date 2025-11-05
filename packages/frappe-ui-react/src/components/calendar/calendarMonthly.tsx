@@ -7,6 +7,7 @@ import { CalendarEvent } from "./calendarEvent";
 import type { CalendarEvent as CalendarEventType } from "./types";
 import { ShowMoreCalendarEvent } from "./showMoreCalendarEvent";
 import { useCalendarData } from "./hooks/useCalendarData";
+import { dayjs } from "../../utils/dayjs";
 
 export const CalendarMonthly = () => {
   const { events, currentMonthDates, currentDate, config, handleCellDblClick } =
@@ -69,7 +70,7 @@ export const CalendarMonthly = () => {
   };
 
   const handleShowMore = (date: Date) => {
-    setCurrentDate(date);
+    setCurrentDate(dayjs(date));
     setActiveView("Day");
   };
 
