@@ -1,7 +1,7 @@
-import * as extend from './tailwindExtend.json';
-import path from 'path';
+const path = require("path");
+const extend = require("./tailwindExtend.json");
 
-export default {
+module.exports = {
   darkMode: "class",
   content: [
     path.resolve(__dirname, "./packages/**/src/**/*.{stories}.{tsx,ts,js}"),

@@ -1,9 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 function copyAssets() {
-  const srcDir = 'src';
-  const distDir = 'dist';
+  const srcDir = "src";
+  const distDir = "dist";
 
   function copyFile(src, dest) {
     const destDir = path.dirname(dest);
@@ -19,16 +19,21 @@ function copyAssets() {
       console.log(`Source directory ${dir} does not exist`);
       return;
     }
-    
+
     const files = fs.readdirSync(dir);
-    
-    files.forEach(file => {
+
+    files.forEach((file) => {
       const filePath = path.join(dir, file);
       const stat = fs.statSync(filePath);
-      
+
       if (stat.isDirectory()) {
         walkDir(filePath);
-      } else if (file.endsWith('.css') || file.endsWith('.svg')) {
+      } else if (
+        file.endsWith(".css") ||
+        file.endsWith(".svg") ||
+        file.endsWith(".cjs") ||
+        file.endsWith(".json")
+      ) {
         const relativePath = path.relative(srcDir, filePath);
         const destPath = path.join(distDir, relativePath);
         copyFile(filePath, destPath);
@@ -36,9 +41,9 @@ function copyAssets() {
     });
   }
 
-  console.log('Copying CSS and SVG assets...');
+  console.log("Copying CSS and SVG assets...");
   walkDir(srcDir);
-  console.log('Asset copying complete!');
+  console.log("Asset copying complete!");
 }
 
 copyAssets();
