@@ -100,7 +100,7 @@ const Select: React.FC<SelectProps> = ({
       xl: "pl-3",
     }[size];
   }, [size]);
-
+  
   return (
     <div className="relative flex items-center">
       {prefix && (

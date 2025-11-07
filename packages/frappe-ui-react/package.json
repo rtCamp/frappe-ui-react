@@ -27,6 +27,7 @@
       "types": "./dist-types/index.d.ts"
     },
     "./theme": "./dist/theme.css",
+    "./theme-v3": "./dist/themeV3.css",
     "./tailwind/preset": "./dist/utils/tailwind.config.cjs"
   },
   "scripts": {

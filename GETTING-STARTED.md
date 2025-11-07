@@ -19,7 +19,12 @@ npm install @rtcamp/frappe-ui-react
 
 ### Step 2: Configuration
 
-**Option 1 (Tailwind v3 usage):** If you already have a Tailwind v3 configuration, import the tailwind configuration from `frappe-ui-react` and use it as a preset or extend your existing configuration.
+**Option 1 (Tailwind v3 usage):** If you already have a Tailwind v3 configuration, import `theme-v3` css in your `index.css`, then use the `index.css` in your `index.tsx` then import the tailwind configuration from `frappe-ui-react` and use it as a preset or extend your existing configuration.
+
+```css
+/* index.css */
+@import '@rtcamp/frappe-ui-react/theme-v3';
+```
 
 ```js
 // tailwind.config.js in your project
@@ -37,7 +42,7 @@ module.exports = {
 **Option 2 (Tailwind v4):** Import the theme CSS directly into your project (e.g., in `index.css`) and provide the source of the frappe-ui-react package so that it picks the styles automatically.
 
 ```css
-@import '@rtcamp/frappe-ui-react/theme.css';
+@import '@rtcamp/frappe-ui-react/theme';
 @source "../../node_modules/@rtcamp/frappe-ui-react/dist";
 ```
 
