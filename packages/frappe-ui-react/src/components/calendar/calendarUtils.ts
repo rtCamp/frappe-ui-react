@@ -360,11 +360,11 @@ export function sortMonthlyEvents(events: CalendarEvent[]) {
   const timedEvents = events
     .filter((event) => !event.isFullDay)
     .sort((a, b) =>
-      a.fromTime !== b.fromTime
-        ? calculateMinutes(a.fromTime) > calculateMinutes(b.fromTime)
+      a.from_time !== b.from_time
+        ? calculateMinutes(a.from_time || '00:00') > calculateMinutes(b.from_time || '00:00')
           ? 1
           : -1
-        : calculateMinutes(a.toTime) > calculateMinutes(b.toTime)
+        : calculateMinutes(a.to_time || '00:00') > calculateMinutes(b.to_time || '00:00')
         ? 1
         : -1
     );

@@ -48,7 +48,7 @@ export const EventModalContent = ({
         )}
       </div>
       <div className="mt-2 flex flex-col gap-5">
-        <div className="flex justify-between text-xl font-semibold">
+        <div className="flex justify-between text-xl font-semibold break-all">
           <span>{calendarEvent.title || "New Event"}</span>
         </div>
 
@@ -58,8 +58,8 @@ export const EventModalContent = ({
             <span className="text-sm">{parseDateEventPopupFormat(date)}</span>
           </div>
           {calendarEvent.participant && (
-            <div className="flex items-center gap-2">
-              <User size={16} className="text-ink-gray-5" />
+            <div className="flex items-center gap-2 break-all">
+              <User size={16} className="text-ink-gray-5 shrink-0" />
               <span className="text-sm">{calendarEvent.participant}</span>
             </div>
           )}
@@ -72,8 +72,8 @@ export const EventModalContent = ({
             </div>
           )}
           {calendarEvent.venue && (
-            <div className="flex items-center gap-2">
-              <MapPin size={16} className="text-ink-gray-5" />
+            <div className="flex items-center gap-2 break-all">
+              <MapPin size={16} className="text-ink-gray-5 shrink-0" />
               <span className="text-sm">{calendarEvent.venue}</span>
             </div>
           )}

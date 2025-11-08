@@ -7,6 +7,7 @@ import { CalendarEvent } from "./calendarEvent";
 import type { CalendarEvent as CalendarEventType } from "./types";
 import { ShowMoreCalendarEvent } from "./showMoreCalendarEvent";
 import { useCalendarData } from "./hooks/useCalendarData";
+import { dayjs } from "../../utils/dayjs";
 
 export const CalendarMonthly = () => {
   const { events, currentMonthDates, currentDate, config, handleCellDblClick } =
@@ -43,6 +44,18 @@ export const CalendarMonthly = () => {
     e.dataTransfer.setData("calendarEventID", String(eventId));
   };
 
+  const handleDragEnd = (
+    e: React.DragEvent<HTMLDivElement>,
+    eventId: string | number
+  ) => {
+    if (!eventId || !config.isEditMode) {
+      return;
+    }
+    const target = e.target as HTMLDivElement;
+    target.style.opacity = "1";
+    e.dataTransfer.clearData();
+  };
+
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, date: Date) => {
     e.preventDefault();
     const eventId = e.dataTransfer.getData("calendarEventID");
@@ -57,7 +70,7 @@ export const CalendarMonthly = () => {
   };
 
   const handleShowMore = (date: Date) => {
-    setCurrentDate(date);
+    setCurrentDate(dayjs(date));
     setActiveView("Day");
   };
 
@@ -85,7 +98,6 @@ export const CalendarMonthly = () => {
               className="overflow-y-auto border-t border-l border-gray-200 p-1"
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => handleDrop(e, date)}
-              onDoubleClick={(e) => handleCellDblClick(e, date.toLocaleDateString("en-CA"))}
             >
               <div
                 className={clsx(
@@ -94,6 +106,7 @@ export const CalendarMonthly = () => {
                     ? "text-ink-gray-7"
                     : "text-ink-gray-3"
                 )}
+                onDoubleClick={(e) => handleCellDblClick(e, date.toLocaleDateString("en-CA"))}
               >
                 <span
                   className={clsx(
@@ -114,6 +127,9 @@ export const CalendarMonthly = () => {
                         draggable={config.isEditMode}
                         onDragStart={(e) => {
                           handleDragStart(e, event.id);
+                        }}
+                        onDragEnd={(e) => {
+                          handleDragEnd(e, event.id);
                         }}
                       />
                     ))

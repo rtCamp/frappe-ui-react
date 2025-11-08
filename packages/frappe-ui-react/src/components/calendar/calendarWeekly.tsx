@@ -171,8 +171,6 @@ export const CalendarWeekly = ({ weeklyDates }: CalendarWeeklyProps) => {
                     <div
                       key={time}
                       className="cell relative flex flex-col cursor-pointer calendar-column"
-                      onDoubleClick={(e) => handleCellDblClick(e, date.toLocaleDateString("en-CA"), time)}
-                      onClick={(e) => handleCellDblClick(e, date.toLocaleDateString("en-CA"), time)}
                     >
                       <div
                         className={clsx(
@@ -181,11 +179,13 @@ export const CalendarWeekly = ({ weeklyDates }: CalendarWeeklyProps) => {
                         )}
                         style={{ height: `${hourHeight}px` }}
                         data-time-attr={index === 0 && i >= 1 ? timeArray[i] : undefined}
+                        onDoubleClick={(e) => handleCellDblClick(e, date.toLocaleDateString("en-CA"), time)}
+                        onClick={(e) => handleCellDblClick(e, date.toLocaleDateString("en-CA"), time)}
                       />
                     </div>
                   ))}
-                  {(timedEvents[parseDate(date)] || []).map((event) => (
-                    <CalendarEvent key={event.id} event={event} date={date} />
+                  {(timedEvents[parseDate(date)] || []).map((event, idx) => (
+                    <CalendarEvent key={event.id} event={{ ...event, idx }} date={date} />
                   ))}
                   <CalendarTimeMarker date={date} />
                 </div>

@@ -53,6 +53,10 @@ export interface CalendarEventProps {
     event: React.DragEvent<HTMLDivElement>,
     id: number | string
   ) => void;
+  onDragEnd?: (
+    event: React.DragEvent<HTMLDivElement>,
+    id: number | string
+  ) => void;
 }
 
 export interface ColorMap {

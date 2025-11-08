@@ -33,7 +33,7 @@ const config = {
   isEditMode: true,
   eventIcons: {},
   allowCustomClickEvents: true,
-  redundantCellHeight: 100,
+  redundantCellHeight: 0,
   hourHeight: 50,
   enableShortcuts: false,
   timeFormat: "12h",
@@ -148,10 +148,10 @@ export const CustomHeader: Story = {
     }) => (
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold text-ink-gray-1">
+          <h1 className="text-xl font-bold text-ink-gray-8">
             {currentMonthYear}
           </h1>
-          <div className="flex items-center gap-1 text-ink-gray-1">
+          <div className="flex items-center gap-1 text-ink-gray-8">
             <button
               onClick={decrement}
               className="p-2 rounded hover:bg-gray-200"

@@ -78,23 +78,23 @@ export const CalendarDaily = () => {
                 key={time}
                 className="relative flex text-ink-gray-8 cursor-pointer"
                 data-time-attr={timeIndex !== 0 ? time : undefined}
-                onClick={(e) =>
-                  handleCellDblClick(e, currentDate.toLocaleDateString("en-CA"), time)
-                }
-                onDoubleClick={(e) =>
-                  handleCellDblClick(e, currentDate.toLocaleDateString("en-CA"), time)
-                }
               >
                 <div
                   className="w-full border-b border-gray-200"
                   style={{ height: `${hourHeight}px` }}
+                  onClick={(e) =>
+                    handleCellDblClick(e, currentDate.toDate().toLocaleDateString("en-CA"), twentyFourHoursFormat[timeIndex])
+                  }
+                  onDoubleClick={(e) =>
+                    handleCellDblClick(e, currentDate.toDate().toLocaleDateString("en-CA"), twentyFourHoursFormat[timeIndex])
+                  }
                 />
               </div>
             ))}
-            {(timedEvents[parsedCurrentDate] || []).map((event) => (
+            {(timedEvents[parsedCurrentDate] || []).map((event, idx) => (
               <CalendarEvent
                 key={event.id}
-                event={event}
+                event={{ ...event, idx }}
                 date={currentDate.toDate()}
                 extraClassName="absolute mb-2 cursor-pointer"
               />

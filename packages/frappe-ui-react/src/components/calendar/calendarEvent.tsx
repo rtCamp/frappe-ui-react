@@ -20,6 +20,7 @@ export const CalendarEvent = ({
   date,
   extraClassName = "",
   onDragStart = () => {},
+  onDragEnd = () => {},
 }: CalendarEventProps) => {
   const { activeView, config, deleteEvent, updatEventState, createNewEvent } =
     useContext(CalendarContext);
@@ -144,6 +145,7 @@ export const CalendarEvent = ({
         style={eventStyles}
         onClick={handleEventClick}
         onDragStart={(e) => onDragStart(e, event.id)}
+        onDragEnd={(e) => onDragEnd(e, event.id)}
         onMouseDown={
           activeView !== "Month" && config.isEditMode
             ? handleRepositionMouseDown

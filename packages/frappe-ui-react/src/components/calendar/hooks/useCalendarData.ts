@@ -23,8 +23,8 @@ export const useCalendarData = (events: CalendarEvent[], view = "") => {
         _value = value
           .filter((event) => !event.isFullDay)
           .map((task) => {
-            task.startTime = calculateMinutes(task.fromTime);
-            task.endTime = calculateMinutes(task.toTime);
+            task.startTime = calculateMinutes(task.from_time || "00:00");
+            task.endTime = calculateMinutes(task.to_time || "00:00");
             return task;
           });
           _value.sort((a, b) => a.startTime - b.startTime);
