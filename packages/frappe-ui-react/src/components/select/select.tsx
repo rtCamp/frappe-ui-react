@@ -107,7 +107,7 @@ const Select: React.FC<SelectProps> = ({
         <div
           className={`absolute inset-y-0 left-0 flex items-center ${textColor} ${prefixClasses} pointer-events-none`}
         >
-          {prefix?.()}
+          {prefix?.(size)}
         </div>
       )}
       {placeholder && !value && (
