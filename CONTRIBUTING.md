@@ -71,10 +71,12 @@ git checkout main
 git pull upstream main
 ```
 
-4. Install the dependencies with npm:
+4. Install the dependencies with npm and run storybook.
 
 ```bash
+nvm use # To ensure correct node version.
 npm install
+npm run storybook
 ```
 
 5. Create a new topic branch:

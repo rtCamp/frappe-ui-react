@@ -7,7 +7,7 @@ Frappe UI React is a modern component library designed for building frontend app
 
 ## Usage
 
-You can set up frappe-ui-react in the following simple steps.
+You can set up frappe-ui-react in the following simple steps, or you can quickly setup frappe-ui-react using [frappe-ui-react-starter](https://github.com/rtCamp/frappe-ui-react-starter).
 
 ### Step 1: Installation
 
@@ -19,7 +19,20 @@ npm install @rtcamp/frappe-ui-react
 
 ### Step 2: Configuration
 
-**Option 1 (Tailwind v3 usage):** If you already have a Tailwind v3 configuration, import `theme-v3` css in your `index.css`, then use the `index.css` in your `index.tsx` then import the tailwind configuration from `frappe-ui-react` and use it as a preset or extend your existing configuration.
+Import the theme CSS directly into your project (e.g., in `index.css`) and provide the source of the frappe-ui-react package so that it picks the styles automatically.
+
+```css
+@import '@rtcamp/frappe-ui-react/theme';
+@source "../../node_modules/@rtcamp/frappe-ui-react/dist";
+```
+
+**(Tailwind v3 usage):** 
+
+If you are already using a Tailwind v3 configuration, you should take two steps:
+
+- Import the `theme-v3` CSS into your index.css file, and ensure that `index.css` is then imported in your `index.tsx`.
+
+- Import the Tailwind configuration from frappe-ui-react and either use it as a preset or extend your existing configuration.
 
 ```css
 /* index.css */
@@ -37,13 +50,6 @@ module.exports = {
   ]
   // Additional configuration...
 }
-```
-
-**Option 2 (Tailwind v4):** Import the theme CSS directly into your project (e.g., in `index.css`) and provide the source of the frappe-ui-react package so that it picks the styles automatically.
-
-```css
-@import '@rtcamp/frappe-ui-react/theme';
-@source "../../node_modules/@rtcamp/frappe-ui-react/dist";
 ```
 
 ### Step 3: Import and Use Components
