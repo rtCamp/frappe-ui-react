@@ -93,16 +93,19 @@ export const SquareWithoutImage: Story = {
 
 export const WithIndicator: Story = {
   render: (args) => (
-    <Avatar {...args}>
-      <div
-        style={{
-          background: "green",
-          width: "10px",
-          height: "10px",
-          borderRadius: "50%",
-        }}
-      />
-    </Avatar>
+    <Avatar
+      {...args}
+      indicator={
+        <div
+          style={{
+            background: "green",
+            width: "10px",
+            height: "10px",
+            borderRadius: "50%",
+          }}
+        />
+      }
+    />
   ),
   args: {
     label: "EY",
