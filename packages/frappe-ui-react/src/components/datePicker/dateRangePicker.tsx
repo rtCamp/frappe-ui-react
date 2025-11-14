@@ -68,7 +68,9 @@ function useDateRangePicker({
   function swapDatesIfNecessary(a: string, b: string) {
     if (!a || !b) return;
     const from = getDate(a);
+    from.setHours(0, 0, 0, 0);
     const to = getDate(b);
+    to.setHours(0, 0, 0, 0);
 
     if (from > to) {
       setFromDate(getDateValue(to));
@@ -230,6 +232,7 @@ export const DateRangePicker: React.FC<DatePickerProps> = ({
                     date.getMonth() === today.getMonth() &&
                     date.getFullYear() === today.getFullYear() &&
                     date.getMonth() === currentMonth - 1;
+                  console.log("Rendering date:", val, "FromDate:", fromDate, "ToDate:", toDate);
                   const isToDate = toDate && getDateValue(date) === toDate;
                   const isFromDate =
                     fromDate && getDateValue(date) === fromDate;
