@@ -232,7 +232,6 @@ export const DateRangePicker: React.FC<DatePickerProps> = ({
                     date.getMonth() === today.getMonth() &&
                     date.getFullYear() === today.getFullYear() &&
                     date.getMonth() === currentMonth - 1;
-                  console.log("Rendering date:", val, "FromDate:", fromDate, "ToDate:", toDate);
                   const isToDate = toDate && getDateValue(date) === toDate;
                   const isFromDate =
                     fromDate && getDateValue(date) === fromDate;
