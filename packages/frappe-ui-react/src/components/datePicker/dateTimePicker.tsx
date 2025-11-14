@@ -255,7 +255,7 @@ export const DateTimePicker: React.FC<DatePickerProps> = ({
             <div>
               {twoDigit(hour)} : {twoDigit(minute)} : {twoDigit(second)}
             </div>
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-center accent-black dark:accent-white">
               <div className="slider flex min-h-4 items-center justify-center">
                 <input
                   name="hours"
