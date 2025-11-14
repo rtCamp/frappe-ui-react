@@ -18,13 +18,13 @@ interface ListHeaderItemProps {
   children?: ReactNode;
   prefix?: ReactNode;
   suffix?: ReactNode;
-  firstItem?: boolean;
+  lastItem?: boolean;
 }
 
 const ListHeaderItem: React.FC<ListHeaderItemProps> = ({
   item,
-  firstItem = false,
-  debounce: debounceTime = 1000,
+  lastItem = false,
+  debounce: debounceTime = 300,
   onColumnWidthUpdated,
   children,
   prefix,
@@ -99,14 +99,13 @@ const ListHeaderItem: React.FC<ListHeaderItemProps> = ({
   const rootClasses = useMemo(() => {
     return [
       "group relative flex items-center",
-      firstItem ? "ml-4" : "",
       item.align
         ? alignmentMap[item.align as keyof typeof alignmentMap]
         : "justify-between",
     ]
       .filter(Boolean)
       .join(" ");
-  }, [item.align, firstItem]);
+  }, [item.align]);
 
   return (
     <div ref={columnRef} className={rootClasses}>
@@ -119,9 +118,11 @@ const ListHeaderItem: React.FC<ListHeaderItemProps> = ({
         {headerContent}
         {suffix}
       </div>
-      {list.options.resizeColumn && (
+      {list.options.resizeColumn && !lastItem && (
         <div
-          className="flex h-4 absolute -right-2 w-2 cursor-col-resize justify-center"
+          className={`flex h-4 absolute right-0 w-0.5 cursor-col-resize justify-center bg-outline-gray-3 hover:bg-outline-gray-5 ${
+						isResizing ? "bg-outline-gray-5" : ""
+					}`}
           onMouseDown={startResizing}
         >
           <div

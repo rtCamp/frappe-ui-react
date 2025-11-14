@@ -18,6 +18,18 @@ export const ListProvider: React.FC<ListProviderProps> = ({
 }) => {
   const [selections, setSelections] = useState<Set<any>>(new Set());
   const [activeRow, setActiveRow] = useState<any>(null);
+  const [_columns, setColumns] = useState<any[]>(columns);
+
+  const updateColumnWidth = useCallback((index: number, width: number) => {
+    setColumns((prevColumns) => {
+      const newColumns = [...prevColumns];
+      newColumns[index] = {
+        ...newColumns[index],
+        width: `${width}px`,
+      };
+      return newColumns;
+    });
+  }, []);
 
   const mergedOptions = useMemo(() => {
     return {
@@ -111,7 +123,7 @@ export const ListProvider: React.FC<ListProviderProps> = ({
   const contextValue = useMemo(
     () => ({
       options: {
-        columns: columns,
+        columns: _columns,
         rows: rows,
         rowKey,
         options: mergedOptions,
@@ -123,10 +135,11 @@ export const ListProvider: React.FC<ListProviderProps> = ({
         toggleAllRows,
         emptyState: options.emptyState,
         setColumns: () => {},
+        updateColumnWidth,
       },
     }),
     [
-      columns,
+      _columns,
       rows,
       rowKey,
       options.slots,
@@ -137,6 +150,7 @@ export const ListProvider: React.FC<ListProviderProps> = ({
       allRowsSelected,
       toggleRow,
       toggleAllRows,
+      updateColumnWidth,
     ]
   );
   return (

@@ -99,7 +99,7 @@ const ListRow: React.FC<ListRowProps> = ({
     >
       <button className="[all:unset] hover:[all:unset]">
         <div
-          className="grid items-center px-2"
+          className="grid items-center px-2 gap-2"
           style={{
             height: rowHeight,
             gridTemplateColumns: getGridTemplateColumns(
