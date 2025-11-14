@@ -83,7 +83,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
         : null;
 
       onChange?.(val, selected);
-      setQuery(val || "");
+      setQuery(selected ? getLabel(selected) : "");
     },
     [allOptionsFlat, onChange]
   );
