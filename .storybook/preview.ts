@@ -40,7 +40,7 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ["Theme", "Components"],
+        order: ["Getting Started", "Theme", "Components"],
       },
     },
   },
