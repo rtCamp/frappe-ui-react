@@ -33,7 +33,7 @@ const ListHeader: React.FC<ListHeaderProps> = ({ children }) => {
           <ListHeaderItem
             key={column.key}
             item={column}
-						lastItem={index === list.columns.length - 1}
+            lastItem={index === list.columns.length - 1}
             onColumnWidthUpdated={(width: number) => {
               list.updateColumnWidth(index, width);
             }}
