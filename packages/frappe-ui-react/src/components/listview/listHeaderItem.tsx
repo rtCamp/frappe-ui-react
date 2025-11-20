@@ -121,8 +121,8 @@ const ListHeaderItem: React.FC<ListHeaderItemProps> = ({
       {list.options.resizeColumn && !lastItem && (
         <div
           className={`flex h-4 absolute right-0 w-0.5 cursor-col-resize justify-center bg-outline-gray-3 hover:bg-outline-gray-5 ${
-						isResizing ? "bg-outline-gray-5" : ""
-					}`}
+            isResizing ? "bg-outline-gray-5" : ""
+          }`}
           onMouseDown={startResizing}
         >
           <div
