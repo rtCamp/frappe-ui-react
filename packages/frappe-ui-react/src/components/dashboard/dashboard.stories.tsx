@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useArgs } from "storybook/preview-api";
 import { Dashboard } from "./index";
 import type { LayoutItem } from "./types";
 
@@ -47,8 +48,27 @@ const Activity = () => (
 );
 
 export const Default: Story = {
-  render: function Render() {
-    const [layout, setLayout] = useState<LayoutItem[]>([
+  render: function Render(args) {
+    const [, updateArgs] = useArgs();
+
+    const handleLayoutChange = (
+      newLayout: LayoutItem[] | ((prevLayout: LayoutItem[]) => LayoutItem[])
+    ) => {
+      const resolvedLayout =
+        typeof newLayout === "function"
+          ? newLayout(args.layout || [])
+          : newLayout;
+      updateArgs({ layout: resolvedLayout });
+    };
+
+    return (
+      <div className="w-full h-screen flex justify-center items-center">
+        <Dashboard layout={args.layout || []} setLayout={handleLayoutChange} />
+      </div>
+    );
+  },
+  args: {
+    layout: [
       {
         id: "main-row",
         type: "row",
@@ -97,13 +117,6 @@ export const Default: Story = {
           },
         ],
       },
-    ]);
-
-    return (
-      <div className="w-full h-screen flex justify-center items-center">
-        <Dashboard layout={layout} setLayout={setLayout} />
-      </div>
-    );
+    ],
   },
-  args: {},
 };
