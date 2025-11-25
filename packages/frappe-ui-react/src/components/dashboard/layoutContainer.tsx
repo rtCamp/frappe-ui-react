@@ -50,8 +50,8 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
-        delay: 10,
+        distance: 10,
+        delay: 100,
         tolerance: 5,
       },
     }),

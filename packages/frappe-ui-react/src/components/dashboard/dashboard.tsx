@@ -3,12 +3,29 @@ import { LayoutContainer } from "./layoutContainer";
 import type { DashboardProps, LayoutItem, SerializedLayoutItem } from "./types";
 
 export const Dashboard: React.FC<DashboardProps> = ({ initialLayout, savedLayout, onLayoutChange }) => {
+  const handleMakeSerializable = useCallback((item: LayoutItem): SerializedLayoutItem => {
+    if (item.type === "component") {
+      const { component, props, ...rest } = item;
+      void component;
+      void props;
+      return rest;
+    } else if (item.type === "row" || item.type === "stack") {
+      return {
+        ...item,
+        elements: item.elements.map(handleMakeSerializable),
+      };
+    }
+    return item;
+  }, []);
+
   const mergeLayouts = useCallback((saved: SerializedLayoutItem, initial: LayoutItem): LayoutItem => {
     const componentMap = new Map<string, React.ComponentType>();
+    const propsMap = new Map<string, Record<string, unknown>>();
     
     const extractComponents = (item: LayoutItem) => {
       if (item.type === 'component') {
         componentMap.set(item.id, item.component);
+        propsMap.set(item.id, item.props);
       } else if ('elements' in item) {
         item.elements.forEach(extractComponents);
       }
@@ -21,6 +38,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ initialLayout, savedLayout
         return {
           ...item,
           component: componentMap.get(item.id) ?? (() => <div>Component Not Found</div>),
+          props: propsMap.get(item.id) ?? {},
         };
       } else {
         return {
@@ -40,19 +58,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ initialLayout, savedLayout
     return initialLayout;
   });
 
-  const handleMakeSerializable = useCallback((item: LayoutItem): SerializedLayoutItem => {
-    if (item.type === "component") {
-      const { component, ...rest } = item;
-      void component;
-      return rest;
-    } else if (item.type === "row" || item.type === "stack") {
-      return {
-        ...item,
-        elements: item.elements.map(handleMakeSerializable),
-      };
-    }
-    return item;
-  }, []);
+  useEffect(() => {
+    setLayout((currentLayout) => {
+      const currentSerialized = handleMakeSerializable(currentLayout);
+      return mergeLayouts(currentSerialized, initialLayout);
+    });
+  }, [initialLayout, mergeLayouts, handleMakeSerializable]);
 
   useEffect(() => {
     const strippedLayout = handleMakeSerializable(layout);
