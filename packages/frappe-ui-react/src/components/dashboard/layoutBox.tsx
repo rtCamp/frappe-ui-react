@@ -17,9 +17,13 @@ export const LayoutBox: React.FC<LayoutBoxProps> = ({
   return (
     <div
       className={clsx(
-        "flex gap-4 rounded min-h-[100px]",
-        orientation === "horizontal" ? "flex-row" : "flex-col"
+        "flex rounded min-h-[100px]",
+        orientation === "horizontal" ? "flex-row" : "flex-col",
+        !layout.gap && "gap-4"
       )}
+      style={{
+        ...(layout.gap && { gap: layout.gap }),
+      }}
     >
       {layout.slots.map((slotItem, slotIndex) => {
         const slotId = `${layout.id}-slot-${slotIndex}`;
