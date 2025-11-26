@@ -15,19 +15,18 @@ import { Widget } from "./widget";
 import { LayoutRenderer } from "./layoutRenderer";
 import { LayoutContainerProps } from "./types";
 import { deepClone, findContainerById, flattenLayout } from "./dashboardUtil";
+import { LayoutContext } from "./layoutContext";
 
 export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   layout,
   setLayout,
+  layoutLock = false,
+  dragHandle = false,
+  dragHandleOnHover = false,
 }) => {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
 
   const layoutFlatMap = useMemo(() => flattenLayout(layout), [layout]);
-
-  const activeParentId = useMemo(() => {
-    if (!activeId) return null;
-    return layoutFlatMap.get(activeId)?.parentId ?? null;
-  }, [activeId, layoutFlatMap]);
 
   const activeSlotId = useMemo(() => {
     if (!activeId) return null;
@@ -38,11 +37,13 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 10,
-        delay: 100,
-        tolerance: 5,
-      },
+      activationConstraint: dragHandle
+        ? undefined
+        : {
+            distance: 10,
+            delay: 100,
+            tolerance: 5,
+          },
     }),
     useSensor(KeyboardSensor)
   );
@@ -115,20 +116,25 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   };
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={pointerWithin}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
+    <LayoutContext.Provider
+      value={{
+        activeSlotId,
+        layoutLock,
+        dragHandle,
+        dragHandleOnHover,
+      }}
     >
-      <LayoutRenderer
-        layout={layout}
-        activeParentId={activeParentId}
-        activeSlotId={activeSlotId}
-      />
-      <DragOverlay>
-        {activeId ? <Widget layout={layoutFlatMap.get(activeId)} /> : null}
-      </DragOverlay>
-    </DndContext>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={pointerWithin}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <LayoutRenderer layout={layout} />
+        <DragOverlay>
+          {activeId ? <Widget layout={layoutFlatMap.get(activeId)} /> : null}
+        </DragOverlay>
+      </DndContext>
+    </LayoutContext.Provider>
   );
 };

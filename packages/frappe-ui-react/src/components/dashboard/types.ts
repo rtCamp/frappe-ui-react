@@ -38,6 +38,9 @@ export type SerializedLayoutItem = Omit<ComponentElement, 'component' | 'props'>
 
 export interface DashboardProps {
   initialLayout: LayoutItem;
+  layoutLock?: boolean;
+  dragHandle?: boolean;
+  dragHandleOnHover?: boolean;
   savedLayout?: SerializedLayoutItem;
   onLayoutChange: (layout: SerializedLayoutItem) => void;
 }
@@ -45,29 +48,33 @@ export interface DashboardProps {
 export interface LayoutContainerProps {
   layout: LayoutItem;
   setLayout: (layout: LayoutItem | ((prevLayout: LayoutItem) => LayoutItem)) => void;
+  layoutLock?: boolean;
+  dragHandle?: boolean;
+  dragHandleOnHover?: boolean;
 }
 
 export interface LayoutBoxProps {
   layout: ContainerElement;
   orientation: "horizontal" | "vertical";
-  activeParentId?: string | null;
-  activeSlotId?: string | null;
 }
 
 export interface LayoutRendererProps {
   layout: LayoutItem;
-  activeParentId?: string | null;
-  activeSlotId?: string | null;
 }
 
 export interface SlotContainerProps {
   slotId: string;
   slotItem: LayoutItem;
   isDragging: boolean;
-  activeSlotId?: string | null;
-  activeParentId?: string | null;
 }
 
 export interface WidgetProps {
   layout: ComponentElement;
+}
+
+export interface LayoutContextValue {
+  activeSlotId: string | null;
+  layoutLock: boolean;
+  dragHandle: boolean;
+  dragHandleOnHover: boolean;
 }

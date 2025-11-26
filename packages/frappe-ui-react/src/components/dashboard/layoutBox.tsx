@@ -7,8 +7,6 @@ import type { LayoutBoxProps } from "./types";
 export const LayoutBox: React.FC<LayoutBoxProps> = ({
   layout,
   orientation,
-  activeParentId,
-  activeSlotId,
 }) => {
   const { active } = useDndContext();
   const isDragging = useMemo(() => active !== null, [active]);
@@ -28,8 +26,6 @@ export const LayoutBox: React.FC<LayoutBoxProps> = ({
             slotId={slotId}
             slotItem={slotItem}
             isDragging={isDragging}
-            activeSlotId={activeSlotId}
-            activeParentId={activeParentId}
           />
         );
       })}
