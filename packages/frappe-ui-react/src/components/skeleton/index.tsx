@@ -1,4 +1,3 @@
-import * as React from "react";
 import type {
   SkeletonProps,
   SkeletonSize,
@@ -17,7 +16,6 @@ const Skeleton: React.FC<SkeletonProps> = ({
   style,
   ...props
 }) => {
-  // Size classes - using min dimensions so they can expand in containers
   const sizeClasses: Record<SkeletonSize, { width: string; height: string }> = {
     sm: { width: "min-w-16 w-full", height: "min-h-4 h-4" },
     md: { width: "min-w-24 w-full", height: "min-h-5 h-5" },
@@ -25,7 +23,6 @@ const Skeleton: React.FC<SkeletonProps> = ({
     xl: { width: "min-w-40 w-full", height: "min-h-8 h-8" },
   };
 
-  // Variant classes
   const variantClasses: Record<SkeletonVariant, string> = {
     default: "rounded-md",
     rounded: "rounded-lg",
@@ -33,22 +30,18 @@ const Skeleton: React.FC<SkeletonProps> = ({
     text: "rounded",
   };
 
-  // Animation classes
   const animationClasses: Record<SkeletonAnimation, string> = {
     pulse: "animate-pulse",
-    wave: "animate-bounce", // Using bounce as wave alternative
+    wave: "animate-bounce",
     none: "",
   };
 
-  // Base classes with proper semantic tokens
   const baseClasses = "bg-surface-gray-2";
 
-  // Get size-based dimensions
   const sizeConfig = sizeClasses[size];
   const widthClass = width ? "" : sizeConfig.width;
   const heightClass = height ? "" : sizeConfig.height;
 
-  // Handle circular variant (should be square) - responsive to size
   const isCircular = variant === "circular";
   const circularSizes = {
     sm: "w-8 h-8 min-w-8 min-h-8",
@@ -58,7 +51,6 @@ const Skeleton: React.FC<SkeletonProps> = ({
   };
   const circularClasses = isCircular ? circularSizes[size] : "";
 
-  // Custom inline styles - include min dimensions for visibility
   const customStyle: React.CSSProperties = {
     ...style,
     ...(width && {
@@ -71,7 +63,6 @@ const Skeleton: React.FC<SkeletonProps> = ({
     }),
   };
 
-  // For text variant with multiple lines
   if (variant === "text" && lines > 1) {
     return (
       <div className="space-y-2">
@@ -101,7 +92,6 @@ const Skeleton: React.FC<SkeletonProps> = ({
     );
   }
 
-  // Single skeleton element
   const skeletonClasses = [
     baseClasses,
     animationClasses[animation],
@@ -114,7 +104,5 @@ const Skeleton: React.FC<SkeletonProps> = ({
 
   return <div className={skeletonClasses} style={customStyle} {...props} />;
 };
-
-Skeleton.displayName = "Skeleton";
 
 export default Skeleton;
