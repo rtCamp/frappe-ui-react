@@ -272,9 +272,9 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   const clearAll = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      if(multiple){
+      if (multiple) {
         handleComboboxChange([]);
-      }else{
+      } else {
         setQuery("");
       }
     },
@@ -295,213 +295,223 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   );
 
   return (
-    <Combobox
-      value={selectedComboboxValue}
-      onChange={handleComboboxChange}
-      multiple={multiple}
-      by={compareFn}
-      data-testid="autocomplete-component"
-    >
-      {({ open: isComboboxOpen }) => (
-        <Popover
-          show={showOptions}
-          onUpdateShow={setShowOptions}
-          placement={placement}
-          popoverClass={bodyClasses}
-          target={({ togglePopover: popoverToggle }) => (
-            <div className="w-full space-y-1.5">
-              {label && (
-                <label
-                  htmlFor={comboboxInputId}
-                  className="block text-xs text-ink-gray-5"
-                >
-                  {label}
-                </label>
-              )}
-              <button
-                type="button"
-                className={`flex h-7 w-full max-w-md items-center justify-between gap-2 rounded bg-surface-gray-2 px-2 py-1 transition-colors hover:bg-surface-gray-3 border border-transparent focus:border-outline-gray-4 focus:ring-2 focus:ring-outline-gray-3 focus:outline-none ${
-                  isComboboxOpen ? "bg-surface-gray-3" : ""
-                }`}
-                onClick={popoverToggle}
-                role="button"
-                aria-label="Toggle options"
-              >
-                <FeatherIcon
-                  name="chevron-down"
-                  className="h-4 w-4 text-ink-gray-5 shrink-0"
-                  aria-hidden="true"
-                />
-                <div className="flex items-center overflow-hidden">
-                  {prefix && prefix(selectedComboboxValue)}
-                  <span
-                    className={`truncate text-base leading-5 ${
-                      displayValue ? "text-ink-gray-8" : "text-ink-gray-4"
-                    }`}
+    <div style={{ width: "100px" }}>
+      <Combobox
+        value={selectedComboboxValue}
+        onChange={handleComboboxChange}
+        multiple={multiple}
+        by={compareFn}
+        data-testid="autocomplete-component"
+      >
+        {({ open: isComboboxOpen }) => (
+          <Popover
+            show={showOptions}
+            onUpdateShow={setShowOptions}
+            placement={placement}
+            popoverClass={bodyClasses}
+            target={({ togglePopover: popoverToggle }) => (
+              <div className="w-full space-y-1.5">
+                {label && (
+                  <label
+                    htmlFor={comboboxInputId}
+                    className="block text-xs text-ink-gray-5"
                   >
-                    {displayValue || placeholder || ""}
-                  </span>
-                  {suffix && suffix(selectedComboboxValue)}
-                </div>
-              </button>
-            </div>
-          )}
-          body={({ isOpen: isPopoverOpen }) =>
-            isPopoverOpen && (
-              <div className="relative mt-1 w-fit max-w-md rounded-lg bg-surface-modal text-base shadow-2xl">
-                {!hideSearch && (
-                  <div>
-                  <div className="sticky top-0 z-[100] flex items-stretch space-x-1.5 bg-surface-modal py-1.5 rounded-lg">
-                    <div className="relative w-full rounded flex mx-2 border border-surface-gray-2 bg-surface-gray-2 text-base text-ink-gray-8 placeholder-ink-gray-4 transition-colors hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:bg-surface-white focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 focus:bg-surface-gray-3 hover:bg-surface-gray-4 text-ink-gray-8 cursor-pointer">
-                      <ComboboxInput
-                        id={comboboxInputId}
-                        ref={searchInputRef}
-                        className=" h-7 w-full py-1.5 pl-2 pr-2 outline-none"
-                        type="text"
-                        data-testid="autocomplete"
-                        displayValue={() => query}
-                        onChange={(
-                          event: React.ChangeEvent<HTMLInputElement>
-                        ) => {
-                          cancelRef.current?.removeAttribute("inert");
-                          cancelRef.current?.removeAttribute("aria-hidden");
-                          setQuery(event.target.value);
-                        }}
-                        autoComplete="off"
-                        onBlur={() => {
-                          cancelRef.current?.removeAttribute("inert");
-                          cancelRef.current?.removeAttribute("aria-hidden");
-                        }}
-                        placeholder="Search"
-                      />
-                      <div
-                        ref={cancelRef}
-                        className="inline-flex h-7 w-7 items-center justify-center"
-                        onMouseEnter={() => {
-                          cancelRef.current?.removeAttribute("inert");
-                          cancelRef.current?.removeAttribute("aria-hidden");
-                        }}
-                      >
-                        {loading ? (
-                          <LoadingIndicator
-                            data-testid="loading-indicator"
-                            className="h-4 w-4 text-ink-gray-5"
+                    {label}
+                  </label>
+                )}
+                <button
+                  type="button"
+                  className={`flex h-7 w-full max-w-md items-center justify-between gap-2 rounded bg-surface-gray-2 px-2 py-1 transition-colors hover:bg-surface-gray-3 border border-transparent focus:border-outline-gray-4 focus:ring-2 focus:ring-outline-gray-3 focus:outline-none ${
+                    isComboboxOpen ? "bg-surface-gray-3" : ""
+                  }`}
+                  onClick={popoverToggle}
+                  role="button"
+                  aria-label="Toggle options"
+                >
+                  <FeatherIcon
+                    name="chevron-down"
+                    className="h-4 w-4 text-ink-gray-5 shrink-0"
+                    aria-hidden="true"
+                  />
+                  <div className="flex items-center overflow-hidden">
+                    {prefix && prefix(selectedComboboxValue)}
+                    <span
+                      className={`truncate text-base leading-5 ${
+                        displayValue ? "text-ink-gray-8" : "text-ink-gray-4"
+                      }`}
+                    >
+                      {displayValue || placeholder || ""}
+                    </span>
+                    {suffix && suffix(selectedComboboxValue)}
+                  </div>
+                </button>
+              </div>
+            )}
+            body={({ isOpen: isPopoverOpen }) =>
+              isPopoverOpen && (
+                <div className="relative mt-1 w-fit max-w-md rounded-lg bg-surface-modal text-base shadow-2xl">
+                  {!hideSearch && (
+                    <div>
+                      <div className="sticky top-0 z-[100] flex items-stretch space-x-1.5 bg-surface-modal py-1.5 rounded-lg">
+                        <div className="relative w-full rounded flex mx-2 border border-surface-gray-2 bg-surface-gray-2 text-base text-ink-gray-8 placeholder-ink-gray-4 transition-colors hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:bg-surface-white focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 focus:bg-surface-gray-3 hover:bg-surface-gray-4 text-ink-gray-8 cursor-pointer">
+                          <ComboboxInput
+                            id={comboboxInputId}
+                            ref={searchInputRef}
+                            className=" h-7 w-full py-1.5 pl-2 pr-2 outline-none"
+                            type="text"
+                            data-testid="autocomplete"
+                            displayValue={() => query}
+                            onChange={(
+                              event: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              cancelRef.current?.removeAttribute("inert");
+                              cancelRef.current?.removeAttribute("aria-hidden");
+                              setQuery(event.target.value);
+                            }}
+                            autoComplete="off"
+                            onBlur={() => {
+                              cancelRef.current?.removeAttribute("inert");
+                              cancelRef.current?.removeAttribute("aria-hidden");
+                            }}
+                            placeholder="Search"
                           />
-                        ) : (
-                          <button
-                            type="button"
-                            aria-label="Clear"
-                            onClick={clearAll}
+                          <div
+                            ref={cancelRef}
+                            className="inline-flex h-7 w-7 items-center justify-center"
+                            onMouseEnter={() => {
+                              cancelRef.current?.removeAttribute("inert");
+                              cancelRef.current?.removeAttribute("aria-hidden");
+                            }}
                           >
-                            <FeatherIcon
-                              name="x"
-                              className="w-4 h-4 text-ink-gray-8"
-                            />
-                          </button>
-                        )}
+                            {loading ? (
+                              <LoadingIndicator
+                                data-testid="loading-indicator"
+                                className="h-4 w-4 text-ink-gray-5"
+                              />
+                            ) : (
+                              <button
+                                type="button"
+                                aria-label="Clear"
+                                onClick={clearAll}
+                              >
+                                <FeatherIcon
+                                  name="x"
+                                  className="w-4 h-4 text-ink-gray-8"
+                                />
+                              </button>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  </div>
-                )}
+                  )}
 
-                <ComboboxOptions
-                  static
-                  className={`max-h-[15rem] overflow-y-auto px-1.5 pb-1.5 ${
-                    hideSearch ? "pt-1.5" : ""
-                  }`}
-                >
-                  {groups.length === 0 ? (
-                    <li className="rounded-md px-2.5 py-1.5 text-base text-ink-gray-5">
-                      No results found
-                    </li>
-                  ) : (
-                    groups.map((group) => (
-                      <div
-                        key={group.group}
-                        className={group.items.length === 0 ? "hidden" : ""}
-                      >
-                        {group.group && !group.hideLabel && (
-                          <div className="sticky top-10 truncate bg-surface-modal px-2.5 py-1.5 text-sm font-medium text-ink-gray-5">
-                            {group.group}
-                          </div>
-                        )}
-                        {group.items.slice(0, maxOptions).map((option, idx) => (
-                          <ComboboxOption
-                            key={idx}
-                            value={option}
-                            disabled={(option as Option).disabled}
-                            className={({ focus }) =>
-                              `flex cursor-pointer items-center justify-between rounded px-2.5 py-1.5 text-base ${
-                                focus ? "bg-surface-gray-3" : ""
-                              } ${
-                                (option as Option).disabled ? "opacity-50" : ""
-                              }`
-                            }
-                          >
-                            <>
-                              <div className="flex flex-1 gap-2 overflow-hidden items-center">
-                                {(itemPrefix || multiple) && (
-                                  <div className="flex flex-shrink-0">
-                                    {itemPrefix ? (
-                                      itemPrefix(option as AutocompleteOption)
-                                    ) : isOptionSelected(option as Option) ? (
-                                      <FeatherIcon
-                                        name="check"
-                                        className="h-4 w-4 text-ink-gray-7"
-                                      />
-                                    ) : (
-                                      <div className="h-4 w-4" />
+                  <ComboboxOptions
+                    static
+                    className={`max-h-[15rem] overflow-y-auto px-1.5 pb-1.5 ${
+                      hideSearch ? "pt-1.5" : ""
+                    }`}
+                  >
+                    {groups.length === 0 ? (
+                      <li className="rounded-md px-2.5 py-1.5 text-base text-ink-gray-5">
+                        No results found
+                      </li>
+                    ) : (
+                      groups.map((group) => (
+                        <div
+                          key={group.group}
+                          className={group.items.length === 0 ? "hidden" : ""}
+                        >
+                          {group.group && !group.hideLabel && (
+                            <div className="sticky top-10 truncate bg-surface-modal px-2.5 py-1.5 text-sm font-medium text-ink-gray-5">
+                              {group.group}
+                            </div>
+                          )}
+                          {group.items
+                            .slice(0, maxOptions)
+                            .map((option, idx) => (
+                              <ComboboxOption
+                                key={idx}
+                                value={option}
+                                disabled={(option as Option).disabled}
+                                className={({ focus }) =>
+                                  `flex cursor-pointer items-center justify-between rounded px-2.5 py-1.5 text-base ${
+                                    focus ? "bg-surface-gray-3" : ""
+                                  } ${
+                                    (option as Option).disabled
+                                      ? "opacity-50"
+                                      : ""
+                                  }`
+                                }
+                              >
+                                <>
+                                  <div className="flex flex-1 gap-2 overflow-hidden items-center">
+                                    {(itemPrefix || multiple) && (
+                                      <div className="flex flex-shrink-0">
+                                        {itemPrefix ? (
+                                          itemPrefix(
+                                            option as AutocompleteOption
+                                          )
+                                        ) : isOptionSelected(
+                                            option as Option
+                                          ) ? (
+                                          <FeatherIcon
+                                            name="check"
+                                            className="h-4 w-4 text-ink-gray-7"
+                                          />
+                                        ) : (
+                                          <div className="h-4 w-4" />
+                                        )}
+                                      </div>
                                     )}
+                                    <span className="flex-1 truncate text-ink-gray-7">
+                                      {getLabel(option)}
+                                    </span>
                                   </div>
-                                )}
-                                <span className="flex-1 truncate text-ink-gray-7">
-                                  {getLabel(option)}
-                                </span>
-                              </div>
 
-                              {itemSuffix && (
-                                <div className="ml-2 flex-shrink-0">
-                                  {itemSuffix(option as Option)}
-                                  {(option as Option)?.description && (
-                                    <div className="text-sm text-ink-gray-5">
-                                      {(option as Option).description}
+                                  {itemSuffix && (
+                                    <div className="ml-2 flex-shrink-0">
+                                      {itemSuffix(option as Option)}
+                                      {(option as Option)?.description && (
+                                        <div className="text-sm text-ink-gray-5">
+                                          {(option as Option).description}
+                                        </div>
+                                      )}
                                     </div>
                                   )}
-                                </div>
-                              )}
-                            </>
-                          </ComboboxOption>
-                        ))}
-                      </div>
-                    ))
-                  )}
-                </ComboboxOptions>
-
-                {showFooter && multiple && (
-                  <div className="border-t p-1 border-outline-gray-2">
-                    {multiple ? (
-                      <div className="flex items-center justify-end">
-                        {!areAllOptionsSelected && (
-                          <Button label="Select All" onClick={selectAll} />
-                        )}
-                        {areAllOptionsSelected && (
-                          <Button label="Clear All" onClick={clearAll} />
-                        )}
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-end">
-                        <Button label="Clear" onClick={clearAll} />
-                      </div>
+                                </>
+                              </ComboboxOption>
+                            ))}
+                        </div>
+                      ))
                     )}
-                  </div>
-                )}
-              </div>
-            )
-          }
-        />
-      )}
-    </Combobox>
+                  </ComboboxOptions>
+
+                  {showFooter && multiple && (
+                    <div className="border-t p-1 border-outline-gray-2">
+                      {multiple ? (
+                        <div className="flex items-center justify-end">
+                          {!areAllOptionsSelected && (
+                            <Button label="Select All" onClick={selectAll} />
+                          )}
+                          {areAllOptionsSelected && (
+                            <Button label="Clear All" onClick={clearAll} />
+                          )}
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-end">
+                          <Button label="Clear" onClick={clearAll} />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )
+            }
+          />
+        )}
+      </Combobox>
+    </div>
   );
 };
 
