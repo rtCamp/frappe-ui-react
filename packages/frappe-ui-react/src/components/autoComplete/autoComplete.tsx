@@ -295,7 +295,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   );
 
   return (
-    <div style={{ width: "100px" }}>
+    <div className="w-full">
       <Combobox
         value={selectedComboboxValue}
         onChange={handleComboboxChange}
