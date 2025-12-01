@@ -57,7 +57,7 @@ export const Widget: React.FC<WidgetProps> = ({
           <GripVertical className="w-4 h-4 text-ink-gray-5" strokeWidth={2} />
         </button>
       )}
-      {layout.component}
+      <layout.component {...layout.props}/>
     </div>
   );
 };
