@@ -1,5 +1,6 @@
-import clsx from 'clsx';
-import type { CommandPaletteItem as ItemType } from './types';
+import clsx from "clsx";
+
+import type { CommandPaletteItem as ItemType } from "./types";
 
 export interface CommandPaletteItemProps {
   item: ItemType;
@@ -12,8 +13,8 @@ const CommandPaletteItem = ({ item, active }: CommandPaletteItemProps) => {
   return (
     <div
       className={clsx(
-        'flex w-full min-w-0 items-center rounded px-2 py-2 text-base font-medium text-ink-gray-8',
-        { 'bg-surface-gray-3': active }
+        "flex w-full min-w-0 items-center rounded px-2 py-2 text-base font-medium text-ink-gray-8",
+        { "bg-surface-gray-3": active }
       )}
     >
       {IconComponent && (

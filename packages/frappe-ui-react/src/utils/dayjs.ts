@@ -1,45 +1,46 @@
-import _dayjs, { Dayjs } from 'dayjs/esm'
-import relativeTime from 'dayjs/esm/plugin/relativeTime'
-import localizedFormat from 'dayjs/esm/plugin/localizedFormat'
-import updateLocale from 'dayjs/esm/plugin/updateLocale'
-import isToday from 'dayjs/esm/plugin/isToday'
-import duration from 'dayjs/esm/plugin/duration'
-import utc from 'dayjs/esm/plugin/utc'
-import timezone from 'dayjs/esm/plugin/timezone'
-import advancedFormat from 'dayjs/esm/plugin/advancedFormat'
-import { getConfig } from './config';
+import _dayjs, { Dayjs } from "dayjs/esm";
+import relativeTime from "dayjs/esm/plugin/relativeTime";
+import localizedFormat from "dayjs/esm/plugin/localizedFormat";
+import updateLocale from "dayjs/esm/plugin/updateLocale";
+import isToday from "dayjs/esm/plugin/isToday";
+import duration from "dayjs/esm/plugin/duration";
+import utc from "dayjs/esm/plugin/utc";
+import timezone from "dayjs/esm/plugin/timezone";
+import advancedFormat from "dayjs/esm/plugin/advancedFormat";
 
-_dayjs.extend(updateLocale)
-_dayjs.extend(relativeTime)
-_dayjs.extend(localizedFormat)
-_dayjs.extend(isToday)
-_dayjs.extend(duration)
-_dayjs.extend(utc)
-_dayjs.extend(timezone)
-_dayjs.extend(advancedFormat)
+import { getConfig } from "./config";
+
+_dayjs.extend(updateLocale);
+_dayjs.extend(relativeTime);
+_dayjs.extend(localizedFormat);
+_dayjs.extend(isToday);
+_dayjs.extend(duration);
+_dayjs.extend(utc);
+_dayjs.extend(timezone);
+_dayjs.extend(advancedFormat);
 
 function getBrowserTimezone(): string {
-  return Intl.DateTimeFormat().resolvedOptions().timeZone
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
 
 export function dayjsLocal(dateTimeString?: string): Dayjs {
-  const systemTimezone = getConfig('systemTimezone')
-  const localTimezone = getConfig('localTimezone') || getBrowserTimezone()
+  const systemTimezone = getConfig("systemTimezone");
+  const localTimezone = getConfig("localTimezone") || getBrowserTimezone();
 
-  if (!systemTimezone) return _dayjs(dateTimeString)
+  if (!systemTimezone) return _dayjs(dateTimeString);
 
-  if (!dateTimeString) return _dayjs().tz(localTimezone)
-  return _dayjs.tz(dateTimeString, systemTimezone).tz(localTimezone)
+  if (!dateTimeString) return _dayjs().tz(localTimezone);
+  return _dayjs.tz(dateTimeString, systemTimezone).tz(localTimezone);
 }
 
 export function dayjsSystem(dateTimeString?: string): Dayjs {
-  const systemTimezone = getConfig('systemTimezone')
-  const localTimezone = getConfig('localTimezone') || getBrowserTimezone()
+  const systemTimezone = getConfig("systemTimezone");
+  const localTimezone = getConfig("localTimezone") || getBrowserTimezone();
 
-  if (!systemTimezone) return _dayjs(dateTimeString)
+  if (!systemTimezone) return _dayjs(dateTimeString);
 
-  if (!dateTimeString) return _dayjs().tz(systemTimezone)
-  return _dayjs.tz(dateTimeString, localTimezone).tz(systemTimezone)
+  if (!dateTimeString) return _dayjs().tz(systemTimezone);
+  return _dayjs.tz(dateTimeString, localTimezone).tz(systemTimezone);
 }
 
-export const dayjs = _dayjs
+export const dayjs = _dayjs;

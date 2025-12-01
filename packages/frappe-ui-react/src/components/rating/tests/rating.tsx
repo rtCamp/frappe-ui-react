@@ -1,6 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
+
 import Rating from "../rating";
 
 describe("Rating", () => {
@@ -30,7 +31,9 @@ describe("Rating", () => {
 
   it("does not call onChange when readonly", () => {
     const handleChange = jest.fn();
-    render(<Rating value={0} ratingFrom={5} onChange={handleChange} readonly />);
+    render(
+      <Rating value={0} ratingFrom={5} onChange={handleChange} readonly />
+    );
     const stars = screen.getAllByTestId("star-icon");
     fireEvent.click(stars[2]);
     expect(handleChange).not.toHaveBeenCalled();

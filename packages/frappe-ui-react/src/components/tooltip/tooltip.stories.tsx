@@ -6,19 +6,17 @@ import { Button } from "../button";
 const meta: Meta<typeof Tooltip> = {
   title: "Components/Tooltip",
   component: Tooltip,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
   argTypes: {
     placement: {
       control: "select",
       options: ["top", "right", "bottom", "left"],
-			description: "Placement of the tooltip relative to the trigger",
+      description: "Placement of the tooltip relative to the trigger",
     },
     children: {
       control: false,
-			description: "Element that triggers the tooltip on hover",
+      description: "Element that triggers the tooltip on hover",
     },
     body: {
       description: "Custom content to render inside the tooltip",
@@ -51,9 +49,9 @@ type Story = StoryObj<typeof meta>;
 export const WithText: Story = {
   render: (args) => {
     return (
-        <Tooltip text={args.text} hoverDelay={args.hoverDelay}>
-          <Button theme="red">Delete</Button>
-        </Tooltip>
+      <Tooltip text={args.text} hoverDelay={args.hoverDelay}>
+        <Button theme="red">Delete</Button>
+      </Tooltip>
     );
   },
   args: {
@@ -67,9 +65,9 @@ export const WithText: Story = {
 export const Disabled: Story = {
   render: (args) => {
     return (
-        <Tooltip {...args}>
-          <Button theme="red">Delete</Button>
-        </Tooltip>
+      <Tooltip {...args}>
+        <Button theme="red">Delete</Button>
+      </Tooltip>
     );
   },
   args: {
@@ -82,9 +80,9 @@ export const Disabled: Story = {
 export const WithCustomContent: Story = {
   render: (args) => {
     return (
-        <Tooltip {...args}>
-          <Button theme="red">Delete</Button>
-        </Tooltip>
+      <Tooltip {...args}>
+        <Button theme="red">Delete</Button>
+      </Tooltip>
     );
   },
   args: {

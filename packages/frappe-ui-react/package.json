@@ -1,6 +1,6 @@
 {
   "name": "@rtcamp/frappe-ui-react",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.4",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist-types/index.d.ts",
@@ -8,6 +8,13 @@
   "author": {
     "name": "rtCamp"
   },
+  "files": [
+    "dist/",
+    "dist-types/",
+    "package.json",
+    "README.md",
+    "tsconfig.json"
+  ],
   "license": "MIT",
   "private": false,
   "sideEffects": false,
@@ -18,11 +25,16 @@
       "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist-types/index.d.ts"
-    }
+    },
+    "./theme": "./dist/theme.css",
+    "./theme-v3": "./dist/themeV3.css",
+    "./tailwind/preset": "./dist/utils/tailwind.config.cjs"
   },
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsc -b && npm run copy-assets",
+    "copy-assets": "node scripts/copy-assets.js",
     "publish:local": "npm publish --registry http://localhost:4873",
+    "unpublish:local": "npm unpublish --registry http://localhost:4873 --force",
     "publish:remote": "npm publish"
   },
   "dependencies": {
@@ -37,6 +49,7 @@
     "@tailwindcss/vite": "^4.1.11",
     "class-variance-authority": "^0.7.1",
     "date-fns": "^3.6.0",
+    "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "dompurify": "^3.2.6",
     "echarts": "^5.6.0",
@@ -52,6 +65,7 @@
     "react-dom": "^19.1.0",
     "react-grid-layout": "^1.5.2",
     "react-quill-new": "^3.6.0",
+    "react-resizable": "^3.0.5",
     "styled-components": "^6.1.19",
     "tailwindcss": "^4.1.11",
     "tailwind-merge": "^2.4.0"

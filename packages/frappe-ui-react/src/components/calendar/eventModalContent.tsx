@@ -6,10 +6,10 @@ import {
   Trash2,
   User,
   X,
-} from 'lucide-react';
+} from "lucide-react";
 
-import type { CalendarEvent } from './types';
-import { parseDateEventPopupFormat } from './calendarUtils';
+import type { CalendarEvent } from "./types";
+import { parseDateEventPopupFormat } from "./calendarUtils";
 
 // Define the component's props interface
 interface EventModalContentProps {
@@ -29,6 +29,7 @@ export const EventModalContent = ({
   onEdit,
   onDelete,
 }: EventModalContentProps) => {
+
   return (
     <div className="w-80 rounded bg-surface-white p-4 text-ink-gray-8 shadow-lg">
       <div className="flex flex-row-reverse gap-3 text-ink-gray-5">
@@ -47,8 +48,8 @@ export const EventModalContent = ({
         )}
       </div>
       <div className="mt-2 flex flex-col gap-5">
-        <div className="flex justify-between text-xl font-semibold">
-          <span>{calendarEvent.title || 'New Event'}</span>
+        <div className="flex justify-between text-xl font-semibold break-all">
+          <span>{calendarEvent.title || "New Event"}</span>
         </div>
 
         <div className="flex flex-col gap-4">
@@ -57,8 +58,8 @@ export const EventModalContent = ({
             <span className="text-sm">{parseDateEventPopupFormat(date)}</span>
           </div>
           {calendarEvent.participant && (
-            <div className="flex items-center gap-2">
-              <User size={16} className="text-ink-gray-5" />
+            <div className="flex items-center gap-2 break-all">
+              <User size={16} className="text-ink-gray-5 shrink-0" />
               <span className="text-sm">{calendarEvent.participant}</span>
             </div>
           )}
@@ -71,8 +72,8 @@ export const EventModalContent = ({
             </div>
           )}
           {calendarEvent.venue && (
-            <div className="flex items-center gap-2">
-              <MapPin size={16} className="text-ink-gray-5" />
+            <div className="flex items-center gap-2 break-all">
+              <MapPin size={16} className="text-ink-gray-5 shrink-0" />
               <span className="text-sm">{calendarEvent.venue}</span>
             </div>
           )}

@@ -1,8 +1,7 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from "react";
+import styled from "styled-components";
 
-import { CalendarContext } from './calendarContext';
-import styled from 'styled-components';
-
+import { CalendarContext } from "./calendarContext";
 
 interface CalendarTimeMarkerProps {
   date: Date;
@@ -10,8 +9,8 @@ interface CalendarTimeMarkerProps {
 }
 
 const StyledDiv = styled.div`
-  &:before{
-    content: '';
+  &:before {
+    content: "";
     display: block;
     width: 12px;
     height: 12px;
@@ -22,9 +21,12 @@ const StyledDiv = styled.div`
     top: 50%;
     transform: translateY(-50%);
   }
-`
+`;
 
-export const CalendarTimeMarker = ({ date, redundantCellHeight = 0 }: CalendarTimeMarkerProps) => {
+export const CalendarTimeMarker = ({
+  date,
+  redundantCellHeight = 0,
+}: CalendarTimeMarkerProps) => {
   const { config } = useContext(CalendarContext);
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -58,7 +60,7 @@ export const CalendarTimeMarker = ({ date, redundantCellHeight = 0 }: CalendarTi
       className="absolute left-0 right-0 z-10 w-full pl-2"
       style={topPositionStyle}
     >
-      <StyledDiv className='relative h-0.5 bg-red-600' />
+      <StyledDiv className="relative h-0.5 bg-red-600" />
     </div>
   );
 };

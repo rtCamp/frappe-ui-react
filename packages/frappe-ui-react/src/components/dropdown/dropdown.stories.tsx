@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { action } from "storybook/actions";
+
 import Dropdown from "./dropdown";
 import { Button } from "../button";
 import type { DropdownOptions } from "./types";
@@ -27,9 +28,7 @@ export default {
       description: "Custom trigger element for the dropdown.",
     },
   },
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
 } as Meta<typeof Dropdown>;
 
@@ -196,9 +195,9 @@ const submenuActions: DropdownOptions = [
 
 const DropdownTemplate: StoryObj<typeof Dropdown> = {
   render: (args) => (
-      <div className="p-4 flex justify-center items-center h-40">
-        <Dropdown {...args} />
-      </div>
+    <div className="p-4 flex justify-center items-center h-40">
+      <Dropdown {...args} />
+    </div>
   ),
 };
 

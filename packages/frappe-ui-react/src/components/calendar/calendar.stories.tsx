@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { action } from "storybook/actions";
 
 import type { CalendarConfig, CalendarEvent } from "./types";
 import { Calendar } from "./calendar";
@@ -8,9 +7,7 @@ import TabButtons from "../tabButtons";
 const meta: Meta<typeof Calendar> = {
   title: "Components/Calendar",
   component: Calendar,
-  parameters: {
-    layout: "fullscreen",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "fullscreen" },
   argTypes: {
     config: {
       createNewEvent: { action: "create" },
@@ -31,12 +28,12 @@ const meta: Meta<typeof Calendar> = {
 export default meta;
 type Story = StoryObj<typeof Calendar>;
 
-const config = {
+const config: Partial<CalendarConfig> = {
   defaultMode: "Month" as CalendarConfig["defaultMode"],
   isEditMode: true,
   eventIcons: {},
   allowCustomClickEvents: true,
-  redundantCellHeight: 100,
+  redundantCellHeight: 0,
   hourHeight: 50,
   enableShortcuts: false,
   timeFormat: "12h",
@@ -125,16 +122,16 @@ export const Default: Story = {
   args: {
     config: {
       ...config,
-      createNewEvent: action("createEvent"),
-      updateEventState: action("updateEvent"),
-      deleteEvent: action("deleteEvent"),
+      createNewEvent: (event: CalendarEvent) => console.log("Create Event", event),
+      updateEventState: (event: CalendarEvent) => console.log("Update Event", event),
+      deleteEvent: (eventId: string|number) => console.log("Delete Event", eventId),
     },
     events,
   },
   render: (args) => (
-      <div className="flex h-screen flex-col overflow-hidden p-5">
-        <Calendar {...args} />
-      </div>
+    <div className="flex h-screen flex-col overflow-hidden p-5">
+      <Calendar {...args} />
+    </div>
   ),
 };
 
@@ -151,10 +148,10 @@ export const CustomHeader: Story = {
     }) => (
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold text-ink-gray-1">
+          <h1 className="text-xl font-bold text-ink-gray-8">
             {currentMonthYear}
           </h1>
-          <div className="flex items-center gap-1 text-ink-gray-1">
+          <div className="flex items-center gap-1 text-ink-gray-8">
             <button
               onClick={decrement}
               className="p-2 rounded hover:bg-gray-200"
@@ -183,9 +180,9 @@ export const CustomHeader: Story = {
     ),
   },
   render: (args) => (
-		<div className="flex h-screen flex-col overflow-hidden p-5">
-			<Calendar {...args} />
-		</div>
+    <div className="flex h-screen flex-col overflow-hidden p-5">
+      <Calendar {...args} />
+    </div>
   ),
 };
 
@@ -207,8 +204,8 @@ export const CustomClickEvents: Story = {
     events,
   },
   render: (args) => (
-		<div className="flex h-screen flex-col overflow-hidden p-5">
-			<Calendar {...args} />
-		</div>
+    <div className="flex h-screen flex-col overflow-hidden p-5">
+      <Calendar {...args} />
+    </div>
   ),
 };

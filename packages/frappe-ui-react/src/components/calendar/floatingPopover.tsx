@@ -4,19 +4,19 @@ import {
   offset,
   shift,
   useFloating,
-} from '@floating-ui/react';
-import { createPortal } from 'react-dom';
-import { useEffect } from 'react';
+} from "@floating-ui/react";
+import { createPortal } from "react-dom";
+import { useEffect } from "react";
 
-import type { CalendarEvent } from './types';
-import { EventModalContent } from './eventModalContent';
+import type { CalendarEvent } from "./types";
+import { EventModalContent } from "./eventModalContent";
 
 interface FloatingEventModalProps {
   isOpen: boolean;
   targetElement: HTMLElement | null;
   calendarEvent: CalendarEvent;
   date: Date;
-  activeView: 'monthly' | 'weekly' | 'daily';
+  activeView: "monthly" | "weekly" | "daily";
   onClose: () => void;
 }
 
@@ -31,12 +31,12 @@ const FloatingEventModal = ({
   const { refs, floatingStyles } = useFloating({
     open: isOpen,
     onOpenChange: (open) => {
-        if (!open) onClose();
+      if (!open) onClose();
     },
     elements: {
       reference: targetElement,
     },
-    placement: activeView === 'daily' ? 'top' : 'right',
+    placement: activeView === "daily" ? "top" : "right",
     middleware: [offset(10), flip(), shift()],
     whileElementsMounted: autoUpdate,
   });
@@ -58,9 +58,9 @@ const FloatingEventModal = ({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen, refs.floating, targetElement, onClose]);
 
@@ -69,10 +69,7 @@ const FloatingEventModal = ({
   }
 
   return createPortal(
-    <div
-      ref={refs.setFloating}
-      style={{ ...floatingStyles, zIndex: 100 }}
-    >
+    <div ref={refs.setFloating} style={{ ...floatingStyles, zIndex: 100 }}>
       <EventModalContent
         calendarEvent={calendarEvent}
         date={date}

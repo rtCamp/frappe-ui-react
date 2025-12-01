@@ -6,9 +6,7 @@ import Select from "./select";
 export default {
   title: "Components/Select",
   component: Select,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
   argTypes: {
     size: {
@@ -37,7 +35,7 @@ export default {
         "Array of options to display in the dropdown, each with a label and value",
     },
     prefix: {
-      control: "text",
+      control: false,
       description: "Element to display before the selected value",
     },
     htmlId: {
@@ -60,6 +58,7 @@ const Template: StoryObj<SelectProps> = {
         <Select
           {...args}
           value={value}
+          prefix={() => <span>👤</span>}
           onChange={(e) => setValue(e.target.value)}
           options={[
             { label: "John Doe", value: "john-doe" },

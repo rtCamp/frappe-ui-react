@@ -4,8 +4,7 @@ export interface DialogActionContext {
   close: () => void;
 }
 
-
-export type DialogAction = Omit<ButtonProps, 'onClick'> & {
+export type DialogAction = Omit<ButtonProps, "onClick"> & {
   label: string;
   onClick?: (context: DialogActionContext) => void | Promise<void>;
 };

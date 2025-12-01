@@ -1,4 +1,4 @@
-import { Layouts, Layout as RGL_Layout } from 'react-grid-layout';
+import { Layouts, Layout as RGL_Layout } from "react-grid-layout";
 
 export type Layout = RGL_Layout;
 

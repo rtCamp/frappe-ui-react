@@ -64,6 +64,7 @@ export interface ListOptions {
     resizeColumn?: boolean;
     rowKey?: string;
     selectionText: (count: number) => string;
+		updateColumnWidth: (index: number, width: number) => void;
   };
   toggleRow: (rowId: any) => void;
   allRowsSelected: boolean;

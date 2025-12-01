@@ -1,10 +1,13 @@
+import { Meta } from "@storybook/react-vite/*";
+
 import { useToasts } from "./useToast";
 import ToastProvider from "./toastProvider";
 import { Button } from "../button";
-import { Meta } from "@storybook/react-vite/*";
 
 export default {
   title: "Components/Toast",
+  parameters: { docs: { source: { type: "code" } }, layout: "centered" },
+	tags: ["autodocs"],
   decorators: [
     (Story) => (
       <ToastProvider>
@@ -14,7 +17,7 @@ export default {
   ],
 } as Meta<typeof ToastProvider>;
 
-const ToastTriggerComponent = () => {
+export const Default = () => {
   const toast = useToasts();
 
   const handlePromise = () => {
@@ -39,15 +42,13 @@ const ToastTriggerComponent = () => {
 
   return (
     <div className="flex flex-col gap-4 p-8">
-        <Button onClick={() => toast.success("This is a success message!")}>
-          Show Success Toast
-        </Button>
-        <Button onClick={() => toast.error("This is an error message!")}>
-          Show Error Toast
-        </Button>
-        <Button onClick={handlePromise}>Show Promise Toast</Button>
+      <Button onClick={() => toast.success("This is a success message!")}>
+        Show Success Toast
+      </Button>
+      <Button onClick={() => toast.error("This is an error message!")}>
+        Show Error Toast
+      </Button>
+      <Button onClick={handlePromise}>Show Promise Toast</Button>
     </div>
   );
 };
-
-export const Default = () => <ToastTriggerComponent />;

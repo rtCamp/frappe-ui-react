@@ -4,7 +4,7 @@ import { getDate, getDateValue } from "./utils";
 import { Popover } from "../popover";
 import { Button } from "../button";
 import { TextInput } from "../textInput";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 function twoDigit(n: number) {
   return n.toString().padStart(2, "0");
@@ -17,7 +17,6 @@ function useDateTimePicker({
   value?: string;
   onChange?: (v: string) => void;
 }) {
-  const today = useMemo(() => getDate(), []);
   const [open, setOpen] = useState(false);
   const [dateValue, setDateValue] = useState<string>(
     typeof value === "string" ? value : ""
@@ -25,7 +24,6 @@ function useDateTimePicker({
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
   const [second, setSecond] = useState(0);
-  const [currentMonth] = useState<number>(today.getMonth() + 1);
 
   useEffect(() => {
     if (typeof value === "string") setDateValue(value);
@@ -41,6 +39,7 @@ function useDateTimePicker({
   }, [dateValue]);
 
   const {
+    currentMonth,
     datesAsWeeks,
     formattedMonth,
     prevMonth,
@@ -231,11 +230,11 @@ export const DateTimePicker: React.FC<DatePickerProps> = ({
                       key={val}
                       className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded hover:bg-surface-gray-2 ${
                         date.getMonth() !== currentMonth - 1
-                          ? "text-ink-gray-3"
-                          : "text-ink-gray-9"
+                          ? "text-ink-gray-4"
+                          : ""
                       } ${isToday ? " font-extrabold text-ink-gray-9" : ""} ${
                         getDateValue(date) === dateValue.split(" ")[0]
-                          ? " bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                          ? " bg-surface-gray-2"
                           : ""
                       }`}
                       onClick={() => {
@@ -255,7 +254,7 @@ export const DateTimePicker: React.FC<DatePickerProps> = ({
             <div>
               {twoDigit(hour)} : {twoDigit(minute)} : {twoDigit(second)}
             </div>
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-center accent-black dark:accent-white">
               <div className="slider flex min-h-4 items-center justify-center">
                 <input
                   name="hours"

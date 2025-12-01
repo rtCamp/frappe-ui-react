@@ -49,22 +49,22 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       }[size];
 
       const paddingClasses = {
-        sm: ["py-1.5", prefix ? "pl-8" : "pl-2", suffix ? "pr-8" : "pr-2"].join(
+        sm: ["py-1.5", prefix ? "pl-9" : "pl-2", suffix ? "pr-8" : "pr-2"].join(
           " "
         ),
         md: [
           "py-1.5",
-          prefix ? "pl-9" : "pl-2.5",
+          prefix ? "pl-10" : "pl-2.5",
           suffix ? "pr-9" : "pr-2.5",
         ].join(" "),
         lg: [
           "py-1.5",
-          prefix ? "pl-10" : "pl-3",
+          prefix ? "pl-12" : "pl-3",
           suffix ? "pr-10" : "pr-3",
         ].join(" "),
         xl: [
           "py-1.5",
-          prefix ? "pl-10" : "pl-3",
+          prefix ? "pl-13" : "pl-3",
           suffix ? "pr-10" : "pr-3",
         ].join(" "),
       }[size];
@@ -137,7 +137,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           <div
             className={`absolute inset-y-0 left-0 flex items-center ${textColor} ${prefixClasses}`}
           >
-            {prefix && prefix()}
+            {prefix?.(size)}
           </div>
         )}
         <input

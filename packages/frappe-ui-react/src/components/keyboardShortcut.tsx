@@ -1,6 +1,7 @@
-import React, { useMemo, ReactNode } from 'react';
-import FeatherIcon from './featherIcon';
-import { LucideOption } from 'lucide-react';
+import React, { useMemo, ReactNode } from "react";
+import { LucideOption } from "lucide-react";
+
+import FeatherIcon from "./featherIcon";
 
 interface KeyboardShortcutProps {
   meta?: boolean;
@@ -22,19 +23,19 @@ const KeyboardShortcut: React.FC<KeyboardShortcutProps> = ({
   className,
 }) => {
   const isMac = useMemo(() => {
-    if (typeof window !== 'undefined') {
-      return navigator.userAgent.includes('Mac');
+    if (typeof window !== "undefined") {
+      return navigator.userAgent.includes("Mac");
     }
     return false;
   }, []);
 
   const wrapperClasses = useMemo(() => {
-    const baseClasses = 'inline-flex items-center gap-0.5 text-sm';
+    const baseClasses = "inline-flex items-center gap-0.5 text-sm";
     const backgroundClasses = bg
-      ? 'bg-surface-gray-2 rounded-sm text-ink-gray-5 py-0.5 px-1'
-      : 'text-ink-gray-4';
+      ? "bg-surface-gray-2 rounded-sm text-ink-gray-5 py-0.5 px-1"
+      : "text-ink-gray-4";
 
-    return `${baseClasses} ${backgroundClasses} ${className || ''}`;
+    return `${baseClasses} ${backgroundClasses} ${className || ""}`;
   }, [bg, className]);
 
   return (

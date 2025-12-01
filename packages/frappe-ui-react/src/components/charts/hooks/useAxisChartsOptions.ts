@@ -1,11 +1,11 @@
-import useEchartsOptions from './useEchartsOptions';
-import { formatValue, mergeDeep } from '../helpers';
+import useEchartsOptions from "./useEchartsOptions";
+import { formatValue, mergeDeep } from "../helpers";
 import {
   AreaSeriesConfig,
   AxisChartConfig,
   BarSeriesConfig,
   LineSeriesConfig,
-} from '../types';
+} from "../types";
 
 function getBarSeriesOptions(config: AxisChartConfig, series: BarSeriesConfig) {
   const roundedCorners = config.swapXY ? [0, 2, 2, 0] : [2, 2, 0, 0];
@@ -13,12 +13,12 @@ function getBarSeriesOptions(config: AxisChartConfig, series: BarSeriesConfig) {
   const lastBarSeriesIdx = config.series
     .slice()
     .reverse()
-    .findIndex((s) => s.type === 'bar');
+    .findIndex((s) => s.type === "bar");
 
   const isLastBar = lastBarSeriesIdx === idx;
 
   return {
-    stack: config.stacked ? 'stack' : undefined,
+    stack: config.stacked ? "stack" : undefined,
     barMaxWidth: 60,
     itemStyle: {
       borderRadius: config.stacked
@@ -28,16 +28,16 @@ function getBarSeriesOptions(config: AxisChartConfig, series: BarSeriesConfig) {
         : roundedCorners,
     },
   };
-};
+}
 
 function getLineSeriesOptions(
   config: AxisChartConfig,
-  series: LineSeriesConfig,
+  series: LineSeriesConfig
 ) {
   const showSymbol = series.showDataPoints || series.showDataLabels;
   return {
     connectNulls: true,
-    symbol: 'circle',
+    symbol: "circle",
     symbolSize: 7,
     showSymbol: showSymbol,
     emphasis: {},
@@ -46,55 +46,61 @@ function getLineSeriesOptions(
       type: series.lineType,
     },
   };
-};
+}
 
 function getAreaSeriesOptions(
   config: AxisChartConfig,
-  series: AreaSeriesConfig,
+  series: AreaSeriesConfig
 ) {
   return {
-    type: 'line',
+    type: "line",
     showSymbol: series.showDataPoints,
     areaStyle: {
       color: series.color,
       opacity: series.fillOpacity || 0.5,
     },
   };
-};
+}
 
 export default function useAxisChartOptions(config: AxisChartConfig) {
   const data = config.data || [];
   const baseOptions = useEchartsOptions(config);
 
-  if (config.xAxis.type === 'time' && config.swapXY) {
-    return {options: {} , error: 'Swap axes is not supported for time series data'};
+  if (config.xAxis.type === "time" && config.swapXY) {
+    return {
+      options: {},
+      error: "Swap axes is not supported for time series data",
+    };
   }
 
   if (
-    config.series.find((s) => s.axis === 'y2' || s.type !== 'bar') &&
+    config.series.find((s) => s.axis === "y2" || s.type !== "bar") &&
     config.swapXY
   ) {
-    return {options: {} , error: 'Swap axes is not supported for non-bar series or y2 axis'};
+    return {
+      options: {},
+      error: "Swap axes is not supported for non-bar series or y2 axis",
+    };
   }
 
   const swapXY = config.swapXY;
   const lastBarSeriesIdx = config.series
     .slice()
     .reverse()
-    .findIndex((s) => s.type === 'bar');
-  const hasY2 = config.series.some((s) => s.axis === 'y2');
+    .findIndex((s) => s.type === "bar");
+  const hasY2 = config.series.some((s) => s.axis === "y2");
 
   if (hasY2) {
     baseOptions.yAxis[1].show = true;
   }
 
   baseOptions.series = config.series.map((s, idx) => {
-    let labelPosition = 'top';
-    if (s.type == 'bar' && config.stacked) {
-      labelPosition = idx == lastBarSeriesIdx ? 'top' : 'inside';
+    let labelPosition = "top";
+    if (s.type == "bar" && config.stacked) {
+      labelPosition = idx == lastBarSeriesIdx ? "top" : "inside";
     }
-    if (s.type == 'bar' && swapXY) {
-      labelPosition = 'right';
+    if (s.type == "bar" && swapXY) {
+      labelPosition = "right";
     }
 
     const standardSeriesOptions = {
@@ -111,7 +117,7 @@ export default function useAxisChartOptions(config: AxisChartConfig) {
         }
         return [x, y];
       }),
-      yAxisIndex: s.axis === 'y2' ? 1 : 0,
+      yAxisIndex: s.axis === "y2" ? 1 : 0,
       label: {
         show: s.showDataLabels,
         position: labelPosition,
@@ -128,18 +134,18 @@ export default function useAxisChartOptions(config: AxisChartConfig) {
     };
 
     let seriesTypeOptions = {};
-    if (s.type === 'bar') {
+    if (s.type === "bar") {
       seriesTypeOptions = getBarSeriesOptions(config, s);
     }
-    if (s.type === 'line') {
+    if (s.type === "line") {
       seriesTypeOptions = getLineSeriesOptions(config, s);
     }
-    if (s.type === 'area') {
+    if (s.type === "area") {
       seriesTypeOptions = getAreaSeriesOptions(config, s);
     }
 
     return mergeDeep(standardSeriesOptions, seriesTypeOptions, s.echartOptions);
   });
 
-  return {options: mergeDeep(baseOptions, config.echartOptions), error: null};
-};
+  return { options: mergeDeep(baseOptions, config.echartOptions), error: null };
+}

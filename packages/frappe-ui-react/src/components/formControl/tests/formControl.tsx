@@ -1,6 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
+
 import FormControl from "../formControl";
 
 describe("FormControl", () => {
@@ -80,7 +81,6 @@ describe("FormControl", () => {
     expect(screen.getByTestId("suffix")).toBeInTheDocument();
   });
 
-
   it("calls onChange for select", () => {
     const handleChange = jest.fn();
     render(
@@ -125,8 +125,6 @@ describe("FormControl", () => {
 
   it("applies custom className", () => {
     render(<FormControl className="custom-class" htmlId="test-classname" />);
-    expect(screen.getByTestId("form-control")).toHaveClass(
-      "custom-class"
-    );
+    expect(screen.getByTestId("form-control")).toHaveClass("custom-class");
   });
 });

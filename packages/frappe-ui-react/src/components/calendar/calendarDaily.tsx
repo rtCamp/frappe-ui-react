@@ -1,22 +1,27 @@
-import { useContext, useEffect, useRef } from 'react';
-import clsx from 'clsx';
+import { useContext, useEffect, useRef } from "react";
+import clsx from "clsx";
 
-import { parseDate, parseDateWithDay, twelveHoursFormat, twentyFourHoursFormat } from './calendarUtils';
-import { CalendarContext } from './calendarContext';
-import { CalendarEvent } from './calendarEvent';
-import { CalendarTimeMarker } from './calendarTimeMarker';
-import { useCalendarData } from './hooks/useCalendarData';
-
+import {
+  parseDate,
+  parseDateWithDay,
+  twelveHoursFormat,
+  twentyFourHoursFormat,
+} from "./calendarUtils";
+import { CalendarContext } from "./calendarContext";
+import { CalendarEvent } from "./calendarEvent";
+import { CalendarTimeMarker } from "./calendarTimeMarker";
+import { useCalendarData } from "./hooks/useCalendarData";
 
 export const CalendarDaily = () => {
   const { handleCellDblClick } = useContext(CalendarContext);
   const { events, config, currentDate } = useContext(CalendarContext);
-  const { timedEvents, fullDayEvents } = useCalendarData(events, 'Day');
+  const { timedEvents, fullDayEvents } = useCalendarData(events, "Day");
   const gridRef = useRef<HTMLDivElement>(null);
 
   const hourHeight = config.hourHeight || 72;
 
-  const timeArray = config.timeFormat === '24h' ? twentyFourHoursFormat : twelveHoursFormat;
+  const timeArray =
+    config.timeFormat === "24h" ? twentyFourHoursFormat : twelveHoursFormat;
 
   useEffect(() => {
     if (gridRef.current) {
@@ -33,9 +38,30 @@ export const CalendarDaily = () => {
         {parseDateWithDay(currentDate.toDate(), true)}
       </p>
       <div
+        className={`flex shrink-0 h-fit border-outline-gray-1 ${
+          config.noBorder ? 'border-t-[1px]' : 'border-[1px] border-b-0'
+        }`}
+      >
+        <div className="flex justify-center items-start py-0.5 w-20 text-base text-ink-gray-6 text-center">
+          <div className="text-sm text-ink-gray-6 h-[29px] inline-flex items-center">
+            All day
+          </div>
+        </div>
+        <div className="grid w-full grid-cols-7 relative">
+          {(fullDayEvents[parsedCurrentDate] || []).map((event, idx) => (
+            <CalendarEvent
+              key={event.id}
+              event={{ ...event, idx }}
+              date={currentDate.toDate()}
+              extraClassName="mb-1 w-[20%] cursor-pointer"
+            />
+          ))}
+        </div>
+      </div>
+      <div
         className={clsx(
-          "flex h-full w-full overflow-y-scroll border-ink-gray-2",
-          config.noBorder ? 'border-t' : 'border border-r-0'
+          "flex h-full w-full overflow-y-scroll border-gray-200",
+          config.noBorder ? "border-t" : "border border-r-0"
         )}
         ref={gridRef}
       >
@@ -46,42 +72,34 @@ export const CalendarDaily = () => {
         </div>
 
         <div className="grid h-full w-full grid-cols-1 pb-2">
-          <div className="calendar-column relative border-r border-l border-ink-gray-2">
-            <div
-              className="flex w-full flex-wrap gap-2 overflow-y-auto border-b border-ink-gray-2 p-1 transition-all"
-              style={{ minHeight: `${config.redundantCellHeight}px` }}
-            >
-              {(fullDayEvents[parsedCurrentDate] || []).map((event, idx) => (
-                <CalendarEvent
-                  key={event.id}
-                  event={{ ...event, idx }}
-                  date={currentDate.toDate()}
-                  extraClassName="mb-1 w-[20%] cursor-pointer"
-                />
-              ))}
-            </div>
-              {timeArray.map(time => (
+          <div className="calendar-column relative border-r border-l border-gray-200">
+            {timeArray.map((time, timeIndex) => (
+              <div
+                key={time}
+                className="relative flex text-ink-gray-8 cursor-pointer"
+                data-time-attr={timeIndex !== 0 ? time : undefined}
+              >
                 <div
-                  key={time}
-                  className="relative flex text-ink-gray-8"
-                  data-time-attr={time}
-                  onDoubleClick={(e) => handleCellDblClick(e, currentDate.toDate(), time)}
-                >
-                  <div
-                    className="w-full border-b border-ink-gray-2"
-                    style={{ height: `${hourHeight}px` }}
-                  />
-                </div>
-              ))}
-              {(timedEvents[parsedCurrentDate] || []).map((event) => (
-                <CalendarEvent
-                  key={event.id}
-                  event={event}
-                  date={currentDate.toDate()}
-                  extraClassName="absolute mb-2 cursor-pointer"
+                  className="w-full border-b border-gray-200"
+                  style={{ height: `${hourHeight}px` }}
+                  onClick={(e) =>
+                    handleCellDblClick(e, currentDate.toDate().toLocaleDateString("en-CA"), twentyFourHoursFormat[timeIndex])
+                  }
+                  onDoubleClick={(e) =>
+                    handleCellDblClick(e, currentDate.toDate().toLocaleDateString("en-CA"), twentyFourHoursFormat[timeIndex])
+                  }
                 />
-              ))}
-              <CalendarTimeMarker date={currentDate.toDate()} />
+              </div>
+            ))}
+            {(timedEvents[parsedCurrentDate] || []).map((event, idx) => (
+              <CalendarEvent
+                key={event.id}
+                event={{ ...event, idx }}
+                date={currentDate.toDate()}
+                extraClassName="absolute mb-2 cursor-pointer"
+              />
+            ))}
+            <CalendarTimeMarker date={currentDate.toDate()} />
           </div>
         </div>
       </div>

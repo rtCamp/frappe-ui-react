@@ -1,7 +1,6 @@
-
-export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type Theme = 'black' | 'red' | 'green' | 'blue' | 'orange';
-export type Variant = 'solid' | 'outline';
+export type Size = "xs" | "sm" | "md" | "lg" | "xl";
+export type Theme = "black" | "red" | "green" | "blue" | "orange";
+export type Variant = "solid" | "outline";
 
 export interface SizeProps {
   ringSize: string;

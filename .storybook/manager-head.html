@@ -1,4 +1,15 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
 <style>
+
+  body, html, div, span, p, h1, h2, h3, h4, h5, h6, 
+  button, input, textarea, select, label {
+    font-family: "Inter", sans-serif ;
+    font-optical-sizing: auto;
+  }
+
   /* Title */
   .sidebar-header div a {
     font-size: 20px !important;
@@ -6,7 +17,11 @@
   }
 
   #fur-title {
-    font-size: 25px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #000000;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
   }
 
   #fur-version {
@@ -15,4 +30,55 @@
     display: block;
     color: grey;
   }
+
+  #root .sidebar-container {
+    background-color: rgb(243, 243, 243);
+  }
+
+  #root > div > div {
+    border-right: 1px solid rgba(226, 226, 226, 0.3);
+  }
+
+  #storybook-explorer-tree .sidebar-item > button > div > svg {
+    visibility: hidden;
+  }
+
+  #storybook-explorer-tree .sidebar-item > button > div::before {
+    content: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path fill='currentColor' d='m28.504 8.136l-12-7a1 1 0 0 0-1.008 0l-12 7A1 1 0 0 0 3 9v14a1 1 0 0 0 .496.864l12 7a1 1 0 0 0 1.008 0l12-7A1 1 0 0 0 29 23V9a1 1 0 0 0-.496-.864M16 3.158L26.016 9L16 14.842L5.984 9ZM5 10.74l10 5.833V28.26L5 22.426Zm12 17.52V16.574l10-5.833v11.685Z'/></svg>");
+    color: #999999;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    transform: translate(34px, 0px);
+    opacity: 0.5;
+  }
+
+  #storybook-explorer-tree .sidebar-item[data-selected="true"]{
+    font-weight: normal;
+  }
+
+  #storybook-explorer-tree .sidebar-item[data-selected="true"]:hover {
+    background-color: rgb(124, 124, 124);
+  }
+
+  #storybook-explorer-tree .sidebar-subheading > button {
+    text-transform: none;
+    font-weight: normal;
+    letter-spacing: normal;
+    font-size: 14px;
+  }
+
 </style>
+
+<script>
+  var observer = new MutationObserver(function(mutations) {
+    if (document.title.match(/Storybook$/)) {
+      document.title = "Frappe UI React";
+    }
+  }).observe(document.querySelector("title"), {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+</script>

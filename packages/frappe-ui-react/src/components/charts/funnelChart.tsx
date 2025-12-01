@@ -1,7 +1,8 @@
-import React from 'react';
-import { useFunnelChartOptions } from './hooks';
-import ChartWrapper from './charts';
-import type { DonutChartConfig } from './types';
+import React from "react";
+
+import { useFunnelChartOptions } from "./hooks";
+import ChartWrapper from "./charts";
+import type { DonutChartConfig } from "./types";
 
 export interface FunnelChartProps {
   config: DonutChartConfig;

@@ -1,2 +1,2 @@
-export { default as Alert } from './alert';
-export type { AlertProps } from './types';
+export { default as Alert } from "./alert";
+export type { AlertProps } from "./types";

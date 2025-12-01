@@ -1,5 +1,5 @@
-export type TextAreaSize = 'sm' | 'md' | 'lg' | 'xl';
-export type TextAreaVariant = 'subtle' | 'outline';
+export type TextAreaSize = "sm" | "md" | "lg" | "xl";
+export type TextAreaVariant = "subtle" | "outline";
 
 export interface TextareaProps {
   label?: string;

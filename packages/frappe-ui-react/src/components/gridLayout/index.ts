@@ -1,2 +1,2 @@
-export * from './types';
-export { default as GridLayout} from './gridLayout';
+export * from "./types";
+export { default as GridLayout } from "./gridLayout";

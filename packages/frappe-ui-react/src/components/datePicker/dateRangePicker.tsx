@@ -1,10 +1,11 @@
+import { useEffect, useMemo, useState } from "react";
+
 import type { DatePickerProps } from "./types";
 import { useDatePicker } from "./useDatePicker";
 import { getDate, getDateValue } from "./utils";
 import { Popover } from "../popover";
 import { Button } from "../button";
 import { TextInput } from "../textInput";
-import { useEffect, useMemo, useState } from "react";
 
 function useDateRangePicker({
   value,
@@ -22,12 +23,8 @@ function useDateRangePicker({
   const [appliedFromDate, setAppliedFromDate] = useState<string>(
     value?.[0] || ""
   );
-  const [appliedToDate, setAppliedToDate] = useState<string>(
-    value?.[1] || ""
-  );
-  const [currentYear, setCurrentYear] = useState<number>(
-    today.getFullYear()
-  );
+  const [appliedToDate, setAppliedToDate] = useState<string>(value?.[1] || "");
+  const [currentYear, setCurrentYear] = useState<number>(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState<number>(
     today.getMonth() + 1
   );
@@ -71,7 +68,9 @@ function useDateRangePicker({
   function swapDatesIfNecessary(a: string, b: string) {
     if (!a || !b) return;
     const from = getDate(a);
+    from.setHours(0, 0, 0, 0);
     const to = getDate(b);
+    to.setHours(0, 0, 0, 0);
 
     if (from > to) {
       setFromDate(getDateValue(to));

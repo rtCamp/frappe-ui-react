@@ -1,6 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-type ResourceOptions<TData, TParams = any> = (params?: TParams) => Promise<TData>;
+type ResourceOptions<TData, TParams = any> = (
+  params?: TParams
+) => Promise<TData>;
 
 interface ResourceState<TData, TError> {
   data: TData | null;
@@ -8,7 +10,8 @@ interface ResourceState<TData, TError> {
   error: TError | null;
 }
 
-export interface ResourceOutput<TData, TError> extends ResourceState<TData, TError> {
+export interface ResourceOutput<TData, TError>
+  extends ResourceState<TData, TError> {
   fetch: (params?: any) => Promise<void>;
   submit: (params?: any) => Promise<void>;
 }
@@ -35,7 +38,7 @@ export function useResource<TData = any, TError = any>(
     },
     [resourceOptions]
   );
-  
+
   const submit = fetch;
 
   return { ...state, fetch, submit };

@@ -7,9 +7,7 @@ const meta: Meta<typeof Popover> = {
   title: "Components/Popover",
   component: Popover,
   tags: ["autodocs"],
-	parameters: {
-		layout: "centered",
-	},
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   argTypes: {
     show: {
       control: "boolean",
@@ -83,7 +81,7 @@ type Story = StoryObj<typeof Popover>;
 
 // Helper to provide common Popover content
 const DefaultPopoverContent = () => (
-  <div className="p-4 bg-white rounded-lg shadow-md border border-gray-200">
+  <div className="p-4 bg-surface-modal rounded-lg shadow-md border border-gray-200">
     <p className="text-gray-800 text-sm">Hello from Popover!</p>
     <button className="mt-2 px-3 py-1 bg-blue-500 text-white rounded text-xs">
       Action

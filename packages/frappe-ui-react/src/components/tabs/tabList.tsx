@@ -76,8 +76,8 @@ export const TabList = ({
       <div
         ref={indicatorRef}
         className={[
-          "tab-indicator absolute bg-surface-gray-7",
-          vertical ? "right-0 w-px" : "bottom-0 h-px",
+          "tab-indicator absolute",
+          vertical ? "right-0 w-px bg-transparent" : "bottom-0 h-px bg-surface-gray-7",
         ].join(" ")}
       />
     </div>

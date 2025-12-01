@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
-import { ListContext } from './listContext';
-import { Button } from '../button';
+import React, { useContext } from "react";
+
+import { ListContext } from "./listContext";
+import { Button } from "../button";
 
 interface EmptyStateProps {
   children?: React.ReactNode;
@@ -9,7 +10,7 @@ const EmptyState = ({ children }: EmptyStateProps) => {
   const list = useContext(ListContext);
 
   if (!list || !list.options || !list.options.emptyState) {
-    throw new Error('EmptyState must be used within a ListContext.Provider');
+    throw new Error("EmptyState must be used within a ListContext.Provider");
   }
 
   return (
@@ -18,7 +19,9 @@ const EmptyState = ({ children }: EmptyStateProps) => {
         children
       ) : (
         <>
-          <div className="text-xl font-medium">{list.options.emptyState.title}</div>
+          <div className="text-xl font-medium">
+            {list.options.emptyState.title}
+          </div>
           <div className="mt-1 text-base text-ink-gray-5">
             {list.options.emptyState.description}
           </div>

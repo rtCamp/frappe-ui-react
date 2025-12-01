@@ -21,17 +21,13 @@ export default {
         "Function to render a suffix element for each breadcrumb item.",
     },
   },
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
 } as Meta<typeof Breadcrumbs>;
 
 const BreadcrumbsTemplate: StoryObj<BreadcrumbsProps> = {
   render: (args) => (
-    <div className="p-4 bg-surface-gray-1 rounded-lg shadow-sm">
-      <Breadcrumbs {...args} />
-    </div>
+    <Breadcrumbs {...args} />
   ),
 };
 
@@ -61,15 +57,15 @@ export const WithPrefixSlot: StoryObj<BreadcrumbsProps> = {
     items: [
       {
         label: "Home",
-        suffixIcon: "🏡",
+        prefixIcon: "🏡",
       },
       {
         label: "Views",
-        suffixIcon: "🏞️",
+        prefixIcon: "🏞️",
       },
       {
         label: "List",
-        suffixIcon: "📃",
+        prefixIcon: "📃",
       },
     ],
   },

@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-declare module '*.svg' {
+declare module "*.svg" {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  import React = require('react');
+  import React = require("react");
   const ReactComponent: React.FC<React.SVGProps<SVGSVGElement>>;
   export default ReactComponent;
 }
 
-declare module '*.svg?react' {
-  import * as React from 'react';
+declare module "*.svg?react" {
+  import * as React from "react";
 
   const ReactComponent: React.FunctionComponent<
-    React.ComponentProps<'svg'> & {
+    React.ComponentProps<"svg"> & {
       title?: string;
       titleId?: string;
       desc?: string;
@@ -43,7 +43,7 @@ type BulletListItem = {
   pubDate?: string;
 };
 
-declare module 'entities/decode' {
+declare module "entities/decode" {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   type EntityDecoder = any;
   export { EntityDecoder };

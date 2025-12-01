@@ -1,6 +1,6 @@
-import { CalendarEvent as EventComponent } from './calendarEvent';
+import { CalendarEvent as EventComponent } from "./calendarEvent";
 
-import type { CalendarEvent } from './types';
+import type { CalendarEvent } from "./types";
 
 interface ShowMoreCalendarEventProps {
   event: CalendarEvent;

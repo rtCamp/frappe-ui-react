@@ -1,28 +1,27 @@
-import React, { useRef, useEffect } from 'react';
-import { init, type ECharts } from 'echarts';
-import { debounce } from '../../utils/debounce';
-import type { ChartsWrapperProps } from './types';
+import React, { useRef, useEffect } from "react";
+import { init, type ECharts } from "echarts";
 
+import { debounce } from "../../utils/debounce";
+import type { ChartsWrapperProps } from "./types";
 
 const ChartsWrapper: React.FC<ChartsWrapperProps> = ({
   options,
   events,
   error,
-  theme = 'light',
+  theme = "light",
 }) => {
-  
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<ECharts | null>(null);
 
   useEffect(() => {
-    if (!chartRef.current){
-        return;
+    if (!chartRef.current) {
+      return;
     }
 
-    chartInstance.current = init(chartRef.current, theme, { renderer: 'svg' });
+    chartInstance.current = init(chartRef.current, theme, { renderer: "svg" });
 
     if (events?.click) {
-      chartInstance.current.on('click', events.click);
+      chartInstance.current.on("click", events.click);
     }
 
     const resizeDebounce = debounce(() => {

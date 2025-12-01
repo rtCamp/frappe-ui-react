@@ -1,2 +1,2 @@
-export * from './useResource';
-export { default as useWindowSize } from './useWindowSize';
+export * from "./useResource";
+export { default as useWindowSize } from "./useWindowSize";

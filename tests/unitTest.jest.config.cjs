@@ -1,6 +1,6 @@
-const sharedConfig = require('./shared.jest.config.cjs');
+const sharedConfig = require("./shared.jest.config.cjs");
 
 module.exports = {
   ...sharedConfig,
-  testEnvironment: 'jsdom',
+  testEnvironment: "jsdom",
 };

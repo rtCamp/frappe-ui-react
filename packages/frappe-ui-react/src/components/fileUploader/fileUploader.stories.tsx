@@ -1,13 +1,12 @@
-import { Button } from "../button";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import { Button } from "../button";
 import FileUploader from "./fileuploader";
 
 const meta: Meta<typeof FileUploader> = {
   title: "Components/FileUploader",
   component: FileUploader,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
   argTypes: {
     fileTypes: {
@@ -54,17 +53,16 @@ const onSuccess = (file: unknown) => {
 
 export const Default: Story = {
   render: () => (
-          <FileUploader
-            fileTypes={["image/*"]}
-            validateFile={validateFileFunction}
-            onSuccess={onSuccess}
-          >
-            {({ uploading, progress, openFileSelector }) => (
-              <Button onClick={openFileSelector} loading={uploading}>
-                {uploading ? `Uploading ${progress}%` : "Upload Image"}
-              </Button>
-            )}
-          </FileUploader>
-      
+    <FileUploader
+      fileTypes={["image/*"]}
+      validateFile={validateFileFunction}
+      onSuccess={onSuccess}
+    >
+      {({ uploading, progress, openFileSelector }) => (
+        <Button onClick={openFileSelector} loading={uploading}>
+          {uploading ? `Uploading ${progress}%` : "Upload Image"}
+        </Button>
+      )}
+    </FileUploader>
   ),
 };

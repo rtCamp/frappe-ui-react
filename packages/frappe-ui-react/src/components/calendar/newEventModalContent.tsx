@@ -7,9 +7,8 @@ import type { CalendarEvent } from "./types";
 import { Dialog } from "../dialog";
 import { ErrorMessage } from "../errorMessage";
 import { FormControl } from "../formControl";
-
-import "./eventFormModal.css";
 import { CalendarContext } from "./calendarContext";
+import "./eventFormModal.css";
 
 interface EventFormModalProps {
   isOpen: boolean;
@@ -17,11 +16,7 @@ interface EventFormModalProps {
   event: Partial<CalendarEvent>;
 }
 
-const EventFormModal = ({
-  isOpen,
-  onClose,
-  event,
-}: EventFormModalProps) => {
+const EventFormModal = ({ isOpen, onClose, event }: EventFormModalProps) => {
   const [newEvent, setNewEvent] = useState<Partial<CalendarEvent>>({});
   const [errorMessage, setErrorMessage] = useState("");
   const { updateEventState, createNewEvent } = useContext(CalendarContext);
@@ -29,7 +24,7 @@ const EventFormModal = ({
   useEffect(() => {
     setNewEvent({
       title: event?.title || "",
-      date: event?.date || new Date(),
+      date: event?.date || new Date().toLocaleDateString("en-CA"),
       participant: event?.participant || "",
       from_time: event?.from_time || "",
       to_time: event?.to_time || "",
@@ -41,10 +36,12 @@ const EventFormModal = ({
     setErrorMessage("");
   }, [isOpen, event]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleFieldChange = useCallback((field: keyof CalendarEvent, value: any) => {
-    setNewEvent((prev) => ({ ...prev, [field]: value }));
-  }, []);
+  const handleFieldChange = useCallback(
+    (field: keyof CalendarEvent, value: any) => {
+      setNewEvent((prev) => ({ ...prev, [field]: value }));
+    },
+    []
+  );
 
   const validateFields = useCallback((): boolean => {
     if (!newEvent.date) {
@@ -93,7 +90,14 @@ const EventFormModal = ({
       createNewEvent(finalEvent as CalendarEvent);
     }
     onClose();
-  }, [createNewEvent, event.id, newEvent, onClose, updateEventState, validateFields]);
+  }, [
+    createNewEvent,
+    event.id,
+    newEvent,
+    onClose,
+    updateEventState,
+    validateFields,
+  ]);
 
   const colorOptions = Object.keys(colorMap).map((color) => ({
     label: color,
@@ -128,7 +132,9 @@ const EventFormModal = ({
         <FormControl
           type="date"
           value={newEvent.date}
-          onChange={(val: React.ChangeEvent<HTMLInputElement>) => handleFieldChange("date", val)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            handleFieldChange("date", e.target.value)
+          }
           label="Date"
           required={true}
           onBlur={validateFields}
@@ -176,9 +182,7 @@ const EventFormModal = ({
         <FormControl
           type="select"
           value={newEvent.color}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleFieldChange("color", e.target.value)
-          }
+          onChange={(value: string) => handleFieldChange("color", value)}
           options={colorOptions}
           label="Color"
           className="form-control-prefix"
@@ -196,9 +200,7 @@ const EventFormModal = ({
           type="checkbox"
           label="Full Day Event?"
           value={newEvent.isFullDay}
-          onChange={(value: boolean) => 
-            handleFieldChange("isFullDay", value)
-          }
+          onChange={(value: boolean) => handleFieldChange("isFullDay", value)}
         />
         {errorMessage && <ErrorMessage message={errorMessage} />}
       </div>

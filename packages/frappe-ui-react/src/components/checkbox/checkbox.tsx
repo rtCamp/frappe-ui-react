@@ -25,7 +25,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   const inputClasses = useMemo(() => {
     const baseClasses = disabled
       ? "border-outline-gray-2 bg-surface-menu-bar text-ink-gray-3"
-      : "border-outline-gray-4 text-ink-gray-9 hover:border-gray-600 focus:ring-offset-0 focus:border-gray-900 active:border-gray-700 transition";
+      : "border-outline-gray-4 text-ink-gray-9 hover:border-gray-600 focus:ring-offset-0 focus:border-gray-900 active:border-gray-700 transition accent-black dark:accent-white";
 
     const interactionClasses = disabled
       ? ""

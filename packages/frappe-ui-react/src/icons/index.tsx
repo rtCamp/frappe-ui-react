@@ -1,1 +1,1 @@
-export { default as DownSolid } from './down-solid.svg?react';
+export { default as DownSolid } from "./down-solid.svg?react";

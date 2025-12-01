@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
 export interface ToastActionProps {
   label: string;
@@ -18,7 +18,7 @@ export interface ToastProps {
   id: string;
 }
 
-export type ToastType = 'success' | 'warning' | 'error' | 'info';
+export type ToastType = "success" | "warning" | "error" | "info";
 
 export interface ToastActionProps {
   label: string;
@@ -27,7 +27,7 @@ export interface ToastActionProps {
 }
 
 export interface ToastOptions
-  extends Omit<Partial<ToastProps>, | 'open' | 'message'> {
+  extends Omit<Partial<ToastProps>, "open" | "message"> {
   message: string;
 }
 

@@ -1,2 +1,2 @@
-export * from './types';
-export { default as CircularProgressBar } from './circularProgressBar'
+export * from "./types";
+export { default as CircularProgressBar } from "./circularProgressBar";

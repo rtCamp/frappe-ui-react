@@ -1,7 +1,7 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
-export type SelectSize = 'sm' | 'md' | 'lg' | 'xl';
-export type SelectVariant = 'subtle' | 'outline' | 'ghost';
+export type SelectSize = "sm" | "md" | "lg" | "xl";
+export type SelectVariant = "subtle" | "outline" | "ghost";
 
 export interface SelectOption {
   value: string;
@@ -20,5 +20,4 @@ export interface SelectProps {
   prefix?: (args?: any) => ReactNode;
   htmlId?: string;
   onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-
 }

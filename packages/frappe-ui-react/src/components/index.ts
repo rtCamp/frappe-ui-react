@@ -32,7 +32,7 @@ export { default as TabButtons } from "./tabButtons";
 export * from "./tabs";
 export * from "./textInput";
 export * from "./textarea";
-export * from "./textEditor";
+export { default as TextEditor } from "./textEditor";
 export * from "./toast";
 export * from "./tooltip";
 export * from "./tree";

@@ -1,5 +1,6 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import { Combobox } from "./index";
 
 const meta: Meta<typeof Combobox> = {
@@ -7,6 +8,10 @@ const meta: Meta<typeof Combobox> = {
   tags: ["autodocs"],
   component: Combobox,
   parameters: {
+    docs: {
+      source: { type: "dynamic" },
+      story: { height: "300px" },
+    },
     layout: "centered",
   },
   argTypes: {
@@ -130,15 +135,13 @@ export const SimpleStringOptions: Story = {
   render: (args) => {
     const [val, setVal] = React.useState("");
     return (
-          <div className="flex flex-col w-80">
-            <label className="block text-sm font-medium mb-2">
-              Simple Options
-            </label>
-            <Combobox {...args} value={val} onChange={setVal} />
-            <div className="mt-2 text-sm text-gray-600">
-              Selected: {val || "None"}
-            </div>
-          </div>
+      <div className="flex flex-col w-80">
+        <label className="block text-sm font-medium mb-2">Simple Options</label>
+        <Combobox {...args} value={val} onChange={setVal} />
+        <div className="mt-2 text-sm text-gray-600">
+          Selected: {val || "None"}
+        </div>
+      </div>
     );
   },
 };
@@ -153,15 +156,13 @@ export const ObjectOptions: Story = {
   render: (args) => {
     const [val, setVal] = React.useState("");
     return (
-          <div className="flex flex-col w-80">
-            <label className="block text-sm font-medium mb-2">
-              Object Options
-            </label>
-            <Combobox {...args} value={val} onChange={setVal} />
-            <div className="mt-2 text-sm text-gray-600">
-              Selected: {val || "None"}
-            </div>
-          </div>
+      <div className="flex flex-col w-80">
+        <label className="block text-sm font-medium mb-2">Object Options</label>
+        <Combobox {...args} value={val} onChange={setVal} />
+        <div className="mt-2 text-sm text-gray-600">
+          Selected: {val || "None"}
+        </div>
+      </div>
     );
   },
 };
@@ -177,15 +178,15 @@ export const WithIcons: Story = {
   render: (args) => {
     const [val, setVal] = React.useState("");
     return (
-          <div className="flex flex-col w-80">
-            <label className="block text-sm font-medium mb-2">
-              Options with Icons
-            </label>
-            <Combobox {...args} value={val} onChange={setVal} />
-            <div className="mt-2 text-sm text-gray-600">
-              Selected: {val || "None"}
-            </div>
-          </div>
+      <div className="flex flex-col w-80">
+        <label className="block text-sm font-medium mb-2">
+          Options with Icons
+        </label>
+        <Combobox {...args} value={val} onChange={setVal} />
+        <div className="mt-2 text-sm text-gray-600">
+          Selected: {val || "None"}
+        </div>
+      </div>
     );
   },
 };
@@ -201,16 +202,15 @@ export const Grouped: Story = {
   render: (args) => {
     const [val, setVal] = React.useState("");
     return (
-          <div className="flex flex-col w-80">
-            <label className="block text-sm font-medium mb-2">
-              Grouped Options
-            </label>
-            <Combobox {...args} value={val} onChange={setVal} />
-            <div className="mt-2 text-sm text-gray-600">
-              Selected: {val || "None"}
-            </div>
-          </div>
-
+      <div className="flex flex-col w-80">
+        <label className="block text-sm font-medium mb-2">
+          Grouped Options
+        </label>
+        <Combobox {...args} value={val} onChange={setVal} />
+        <div className="mt-2 text-sm text-gray-600">
+          Selected: {val || "None"}
+        </div>
+      </div>
     );
   },
 };
@@ -224,12 +224,12 @@ export const DisabledState: Story = {
     onChange: () => {},
   },
   render: (args) => (
-        <div className="flex flex-col w-80">
-          <label className="block text-sm font-medium mb-2">
-            Disabled Combobox
-          </label>
-          <Combobox {...args} />
-        </div>
+    <div className="flex flex-col w-80">
+      <label className="block text-sm font-medium mb-2">
+        Disabled Combobox
+      </label>
+      <Combobox {...args} />
+    </div>
   ),
 };
 
@@ -244,15 +244,15 @@ export const PreselectedValue: Story = {
   render: (args) => {
     const [val, setVal] = React.useState("john-doe");
     return (
-          <div className="flex flex-col w-80">
-            <label className="block text-sm font-medium mb-2">
-              Pre-selected Value
-            </label>
-            <Combobox {...args} value={val} onChange={setVal} />
-            <div className="mt-2 text-sm text-gray-600">
-              Selected: {val || "None"}
-            </div>
-          </div>
+      <div className="flex flex-col w-80">
+        <label className="block text-sm font-medium mb-2">
+          Pre-selected Value
+        </label>
+        <Combobox {...args} value={val} onChange={setVal} />
+        <div className="mt-2 text-sm text-gray-600">
+          Selected: {val || "None"}
+        </div>
+      </div>
     );
   },
 };
@@ -262,14 +262,14 @@ export const PreselectedValue: Story = {
 export const MultipleSelection: Story = {
   name: "Multiple Selection (Not Implemented)",
   render: () => (
-        <div className="p-4">
-          <label className="block text-sm font-medium mb-2 text-ink-gray-9">
-            Multiple Simple Options
-          </label>
-          <div className="text-sm text-gray-600">
-            Not implemented in this Combobox
-          </div>
-        </div>
+    <div className="p-4">
+      <label className="block text-sm font-medium mb-2 text-ink-gray-9">
+        Multiple Simple Options
+      </label>
+      <div className="text-sm text-gray-600">
+        Not implemented in this Combobox
+      </div>
+    </div>
   ),
 };
 
@@ -285,21 +285,21 @@ export const ComplexObject: Story = {
     const [val, setVal] = React.useState("");
     const selected = complexObjects.find((o) => o.value === val);
     return (
-          <div className="flex flex-col w-80">
-            <label className="block text-sm font-medium mb-2">
-              Complex Objects
-            </label>
-            <Combobox {...args} value={val} onChange={setVal} />
-            <div className="mt-2 text-sm text-gray-600">
-              Selected: {val || "None"}
-              {selected && (
-                <div className="text-xs mt-1">
-                  <div>Email: {selected.email}</div>
-                  <div>Role: {selected.role}</div>
-                </div>
-              )}
+      <div className="flex flex-col w-80">
+        <label className="block text-sm font-medium mb-2">
+          Complex Objects
+        </label>
+        <Combobox {...args} value={val} onChange={setVal} />
+        <div className="mt-2 text-sm text-gray-600">
+          Selected: {val || "None"}
+          {selected && (
+            <div className="text-xs mt-1">
+              <div>Email: {selected.email}</div>
+              <div>Role: {selected.role}</div>
             </div>
-          </div>
+          )}
+        </div>
+      </div>
     );
   },
 };

@@ -1,66 +1,64 @@
-import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
-import Badge from '../badge';
+import "@testing-library/jest-dom";
+import { render, screen } from "@testing-library/react";
 
-describe('Badge', () => {
-    test('renders with default props', () => {
-        render(<Badge>Default Badge</Badge>);
-        expect(screen.getByText('Default Badge')).toBeInTheDocument();
-    });
+import Badge from "../badge";
 
-    test('renders with label prop', () => {
-        render(<Badge label="Test Label" />);
-        expect(screen.getByText('Test Label')).toBeInTheDocument();
-    });
+describe("Badge", () => {
+  test("renders with default props", () => {
+    render(<Badge>Default Badge</Badge>);
+    expect(screen.getByText("Default Badge")).toBeInTheDocument();
+  });
 
-    test('renders with different themes', () => {
-        const { rerender } = render(<Badge theme="red">Red Badge</Badge>);
-        expect(screen.getByText('Red Badge')).toHaveClass('text-ink-red-4');
-        expect(screen.getByText('Red Badge')).toHaveClass('bg-surface-red-1');
+  test("renders with label prop", () => {
+    render(<Badge label="Test Label" />);
+    expect(screen.getByText("Test Label")).toBeInTheDocument();
+  });
 
-        rerender(<Badge theme="blue">Blue Badge</Badge>);
-        expect(screen.getByText('Blue Badge')).toHaveClass('text-ink-blue-2');
+  test("renders with different themes", () => {
+    const { rerender } = render(<Badge theme="red">Red Badge</Badge>);
+    expect(screen.getByText("Red Badge")).toHaveClass("text-ink-red-4");
+    expect(screen.getByText("Red Badge")).toHaveClass("bg-surface-red-1");
 
-        rerender(<Badge theme="green">Green Badge</Badge>);
-        expect(screen.getByText('Green Badge')).toHaveClass('text-ink-green-3');
-    });
+    rerender(<Badge theme="blue">Blue Badge</Badge>);
+    expect(screen.getByText("Blue Badge")).toHaveClass("text-ink-blue-2");
 
-    test('renders with different sizes', () => {
-        const { rerender } = render(<Badge size="sm">Small Badge</Badge>);
-        expect(screen.getByText('Small Badge')).toHaveClass('h-4');
+    rerender(<Badge theme="green">Green Badge</Badge>);
+    expect(screen.getByText("Green Badge")).toHaveClass("text-ink-green-3");
+  });
 
-        rerender(<Badge size="md">Medium Badge</Badge>);
-        expect(screen.getByText('Medium Badge')).toHaveClass('h-5');
+  test("renders with different sizes", () => {
+    const { rerender } = render(<Badge size="sm">Small Badge</Badge>);
+    expect(screen.getByText("Small Badge")).toHaveClass("h-4");
 
-        rerender(<Badge size="lg">Large Badge</Badge>);
-        expect(screen.getByText('Large Badge')).toHaveClass('h-6');
-    });
+    rerender(<Badge size="md">Medium Badge</Badge>);
+    expect(screen.getByText("Medium Badge")).toHaveClass("h-5");
 
-    test('renders with different variants', () => {
-        const { rerender } = render(<Badge variant="solid">Solid Badge</Badge>);
-        expect(screen.getByText('Solid Badge')).toBeInTheDocument();
+    rerender(<Badge size="lg">Large Badge</Badge>);
+    expect(screen.getByText("Large Badge")).toHaveClass("h-6");
+  });
 
-        rerender(<Badge variant="subtle">Subtle Badge</Badge>);
-        expect(screen.getByText('Subtle Badge')).toBeInTheDocument();
+  test("renders with different variants", () => {
+    const { rerender } = render(<Badge variant="solid">Solid Badge</Badge>);
+    expect(screen.getByText("Solid Badge")).toBeInTheDocument();
 
-        rerender(<Badge variant="outline">Outline Badge</Badge>);
-        expect(screen.getByText('Outline Badge')).toHaveClass('border');
+    rerender(<Badge variant="subtle">Subtle Badge</Badge>);
+    expect(screen.getByText("Subtle Badge")).toBeInTheDocument();
 
-        rerender(<Badge variant="ghost">Ghost Badge</Badge>);
-        expect(screen.getByText('Ghost Badge')).toHaveClass('bg-transparent');
-    });
+    rerender(<Badge variant="outline">Outline Badge</Badge>);
+    expect(screen.getByText("Outline Badge")).toHaveClass("border");
 
-    test('renders with prefix and suffix', () => {
-        render(
-            <Badge 
-                prefix={<span>Pre</span>}
-                suffix={<span>Post</span>}
-            >
-                Content
-            </Badge>
-        );
-        expect(screen.getByText('Pre')).toBeInTheDocument();
-        expect(screen.getByText('Content')).toBeInTheDocument();
-        expect(screen.getByText('Post')).toBeInTheDocument();
-    });
+    rerender(<Badge variant="ghost">Ghost Badge</Badge>);
+    expect(screen.getByText("Ghost Badge")).toHaveClass("bg-transparent");
+  });
+
+  test("renders with prefix and suffix", () => {
+    render(
+      <Badge prefix={<span>Pre</span>} suffix={<span>Post</span>}>
+        Content
+      </Badge>
+    );
+    expect(screen.getByText("Pre")).toBeInTheDocument();
+    expect(screen.getByText("Content")).toBeInTheDocument();
+    expect(screen.getByText("Post")).toBeInTheDocument();
+  });
 });

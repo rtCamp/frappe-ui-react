@@ -1,8 +1,8 @@
-import React, { useContext, useMemo } from 'react';
-import { ListContext } from './listContext';
-import { Checkbox } from '../checkbox';
-import ListHeaderItem from './listHeaderItem';
-import { getGridTemplateColumns } from './utils';
+import React, { useContext, useMemo } from "react";
+import { ListContext } from "./listContext";
+import { Checkbox } from "../checkbox";
+import ListHeaderItem from "./listHeaderItem";
+import { getGridTemplateColumns } from "./utils";
 
 interface ListHeaderProps {
   children?: React.ReactNode;
@@ -12,7 +12,7 @@ const ListHeader: React.FC<ListHeaderProps> = ({ children }) => {
   const { options: list } = useContext(ListContext);
 
   if (!list) {
-    throw new Error('ListHeader must be used within a ListProvider');
+    throw new Error("ListHeader must be used within a ListProvider");
   }
 
   const gridTemplateColumns = useMemo(
@@ -22,24 +22,20 @@ const ListHeader: React.FC<ListHeaderProps> = ({ children }) => {
 
   return (
     <div
-      className="mb-2 grid items-center rounded bg-surface-gray-2 p-2"
+      className="mb-2 grid items-center rounded bg-surface-gray-2 p-2 gap-2"
       style={{ gridTemplateColumns }}
     >
       {list.options.selectable && (
-        <Checkbox
-          value={list.allRowsSelected}
-          onChange={list.toggleAllRows}
-        />
+        <Checkbox value={list.allRowsSelected} onChange={list.toggleAllRows} />
       )}
       {children ||
         list.columns.map((column: any, index) => (
           <ListHeaderItem
             key={column.key}
-            firstItem={index === 0}
             item={column}
-            onColumnWidthUpdated={() => {
-              // This is where you would update the state with the new column widths
-              // For example: list.setColumns([...list.columns]);
+            lastItem={index === list.columns.length - 1}
+            onColumnWidthUpdated={(width: number) => {
+              list.options.updateColumnWidth(index, width);
             }}
           />
         ))}

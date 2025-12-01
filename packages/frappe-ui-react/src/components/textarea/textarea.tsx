@@ -1,18 +1,14 @@
-import React, {
-  useMemo,
-  useRef,
-  useCallback,
-  forwardRef,
-} from 'react';
-import { debounce } from '../../utils/debounce';
-import { TextareaProps } from './types';
+import React, { useMemo, useRef, useCallback, forwardRef } from "react";
+
+import { debounce } from "../../utils/debounce";
+import { TextareaProps } from "./types";
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   (
     {
       label,
-      size = 'sm',
-      variant = 'subtle',
+      size = "sm",
+      variant = "subtle",
       disabled = false,
       value,
       onChange,
@@ -30,10 +26,11 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const setRefs = useCallback(
       (node: HTMLTextAreaElement) => {
         textareaRef.current = node;
-        if (typeof ref === 'function') {
+        if (typeof ref === "function") {
           ref(node);
         } else if (ref) {
-          (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = node;
+          (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current =
+            node;
         }
       },
       [ref]
@@ -41,41 +38,41 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     const inputClasses = useMemo(() => {
       const sizeClasses = {
-        sm: 'text-base rounded',
-        md: 'text-base rounded',
-        lg: 'text-lg rounded-md',
-        xl: 'text-xl rounded-md',
+        sm: "text-base rounded",
+        md: "text-base rounded",
+        lg: "text-lg rounded-md",
+        xl: "text-xl rounded-md",
       }[size];
 
       const paddingClasses = {
-        sm: 'py-1.5 px-2',
-        md: 'py-1.5 px-2.5',
-        lg: 'py-1.5 px-3',
-        xl: 'py-1.5 px-3',
+        sm: "py-1.5 px-2",
+        md: "py-1.5 px-2.5",
+        lg: "py-1.5 px-3",
+        xl: "py-1.5 px-3",
       }[size];
 
-      const currentVariant = disabled ? 'disabled' : variant;
+      const currentVariant = disabled ? "disabled" : variant;
       const variantClasses = {
         subtle:
-          'border border-[--surface-gray-2] bg-surface-gray-2 placeholder-ink-gray-4 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3',
+          "border border-surface-gray-2 bg-surface-gray-2 placeholder-ink-gray-4 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
         outline:
-          'border border-outline-gray-2 bg-surface-white placeholder-ink-gray-4 hover:border-outline-gray-3 hover:shadow-sm focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3',
+          "border border-outline-gray-2 bg-surface-white placeholder-ink-gray-4 hover:border-outline-gray-3 hover:shadow-sm focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
         disabled: `border bg-surface-gray-1 placeholder-ink-gray-3 ${
-          variant === 'outline' ? 'border-outline-gray-2' : 'border-transparent'
+          variant === "outline" ? "border-outline-gray-2" : "border-transparent"
         }`,
       }[currentVariant];
 
-      const textColor = disabled ? 'text-ink-gray-5' : 'text-ink-gray-8';
+      const textColor = disabled ? "text-ink-gray-5" : "text-ink-gray-8";
 
       return `resize-y transition-colors w-full block outline-none ${sizeClasses} ${paddingClasses} ${variantClasses} ${textColor} ${extraClasses}`;
     }, [size, disabled, variant]);
 
     const labelClasses = useMemo(() => {
       const sizeClasses = {
-        sm: 'text-xs',
-        md: 'text-base',
-        lg: 'text-lg',
-        xl: 'text-xl',
+        sm: "text-xs",
+        md: "text-base",
+        lg: "text-lg",
+        xl: "text-xl",
       }[size];
       return `block ${sizeClasses} text-ink-gray-5`;
     }, [size]);
@@ -98,7 +95,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       }
       return emitChange;
     }, [debounceTime, emitChange]);
-    
+
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         debouncedEmitChange(e.target.value);

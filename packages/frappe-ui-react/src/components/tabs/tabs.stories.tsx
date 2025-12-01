@@ -6,9 +6,7 @@ const meta: Meta<typeof Tabs> = {
   title: "Components/Tabs",
   tags: ["autodocs"],
   component: Tabs,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   argTypes: {
     tabs: {
       control: false,

@@ -1,4 +1,5 @@
 import React, { useMemo, ReactNode, HTMLAttributes } from "react";
+
 import ListEmptyState from "./emptyState";
 import ListHeader from "./listHeader";
 import ListRows from "./listRows";
@@ -33,7 +34,9 @@ const ListView: React.FC<ListProps> = ({
   }
 
   const selectable =
-    options?.options?.selectable !== undefined ? options.options.selectable : true;
+    options?.options?.selectable !== undefined
+      ? options.options.selectable
+      : true;
 
   const defaultContent = (
     <>
@@ -67,9 +70,7 @@ const ListView: React.FC<ListProps> = ({
           }`}
           style={attrs.style}
         >
-          {children
-            ? children
-            : defaultContent}
+          {children ? children : defaultContent}
         </div>
       </div>
     </ListProvider>

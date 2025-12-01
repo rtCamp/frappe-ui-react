@@ -1,4 +1,5 @@
 import { Radio, RadioGroup } from "@headlessui/react";
+
 import { Button } from "../button";
 
 interface TabButtonItem {
@@ -10,7 +11,6 @@ interface TabButtonItem {
   // Allow additional props to be passed to Button
   [key: string]: unknown;
 }
-
 
 interface TabButtonsProps {
   buttons: TabButtonItem[];
@@ -27,7 +27,7 @@ const TabButtons = ({
 }: TabButtonsProps) => {
   return (
     <RadioGroup value={value} onChange={onChange} className={className}>
-      <div className="flex space-x-0.5 rounded-md bg-surface-gray-2 h-7 items-center px-[1px] text-sm">
+      <div className="flex space-x-0.5 rounded-md bg-surface-gray-2 h-7 items-center px-[1px] text-sm border border-gray-200">
         {buttons.map((button) => (
           <Radio
             key={button.value || button.label}
@@ -58,7 +58,7 @@ const TabButtons = ({
                     ? ""
                     : checked
                     ? "text-ink-gray-9 shadow"
-                    : "text-ink-gray-7"
+                    : "!text-ink-gray-5"
                 } cursor-pointer`}
               >
                 {!button.hideLabel && button.label && (

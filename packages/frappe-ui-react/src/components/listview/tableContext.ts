@@ -1,4 +1,4 @@
-import { createContext, } from 'react';
+import { createContext } from "react";
 
 export interface TableOptions {
   rowCount: number;
@@ -12,4 +12,6 @@ export interface TableContextType {
   setPageLength: (length: number) => void;
 }
 
-export const TableContext = createContext<TableContextType | undefined>(undefined);
+export const TableContext = createContext<TableContextType | undefined>(
+  undefined
+);

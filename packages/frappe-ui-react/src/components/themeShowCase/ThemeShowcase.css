@@ -1,21 +1,31 @@
+/**
+ * Theme Showcase Component Styles
+ * 
+ * This CSS file contains all styles for the ThemeShowcase component, which is used
+ * to display and demonstrate the Frappe UI React component library.
+ * 
+ * - Used primarily in Storybook documentation and component demos
+ */
+
 .theme-showcase {
   --showcase-max-width: 1200px;
   --showcase-padding: 2rem;
   --showcase-spacing: 2rem;
   --showcase-border-radius: var(--radius-default);
-  --showcase-card-bg: var(--surface-white);
-  --showcase-card-border: var(--outline-gray-1);
-  --showcase-font-color: var(--ink-gray-9);
-  --showcase-tab-active-bg: var(--surface-blue-2);
-  --showcase-tab-active-border: var(--outline-blue-1);
+  --showcase-card-bg: var(--color-surface-white);
+  --showcase-card-border: var(--color-outline-gray-1);
+  --showcase-font-color: var(--color-ink-gray-9);
+  --showcase-tab-active-bg: var(--color-surface-blue-2);
+  --showcase-tab-active-border: var(--color-outline-blue-1);
 
   padding: var(--showcase-padding);
-  font-family: "Reddit Sans", sans-serif;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
   color: var(--showcase-font-color);
   max-width: var(--showcase-max-width);
   margin: 0 auto;
   min-height: 100vh;
-  background-color: var(--surface-gray-1);
+  background-color: var(--color-surface-gray-1);
 }
 
 .showcase-header {
@@ -34,9 +44,9 @@
 }
 
 .theme-toggle-button {
-  background-color: var(--surface-gray-2);
-  color: var(--ink-gray-8);
-  border: 1px solid var(--outline-gray-2);
+  background-color: var(--color-surface-gray-2);
+  color: var(--color-ink-gray-8);
+  border: 1px solid var(--color-outline-gray-2);
   border-radius: var(--radius-default);
   padding: 0.5rem 1rem;
   cursor: pointer;
@@ -45,7 +55,7 @@
 }
 
 .theme-toggle-button:hover {
-  background-color: var(--surface-gray-3);
+  background-color: var(--color-surface-gray-3);
 }
 
 .showcase-tabs {
@@ -56,9 +66,9 @@
 }
 
 .showcase-tabs button {
-  background-color: var(--surface-gray-1);
-  color: var(--ink-gray-7);
-  border: 1px solid var(--outline-gray-2);
+  background-color: var(--color-surface-gray-1);
+  color: var(--color-ink-gray-7);
+  border: 1px solid var(--color-outline-gray-2);
   border-radius: var(--radius-default);
   padding: 0.5rem 1rem;
   cursor: pointer;
@@ -67,12 +77,12 @@
 }
 
 .showcase-tabs button:hover {
-  background-color: var(--surface-gray-2);
+  background-color: var(--color-surface-gray-2);
 }
 
 .showcase-tabs button.active {
   background-color: var(--showcase-tab-active-bg);
-  color: var(--ink-blue-3);
+  color: var(--color-ink-blue-3);
   border-color: var(--showcase-tab-active-border);
 }
 
@@ -126,7 +136,7 @@
 
 .swatch-info {
   padding: 0.5rem;
-  background-color: var(--surface-white);
+  background-color: var(--color-surface-white);
   border: 1px solid var(--showcase-card-border);
   border-top: none;
   border-radius: 0 0 var(--radius-sm) var(--radius-sm);
@@ -142,7 +152,7 @@
 .swatch-value {
   display: block;
   font-size: var(--text-2xs-size);
-  color: var(--ink-gray-5);
+  color: var(--color-ink-gray-5);
   font-family: monospace;
 }
 
@@ -178,7 +188,7 @@
 .font-size-example {
   margin-bottom: 0.5rem;
   padding: 0.5rem;
-  background-color: var(--surface-gray-1);
+  background-color: var(--color-surface-gray-1);
   border-radius: var(--radius-sm);
 }
 
@@ -191,12 +201,12 @@
 
 .font-size-name {
   font-weight: 600;
-  color: var(--ink-blue-2);
+  color: var(--color-ink-blue-2);
 }
 
 .font-size-values {
   font-family: monospace;
-  color: var(--ink-gray-5);
+  color: var(--color-ink-gray-5);
 }
 
 /* Spacing */
@@ -222,8 +232,8 @@
 }
 
 .spacing-box {
-  background-color: var(--surface-blue-2);
-  border: 1px solid var(--outline-blue-1);
+  background-color: var(--color-surface-blue-2);
+  border: 1px solid var(--color-outline-blue-1);
   border-radius: var(--radius-sm);
 }
 
@@ -240,7 +250,7 @@
 
 .spacing-value {
   font-family: monospace;
-  color: var(--ink-gray-5);
+  color: var(--color-ink-gray-5);
 }
 
 /* Shadows */
@@ -257,7 +267,7 @@
 
 .shadow-example {
   height: 100px;
-  background-color: var(--surface-white);
+  background-color: var(--color-surface-white);
   border-radius: var(--radius-md);
   margin-bottom: 1rem;
 }
@@ -274,7 +284,7 @@
 
 .shadow-value {
   font-family: monospace;
-  color: var(--ink-gray-5);
+  color: var(--color-ink-gray-5);
   display: block;
   word-wrap: break-word;
 }
@@ -295,8 +305,8 @@
 .radius-example {
   height: 80px;
   width: 80px;
-  background-color: var(--surface-blue-2);
-  border: 1px solid var(--outline-blue-1);
+  background-color: var(--color-surface-blue-2);
+  border: 1px solid var(--color-outline-blue-1);
   margin: 0 auto 1rem;
 }
 
@@ -313,7 +323,7 @@
 
 .radius-value {
   font-family: monospace;
-  color: var(--ink-gray-5);
+  color: var(--color-ink-gray-5);
 }
 
 /* Responsive adjustments */
@@ -348,7 +358,7 @@
 .default-tokens-intro {
   margin-bottom: 1.5rem;
   font-size: var(--text-base-size);
-  color: var(--ink-gray-6);
+  color: var(--color-ink-gray-6);
   line-height: 1.6;
 }
 
@@ -362,14 +372,14 @@
   font-size: var(--text-base-size);
   border: 1px solid var(--showcase-card-border);
   border-radius: var(--radius-md);
-  background-color: var(--surface-white);
-  color: var(--ink-gray-8);
+  background-color: var(--color-surface-white);
+  color: var(--color-ink-gray-8);
   transition: all 0.2s ease;
 }
 
 .default-token-search-input:focus {
   outline: none;
-  border-color: var(--outline-blue-1);
+  border-color: var(--color-outline-blue-1);
   box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
 }
 
@@ -379,7 +389,7 @@
   padding-right: 10px;
   margin-bottom: 2rem;
   scrollbar-width: thin;
-  scrollbar-color: var(--outline-gray-3) transparent;
+  scrollbar-color: var(--color-outline-gray-3) transparent;
 }
 
 .default-token-categories-wrapper::-webkit-scrollbar {
@@ -391,7 +401,7 @@
 }
 
 .default-token-categories-wrapper::-webkit-scrollbar-thumb {
-  background-color: var(--outline-gray-3);
+  background-color: var(--color-outline-gray-3);
   border-radius: 20px;
 }
 
@@ -407,7 +417,7 @@
   z-index: 1;
   margin-bottom: 1rem;
   border-bottom: 1px solid var(--showcase-card-border);
-  color: var(--ink-blue-2);
+  color: var(--color-ink-blue-2);
 }
 
 .default-token-grid {
@@ -420,7 +430,7 @@
   border: 1px solid var(--showcase-card-border);
   border-radius: var(--radius-sm);
   padding: 1rem;
-  background-color: var(--surface-gray-1);
+  background-color: var(--color-surface-gray-1);
   transition: all 0.2s ease;
 }
 
@@ -438,20 +448,20 @@
   font-weight: 600;
   font-size: var(--text-sm-size);
   margin-bottom: 0.5rem;
-  color: var(--ink-blue-2);
+  color: var(--color-ink-blue-2);
 }
 
 .default-token-value {
   font-family: monospace;
   font-size: var(--text-xs-size);
-  color: var(--ink-gray-5);
+  color: var(--color-ink-gray-5);
   margin-bottom: 0.5rem;
 }
 
 .default-badge {
   display: inline-block;
-  background-color: var(--surface-blue-2);
-  color: var(--ink-blue-2);
+  background-color: var(--color-surface-blue-2);
+  color: var(--color-ink-blue-2);
   font-size: var(--text-2xs-size);
   padding: 0.2rem 0.5rem;
   border-radius: var(--radius-sm);
@@ -463,19 +473,19 @@
 .default-token-note {
   margin-top: 2rem;
   padding: 1rem;
-  background-color: var(--surface-amber-1);
-  border-left: 4px solid var(--outline-amber-1);
+  background-color: var(--color-surface-amber-1);
+  border-left: 4px solid var(--color-outline-amber-1);
   border-radius: var(--radius-sm);
 }
 
 .default-token-note p {
   margin: 0;
   font-size: var(--text-sm-size);
-  color: var(--ink-gray-8);
+  color: var(--color-ink-gray-8);
 }
 
 .dark .default-token-note p {
-  color: var(--ink-gray-1);
+  color: var(--color-ink-gray-1);
 }
 
 /* Responsive adjustments for default tokens */

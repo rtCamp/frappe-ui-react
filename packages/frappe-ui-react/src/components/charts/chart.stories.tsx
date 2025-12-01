@@ -1,10 +1,10 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import AxisChart, { AxisChartProps } from "./axisChart";
-import DonutChart, { DonutChartProps } from "./donutChart";
-import FunnelChart, { FunnelChartProps } from "./funnelChart";
-import NumberChart, { NumberChartProps } from "./numberChart";
+import AxisChart, { type AxisChartProps } from "./axisChart";
+import DonutChart, { type DonutChartProps } from "./donutChart";
+import FunnelChart, { type FunnelChartProps } from "./funnelChart";
+import NumberChart, { type NumberChartProps } from "./numberChart";
 import type {
   AxisChartConfig,
   DonutChartConfig,
@@ -196,9 +196,7 @@ const funnelConfig: FunnelChartConfig = {
 
 const meta: Meta<typeof NumberChart> = {
   title: "Components/Charts",
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   argTypes: {
     config: {
       control: "object",

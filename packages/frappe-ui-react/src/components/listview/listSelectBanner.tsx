@@ -1,7 +1,7 @@
-import React, { useContext, useMemo } from 'react';
-import { ListContext } from './listContext';
-import { Checkbox } from '../checkbox';
-import { Button } from '../button';
+import React, { useContext, useMemo } from "react";
+import { ListContext } from "./listContext";
+import { Checkbox } from "../checkbox";
+import { Button } from "../button";
 
 interface ListSelectBannerProps {
   children?: (props: {
@@ -19,11 +19,17 @@ interface ListSelectBannerProps {
   }) => React.ReactNode;
 }
 
-const ListSelectBanner: React.FC<ListSelectBannerProps> = ({ children, actions, ...rest }) => {
+const ListSelectBanner: React.FC<ListSelectBannerProps> = ({
+  children,
+  actions,
+  ...rest
+}) => {
   const { options: list } = useContext(ListContext);
 
   if (!list) {
-    throw new Error('ListSelectBanner must be used within a ListContext.Provider');
+    throw new Error(
+      "ListSelectBanner must be used within a ListContext.Provider"
+    );
   }
 
   const selectedText = useMemo(() => {
@@ -31,16 +37,20 @@ const ListSelectBanner: React.FC<ListSelectBannerProps> = ({ children, actions, 
   }, [list.selections.size, list.options]);
 
   // Props to pass to the slots
-  const slotProps = useMemo(() => ({
-    selections: list.selections,
-    allRowsSelected: list.allRowsSelected,
-    selectAll: () => list.toggleAllRows(true),
-    unselectAll: () => list.toggleAllRows(false),
-  }), [list]);
+  const slotProps = useMemo(
+    () => ({
+      selections: list.selections,
+      allRowsSelected: list.allRowsSelected,
+      selectAll: () => list.toggleAllRows(true),
+      unselectAll: () => list.toggleAllRows(false),
+    }),
+    [list]
+  );
 
-  const transitionClasses = list.selections.size > 0
-    ? 'opacity-100 duration-300 ease-out'
-    : 'opacity-0 duration-300 ease-in transform';
+  const transitionClasses =
+    list.selections.size > 0
+      ? "opacity-100 duration-300 ease-out"
+      : "opacity-0 duration-300 ease-in transform";
 
   return (
     <div className={`transition-all ${transitionClasses}`} aria-live="polite">
@@ -49,9 +59,7 @@ const ListSelectBanner: React.FC<ListSelectBannerProps> = ({ children, actions, 
           className={`absolute inset-x-0 bottom-6 mx-auto w-max text-base`}
           {...rest}
         >
-          <div
-            className="flex min-w-[596px] items-center space-x-3 rounded-lg bg-surface-white px-4 py-2 shadow-2xl"
-          >
+          <div className="flex min-w-[596px] items-center space-x-3 rounded-lg bg-surface-white px-4 py-2 shadow-2xl">
             {children ? (
               children(slotProps)
             ) : (
@@ -61,9 +69,7 @@ const ListSelectBanner: React.FC<ListSelectBannerProps> = ({ children, actions, 
                     <Checkbox value={true} disabled={true} />
                     <div>{selectedText}</div>
                   </div>
-                  <div className="mr-3">
-                    {actions && actions(slotProps)}
-                  </div>
+                  <div className="mr-3">{actions && actions(slotProps)}</div>
                 </div>
                 <div className="flex items-center space-x-1">
                   <Button

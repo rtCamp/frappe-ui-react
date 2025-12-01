@@ -1,1 +1,1 @@
-module.exports = 'span';
+module.exports = "span";

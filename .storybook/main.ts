@@ -15,7 +15,7 @@ const config: StorybookConfig = {
     getAbsolutePath("@storybook/addon-docs"),
     getAbsolutePath("@storybook/addon-onboarding"),
     getAbsolutePath("@storybook/addon-a11y"),
-    getAbsolutePath('@storybook/addon-themes'),
+    getAbsolutePath("@storybook/addon-themes"),
   ],
   framework: {
     name: getAbsolutePath("@storybook/react-vite"),
@@ -35,6 +35,13 @@ const config: StorybookConfig = {
         },
       },
     };
+  },
+  typescript: {
+    check: true,
+    skipCompiler: true,
+    reactDocgenTypescriptOptions: {
+      propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
+    },
   },
 };
 export default config;

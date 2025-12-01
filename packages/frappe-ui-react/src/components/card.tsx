@@ -1,6 +1,6 @@
-import React, { type ReactNode } from 'react';
+import React, { type ReactNode } from "react";
 
-import LoadingText from './loadingText';
+import LoadingText from "./loadingText";
 
 interface CardProps {
   title?: string;
@@ -24,32 +24,22 @@ const Card: React.FC<CardProps> = ({
       <div className="flex items-baseline justify-between">
         <div className="flex items-baseline space-x-2">
           {actionsLeft && (
-            <div className="flex items-center space-x-2">
-              {actionsLeft}
-            </div>
+            <div className="flex items-center space-x-2">{actionsLeft}</div>
           )}
           <h2 className="text-xl font-semibold">{title}</h2>
         </div>
         {actions && (
-          <div className="flex items-center space-x-2">
-            {actions}
-          </div>
+          <div className="flex items-center space-x-2">{actions}</div>
         )}
       </div>
-      {subtitle && (
-        <p className="mt-1.5 text-base text-gray-600">
-          {subtitle}
-        </p>
-      )}
+      {subtitle && <p className="mt-1.5 text-base text-gray-600">{subtitle}</p>}
       {loading ? (
         <div className="mt-4 flex flex-auto flex-col items-center justify-center rounded-md">
           <LoadingText />
         </div>
       ) : (
         children && (
-          <div className="mt-4 flex-auto overflow-auto">
-            {children}
-          </div>
+          <div className="mt-4 flex-auto overflow-auto">{children}</div>
         )
       )}
     </div>

@@ -1,4 +1,5 @@
 import React, { useContext, useCallback, useMemo } from "react";
+
 import { DownSolid } from "../../icons";
 import { ListContext } from "./listContext";
 
@@ -45,11 +46,7 @@ const ListGroupHeader: React.FC<ListGroupHeaderProps> = ({
     const GroupHeaderComponent = listContext?.options?.slots?.["group-header"];
 
     if (GroupHeaderComponent) {
-      return (
-        <GroupHeaderComponent
-          group={{ ...initialGroup, collapsed }}
-        />
-      );
+      return <GroupHeaderComponent group={{ ...initialGroup, collapsed }} />;
     }
 
     return (

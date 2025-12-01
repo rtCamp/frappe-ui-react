@@ -18,8 +18,8 @@ export function htmlAttrsToJsx(
 
   // A map for attributes that have a different name in JSX.
   const attributeMap: Record<string, string> = {
-    class: 'className',
-    for: 'htmlFor',
+    class: "className",
+    for: "htmlFor",
   };
 
   const jsxAttrs: Record<string, any> = {};
@@ -30,7 +30,7 @@ export function htmlAttrsToJsx(
       const value = htmlAttrs[key];
 
       // 1. Preserve `data-*` and `aria-*` attributes as they are.
-      if (key.startsWith('data-') || key.startsWith('aria-')) {
+      if (key.startsWith("data-") || key.startsWith("aria-")) {
         jsxAttrs[key] = value;
         continue;
       }

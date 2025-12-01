@@ -1,11 +1,11 @@
-import { withThemeByClassName } from '@storybook/addon-themes';
+import { withThemeByClassName } from "@storybook/addon-themes";
 
 export const decorators = [
   withThemeByClassName({
     themes: {
-      light: '', // Class name for light mode
-      dark: 'dark',  // Class name for dark mode
+      light: "",
+      dark: "dark",
     },
-    defaultTheme: 'light', // Default theme
+    defaultTheme: "light",
   }),
 ];

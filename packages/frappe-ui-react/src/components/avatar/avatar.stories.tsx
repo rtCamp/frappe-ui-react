@@ -5,9 +5,7 @@ import type { StoryObj } from "@storybook/react-vite";
 export default {
   title: "Components/Avatar",
   component: Avatar,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   argTypes: {
     size: {
       control: {
@@ -95,16 +93,19 @@ export const SquareWithoutImage: Story = {
 
 export const WithIndicator: Story = {
   render: (args) => (
-    <Avatar {...args}>
-      <div
-        style={{
-          background: "green",
-          width: "10px",
-          height: "10px",
-          borderRadius: "50%",
-        }}
-      />
-    </Avatar>
+    <Avatar
+      {...args}
+      indicator={
+        <div
+          style={{
+            background: "green",
+            width: "10px",
+            height: "10px",
+            borderRadius: "50%",
+          }}
+        />
+      }
+    />
   ),
   args: {
     label: "EY",

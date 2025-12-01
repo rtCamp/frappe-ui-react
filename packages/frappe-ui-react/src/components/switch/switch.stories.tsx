@@ -8,9 +8,7 @@ const meta: Meta<typeof Switch> = {
   title: "Components/Switch",
   tags: ["autodocs"],
   component: Switch,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
 };
 export default meta;
 

@@ -75,7 +75,7 @@ const Switch: React.FC<SwitchProps> = ({
       );
       classes.push(size === "md" ? "px-3 py-1.5" : "px-2.5 py-1.5");
     } else if (switchType === SwitchVariant.WITH_LABEL_AND_DESCRIPTION) {
-      classes.push("items-start");
+      classes.push("group items-start");
       classes.push(size === "md" ? "space-x-3.5" : "space-x-2.5");
     }
     return classes.join(" ");

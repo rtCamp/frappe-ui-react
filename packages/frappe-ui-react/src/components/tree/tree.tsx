@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback } from "react";
+
 import type { TreeProps } from "./types";
 import FeatherIcon from "../featherIcon";
 
@@ -46,7 +47,11 @@ export const Tree: React.FC<TreeProps> = ({
       {renderLabel ? (
         renderLabel({ node, hasChildren, isCollapsed })
       ) : (
-        <div className={`text-base text-ink-gray-8 truncate ${hasChildren ? "" : "pl-3.5"}`}>
+        <div
+          className={`text-base text-ink-gray-8 truncate ${
+            hasChildren ? "" : "pl-3.5"
+          }`}
+        >
           {node.label}
         </div>
       )}

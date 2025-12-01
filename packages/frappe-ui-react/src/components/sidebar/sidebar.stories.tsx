@@ -1,7 +1,7 @@
 import React from "react";
-import Sidebar from "./sidebar";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  LucideBell,
+	LucideBell,
   LucideBriefcase,
   LucideBuilding,
   LucideCheckSquare,
@@ -14,14 +14,13 @@ import {
   LucideUserCheck,
   LucideUsers,
 } from "lucide-react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import Sidebar from "./sidebar";
 
 const meta: Meta<typeof Sidebar> = {
   title: "Components/Sidebar",
   tags: ["autodocs"],
-  parameters: {
-    layout: "padded",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "padded" },
   argTypes: {
     header: {
       control: "object",
@@ -167,12 +166,12 @@ export const SidebarExample: Story = {
         className="flex h-screen w-full flex-col bg-surface-white shadow"
         id="sidebar-container"
       >
-          <Sidebar
-            header={{
-              ...crmSidebar.header,
-            }}
-            sections={crmSidebar.sections}
-          />
+        <Sidebar
+          header={{
+            ...crmSidebar.header,
+          }}
+          sections={crmSidebar.sections}
+        />
       </div>
     );
   },

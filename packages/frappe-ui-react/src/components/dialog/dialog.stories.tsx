@@ -11,20 +11,18 @@ const meta: Meta<typeof Dialog> = {
   component: Dialog,
   decorators: [
     (Story) => (
-			<div
-				style={{
-					display: "grid",
-					gap: "1rem",
-					gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-				}}
-			>
-				<Story />
-			</div>
+      <div
+        style={{
+          display: "grid",
+          gap: "1rem",
+          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+        }}
+      >
+        <Story />
+      </div>
     ),
   ],
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
   argTypes: {
     open: {

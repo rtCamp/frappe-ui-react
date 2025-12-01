@@ -1,5 +1,6 @@
 import React from "react";
 import feather from "feather-icons";
+
 import { htmlAttrsToJsx } from "../utils";
 
 export interface FeatherIconProps extends React.SVGProps<SVGSVGElement> {
@@ -15,7 +16,9 @@ const FeatherIcon = ({
   ...props
 }: FeatherIconProps) => {
   const validIcons = Object.keys(feather.icons);
-  const iconName: keyof typeof feather.icons = validIcons.includes(name) ? name : "circle";
+  const iconName: keyof typeof feather.icons = validIcons.includes(name)
+    ? name
+    : "circle";
   const icon = feather.icons[iconName];
 
   if (!validIcons.includes(name)) {

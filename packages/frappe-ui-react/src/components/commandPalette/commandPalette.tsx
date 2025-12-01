@@ -1,8 +1,15 @@
-import { useEffect } from 'react';
-import { Dialog, Combobox, DialogPanel, ComboboxOptions, ComboboxOption } from '@headlessui/react';
-import { Search as SearchIcon } from 'lucide-react';
-import CommandPaletteItem from './commandPaletteItem';
-import type { CommandPaletteGroup } from './types';
+import { useEffect } from "react";
+import {
+  Dialog,
+  Combobox,
+  DialogPanel,
+  ComboboxOptions,
+  ComboboxOption,
+} from "@headlessui/react";
+import { Search as SearchIcon } from "lucide-react";
+
+import CommandPaletteItem from "./commandPaletteItem";
+import type { CommandPaletteGroup } from "./types";
 
 export interface CommandPaletteProps {
   show: boolean;
@@ -31,23 +38,27 @@ export const CommandPalette = ({
 
   useEffect(() => {
     const keydownWatcher = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && show) {
+      if (e.key === "Escape" && show) {
         e.preventDefault();
         onShowChange(false);
       }
 
-      if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+      if (e.key === "k" && (e.ctrlKey || e.metaKey)) {
         const target = e.target as HTMLElement;
-        if (target.nodeName !== 'INPUT' && target.nodeName !== 'TEXTAREA' && !target.isContentEditable) {
-           e.preventDefault();
-           onShowChange(true);
+        if (
+          target.nodeName !== "INPUT" &&
+          target.nodeName !== "TEXTAREA" &&
+          !target.isContentEditable
+        ) {
+          e.preventDefault();
+          onShowChange(true);
         }
       }
     };
 
-    window.addEventListener('keydown', keydownWatcher);
+    window.addEventListener("keydown", keydownWatcher);
     return () => {
-      window.removeEventListener('keydown', keydownWatcher);
+      window.removeEventListener("keydown", keydownWatcher);
     };
   }, [show, onShowChange]);
 
@@ -82,7 +93,11 @@ export const CommandPalette = ({
                 )}
                 <div className="px-2.5">
                   {group.items.map((item) => (
-                    <ComboboxOption key={item.name} value={item} disabled={item.disabled}>
+                    <ComboboxOption
+                      key={item.name}
+                      value={item}
+                      disabled={item.disabled}
+                    >
                       {({ focus }) => (
                         <CommandPaletteItem item={item} active={focus} />
                       )}

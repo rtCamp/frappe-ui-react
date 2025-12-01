@@ -38,35 +38,43 @@ export const Combobox: React.FC<ComboboxProps> = ({
     return flat;
   }, [options]);
 
-  const selectedOption = useMemo(() => {
-    if (!value) return null;
-    return allOptionsFlat.find((opt) => getValue(opt) === value) ?? null;
-  }, [value, allOptionsFlat]);
-
   // For filtering/search
   const [query, setQuery] = useState("");
 
+  const selectedOption = useMemo(() => {
+    if (!value) return null;
+
+    const opt = allOptionsFlat.find((opt) => getValue(opt) === value) ?? null;
+
+    setQuery(opt ? getLabel(opt) : "");
+    return opt;
+  }, [value, allOptionsFlat]);
+
   const filteredOptions = useMemo(() => {
-    if (!query) return options;
-    const match = (opt: SimpleOption) =>
-      getLabel(opt).toLowerCase().includes(query.toLowerCase());
+		if (!query) {
+			return options;
+    }
+
     return options
       .map((opt) =>
         typeof opt === "object" && "group" in opt
           ? {
               ...opt,
-              options: opt.options.filter(match),
+              options: opt.options,
             }
           : opt
       )
       .filter((opt) =>
         typeof opt === "string"
-          ? match(opt)
+          ? opt.toLowerCase().includes(query.toLowerCase())
           : "group" in opt
-          ? opt.options.length
-          : match(opt)
+          ? opt.options.some((o) =>
+							getLabel(o).toLowerCase().includes(query.toLowerCase())
+						)
+          : opt.label.toLowerCase().includes(query.toLowerCase())
       );
   }, [options, query]);
+
 
   const handleChange = useCallback(
     (val: string | null) => {
@@ -75,7 +83,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
         : null;
 
       onChange?.(val, selected);
-      setQuery(val || "");
+      setQuery(selected ? getLabel(selected) : "");
     },
     [allOptionsFlat, onChange]
   );
@@ -105,9 +113,9 @@ export const Combobox: React.FC<ComboboxProps> = ({
           )}
           <ComboboxInput
             className={`
-              w-full border border-surface-gray-2 rounded
+              w-full bg-surface-gray-2 border border-surface-gray-2 rounded
               ${selectedOption && getIcon(selectedOption) ? "pl-8" : "pl-2"}
-              pr-2 py-1 min-h-[25px] text-base bg-surface-white
+              pr-6 py-1 min-h-[25px] text-base
               placeholder-ink-gray-4 text-ink-gray-8
               outline-none focus:border-outline-gray-4 focus:ring-2 focus:ring-outline-gray-3
               transition-colors
@@ -132,8 +140,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
         </ComboboxButton>
         <ComboboxOptions
           className={`
-            absolute z-[100] mt-1 w-full bg-surface-white border border-surface-gray-2 rounded shadow-xl min-w-[160px]
-            animate-fade-in
+            absolute z-[100] mt-1 w-full bg-surface-white border border-surface-gray-2 rounded shadow-xl min-w-[160px] max-h-50 animate-fade-in overflow-auto
           `}
         >
           {filteredOptions.length === 0 && (
@@ -144,7 +151,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
           {filteredOptions.map((opt) =>
             typeof opt === "object" && "group" in opt ? (
               <div key={opt.group}>
-                <div className="px-2 py-1 text-xs text-ink-gray-5 font-semibold bg-surface-gray-2">
+                <div className="p-2 text-xs text-ink-gray-5 font-semibold">
                   {opt.group}
                 </div>
                 {opt.options.map((option) => (
@@ -167,7 +174,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
                     <span className="flex-1">{getLabel(option)}</span>
                     {selectedOption &&
                       getValue(option) === getValue(selectedOption) && (
-                        <span className="ml-2 text-green-600">
+                        <span className="ml-2 text-ink-gray-5">
                           <svg width="16" height="16" viewBox="0 0 16 16">
                             <path
                               d="M4 8l3 3 5-5"
@@ -202,7 +209,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
                 {selectedOption &&
                   getValue(opt as SimpleOption) ===
                     getValue(selectedOption) && (
-                    <span className="ml-2 text-green-600">
+                    <span className="ml-2 text-ink-gray-5">
                       <svg width="16" height="16" viewBox="0 0 16 16">
                         <path
                           d="M4 8l3 3 5-5"

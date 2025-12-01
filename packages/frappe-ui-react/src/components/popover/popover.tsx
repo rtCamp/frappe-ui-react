@@ -7,11 +7,7 @@ import React, {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
-import {
-  createPopper,
-  type Instance,
-  type Placement,
-} from "@popperjs/core";
+import { createPopper, type Instance, type Placement } from "@popperjs/core";
 
 const popoverRootId = "frappeui-popper-root";
 
@@ -77,8 +73,7 @@ const Popover: React.FC<PopoverProps> = ({
 }) => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [targetWidth, setTargetWidth] = useState<number | null>(null);
-  const pointerOverTargetOrPopupRef =
-    useRef<boolean>(false);
+  const pointerOverTargetOrPopupRef = useRef<boolean>(false);
 
   const referenceRef = useRef<HTMLDivElement>(null);
   const popperRef = useRef<HTMLDivElement>(null);
@@ -146,7 +141,7 @@ const Popover: React.FC<PopoverProps> = ({
     if (trigger === "hover") {
       if (hoverDelay) {
         hoverTimer.current = setTimeout(() => {
-          if(pointerOverTargetOrPopupRef.current){
+          if (pointerOverTargetOrPopupRef.current) {
             open();
           }
         }, Number(hoverDelay) * 1000);
@@ -169,15 +164,14 @@ const Popover: React.FC<PopoverProps> = ({
       }
       if (leaveDelay) {
         leaveTimer.current = setTimeout(() => {
-          if(!pointerOverTargetOrPopupRef.current) {
+          if (!pointerOverTargetOrPopupRef.current) {
             close();
           }
         }, Number(leaveDelay) * 1000);
       } else {
-        if(!pointerOverTargetOrPopupRef.current) {
+        if (!pointerOverTargetOrPopupRef.current) {
           close();
         }
-        
       }
     }
   }, [trigger, leaveDelay, close]);
@@ -368,11 +362,14 @@ const Popover: React.FC<PopoverProps> = ({
       </div>
 
       {createPortal(
-        <div style={{ width: targetWidth || "auto", height: "auto",               zIndex: 99 }}>
+        <div
+          style={{ width: targetWidth || "auto", height: "auto", zIndex: 99 }}
+        >
           <div
             ref={popperRef}
             style={{
-              ...(popperInstance.current?.state?.styles?.popper as React.CSSProperties ?? {}),
+              ...((popperInstance.current?.state?.styles
+                ?.popper as React.CSSProperties) ?? {}),
             }}
             data-popper-placement={
               popperInstance.current?.state?.placement || ""

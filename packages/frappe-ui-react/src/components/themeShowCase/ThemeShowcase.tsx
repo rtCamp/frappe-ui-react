@@ -39,6 +39,12 @@ type RadiusToken = {
   value: string;
 };
 
+type FontFamilyToken = {
+  name: string;
+  value: string;
+  className: string;
+};
+
 // Types for default Tailwind tokens
 type DefaultToken = {
   name: string;
@@ -948,6 +954,26 @@ const ThemeShowcase: React.FC = () => {
     },
   ];
 
+  const fontFamilies: FontFamilyToken[] = [
+    {
+      name: "Sans",
+      value:
+        "Inter, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
+      className: "font-sans",
+    },
+    {
+      name: "Serif",
+      value: "ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif",
+      className: "font-serif",
+    },
+    {
+      name: "Mono",
+      value:
+        "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+      className: "font-mono",
+    },
+  ];
+
   const fontSizes: FontSizeToken[] = [
     {
       name: "2xs",
@@ -1197,7 +1223,7 @@ const ThemeShowcase: React.FC = () => {
                   className="swatch"
                   style={{
                     backgroundColor: "var(--color-white)",
-                    border: "1px solid var(--outline-gray-1)",
+                    border: "1px solid var(--color-outline-gray-1)",
                   }}
                 ></div>
                 <div className="swatch-info">
@@ -1218,7 +1244,7 @@ const ThemeShowcase: React.FC = () => {
                         className="swatch"
                         style={{
                           backgroundColor: `var(--color-${variant.value})`,
-                          border: "1px solid var(--outline-gray-1)",
+                          border: "1px solid var(--color-outline-gray-1)",
                         }}
                       ></div>
                       <div className="swatch-info">
@@ -1244,7 +1270,7 @@ const ThemeShowcase: React.FC = () => {
                         className="swatch"
                         style={{
                           backgroundColor: `var(--color-${variant.value})`,
-                          border: "1px solid var(--outline-gray-1)",
+                          border: "1px solid var(--color-outline-gray-1)",
                         }}
                       ></div>
                       <div className="swatch-info">
@@ -1273,8 +1299,8 @@ const ThemeShowcase: React.FC = () => {
                       <div
                         className="swatch"
                         style={{
-                          backgroundColor: `var(--${color.value})`,
-                          border: "1px solid var(--outline-gray-1)",
+                          backgroundColor: `var(--color-${color.value})`,
+                          border: "1px solid var(--color-outline-gray-1)",
                         }}
                       ></div>
                       <div className="swatch-info">
@@ -1291,6 +1317,36 @@ const ThemeShowcase: React.FC = () => {
 
         {activeTab === "typography" && (
           <div className="typography">
+            <h2>Typography</h2>
+
+            {/* Font Families Section */}
+            <h2>Font Families</h2>
+            <div className="typography-section">
+              <div className="space-y-4">
+                {fontFamilies.map((font) => (
+                  <div
+                    key={font.name}
+                    className="p-4 bg-white"
+                  >
+                    <div className="flex items-baseline justify-between mb-2">
+                      <span className="font-semibold text-gray-700">
+                        {font.name}
+                      </span>
+                      <code className="text-xs text-ink-blue-2 font-semibold">
+                        {font.className}
+                      </code>
+                    </div>
+                    <p
+                      className={`${font.className} text-2xl text-gray-900 mb-1`}
+                    >
+                      The quick brown fox jumps over the lazy dog
+                    </p>
+                    <p className="text-xs text-gray-500 mt-2">{font.value}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             <h2>Font Sizes</h2>
             <div className="typography-section">
               <h3>Headings</h3>

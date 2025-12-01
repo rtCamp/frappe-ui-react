@@ -1,29 +1,32 @@
-import { AutocompleteOption, AutocompleteOptionGroup } from "../components/autoComplete/types";
+import {
+  AutocompleteOption,
+  AutocompleteOptionGroup,
+} from "../components/autoComplete/types";
 
 export const simpleOptions: AutocompleteOption[] = [
-  { label: 'Apple', value: 'a' },
-  { label: 'Banana', value: 'b' },
-  { label: 'Cherry', value: 'c' },
+  { label: "Apple", value: "a" },
+  { label: "Banana", value: "b" },
+  { label: "Cherry", value: "c" },
 ];
 
 export const groupedOptions: AutocompleteOptionGroup[] = [
   {
-    group: 'Fruits',
+    group: "Fruits",
     items: [
-      { label: 'Apple', value: 'a' },
-      { label: 'Banana', value: 'b' },
+      { label: "Apple", value: "a" },
+      { label: "Banana", value: "b" },
     ],
   },
   {
-    group: 'Vegetables',
+    group: "Vegetables",
     items: [
-      { label: 'Broccoli', value: 'broc' },
-      { label: 'Carrot', value: 'carr' },
+      { label: "Broccoli", value: "broc" },
+      { label: "Carrot", value: "carr" },
     ],
   },
   {
-    group: 'Hidden Label Group',
+    group: "Hidden Label Group",
     hideLabel: true,
-    items: [{ label: 'Hidden', value: 'hid' }],
+    items: [{ label: "Hidden", value: "hid" }],
   },
 ];

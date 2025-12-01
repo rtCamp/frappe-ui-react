@@ -1,2 +1,2 @@
-export { default as FormControl} from './formControl';
-export * from './types';
+export { default as FormControl } from "./formControl";
+export * from "./types";

@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react';
-import type{ ErrorMessageProps, MessageError } from './types';
+import React, { useMemo } from "react";
+
+import type { ErrorMessageProps, MessageError } from "./types";
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => {
   const errorMessage = useMemo(() => {
     if (!message) {
-      return '';
+      return "";
     }
 
     if (message instanceof Error) {

@@ -8,9 +8,7 @@ import FeatherIcon from "../featherIcon";
 export default {
   title: "Components/TextInput",
   component: TextInput,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
   argTypes: {
     type: {
@@ -194,7 +192,7 @@ export const PrefixSlotIcon = {
   args: {
     type: "url",
     placeholder: "Placeholder",
-    prefix: () => <FeatherIcon className="w-4" name="search" />,
+    prefix: (size) => <FeatherIcon className={size === "sm" ? "w-4" : "w-5"} name="search" />,
     value: "",
   },
 };
@@ -214,10 +212,11 @@ export const PrefixSlotAvatar = {
   args: {
     type: "url",
     placeholder: "Placeholder",
-    prefix: () => (
+    prefix: (size) => (
       <Avatar
         shape="circle"
         image="https://avatars.githubusercontent.com/u/499550?s=60&v=4"
+        size={size}
       />
     ),
     value: "",

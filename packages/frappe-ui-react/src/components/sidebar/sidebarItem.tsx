@@ -35,7 +35,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
     <Button
       label={label}
       onClick={handleClick}
-      className={`w-fit ${
+      className={`w-full flex justify-start items-center ${
         isActive ? "!bg-surface-selected shadow-sm" : "hover:bg-surface-gray-2"
       }`}
       variant="ghost"

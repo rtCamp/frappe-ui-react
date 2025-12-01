@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import Button from "./button";
 import { ButtonProps } from "./types";
 
@@ -47,14 +48,6 @@ export default {
       action: "clicked",
       description: "Function to call when the button is clicked.",
     },
-    prefixIcon: {
-      control: "text",
-      description: 'Icon to display before the label (e.g., "plus", "home").',
-    },
-    suffixIcon: {
-      control: "text",
-      description: 'Icon to display after the label (e.g., "arrow-right").',
-    },
     icon: {
       control: "text",
       description: "Main icon for icon-only buttons.",
@@ -70,16 +63,14 @@ export default {
       description: "Right side icon for the button",
     },
   },
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
 } as Meta<typeof Button>;
 
 const ButtonTemplate: StoryObj<ButtonProps> = {
   render: (args) => (
-      <div className="p-4">
-        <Button {...args} />
-      </div>
+    <div className="p-4">
+      <Button {...args} />
+    </div>
   ),
 };
 

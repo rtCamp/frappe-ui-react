@@ -1,7 +1,15 @@
-import React, { useContext, useRef, useMemo, useState, useCallback, ReactNode } from 'react';
-import { ListContext } from './listContext';
-import { alignmentMap } from './utils';
-import { debounce } from '../../utils';
+import React, {
+  useContext,
+  useRef,
+  useMemo,
+  useState,
+  useCallback,
+  ReactNode,
+} from "react";
+
+import { ListContext } from "./listContext";
+import { alignmentMap } from "./utils";
+import { debounce } from "../../utils";
 
 interface ListHeaderItemProps {
   item: any;
@@ -10,13 +18,13 @@ interface ListHeaderItemProps {
   children?: ReactNode;
   prefix?: ReactNode;
   suffix?: ReactNode;
-  firstItem?: boolean;
+  lastItem?: boolean;
 }
 
 const ListHeaderItem: React.FC<ListHeaderItemProps> = ({
   item,
-  firstItem = false,
-  debounce: debounceTime = 1000,
+  lastItem = false,
+  debounce: debounceTime = 300,
   onColumnWidthUpdated,
   children,
   prefix,
@@ -25,27 +33,27 @@ const ListHeaderItem: React.FC<ListHeaderItemProps> = ({
   const { options: list } = useContext(ListContext);
 
   if (!list) {
-    throw new Error('ListHeaderItem must be used within a ListProvider');
+    throw new Error("ListHeaderItem must be used within a ListProvider");
   }
 
   const columnRef = useRef<HTMLDivElement>(null);
   const [isResizing, setIsResizing] = useState(false);
 
   const updateWidth = debounce((width: number) => {
-    if(!onColumnWidthUpdated){
-      return
+    if (!onColumnWidthUpdated) {
+      return;
     }
 
     onColumnWidthUpdated(width);
   }, debounceTime);
 
   const getWidthInPx = useCallback(() => {
-    if (typeof item.width === 'string') {
+    if (typeof item.width === "string") {
       const parsedWidth = parseInt(item.width, 10);
 
-      if (item.width.includes('rem')) {
+      if (item.width.includes("rem")) {
         return parsedWidth * 16;
-      } else if (item.width.includes('px')) {
+      } else if (item.width.includes("px")) {
         return parsedWidth;
       }
     }
@@ -62,61 +70,64 @@ const ListHeaderItem: React.FC<ListHeaderItemProps> = ({
       const onMouseMove = (e: MouseEvent) => {
         const newWidth = initialWidth + (e.clientX - initialX);
         const newWidthPx = Math.max(50, newWidth);
-        
+
         if (columnRef.current) {
           columnRef.current.style.width = `${newWidthPx}px`;
         }
-        
+
         updateWidth(newWidthPx);
       };
 
       const onMouseUp = () => {
         setIsResizing(false);
-        window.removeEventListener('mousemove', onMouseMove);
-        window.removeEventListener('mouseup', onMouseUp);
+        window.removeEventListener("mousemove", onMouseMove);
+        window.removeEventListener("mouseup", onMouseUp);
       };
 
-      window.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('mouseup', onMouseUp);
+      window.addEventListener("mousemove", onMouseMove);
+      window.addEventListener("mouseup", onMouseUp);
     },
     [getWidthInPx, updateWidth]
   );
-  
+
   const headerContent = useMemo(() => {
-    const defaultContent = (
-      <div className="truncate">
-        {item.label}
-      </div>
-    );
+    const defaultContent = <div className="truncate">{item.label}</div>;
 
     return children || defaultContent;
   }, [item.label, children]);
 
   const rootClasses = useMemo(() => {
     return [
-      'group relative flex items-center',
-      firstItem ? 'ml-4': '',
-      item.align ? alignmentMap[item.align as keyof typeof alignmentMap] : 'justify-between',
-    ].filter(Boolean).join(' ');
-  }, [item.align, firstItem]);
+      "group relative flex items-center",
+      item.align
+        ? alignmentMap[item.align as keyof typeof alignmentMap]
+        : "justify-between",
+    ]
+      .filter(Boolean)
+      .join(" ");
+  }, [item.align]);
 
   return (
     <div ref={columnRef} className={rootClasses}>
       <div
-        className={`flex items-center space-x-2 truncate text-sm text-ink-gray-5 ${isResizing ? 'cursor-col-resize' : ''}`}
+        className={`flex items-center space-x-2 truncate text-sm text-ink-gray-5 ${
+          isResizing ? "cursor-col-resize" : ""
+        }`}
       >
         {prefix}
         {headerContent}
         {suffix}
       </div>
-      {list.options.resizeColumn && (
+      {list.options.resizeColumn && !lastItem && (
         <div
-          className="flex h-4 absolute -right-2 w-2 cursor-col-resize justify-center"
+          className={`flex h-4 absolute right-0 w-0.5 cursor-col-resize justify-center bg-outline-gray-3 hover:bg-outline-gray-5 ${
+            isResizing ? "bg-outline-gray-5" : ""
+          }`}
           onMouseDown={startResizing}
         >
           <div
             className={`h-full w-[2px] rounded-full transition-all duration-300 ease-in-out group-hover:bg-gray-400 ${
-              isResizing ? 'bg-gray-400' : ''
+              isResizing ? "bg-gray-400" : ""
             }`}
           />
         </div>

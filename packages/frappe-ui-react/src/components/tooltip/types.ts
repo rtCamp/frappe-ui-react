@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
-export type TooltipPlacement = 'top' | 'right' | 'bottom' | 'left';
+export type TooltipPlacement = "top" | "right" | "bottom" | "left";
 
 export interface TooltipProps {
   children: ReactNode;

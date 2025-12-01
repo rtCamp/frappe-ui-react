@@ -1,5 +1,5 @@
 export interface CheckboxProps {
-  size?: 'sm' | 'md';
+  size?: "sm" | "md";
   label?: string;
   checked?: boolean;
   disabled?: boolean;

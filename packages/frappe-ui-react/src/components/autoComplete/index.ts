@@ -1,2 +1,2 @@
-export { default as Autocomplete} from './autoComplete';
-export * from './types'
+export { default as Autocomplete } from "./autoComplete";
+export * from "./types";

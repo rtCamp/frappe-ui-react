@@ -1,6 +1,7 @@
-import React from 'react';
-import { formatValue } from './helpers';
-import { NumberChartConfig } from './types';
+import React from "react";
+
+import { formatValue } from "./helpers";
+import { NumberChartConfig } from "./types";
 
 interface RenderPropHelpers {
   formatValue: typeof formatValue;
@@ -26,9 +27,9 @@ const NumberChart: React.FC<NumberChartProps> = ({
 
   const getDeltaColorClass = () => {
     if (config.negativeIsBetter) {
-      return isDeltaPositive ? 'text-ink-red-3' : 'text-green-500';
+      return isDeltaPositive ? "text-ink-red-3" : "text-green-500";
     }
-    return isDeltaPositive ? 'text-ink-green-2' : 'text-ink-red-3';
+    return isDeltaPositive ? "text-ink-green-2" : "text-ink-red-3";
   };
 
   const defaultContent = (
@@ -55,7 +56,7 @@ const NumberChart: React.FC<NumberChartProps> = ({
             <div
               className={`flex items-center gap-0.5 text-xs font-medium ${getDeltaColorClass()}`}
             >
-              <span>{isDeltaPositive ? '↑' : '↓'}</span>
+              <span>{isDeltaPositive ? "↑" : "↓"}</span>
               <span>
                 {config.deltaPrefix}
                 {config.delta && formatValue(config.delta, 1, true)}
@@ -69,7 +70,7 @@ const NumberChart: React.FC<NumberChartProps> = ({
   return (
     <div
       className={`flex max-h-[140px] items-center gap-2 overflow-hidden bg-surface-gray-1 px-6 pt-5 text-ink-gray-8 ${
-        hasDelta ? 'pb-6' : 'pb-3'
+        hasDelta ? "pb-6" : "pb-3"
       }`}
     >
       {body || defaultContent}

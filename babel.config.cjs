@@ -1,21 +1,21 @@
 module.exports = function (api) {
-  const isProduction = api.env('production');
+  const isProduction = api.env("production");
 
   return {
     presets: [
-      ['@babel/preset-env'],
+      ["@babel/preset-env"],
       [
-        '@babel/preset-react',
+        "@babel/preset-react",
         {
           development: !isProduction,
-          runtime: 'automatic',
+          runtime: "automatic",
         },
       ],
-      '@babel/preset-typescript',
+      "@babel/preset-typescript",
     ],
     plugins: [
-      ['@babel/plugin-transform-react-jsx', {runtime: 'automatic'}],
-      ['babel-plugin-styled-components'],
+      ["@babel/plugin-transform-react-jsx", { runtime: "automatic" }],
+      ["babel-plugin-styled-components"],
     ],
     sourceMaps: true,
   };

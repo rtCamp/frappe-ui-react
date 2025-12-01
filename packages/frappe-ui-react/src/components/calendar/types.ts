@@ -16,25 +16,33 @@ export interface CalendarEvent {
 }
 
 export interface CalendarConfig {
-  activeView: 'Month' | 'Day' | 'Week';
+  activeView: "Month" | "Day" | "Week";
   disableModes: string[];
-  defaultMode: 'Month' | 'Day' | 'Week';
+  defaultMode: "Month" | "Day" | "Week";
   isEditMode: boolean;
   eventIcons: Record<string, ReactNode>;
   redundantCellHeight: number;
+  timeFormat: '12h' | '24h';
   hourHeight: number;
-  enableShortcuts: boolean,
+  enableShortcuts: boolean;
   showIcon: boolean;
   allowCustomClickEvents: boolean;
   createNewEvent?: (event: CalendarEvent) => void;
   updateEventState?: (updatedEvent: CalendarEvent) => void;
   deleteEvent?: (eventId: string | number) => void;
-  onClick?: (data: { event: MouseEvent, calendarEvent: CalendarEvent }) => void;
-  onDblClick?: (data: { event: MouseEvent, calendarEvent: CalendarEvent }) => void;
-  onCellDblClick?: (data: { event: MouseEvent, date: Date,
-	time: string,
-	view: "Day" | "Week" | "Month"}) => void;
+  onClick?: (data: { event: MouseEvent; calendarEvent: CalendarEvent }) => void;
+  onDblClick?: (data: {
+    event: MouseEvent;
+    calendarEvent: CalendarEvent;
+  }) => void;
+  onCellDblClick?: (data: {
+    event: MouseEvent;
+    date: Date;
+    time: string;
+    view: "Day" | "Week" | "Month";
+  }) => void;
   handleCellDblClick?: (event: MouseEvent) => void;
+  noBorder?: boolean;
 }
 
 export interface CalendarEventProps {
@@ -42,7 +50,14 @@ export interface CalendarEventProps {
   date: Date;
   extraClassName?: string;
   draggable?: boolean;
-  onDragStart?: (event: React.DragEvent<HTMLDivElement>, id: number | string) => void;
+  onDragStart?: (
+    event: React.DragEvent<HTMLDivElement>,
+    id: number | string
+  ) => void;
+  onDragEnd?: (
+    event: React.DragEvent<HTMLDivElement>,
+    id: number | string
+  ) => void;
 }
 
 export interface ColorMap {

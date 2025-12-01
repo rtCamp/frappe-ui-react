@@ -1,11 +1,10 @@
-import './spinner.css';
+import "./spinner.css";
 
 interface SpinnerProps {
   className?: string;
 }
 
-
-const Spinner = ({className=''}: SpinnerProps) => {
+const Spinner = ({ className = "" }: SpinnerProps) => {
   return (
     <svg className={`spinner ${className}`} viewBox="0 0 50 50">
       <defs>

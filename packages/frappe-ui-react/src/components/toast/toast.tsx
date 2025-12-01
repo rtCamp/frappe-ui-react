@@ -1,18 +1,14 @@
-import React, { useMemo } from 'react';
-import * as Toast from '@radix-ui/react-toast';
-import {
-  CircleCheck,
-  AlertTriangle,
-  Info,
-  X,
-} from 'lucide-react';
-import type { ToastProps } from './types';
+import React, { useMemo } from "react";
+import * as Toast from "@radix-ui/react-toast";
+import { CircleCheck, AlertTriangle, Info, X } from "lucide-react";
+
+import type { ToastProps } from "./types";
 
 const ToastComponent: React.FC<ToastProps> = ({
   open,
   onOpenChange,
   message,
-  type = 'success',
+  type = "success",
   icon,
   closable = true,
   duration = 5000,
@@ -21,12 +17,16 @@ const ToastComponent: React.FC<ToastProps> = ({
   const iconComponent = useMemo(() => {
     if (icon) return icon;
     switch (type) {
-      case 'success':
-        return <CircleCheck className="flex-shrink-0 size-4 text-ink-green-2" />;
-      case 'warning':
-        return <AlertTriangle className="flex-shrink-0 size-4 text-ink-amber-2" />;
-      case 'error':
-        return <Info className="flex-shrink-0 size-4 text-ink-red-2" />;
+      case "success":
+        return (
+          <CircleCheck className="flex-shrink-0 size-4 text-ink-green-3 dark:text-green-700" />
+        );
+      case "warning":
+        return (
+          <AlertTriangle className="flex-shrink-0 size-4 text-ink-amber-3 dark:text-amber-700" />
+        );
+      case "error":
+        return <Info className="flex-shrink-0 size-4 text-ink-red-4 dark:text-red-700" />;
       default:
         return null;
     }
@@ -41,7 +41,7 @@ const ToastComponent: React.FC<ToastProps> = ({
       open={open}
       onOpenChange={onOpenChange}
       duration={closable ? duration : Infinity}
-      className="toast-root-animatable bg-surface-gray-6 border-none rounded-md px-4 py-1.5 shadow-lg flex items-center justify-between gap-3 min-w-[280px] max-w-[400px] pointer-events-auto list-none"
+      className="toast-root-animatable bg-surface-gray-6 dark:bg-gray-900 text-ink-white dark:text-white border-none rounded-md px-4 py-1.5 shadow-lg flex items-center justify-between gap-3 min-w-[280px] max-w-[400px] pointer-events-auto list-none"
     >
       <div className="flex items-center gap-2 flex-grow overflow-hidden">
         {iconComponent}
@@ -57,7 +57,7 @@ const ToastComponent: React.FC<ToastProps> = ({
       <div className="flex items-center gap-2 h-7">
         {action && (
           <Toast.Action
-            className="flex-shrink-0 rounded px-2 py-1 text-sm text-ink-blue-link hover:text-ink-gray-3 focus:outline-none focus-visible:ring focus-visible:ring-outline-gray-4"
+            className="flex-shrink-0 rounded px-2 py-1 text-sm text-ink-blue-link dark:text-gray-300 hover:text-ink-gray-3 focus:outline-none focus-visible:ring focus-visible:ring-outline-gray-4"
             altText={action.altText || action.label}
             onClick={handleAction}
           >
@@ -66,7 +66,7 @@ const ToastComponent: React.FC<ToastProps> = ({
         )}
         {closable && (
           <Toast.Close
-            className="flex-shrink-0 rounded p-1 text-ink-white hover:text-ink-gray-3 focus:outline-none focus-visible:ring focus-visible:ring-outline-gray-4"
+            className="flex-shrink-0 rounded p-1 text-ink-white dark:text-gray-300 hover:text-ink-gray-3 focus:outline-none focus-visible:ring focus-visible:ring-outline-gray-4"
             aria-label="Close"
           >
             <X className="size-4" />

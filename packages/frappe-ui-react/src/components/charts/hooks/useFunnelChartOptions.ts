@@ -4,30 +4,32 @@ import {
   SUBTITLE_HEIGHT,
   TITLE_BOTTOM,
   TITLE_HEIGHT,
-} from './useEchartsOptions'
-import { formatValue } from '../helpers'
-import { ChartsWrapperProps, FunnelChartConfig } from '../types'
+} from "./useEchartsOptions";
+import { formatValue } from "../helpers";
+import { ChartsWrapperProps, FunnelChartConfig } from "../types";
 
-export default function useFunnelChartOptions(config: FunnelChartConfig): ChartsWrapperProps['options'] {
+export default function useFunnelChartOptions(
+  config: FunnelChartConfig
+): ChartsWrapperProps["options"] {
   const _data = config.data || [];
 
   const hasSubtitle = config.subtitle ? 1 : 0;
 
   const labels = _data.map((row) => row[config.categoryColumn]);
   const values = _data.map((row) => row[config.valueColumn]);
-  const total = values[0]
+  const total = values[0];
 
   const blueGradient = [
-    '#2d87d6',
-    '#4393da',
-    '#589fdf',
-    '#6dace3',
-    '#83b8e7',
-    '#98c4eb',
-    '#c3dcf3',
-    '#d8e9f7',
-    '#edf5fc',
-    '#ffffff',
+    "#2d87d6",
+    "#4393da",
+    "#589fdf",
+    "#6dace3",
+    "#83b8e7",
+    "#98c4eb",
+    "#c3dcf3",
+    "#d8e9f7",
+    "#edf5fc",
+    "#ffffff",
   ];
   const colors = blueGradient;
 
@@ -35,37 +37,37 @@ export default function useFunnelChartOptions(config: FunnelChartConfig): Charts
     animation: true,
     animationDuration: 700,
     color: colors,
-    textStyle: { fontFamily: 'InterVar, sans-serif' },
+    textStyle: { fontFamily: "InterVar, sans-serif" },
     title: getTitleOptions(config.title, config.subtitle),
     series: [
       {
-        name: 'Funnel',
-        type: 'funnel',
-        orient: 'vertical',
-        funnelAlign: 'center',
+        name: "Funnel",
+        type: "funnel",
+        orient: "vertical",
+        funnelAlign: "center",
         top:
           PADDING_TOP +
           TITLE_HEIGHT +
           SUBTITLE_HEIGHT * hasSubtitle +
           TITLE_BOTTOM,
-        left: 'center',
-        width: '60%',
-        height: '75%',
-        minSize: '10px',
-        maxSize: '100%',
-        sort: 'descending',
+        left: "center",
+        width: "60%",
+        height: "75%",
+        minSize: "10px",
+        maxSize: "100%",
+        sort: "descending",
         label: {
           show: true,
-          position: 'inside',
+          position: "inside",
           lineHeight: 16,
           formatter: (params: any) => {
-            const index = labels.indexOf(params.name)
-            const value = formatValue(values[index], 1, true)
+            const index = labels.indexOf(params.name);
+            const value = formatValue(values[index], 1, true);
             if (!config.showPercentages) {
-              return value
+              return value;
             }
-            const percentage = Number((values[index] / total) * 100).toFixed(0)
-            return `${value} (${percentage}%)`
+            const percentage = Number((values[index] / total) * 100).toFixed(0);
+            return `${value} (${percentage}%)`;
           },
         },
         labelLine: { show: false },
@@ -77,23 +79,23 @@ export default function useFunnelChartOptions(config: FunnelChartConfig): Charts
             color: colors[index],
             borderColor: colors[index],
             borderWidth: 4,
-            borderCap: 'round',
-            borderJoin: 'round',
+            borderCap: "round",
+            borderJoin: "round",
           },
           emphasis: {
             itemStyle: {
               color: colors[index],
               borderColor: colors[index],
               borderWidth: 6,
-              borderCap: 'round',
-              borderJoin: 'round',
+              borderCap: "round",
+              borderJoin: "round",
             },
           },
         })),
       },
     ],
     tooltip: {
-      trigger: 'item',
+      trigger: "item",
       confine: true,
       appendToBody: false,
       formatter: function (params: any) {
@@ -113,4 +115,4 @@ export default function useFunnelChartOptions(config: FunnelChartConfig): Charts
       },
     },
   };
-};
+}

@@ -1,13 +1,13 @@
 interface DividerAction {
-  label: string
+  label: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  handler: () => any
-  loading?: boolean
+  handler: () => any;
+  loading?: boolean;
 }
 
 export interface DividerProps {
-  orientation?: 'horizontal' | 'vertical'
-  position?: 'start' | 'center' | 'end'
-  flexItem?: boolean
-  action?: DividerAction
+  orientation?: "horizontal" | "vertical";
+  position?: "start" | "center" | "end";
+  flexItem?: boolean;
+  action?: DividerAction;
 }

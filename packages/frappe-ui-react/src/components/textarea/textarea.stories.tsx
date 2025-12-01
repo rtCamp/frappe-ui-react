@@ -6,9 +6,7 @@ import TextArea from "./textarea";
 export default {
   title: "Components/TextArea",
   component: TextArea,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
   argTypes: {
     label: { control: "text", description: "Label for the textarea" },
@@ -42,24 +40,6 @@ export default {
       control: "number",
       description: "Debounce time in milliseconds for the onChange event",
     },
-    type: {
-      control: {
-        type: "select",
-        options: [
-          "text",
-          "number",
-          "email",
-          "date",
-          "datetime-local",
-          "password",
-          "search",
-          "tel",
-          "time",
-          "url",
-        ],
-      },
-      description: "Type of the text input",
-    },
     htmlId: {
       control: "text",
       description: "HTML id attribute for the text input",
@@ -86,7 +66,6 @@ const Template: StoryObj<TextareaProps> = {
 export const SubtleVariant = {
   ...Template,
   args: {
-    type: "text",
     placeholder: "Placeholder",
     variant: "subtle",
     value: "",
@@ -96,7 +75,6 @@ export const SubtleVariant = {
 export const OutlineVariant = {
   ...Template,
   args: {
-    type: "number",
     placeholder: "Placeholder",
     variant: "outline",
     value: "",

@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+
 import type { AlertProps } from "./types";
 
 const Alert: React.FC<AlertProps> = ({
@@ -11,7 +12,7 @@ const Alert: React.FC<AlertProps> = ({
   const classes = useMemo(() => {
     const typeClasses: { [type: string]: string } = {
       warning: "text-ink-gray-7 bg-surface-blue-1",
-    }
+    };
     return typeClasses[type] || typeClasses["warning"];
   }, [type]);
 

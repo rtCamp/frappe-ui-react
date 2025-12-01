@@ -1,8 +1,9 @@
 import React, { useState, useCallback, useEffect } from "react";
+import { LucidePanelRightOpen } from "lucide-react";
+
 import SidebarHeader from "./sidebarHeader";
 import SidebarSection from "./sidebarSection";
 import SidebarItem from "./sidebarItem";
-import { LucidePanelRightOpen } from "lucide-react";
 import { useMediaQuery } from "./useMediaQuery";
 
 export type SidebarHeaderProps = {
@@ -109,7 +110,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <SidebarItem
           label={shouldCollapse ? "Expand" : "Collapse"}
           onClick={() => !isMobile && setCollapsed(!isCollapsed)} // Prevent toggling on mobile
-					sidebarCollapsed={isCollapsed}
+          sidebarCollapsed={isCollapsed}
           icon={
             <span
               className={`transition-transform duration-300 ease-in-out ${
