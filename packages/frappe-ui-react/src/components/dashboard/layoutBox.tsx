@@ -17,9 +17,10 @@ export const LayoutBox: React.FC<LayoutBoxProps> = ({
   return (
     <div
       className={clsx(
-        "flex rounded min-h-[100px]",
+        "flex flex-wrap rounded min-h-[100px]",
         orientation === "horizontal" ? "flex-row" : "flex-col",
-        !layout.gap && "gap-4"
+        !layout.gap && "gap-4",
+        layout.className
       )}
       style={{
         ...(layout.gap && { gap: layout.gap }),
