@@ -1,88 +1,69 @@
-interface ComponentElement {
+export interface Slot {
   id: string;
-  type: 'component';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: React.ComponentType<any>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props: Record<string, any>;
-  width?: string;
-  height?: string;
   flex?: string;
   locked?: boolean;
 }
 
-interface EmptySlot {
+export interface Row {
   id: string;
-  type: 'empty';
-  width?: string;
-  height?: string;
-  flex?: string;
-  locked?: boolean;
-}
-
-interface ContainerElement {
-  id: string;
-  type: 'row' | 'stack';
-  slots: LayoutItem[];
-  width?: string;
-  height?: string;
-  flex?: string;
-  gap?: string;
-  locked?: boolean;
-  className?: string;
-}
-
-export type LayoutItem = ComponentElement | ContainerElement | EmptySlot;
-
-export type SerializedLayoutItem = Omit<ComponentElement, 'component' | 'props'> | EmptySlot | {
-  id: string;
-  type: 'row' | 'stack';
-  slots: SerializedLayoutItem[];
-  width?: string;
-  height?: string;
-  flex?: string;
-  locked?: boolean;
+  slots: Slot[];
   gap?: string;
   className?: string;
-};;
+  locked?: boolean;
+}
+
+export type Layout = Row[];
+
+export interface SerializedSlot {
+  id: string;
+  flex?: string;
+  locked?: boolean;
+}
+
+export interface SerializedRow {
+  id: string;
+  slots: SerializedSlot[];
+  gap?: string;
+  className?: string;
+  locked?: boolean;
+}
+
+export type SerializedLayout = SerializedRow[];
 
 export interface DashboardProps {
-  initialLayout: LayoutItem;
+  initialLayout: Layout;
   layoutLock?: boolean;
   dragHandle?: boolean;
   dragHandleOnHover?: boolean;
-  savedLayout?: SerializedLayoutItem;
-  onLayoutChange: (layout: SerializedLayoutItem) => void;
+  savedLayout?: SerializedLayout;
+  onLayoutChange: (layout: SerializedLayout) => void;
 }
 
 export interface LayoutContainerProps {
-  layout: LayoutItem;
-  setLayout: (layout: LayoutItem | ((prevLayout: LayoutItem) => LayoutItem)) => void;
+  layout: Layout;
+  setLayout: (layout: Layout | ((prevLayout: Layout) => Layout)) => void;
   layoutLock?: boolean;
   dragHandle?: boolean;
   dragHandleOnHover?: boolean;
 }
 
-export interface LayoutBoxProps {
-  layout: ContainerElement;
-  orientation: "horizontal" | "vertical";
+export interface RowProps {
+  row: Row;
   parentLocked?: boolean;
 }
 
-export interface LayoutRendererProps {
-  layout: LayoutItem;
-  parentLocked?: boolean;
-}
-
-export interface SlotContainerProps {
+export interface DroppableProps {
   slotId: string;
-  slotItem: LayoutItem;
-  isDragging: boolean;
+  slot: Slot;
   parentLocked?: boolean;
 }
 
-export interface WidgetProps {
-  layout: ComponentElement;
+export interface DraggableProps {
+  slot: Slot;
   parentLocked?: boolean;
 }
 
