@@ -10,7 +10,7 @@ interface ListHeaderProps {
 
 const ListHeader: React.FC<ListHeaderProps> = ({ children }) => {
   const { options: list } = useContext(ListContext);
-
+  console.log(list)
   if (!list) {
     throw new Error("ListHeader must be used within a ListProvider");
   }
@@ -35,7 +35,7 @@ const ListHeader: React.FC<ListHeaderProps> = ({ children }) => {
             item={column}
             lastItem={index === list.columns.length - 1}
             onColumnWidthUpdated={(width: number) => {
-              list.updateColumnWidth(index, width);
+              list.options.updateColumnWidth(index, width);
             }}
           />
         ))}

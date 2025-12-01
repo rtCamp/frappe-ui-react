@@ -58,8 +58,9 @@ export const ListProvider: React.FC<ListProviderProps> = ({
         title: "No Data",
         description: "No data available",
       },
+      updateColumnWidth,
     };
-  }, [options]);
+  }, [options, updateColumnWidth]);
 
   const showGroupedRows = useMemo(
     () => rows.every((row) => row.group && row.rows && Array.isArray(row.rows)),
@@ -135,7 +136,6 @@ export const ListProvider: React.FC<ListProviderProps> = ({
         toggleAllRows,
         emptyState: options.emptyState,
         setColumns: () => {},
-        updateColumnWidth,
       },
     }),
     [
@@ -150,7 +150,6 @@ export const ListProvider: React.FC<ListProviderProps> = ({
       allRowsSelected,
       toggleRow,
       toggleAllRows,
-      updateColumnWidth,
     ]
   );
   return (
