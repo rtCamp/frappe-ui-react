@@ -156,11 +156,13 @@ export const Autocomplete: Story = {
   render: (args) => {
     const [value, setValue] = useState("");
     return (
-      <FormControl
-        {...args}
-        value={value}
-        onChange={(_value: string) => setValue(_value)}
-      />
+      <div className="w-40">
+        <FormControl
+          {...args}
+          value={value}
+          onChange={(_value: string) => setValue(_value)}
+        />
+      </div>
     );
   },
 };
