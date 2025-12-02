@@ -295,7 +295,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   );
 
   return (
-    <div className="w-full">
+    <div className="min-w-24 w-full">
       <Combobox
         value={selectedComboboxValue}
         onChange={handleComboboxChange}
@@ -349,7 +349,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
             )}
             body={({ isOpen: isPopoverOpen }) =>
               isPopoverOpen && (
-                <div className="relative mt-1 w-fit max-w-md rounded-lg bg-surface-modal text-base shadow-2xl">
+                <div className="relative mt-1 max-w-md rounded-lg bg-surface-modal text-base shadow-2xl">
                   {!hideSearch && (
                     <div>
                       <div className="sticky top-0 z-[100] flex items-stretch space-x-1.5 bg-surface-modal py-1.5 rounded-lg">
