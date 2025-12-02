@@ -43,9 +43,12 @@
     "@popperjs/core": "^2.11.8",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-dropdown-menu": "^2.1.15",
+    "@radix-ui/react-hover-card": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.15",
     "@radix-ui/react-tooltip": "^1.2.7",
     "@tailwindcss/vite": "^4.1.11",
+    "class-variance-authority": "^0.7.1",
+    "date-fns": "^3.6.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "dompurify": "^3.2.6",
@@ -64,7 +67,8 @@
     "react-quill-new": "^3.6.0",
     "react-resizable": "^3.0.5",
     "styled-components": "^6.1.19",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "tailwind-merge": "^2.4.0"
   },
   "devDependencies": {
     "@types/feather-icons": "^4.29.4",

@@ -3,7 +3,7 @@ import { action } from "storybook/actions";
 
 import Dropdown from "./dropdown";
 import { Button } from "../button";
-import { DropdownOptions } from "./types";
+import type { DropdownOptions } from "./types";
 
 export default {
   title: "Components/Dropdown",
