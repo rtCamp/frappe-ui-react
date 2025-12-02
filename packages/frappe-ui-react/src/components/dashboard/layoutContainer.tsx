@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import {
   DndContext,
   KeyboardSensor,
@@ -12,10 +12,10 @@ import {
 } from "@dnd-kit/core";
 import { Row } from "./row";
 import { LayoutContainerProps } from "./types";
-import { deepClone, flattenLayout } from "./dashboardUtil";
 import { LayoutContext } from "./layoutContext";
 
 export const LayoutContainer: React.FC<LayoutContainerProps> = ({
+  widgets,
   layout,
   setLayout,
   layoutLock = false,
@@ -24,19 +24,15 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
 }) => {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
 
-  const layoutFlatMap = useMemo(() => flattenLayout(layout), [layout]);
-
   const activeSlotId = useMemo(() => {
     if (!activeId) return null;
-    const activeSlot = layoutFlatMap.get(activeId);
-    if (!activeSlot) return null;
-    return `${activeSlot.rowId}-slot-${activeSlot.slotIndex}`;
-  }, [activeId, layoutFlatMap]);
+    return activeId as string;
+  }, [activeId]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: dragHandle
-        ? undefined
+        ? { distance: 0 }
         : {
             distance: 10,
             delay: 100,
@@ -47,46 +43,57 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   );
 
   const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event;
-    setActiveId(active.id);
+    setActiveId(event.active.id);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-
     setActiveId(null);
 
     if (!over || active.id === over.id) return;
 
-    const activeSlot = layoutFlatMap.get(active.id as string);
-    if (!activeSlot) return;
-
+    const activeIdStr = String(active.id);
     const overIdStr = String(over.id);
-    const parts = overIdStr.split("-slot-");
-    const targetRowId = parts[0];
-    const targetSlotIndex = parseInt(parts[parts.length - 1]);
 
-    setLayout((currentLayout) => {
-      const newLayout = deepClone(currentLayout);
+    const activeMatch = activeIdStr.match(/row-(\d+)-slot-(\d+)/);
+    const overMatch = overIdStr.match(/row-(\d+)-slot-(\d+)/);
 
-      const sourceRowIndex = activeSlot.rowIndex;
-      const sourceSlotIndex = activeSlot.slotIndex;
-      const targetRowIndex = newLayout.findIndex((r) => r.id === targetRowId);
+    if (!activeMatch || !overMatch) return;
 
-      if (targetRowIndex === -1) return currentLayout;
+    const sourceRowIndex = parseInt(activeMatch[1]);
+    const sourceSlotIndex = parseInt(activeMatch[2]);
+    const targetRowIndex = parseInt(overMatch[1]);
+    const targetSlotIndex = parseInt(overMatch[2]);
 
-      const sourceSlot = newLayout[sourceRowIndex].slots[sourceSlotIndex];
-      const targetSlot = newLayout[targetRowIndex].slots[targetSlotIndex];
-
-      if (!targetSlot) return currentLayout;
-
-      // Swap slots
-      newLayout[sourceRowIndex].slots[sourceSlotIndex] = targetSlot;
-      newLayout[targetRowIndex].slots[targetSlotIndex] = sourceSlot;
-
-      return newLayout;
-    });
+    const newLayout = layout.map((row, rowIndex) =>
+      row.map((widgetId, slotIndex) => {
+        if (rowIndex === sourceRowIndex && slotIndex === sourceSlotIndex)
+          return layout[targetRowIndex][targetSlotIndex];
+        if (rowIndex === targetRowIndex && slotIndex === targetSlotIndex)
+          return layout[sourceRowIndex][sourceSlotIndex];
+        return widgetId;
+      })
+    );
+    setLayout(newLayout);
   };
+
+  const handleAddWidget = useCallback(
+    (rowIndex: number, slotIndex: number, widgetId: string) => {
+      const newLayout = layout.map((row) => [...row]);
+      newLayout[rowIndex][slotIndex] = widgetId;
+      setLayout(newLayout);
+    },
+    [layout, setLayout]
+  );
+
+  const handleRemoveWidget = useCallback(
+    (rowIndex: number, slotIndex: number) => {
+      const newLayout = layout.map((row) => [...row]);
+      newLayout[rowIndex][slotIndex] = "";
+      setLayout(newLayout);
+    },
+    [layout, setLayout]
+  );
 
   return (
     <LayoutContext.Provider
@@ -104,8 +111,16 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
         onDragEnd={handleDragEnd}
       >
         <div className="flex flex-col gap-4">
-          {layout.map((row) => (
-            <Row key={row.id} row={row} parentLocked={layoutLock} />
+          {layout.map((row, rowIndex) => (
+            <Row
+              key={rowIndex}
+              widgets={widgets}
+              row={row}
+              rowIndex={rowIndex}
+              parentLocked={layoutLock}
+              onAddWidget={handleAddWidget}
+              onRemoveWidget={handleRemoveWidget}
+            />
           ))}
         </div>
       </DndContext>

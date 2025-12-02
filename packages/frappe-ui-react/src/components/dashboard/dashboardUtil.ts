@@ -1,42 +1,25 @@
-import { Layout, SerializedLayout } from "./types";
+import { Layout } from "./types";
 
-export const flattenLayout = (layout: Layout)  => {
+export const flattenLayout = (layout: Layout) => {
   const flatMap = new Map();
 
   layout.forEach((row, rowIndex) => {
-    row.slots.forEach((slot, slotIndex) => {
-      flatMap.set(slot.id, {
-        ...slot,
-        rowIndex,
-        slotIndex,
-        rowId: row.id,
-      });
+    row.forEach((widgetId, slotIndex) => {
+      const slotId = `row-${rowIndex}-slot-${slotIndex}`;
+      flatMap.set(slotId, { widgetId, rowIndex, slotIndex });
     });
   });
 
   return flatMap;
 };
 
-export const validateSerializedLayout = (layout: SerializedLayout) => {
-  if (!Array.isArray(layout)) return false;
-
+export const validateSerializedLayout = (layout: Layout): boolean => {
+  if (!Array.isArray(layout) || layout.length === 0) return false;
   for (const row of layout) {
-    if ( !row || typeof row.id !== "string" || !Array.isArray(row.slots)) {
-      return false;
-    }
-    for (const slot of row.slots) {
-      if (typeof slot?.id !== "string") {
-        return false;
-      }
+    if (!row || !Array.isArray(row)) return false;
+    for (const widgetId of row) {
+      if (typeof widgetId !== "string") return false;
     }
   }
-
   return true;
-};
-
-export const deepClone = (layout: Layout): Layout => {
-  return layout.map((row) => ({
-    ...row,
-    slots: row.slots.map((slot) => ({ ...slot })),
-  }));
 };
