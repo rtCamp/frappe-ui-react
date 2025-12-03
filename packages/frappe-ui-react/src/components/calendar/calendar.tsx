@@ -9,6 +9,8 @@ import { CalendarMonthly } from "./calendarMonthly";
 import { CalendarWeekly } from "./calendarWeekly";
 import NewEventModal from "./newEventModalContent";
 import { useCalendar } from "./hooks/useCalendar";
+import TabButtons from "../tabButtons";
+import { dayjs } from "../../utils/dayjs";
 
 interface CalendarProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,11 +35,17 @@ export const Calendar = ({
     weekIndex,
     datesInWeeks,
   } = state;
-  const { setActiveView, increment, decrement, setShowEventModal } = actions;
+  const {
+    setActiveView,
+    increment,
+    decrement,
+    setShowEventModal,
+    setCurrentDate,
+  } = actions;
   const enabledModes = [
-    { id: "Month", label: "Month" },
-    { id: "Week", label: "Week" },
     { id: "Day", label: "Day" },
+    { id: "Week", label: "Week" },
+    { id: "Month", label: "Month" },
   ].filter((mode) => !config.disableModes?.includes(mode.label));
 
   const renderView = () => {
@@ -60,6 +68,7 @@ export const Calendar = ({
     decrement,
     increment,
     updateActiveView: setActiveView,
+    setCalendarDate: (date: Date) => setCurrentDate(dayjs(date)),
   };
 
   return (
@@ -68,10 +77,10 @@ export const Calendar = ({
         {CustomHeader ? (
           <CustomHeader {...headerProps} />
         ) : (
-          <div className="mb-2 flex justify-between">
-            <span className="text-lg font-medium text-ink-gray-8">
+          <div className="flex w-full items-center justify-between gap-4 py-2">
+            <h1 className="text-xl font-bold text-ink-gray-8">
               {headerProps.currentMonthYear}
-            </span>
+            </h1>
             <div className="flex gap-x-1">
               <Button
                 onClick={decrement}
@@ -79,9 +88,25 @@ export const Calendar = ({
                 icon={() => <ChevronLeft size={16} />}
               />
               <Button
+                onClick={() => headerProps.setCalendarDate(new Date())}
+                variant="ghost"
+              >
+                Today
+              </Button>
+              <Button
                 onClick={increment}
                 variant="ghost"
                 icon={() => <ChevronRight size={16} />}
+              />
+              <TabButtons
+                buttons={enabledModes.map(
+                  (mode: { id: string; label: string }) => ({
+                    value: mode.id,
+                    label: mode.label,
+                  })
+                )}
+                value={activeView}
+                onChange={(value) => setActiveView(String(value))}
               />
             </div>
           </div>

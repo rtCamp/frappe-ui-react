@@ -2,7 +2,9 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import type { CalendarConfig, CalendarEvent } from "./types";
 import { Calendar } from "./calendar";
-import TabButtons from "../tabButtons";
+import { Button } from "../button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Select } from "../select";
 
 const meta: Meta<typeof Calendar> = {
   title: "Components/Calendar",
@@ -143,39 +145,35 @@ export const CustomHeader: Story = {
       decrement,
       increment,
       enabledModes,
-      activeView,
       updateActiveView,
+      setCalendarDate,
     }) => (
-      <div className="flex items-center justify-between p-4 border-b">
-        <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold text-ink-gray-8">
-            {currentMonthYear}
-          </h1>
-          <div className="flex items-center gap-1 text-ink-gray-8">
-            <button
-              onClick={decrement}
-              className="p-2 rounded hover:bg-gray-200"
-            >
-              Previous
-            </button>
-            <button
-              onClick={increment}
-              className="p-2 rounded hover:bg-gray-200"
-            >
-              Next
-            </button>
-          </div>
-          <TabButtons
-            buttons={enabledModes.map(
-              (mode: { id: string; label: string }) => ({
-                value: mode.id,
-                label: mode.label,
-              })
-            )}
-            value={activeView}
-            onChange={updateActiveView}
+      <div className="mb-2 w-full flex justify-between items-center py-2">
+        <span className="text-lg font-medium text-ink-gray-8">
+          {currentMonthYear}
+        </span>
+        <div className="flex gap-x-1">
+          <Button
+            onClick={decrement}
+            variant="ghost"
+            icon={() => <ChevronLeft size={16} />}
+          />
+          <Button onClick={() => setCalendarDate(new Date())} variant="ghost">
+            Today
+          </Button>
+          <Button
+            onClick={increment}
+            variant="ghost"
+            icon={() => <ChevronRight size={16} />}
           />
         </div>
+        <Select
+          onChange={(e) => updateActiveView(e.target.value)}
+          options={enabledModes.map((mode: { id: string; label: string }) => ({
+            value: mode.id,
+            label: mode.label,
+          }))}
+        />
       </div>
     ),
   },
