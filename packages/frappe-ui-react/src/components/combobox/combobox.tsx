@@ -7,6 +7,7 @@ import {
   ComboboxOption,
 } from "@headlessui/react";
 import type { ComboboxProps, SimpleOption } from "./types";
+import { Check } from "lucide-react";
 
 // Utility for display
 const getLabel = (option: SimpleOption) =>
@@ -43,16 +44,12 @@ export const Combobox: React.FC<ComboboxProps> = ({
 
   const selectedOption = useMemo(() => {
     if (!value) return null;
-
-    const opt = allOptionsFlat.find((opt) => getValue(opt) === value) ?? null;
-
-    setQuery(opt ? getLabel(opt) : "");
-    return opt;
+    return allOptionsFlat.find((opt) => getValue(opt) === value) ?? null;
   }, [value, allOptionsFlat]);
 
   const filteredOptions = useMemo(() => {
-		if (!query) {
-			return options;
+    if (!query || (selectedOption && query === getLabel(selectedOption))) {
+      return options;
     }
 
     return options
@@ -60,7 +57,9 @@ export const Combobox: React.FC<ComboboxProps> = ({
         typeof opt === "object" && "group" in opt
           ? {
               ...opt,
-              options: opt.options,
+              options: opt.options.filter((o) =>
+                getLabel(o).toLowerCase().includes(query.toLowerCase())
+              ),
             }
           : opt
       )
@@ -68,13 +67,10 @@ export const Combobox: React.FC<ComboboxProps> = ({
         typeof opt === "string"
           ? opt.toLowerCase().includes(query.toLowerCase())
           : "group" in opt
-          ? opt.options.some((o) =>
-							getLabel(o).toLowerCase().includes(query.toLowerCase())
-						)
+          ? opt.options.length > 0
           : opt.label.toLowerCase().includes(query.toLowerCase())
       );
-  }, [options, query]);
-
+  }, [options, query, selectedOption]);
 
   const handleChange = useCallback(
     (val: string | null) => {
@@ -122,9 +118,11 @@ export const Combobox: React.FC<ComboboxProps> = ({
               disabled:bg-surface-gray-1 disabled:text-ink-gray-5
             `}
             displayValue={displayValue}
-            value={query}
             placeholder={placeholder}
             onChange={(e) => setQuery(e.target.value)}
+            onFocus={() =>
+              setQuery(selectedOption ? getLabel(selectedOption) : "")
+            }
             autoComplete="off"
           />
         </div>
@@ -140,12 +138,12 @@ export const Combobox: React.FC<ComboboxProps> = ({
         </ComboboxButton>
         <ComboboxOptions
           className={`
-            absolute z-[100] mt-1 w-full bg-surface-white border border-surface-gray-2 rounded shadow-xl min-w-[160px] max-h-50 animate-fade-in overflow-auto
+            absolute z-[100] mt-1 px-1.5 py-1.5 w-full bg-surface-white border-0 border-surface-gray-2 rounded-lg shadow-xl min-w-[160px] max-h-50 animate-fade-in overflow-y-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none] [-ms-overflow-style:'none'] [-webkit-overflow-scrolling:'touch']
           `}
         >
           {filteredOptions.length === 0 && (
-            <div className="px-2 py-2 text-ink-gray-5 text-sm">
-              No results found
+            <div className="px-2 py-2 text-ink-gray-5 text-base text-center">
+              No results found for "{query}"
             </div>
           )}
           {filteredOptions.map((opt) =>
@@ -159,12 +157,11 @@ export const Combobox: React.FC<ComboboxProps> = ({
                     key={getValue(option)}
                     value={getValue(option)}
                     disabled={isDisabled(option)}
-                    className={({ active, selected, disabled }) =>
+                    className={({ active, disabled }) =>
                       `
-                        text-ink-gray-8 flex items-center gap-2 px-2 py-1 text-base cursor-pointer truncate 
+                        text-ink-gray-8 flex items-center gap-2 px-2.5 py-1.5 text-base cursor-pointer truncate rounded
                         ${disabled ? "opacity-50" : ""}
                         ${active ? "bg-surface-gray-3" : ""}
-                        ${selected ? "font-bold" : ""}
                       `
                     }
                   >
@@ -175,14 +172,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
                     {selectedOption &&
                       getValue(option) === getValue(selectedOption) && (
                         <span className="ml-2 text-ink-gray-5">
-                          <svg width="16" height="16" viewBox="0 0 16 16">
-                            <path
-                              d="M4 8l3 3 5-5"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            />
-                          </svg>
+                          <Check className="w-4 h-4" />
                         </span>
                       )}
                   </ComboboxOption>
@@ -193,12 +183,11 @@ export const Combobox: React.FC<ComboboxProps> = ({
                 key={getValue(opt as SimpleOption)}
                 value={getValue(opt as SimpleOption)}
                 disabled={isDisabled(opt as SimpleOption)}
-                className={({ active, selected, disabled }) =>
+                className={({ active, disabled }) =>
                   `
-                    text-ink-gray-8 flex items-center gap-2 px-2 py-1 text-base cursor-pointer truncate
+                    text-ink-gray-8 flex items-center gap-2 px-2.5 py-1.5 text-base cursor-pointer truncate rounded
                     ${disabled ? "opacity-50" : ""}
                     ${active ? "bg-surface-gray-3" : ""}
-                    ${selected ? "font-bold" : ""}
                   `
                 }
               >
@@ -210,14 +199,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
                   getValue(opt as SimpleOption) ===
                     getValue(selectedOption) && (
                     <span className="ml-2 text-ink-gray-5">
-                      <svg width="16" height="16" viewBox="0 0 16 16">
-                        <path
-                          d="M4 8l3 3 5-5"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        />
-                      </svg>
+                      <Check className="w-4 h-4" />
                     </span>
                   )}
               </ComboboxOption>
