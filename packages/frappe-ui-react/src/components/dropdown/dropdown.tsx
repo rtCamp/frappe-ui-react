@@ -2,6 +2,7 @@ import React, { useMemo, useCallback } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 import { Button, ButtonProps } from "../button";
+import { Switch } from "../switch";
 import type {
   DropdownProps,
   DropdownOption,
@@ -14,7 +15,7 @@ const cssClasses = {
   dropdownContent:
     "min-w-40 divide-y divide-outline-gray-modals rounded-lg bg-surface-modal shadow-2xl ring-black focus:outline-none dropdown-content border border-outline-gray-1 z-100",
   groupContainer: "p-1.5",
-  groupLabel: "flex h-7 items-center px-2 text-sm font-medium text-ink-gray-5",
+  groupLabel: "flex h-7 items-center px-2 text-sm font-medium text-ink-gray-7",
   itemLabel: "whitespace-nowrap",
   itemIcon: "mr-2 h-4 w-4 flex-shrink-0",
   chevronIcon: "ml-auto h-4 w-4 flex-shrink-0",
@@ -61,10 +62,13 @@ const Dropdown: React.FC<DropdownProps> = ({
         label: option.label,
         icon: option.icon,
         component: option.component,
-        onClick: () => handleItemClick(option),
+        onClick: option.switch ? option.onClick : () => handleItemClick(option),
         submenu: option.submenu,
         condition: option.condition,
         theme: option.theme,
+        disabled: option.disabled,
+        switch: option.switch,
+        switchValue: option.switchValue,
       };
     },
     [handleItemClick]
@@ -151,6 +155,29 @@ const Dropdown: React.FC<DropdownProps> = ({
     if (item.component) {
       const CustomComponent = item.component;
       return <CustomComponent active={false} />;
+    } else if (item.switch) {
+      return (
+        <div
+          className={`${cssClasses.itemButton} ${getTextColor(item)}`}
+          onClick={(e) => e.preventDefault()}
+        >
+          {item.icon &&
+            (typeof item.icon === "string" ? (
+              <FeatherIcon
+                name={item.icon as FeatherIconProps["name"]}
+                className={`${cssClasses.itemIcon} ${getIconColor(item)}`}
+              />
+            ) : React.isValidElement(item.icon) ? (
+              item.icon
+            ) : null)}
+          <span className={cssClasses.itemLabel}>{item.label}</span>
+          <Switch
+            className="ml-auto"
+            value={item.switchValue || false}
+            onChange={(checked) => item.onClick?.(checked)}
+          />
+        </div>
+      );
     } else if (item.submenu) {
       return (
         <DropdownMenu.Sub>
@@ -201,7 +228,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                     <DropdownMenu.Item
                       key={subItem.label}
                       asChild
-                      onSelect={subItem.onClick}
+                      onSelect={() => subItem.onClick?.()}
                     >
                       {renderDropdownItem(subItem)}
                     </DropdownMenu.Item>
@@ -268,7 +295,7 @@ const Dropdown: React.FC<DropdownProps> = ({
               )}
               {group.items.map((item) => (
                 <div data-testid="dropdown-item" key={item.label}>
-                  <DropdownMenu.Item asChild onSelect={item.onClick}>
+                  <DropdownMenu.Item asChild onSelect={() => !item.switch && item.onClick?.()}>
                     {renderDropdownItem(item)}
                   </DropdownMenu.Item>
                 </div>

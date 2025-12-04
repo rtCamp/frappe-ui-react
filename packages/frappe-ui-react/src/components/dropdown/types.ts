@@ -4,7 +4,7 @@ import { ButtonTheme } from "../button";
 
 export interface DropdownOption {
   label: string;
-  onClick?: () => void;
+  onClick?: (val?: boolean) => void;
   link?: string;
   icon?: string | ReactNode;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -12,6 +12,9 @@ export interface DropdownOption {
   theme?: ButtonTheme;
   submenu?: DropdownOptions;
   condition?: () => boolean;
+  disabled?: boolean;
+  switch?: boolean;
+  switchValue?: boolean;
 }
 
 export interface DropdownGroupOption {
