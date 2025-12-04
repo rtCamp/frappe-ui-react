@@ -19,19 +19,35 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     setOpen,
     dateValue,
     selectDate,
-    prevMonth,
-    nextMonth,
     formattedMonth,
     datesAsWeeks,
     currentMonth,
+    currentYear,
+    view,
+    cycleView,
+    selectMonth,
+    selectYear,
+    yearRangeStart,
+    yearRange,
+    prev,
+    next,
+    resetView,
+    months,
   } = useDatePicker({ value, onChange });
+
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) {
+      resetView();
+    }
+  };
 
   return (
     <Popover
       trigger="click"
       placement={placement || "bottom-start"}
       show={open}
-      onUpdateShow={setOpen}
+      onUpdateShow={handleOpenChange}
       target={() => (
         <div className="flex flex-col space-y-1.5">
           {label && (
@@ -41,76 +57,152 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             type="text"
             placeholder={placeholder}
             value={dateValue && formatter ? formatter(dateValue) : dateValue}
-            suffix={() => <FeatherIcon name="chevron-down" className="w-4 h-4" />}
+            suffix={() => (
+              <FeatherIcon name="chevron-down" className="w-4 h-4" />
+            )}
           />
         </div>
       )}
       body={({ togglePopover }) => (
-        <div className="absolute z-10 mt-2 w-fit select-none text-base text-ink-gray-9 rounded-lg bg-surface-modal shadow-2xl border border-gray-200">
+        <div className="absolute min-w-60 z-10 mt-2 w-fit select-none text-base text-ink-gray-9 rounded-lg bg-surface-modal shadow-2xl border border-gray-200">
           {/* Month Switcher */}
-          <div className="flex items-center justify-between px-2 pt-2 text-ink-gray-4">
-            <Button size="sm" className="text-sm" variant="ghost">
-              {formattedMonth}
+          <div className="flex items-center justify-between px-2 pt-2 gap-1">
+            <Button
+              size="sm"
+              className="text-sm font-medium text-ink-gray-7"
+              variant="ghost"
+              onClick={cycleView}
+            >
+              {view === "date" && formattedMonth}
+              {view === "month" && currentYear}
+              {view === "year" && `${yearRangeStart} - ${yearRangeStart + 11}`}
             </Button>
-            <div className="flex">
+            <div className="flex items-center">
               <Button
                 className="h-7 w-7"
                 icon="chevron-left"
-                onClick={prevMonth}
+                onClick={prev}
                 variant="ghost"
               />
               <Button
                 className="h-7 w-7"
                 icon="chevron-right"
-                onClick={nextMonth}
+                onClick={next}
                 variant="ghost"
               />
             </div>
           </div>
-          {/* Calendar */}
-          <div className="flex flex-col items-center justify-center p-2 text-ink-gray-4">
-            <div className="flex items-center text-sm uppercase">
-              {["s", "m", "t", "w", "t", "f", "s"].map((d, i) => (
-                <div
-                  key={i}
-                  className="flex h-6 w-8 items-center justify-center text-center"
-                >
-                  {d}
-                </div>
-              ))}
-            </div>
-            {datesAsWeeks.map((week, i) => (
-              <div key={i} className="flex items-center">
-                {week.map((date) => {
-                  const val = getDateValue(date);
-                  const today = getDate();
-                  const isToday =
-                    date.getDate() === today.getDate() &&
-                    date.getMonth() === today.getMonth() &&
-                    date.getFullYear() === today.getFullYear() &&
-                    date.getMonth() === currentMonth - 1;
-                  const isSelected = dateValue === val;
-                  return (
+          {/* Calendar / Month Grid / Year Grid */}
+          <div className="p-2">
+            {view === "date" && (
+              <div role="grid" aria-label="Calendar dates">
+                <div className="flex items-center text-xs font-medium uppercase text-ink-gray-4 mb-1">
+                  {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
                     <div
-                      key={val}
-                      className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded hover:bg-surface-gray-2 text-sm ${
-                        isToday ? "font-extrabold text-ink-gray-9" : ""
-                      } ${isSelected ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6" : ""} ${
-                        date.getMonth() !== currentMonth - 1
-                          ? "text-ink-gray-3"
-                          : "text-ink-gray-8"
-                      }`}
-                      onClick={() => selectDate(date, true)}
+                      key={i}
+                      className="flex h-6 w-8 items-center justify-center"
                     >
-                      {date.getDate()}
+                      {d}
                     </div>
+                  ))}
+                </div>
+                {datesAsWeeks.map((week, i) => (
+                  <div key={i} className="flex" role="row">
+                    {week.map((date) => {
+                      const val = getDateValue(date);
+                      const today = getDate();
+                      const isToday =
+                        date.getDate() === today.getDate() &&
+                        date.getMonth() === today.getMonth() &&
+                        date.getFullYear() === today.getFullYear() &&
+                        date.getMonth() === currentMonth - 1;
+                      const isSelected = dateValue === val;
+                      const inMonth = date.getMonth() === currentMonth - 1;
+                      return (
+                        <button
+                          key={val}
+                          className={`flex h-8 w-8 items-center justify-center rounded cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                            inMonth ? "text-ink-gray-8" : "text-ink-gray-3"
+                          } ${
+                            isToday ? "font-extrabold text-ink-gray-9" : ""
+                          } ${
+                            isSelected
+                              ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                              : "hover:bg-surface-gray-2"
+                          }`}
+                          role="gridcell"
+                          aria-selected={isSelected}
+                          onClick={() => selectDate(date, true)}
+                        >
+                          {date.getDate()}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {view === "month" && (
+              <div
+                className="grid grid-cols-3 gap-1"
+                role="grid"
+                aria-label="Select month"
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {months.map((m, i) => {
+                  const isSelected = i === currentMonth - 1;
+                  return (
+                    <button
+                      type="button"
+                      key={m}
+                      className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                        isSelected
+                          ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                          : ""
+                      }`}
+                      aria-selected={isSelected}
+                      onClick={() => selectMonth(i)}
+                    >
+                      {m.slice(0, 3)}
+                    </button>
                   );
                 })}
               </div>
-            ))}
+            )}
+
+            {view === "year" && (
+              <div
+                className="grid grid-cols-3 gap-1"
+                role="grid"
+                aria-label="Select year"
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {yearRange.map((y) => {
+                  const isSelected = y === currentYear;
+                  return (
+                    <button
+                      type="button"
+                      key={y}
+                      className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                        isSelected
+                          ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                          : ""
+                      }`}
+                      aria-selected={isSelected}
+                      onClick={() => selectYear(y)}
+                    >
+                      {y}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
           {/* Actions */}
-          <div className="flex justify-between p-2 border-t border-gray-200">
+          <div className="flex justify-between p-2 gap-1 border-t border-gray-200">
             <div className="flex gap-1">
               <Button
                 onClick={() => {

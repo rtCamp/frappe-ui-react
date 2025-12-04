@@ -1,5 +1,21 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getDate, getDatesAfter, getDaysInMonth, getDateValue } from "./utils";
+import { DatePickerViewMode } from "./types";
+
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 export function useDatePicker({
   value,
@@ -10,6 +26,7 @@ export function useDatePicker({
 } = {}) {
   const today = useMemo(() => getDate(), []);
   const [open, setOpen] = useState(false);
+  const [view, setView] = useState<DatePickerViewMode>("date");
   const [dateValue, setDateValue] = useState<string>(
     typeof value === "string" ? value : ""
   );
@@ -96,6 +113,77 @@ export function useDatePicker({
     selectDate(getDate(), true);
   }, [selectDate]);
 
+  const cycleView = useCallback(() => {
+    setView((prev) => {
+      if (prev === "date") return "month";
+      if (prev === "month") return "year";
+      return "date";
+    });
+  }, []);
+
+  const selectMonth = useCallback((monthIndex: number) => {
+    setCurrentMonth(monthIndex + 1);
+    setView("date");
+  }, []);
+
+  const selectYear = useCallback((year: number) => {
+    setCurrentYear(year);
+    setView("month");
+  }, []);
+
+  const yearRangeStart = useMemo(
+    () => currentYear - (currentYear % 12),
+    [currentYear]
+  );
+
+  const yearRange = useMemo(
+    () => Array.from({ length: 12 }, (_, i) => yearRangeStart + i),
+    [yearRangeStart]
+  );
+
+  const prev = useCallback(() => {
+    if (view === "date") {
+      setCurrentMonth((prev) => {
+        if (prev === 1) {
+          setCurrentYear((y) => y - 1);
+          return 12;
+        }
+        return prev - 1;
+      });
+    } else if (view === "month") {
+      setCurrentYear((y) => y - 1);
+    } else {
+      setCurrentYear((y) => y - 12);
+    }
+  }, [view]);
+
+  const next = useCallback(() => {
+    if (view === "date") {
+      setCurrentMonth((prev) => {
+        if (prev === 12) {
+          setCurrentYear((y) => y + 1);
+          return 1;
+        }
+        return prev + 1;
+      });
+    } else if (view === "month") {
+      setCurrentYear((y) => y + 1);
+    } else {
+      setCurrentYear((y) => y + 12);
+    }
+  }, [view]);
+
+  const resetView = useCallback(() => {
+    setView("date");
+    if (dateValue) {
+      const selectedDate = getDate(dateValue);
+      if (!isNaN(selectedDate.getTime())) {
+        setCurrentYear(selectedDate.getFullYear());
+        setCurrentMonth(selectedDate.getMonth() + 1);
+      }
+    }
+  }, [dateValue]);
+
   return {
     open,
     setOpen,
@@ -113,5 +201,16 @@ export function useDatePicker({
     nextMonth,
     selectDate,
     selectToday,
+    view,
+    setView,
+    cycleView,
+    selectMonth,
+    selectYear,
+    yearRangeStart,
+    yearRange,
+    prev,
+    next,
+    resetView,
+    months: MONTHS,
   };
 }

@@ -26,3 +26,5 @@ export type DatePickerEmits = {
   (event: "update:modelValue", value: string): void;
   (event: "change", value: string): void;
 };
+
+export type DatePickerViewMode = "date" | "month" | "year";
