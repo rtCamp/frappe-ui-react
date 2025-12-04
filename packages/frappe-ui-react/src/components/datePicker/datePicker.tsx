@@ -4,6 +4,7 @@ import { getDate, getDateValue } from "./utils";
 import { Popover } from "../popover";
 import { Button } from "../button";
 import { TextInput } from "../textInput";
+import FeatherIcon from "../featherIcon";
 
 export const DatePicker: React.FC<DatePickerProps> = ({
   value,
@@ -40,45 +41,35 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             type="text"
             placeholder={placeholder}
             value={dateValue && formatter ? formatter(dateValue) : dateValue}
+            suffix={() => <FeatherIcon name="chevron-down" className="w-4 h-4" />}
           />
         </div>
       )}
       body={({ togglePopover }) => (
-        <div className="absolute z-10 mt-1 w-fit select-none text-base text-ink-gray-9 divide-y divide-outline-gray-modals rounded-lg bg-surface-modal shadow-2xl border border-gray-200">
+        <div className="absolute z-10 mt-2 w-fit select-none text-base text-ink-gray-9 rounded-lg bg-surface-modal shadow-2xl border border-gray-200">
           {/* Month Switcher */}
-          <div className="flex items-center p-1 text-ink-gray-4">
-            <Button className="h-7 w-7" onClick={prevMonth} variant="ghost">
-              {"<"}
-            </Button>
-            <div className="flex-1 text-center text-base font-medium text-ink-gray-6">
+          <div className="flex items-center justify-between px-2 pt-2 text-ink-gray-4">
+            <Button size="sm" className="text-sm" variant="ghost">
               {formattedMonth}
+            </Button>
+            <div className="flex">
+              <Button
+                className="h-7 w-7"
+                icon="chevron-left"
+                onClick={prevMonth}
+                variant="ghost"
+              />
+              <Button
+                className="h-7 w-7"
+                icon="chevron-right"
+                onClick={nextMonth}
+                variant="ghost"
+              />
             </div>
-            <Button className="h-7 w-7" onClick={nextMonth} variant="ghost">
-              {">"}
-            </Button>
-          </div>
-          {/* Date Input and Today */}
-          <div className="flex items-center justify-center gap-1 p-1">
-            <TextInput
-              type="text"
-              value={dateValue && formatter ? formatter(dateValue) : dateValue}
-              onChange={(e) => selectDate(getDate(String(e.target.value)))}
-            />
-            <Button
-              className="text-sm"
-              onClick={() => {
-                const today = getDate();
-                today.setHours(0, 0, 0, 0);
-                selectDate(today, true);
-                togglePopover();
-              }}
-            >
-              Today
-            </Button>
           </div>
           {/* Calendar */}
-          <div className="flex flex-col items-center justify-center p-1 text-ink-gray-8">
-            <div className="flex items-center text-xs uppercase">
+          <div className="flex flex-col items-center justify-center p-2 text-ink-gray-4">
+            <div className="flex items-center text-sm uppercase">
               {["s", "m", "t", "w", "t", "f", "s"].map((d, i) => (
                 <div
                   key={i}
@@ -102,12 +93,12 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                   return (
                     <div
                       key={val}
-                      className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded hover:bg-surface-gray-2 ${
+                      className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded hover:bg-surface-gray-2 text-sm ${
                         isToday ? "font-extrabold text-ink-gray-9" : ""
-                      } ${isSelected ? "bg-surface-gray-2" : ""} ${
+                      } ${isSelected ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6" : ""} ${
                         date.getMonth() !== currentMonth - 1
-                          ? "text-ink-gray-4"
-                          : ""
+                          ? "text-ink-gray-3"
+                          : "text-ink-gray-8"
                       }`}
                       onClick={() => selectDate(date, true)}
                     >
@@ -119,14 +110,39 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             ))}
           </div>
           {/* Actions */}
-          <div className="flex justify-end p-1">
+          <div className="flex justify-between p-2 border-t border-gray-200">
+            <div className="flex gap-1">
+              <Button
+                onClick={() => {
+                  const today = getDate();
+                  today.setHours(0, 0, 0, 0);
+                  selectDate(today, true);
+                  togglePopover();
+                }}
+                variant="outline"
+              >
+                Today
+              </Button>
+              <Button
+                onClick={() => {
+                  const today = getDate();
+                  today.setDate(today.getDate() + 1);
+                  today.setHours(0, 0, 0, 0);
+                  selectDate(today, true);
+                  togglePopover();
+                }}
+                variant="outline"
+              >
+                Tomorrow
+              </Button>
+            </div>
             <Button
-              className="text-sm"
               onClick={() => {
                 // Clear the value
                 onChange?.("");
                 setOpen(false);
               }}
+              variant="outline"
             >
               Clear
             </Button>
