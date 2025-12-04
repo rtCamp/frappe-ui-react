@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { getDate, getDatesAfter, getDaysInMonth, getDateValue } from "./utils";
+import {
+  getDate,
+  getDatesAfter,
+  getDaysInMonth,
+  getDateValue,
+  getDateTimeValue,
+  formatDateTime12h,
+} from "./utils";
 import { DatePickerViewMode } from "./types";
 
 const MONTHS = [
@@ -17,27 +24,76 @@ const MONTHS = [
   "December",
 ];
 
+function formatTime12h(hours: number, minutes: number): string {
+  const period = hours >= 12 ? "pm" : "am";
+  const h = hours % 12 || 12;
+  return `${h}:${minutes.toString().padStart(2, "0")} ${period}`;
+}
+
+function parseTimeValue(timeStr: string): { hours: number; minutes: number } {
+  if (!timeStr) return { hours: 0, minutes: 0 };
+  const [time, period] = timeStr.split(" ");
+  const [h, m] = time.split(":").map(Number);
+  let hours = h;
+  const periodLower = period?.toLowerCase();
+  if (periodLower === "pm" && h !== 12) hours += 12;
+  if (periodLower === "am" && h === 12) hours = 0;
+  return { hours, minutes: m };
+}
+
+function generateTimeOptions(): string[] {
+  const options: string[] = [];
+  for (let h = 0; h < 24; h++) {
+    for (let m = 0; m < 60; m += 15) {
+      options.push(formatTime12h(h, m));
+    }
+  }
+  return options;
+}
+
 export function useDatePicker({
   value,
   onChange,
+  withTime = false,
 }: {
   value?: string | string[];
   onChange?: (value: string | string[]) => void;
+  withTime?: boolean;
 } = {}) {
   const today = useMemo(() => getDate(), []);
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<DatePickerViewMode>("date");
-  const [dateValue, setDateValue] = useState<string>(
-    typeof value === "string" ? value : ""
-  );
+  const [dateValue, setDateValue] = useState<string>("");
+  const [timeValue, setTimeValue] = useState<string>(withTime ? "12:00 am" : "");
   const [currentYear, setCurrentYear] = useState<number>(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState<number>(
     today.getMonth() + 1
   );
 
   useEffect(() => {
-    if (typeof value === "string") setDateValue(value);
-  }, [value]);
+    if (typeof value === "string" && value) {
+      if (withTime) {
+        const parts = value.split(" ");
+        const datePart = parts[0] || "";
+        setDateValue(datePart);
+
+        if (parts.length >= 2) {
+          const timePart = parts.slice(1).join(" ");
+          const timeMatch = timePart.match(/^(\d{1,2}):(\d{2})/);
+          if (timeMatch) {
+            const hours = parseInt(timeMatch[1], 10);
+            const minutes = parseInt(timeMatch[2], 10);
+            setTimeValue(formatTime12h(hours, minutes));
+          }
+        }
+      } else {
+        setDateValue(value);
+      }
+    } else {
+      setDateValue("");
+      setTimeValue("");
+    }
+  }, [value, withTime]);
 
   const dates = useMemo(() => {
     if (!(currentYear && currentMonth)) return [];
@@ -103,15 +159,88 @@ export function useDatePicker({
     (d: Date, close = false) => {
       const v = getDateValue(d);
       setDateValue(v);
-      onChange?.(v);
+      if (withTime) {
+        const { hours, minutes } = parseTimeValue(timeValue);
+        const newDate = getDate(v);
+        newDate.setHours(hours, minutes, 0, 0);
+        onChange?.(getDateTimeValue(newDate));
+      } else {
+        onChange?.(v);
+      }
       if (close) setOpen(false);
     },
-    [onChange]
+    [onChange, withTime, timeValue]
   );
 
   const selectToday = useCallback(() => {
     selectDate(getDate(), true);
   }, [selectDate]);
+
+  const timeOptions = useMemo(() => generateTimeOptions(), []);
+
+  const selectTime = useCallback(
+    (time: string) => {
+      setTimeValue(time);
+      if (dateValue) {
+        const { hours, minutes } = parseTimeValue(time);
+        const d = getDate(dateValue);
+        d.setHours(hours, minutes, 0, 0);
+        onChange?.(getDateTimeValue(d));
+      }
+    },
+    [dateValue, onChange]
+  );
+
+  const selectNow = useCallback(() => {
+    const now = getDate();
+    const v = getDateValue(now);
+    setDateValue(v);
+    if (withTime) {
+      const time = formatTime12h(now.getHours(), now.getMinutes());
+      setTimeValue(time);
+      onChange?.(getDateTimeValue(now));
+    } else {
+      onChange?.(v);
+    }
+    setOpen(false);
+  }, [onChange, withTime]);
+
+  const selectTomorrow = useCallback(() => {
+    const tomorrow = getDate();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const v = getDateValue(tomorrow);
+    setDateValue(v);
+
+    if (withTime) {
+      const time =
+        timeValue || formatTime12h(getDate().getHours(), getDate().getMinutes());
+      if (!timeValue) setTimeValue(time);
+      const { hours, minutes } = parseTimeValue(time);
+      tomorrow.setHours(hours, minutes, 0, 0);
+      onChange?.(getDateTimeValue(tomorrow));
+    } else {
+      tomorrow.setHours(0, 0, 0, 0);
+      onChange?.(v);
+    }
+  }, [onChange, withTime, timeValue]);
+
+  const clearValue = useCallback(() => {
+    setDateValue("");
+    setTimeValue("");
+    onChange?.("");
+    setOpen(false);
+  }, [onChange]);
+
+  const displayValue = useMemo(() => {
+    if (!dateValue) return "";
+    if (withTime) {
+      const { hours, minutes } = parseTimeValue(timeValue);
+      const d = getDate(dateValue);
+      d.setHours(hours, minutes, 0, 0);
+      return formatDateTime12h(d);
+    }
+    return dateValue;
+  }, [dateValue, timeValue, withTime]);
 
   const cycleView = useCallback(() => {
     setView((prev) => {
@@ -212,5 +341,13 @@ export function useDatePicker({
     next,
     resetView,
     months: MONTHS,
+    timeValue,
+    setTimeValue,
+    timeOptions,
+    selectTime,
+    selectNow,
+    selectTomorrow,
+    clearValue,
+    displayValue,
   };
 }
