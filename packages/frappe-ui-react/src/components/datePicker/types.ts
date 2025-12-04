@@ -22,6 +22,27 @@ export interface DatePickerProps {
   onChange?: (value: string | string[]) => void;
 }
 
+export interface DateTimePickerProps {
+  value?: string;
+  placeholder?: string;
+  formatter?: (date: string) => string;
+  placement?:
+    | "top-start"
+    | "top"
+    | "top-end"
+    | "bottom-start"
+    | "bottom"
+    | "bottom-end"
+    | "left-start"
+    | "left"
+    | "left-end"
+    | "right-start"
+    | "right"
+    | "right-end";
+  label?: string;
+  onChange?: (value: string) => void;
+}
+
 export type DatePickerEmits = {
   (event: "update:modelValue", value: string): void;
   (event: "change", value: string): void;
