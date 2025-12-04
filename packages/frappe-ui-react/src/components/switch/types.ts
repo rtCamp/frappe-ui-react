@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 export type SwitchProps = {
   value: boolean;
   onChange: (value: boolean) => void;
@@ -6,4 +8,6 @@ export type SwitchProps = {
   description?: string;
   disabled?: boolean;
   className?: string;
+  labelClassName?: string;
+  icon?: string | ReactNode;
 };
