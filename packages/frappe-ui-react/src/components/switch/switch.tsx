@@ -6,6 +6,7 @@ import {
   Description,
 } from "@headlessui/react";
 import { SwitchProps } from "./types";
+import FeatherIcon, { type FeatherIconProps } from "../featherIcon";
 
 enum SwitchVariant {
   DEFAULT,
@@ -21,6 +22,8 @@ const Switch: React.FC<SwitchProps> = ({
   description = "",
   disabled = false,
   className = "",
+  labelClassName = "",
+  icon,
 }) => {
   // Determine switch type
   const switchType = useMemo(() => {
@@ -35,8 +38,12 @@ const Switch: React.FC<SwitchProps> = ({
     "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-outline-gray-3",
     "disabled:cursor-not-allowed disabled:bg-surface-gray-3",
     value
-      ? "bg-surface-gray-7 enabled:hover:bg-surface-gray-6 active:bg-surface-gray-5 group-hover:enabled:bg-surface-gray-6"
-      : "bg-surface-gray-4 enabled:hover:bg-gray-400 active:bg-gray-500 group-hover:enabled:bg-gray-400",
+      ? "bg-surface-gray-7 enabled:hover:bg-surface-gray-6 active:bg-surface-gray-5"
+      : "bg-surface-gray-4 enabled:hover:bg-gray-400 active:bg-gray-500",
+    switchType === SwitchVariant.ONLY_LABEL &&
+      (value
+        ? "group-hover:enabled:bg-surface-gray-6"
+        : "group-hover:enabled:bg-gray-400"),
     size === "md" ? "h-5 w-8 border-[3px]" : "h-4 w-[26px] border-2",
   ].join(" ");
 
@@ -58,9 +65,12 @@ const Switch: React.FC<SwitchProps> = ({
       ? "text-ink-gray-4"
       : "text-ink-gray-8",
     size === "md" ? "text-lg" : "text-base",
+    labelClassName,
   ].join(" ");
 
-  const switchDescriptionClasses = "max-w-xs text-p-base text-ink-gray-7";
+  const switchDescriptionClasses = "max-w-xs text-p-sm text-ink-gray-7";
+
+  const iconClasses = "mr-2 h-4 w-4 flex-shrink-0 text-ink-gray-6";
 
   const switchGroupClasses = useMemo(() => {
     const classes = ["flex justify-between"];
@@ -76,12 +86,11 @@ const Switch: React.FC<SwitchProps> = ({
       classes.push(size === "md" ? "px-3 py-1.5" : "px-2.5 py-1.5");
     } else if (switchType === SwitchVariant.WITH_LABEL_AND_DESCRIPTION) {
       classes.push("group items-start");
-      classes.push(size === "md" ? "space-x-3.5" : "space-x-2.5");
+      classes.push(size === "md" ? " px-3 space-x-3.5" : "px-2.5 space-x-2.5");
     }
     return classes.join(" ");
   }, [switchType, size, disabled]);
-
-  const labelContainerClasses = "flex flex-col space-y-0.5";
+  const labelContainerClasses = "flex flex-col gap-1";
 
   // Keyboard spacebar toggle for ONLY_LABEL
   const handleKeyUp = (e: React.KeyboardEvent) => {
@@ -101,18 +110,30 @@ const Switch: React.FC<SwitchProps> = ({
       onKeyUp={handleKeyUp}
       className={`${switchGroupClasses} ${className}`}
     >
-      <span className={labelContainerClasses}>
-        {label && (
-          <Label as="span" className={switchLabelClasses}>
-            {label}
-          </Label>
-        )}
+      <div className={labelContainerClasses}>
+        <div className="flex items-center">
+          {icon &&
+            (typeof icon === "string" ? (
+              <FeatherIcon
+                name={icon as FeatherIconProps["name"]}
+                className={iconClasses}
+                aria-hidden="true"
+              />
+            ) : React.isValidElement(icon) ? (
+              <span className={iconClasses}>{icon}</span>
+            ) : null)}
+          {label && (
+            <Label as="span" className={switchLabelClasses}>
+              {label}
+            </Label>
+          )}
+        </div>
         {description && (
           <Description as="span" className={switchDescriptionClasses}>
             {description}
           </Description>
         )}
-      </span>
+      </div>
       <HeadlessSwitch
         checked={!!value}
         onChange={() => onChange(!value)}
