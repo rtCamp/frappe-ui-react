@@ -59,9 +59,7 @@ export const TabList = ({
             className={[
               "focus:outline-none focus:transition-none flex items-center gap-1.5 text-base text-ink-gray-5 duration-300 ease-in-out hover:text-ink-gray-9 cursor-pointer",
               selected ? "text-ink-gray-9" : "",
-              vertical
-                ? "py-2.5 px-4 border-r border-transparent hover:border-outline-gray-3"
-                : "py-3 border-b border-transparent hover:border-outline-gray-3",
+              vertical ? "py-2.5 px-4" : "py-3",
             ].join(" ")}
             onClick={() => setTabIndex(i)}
             type="button"
@@ -76,8 +74,8 @@ export const TabList = ({
       <div
         ref={indicatorRef}
         className={[
-          "tab-indicator absolute",
-          vertical ? "right-0 w-px bg-transparent" : "bottom-0 h-px bg-surface-gray-7",
+          "tab-indicator absolute bg-surface-gray-7",
+          vertical ? "right-0 w-px" : "bottom-0 h-px",
         ].join(" ")}
       />
     </div>
