@@ -36,20 +36,13 @@ export function useDatePicker({
     const daysInMonth = getDaysInMonth(monthIndex, year);
     const datesInMonth = getDatesAfter(firstDayOfMonth, daysInMonth - 1);
 
-    let allDates = [
+    const allDates = [
       ...leftPadding,
       firstDayOfMonth,
       ...datesInMonth,
       ...rightPadding,
     ];
 
-    if (allDates.length < 42) {
-      const lastDate = allDates.at(-1);
-      if (lastDate) {
-        const finalPadding = getDatesAfter(lastDate, 42 - allDates.length);
-        allDates = allDates.concat(finalPadding);
-      }
-    }
     return allDates;
   }, [currentYear, currentMonth]);
 
@@ -65,8 +58,8 @@ export function useDatePicker({
   const formattedMonth = useMemo(() => {
     if (!(currentYear && currentMonth)) return "";
     const date = getDate(currentYear, currentMonth - 1, 1);
-    const month = date.toLocaleString("en-US", { month: "long" });
-    return `${month}, ${date.getFullYear()}`;
+    const month = date.toLocaleString("en-US", { month: "short" });
+    return `${month} ${date.getFullYear()}`;
   }, [currentYear, currentMonth]);
 
   const prevMonth = useCallback(() => {
