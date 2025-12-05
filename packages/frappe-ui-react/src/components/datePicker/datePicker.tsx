@@ -12,7 +12,10 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   formatter,
   placement,
   label,
+  clearable = true,
+  variant = "subtle",
   onChange,
+  children,
 }) => {
   const {
     open,
@@ -42,27 +45,35 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     }
   };
 
+  const displayValue =
+    dateValue && formatter ? formatter(dateValue) : dateValue;
+
   return (
     <Popover
       trigger="click"
       placement={placement || "bottom-start"}
       show={open}
       onUpdateShow={handleOpenChange}
-      target={() => (
-        <div className="flex w-full flex-col space-y-1.5">
-          {label && (
-            <label className="block text-xs text-ink-gray-5">{label}</label>
-          )}
-          <TextInput
-            type="text"
-            placeholder={placeholder}
-            value={dateValue && formatter ? formatter(dateValue) : dateValue}
-            suffix={() => (
-              <FeatherIcon name="chevron-down" className="w-4 h-4" />
+      target={({ togglePopover }) =>
+        children ? (
+          children({ togglePopover, isOpen: open, displayValue })
+        ) : (
+          <div className="flex w-full flex-col space-y-1.5">
+            {label && (
+              <label className="block text-xs text-ink-gray-5">{label}</label>
             )}
-          />
-        </div>
-      )}
+            <TextInput
+              type="text"
+              placeholder={placeholder}
+              value={displayValue}
+              suffix={() => (
+                <FeatherIcon name="chevron-down" className="w-4 h-4" />
+              )}
+              variant={variant}
+            />
+          </div>
+        )
+      }
       body={({ togglePopover }) => (
         <div className="absolute min-w-60 z-10 mt-2 w-fit select-none text-base text-ink-gray-9 rounded-lg bg-surface-modal shadow-2xl border border-gray-200">
           {/* Month Switcher */}
@@ -84,6 +95,20 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 onClick={prev}
                 variant="ghost"
               />
+              {!clearable && (
+                <Button
+                  className="text-xs"
+                  onClick={() => {
+                    const today = getDate();
+                    today.setHours(0, 0, 0, 0);
+                    selectDate(today, true);
+                    togglePopover();
+                  }}
+                  variant="ghost"
+                >
+                  Today
+                </Button>
+              )}
               <Button
                 className="h-7 w-7"
                 icon="chevron-right"
@@ -202,43 +227,45 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             )}
           </div>
           {/* Actions */}
-          <div className="flex justify-between p-2 gap-1 border-t border-gray-200">
-            <div className="flex gap-1">
+          {clearable && (
+            <div className="flex justify-between p-2 gap-1 border-t border-gray-200">
+              <div className="flex gap-1">
+                <Button
+                  onClick={() => {
+                    const today = getDate();
+                    today.setHours(0, 0, 0, 0);
+                    selectDate(today, true);
+                    togglePopover();
+                  }}
+                  variant="outline"
+                >
+                  Today
+                </Button>
+                <Button
+                  onClick={() => {
+                    const today = getDate();
+                    today.setDate(today.getDate() + 1);
+                    today.setHours(0, 0, 0, 0);
+                    selectDate(today, true);
+                    togglePopover();
+                  }}
+                  variant="outline"
+                >
+                  Tomorrow
+                </Button>
+              </div>
               <Button
                 onClick={() => {
-                  const today = getDate();
-                  today.setHours(0, 0, 0, 0);
-                  selectDate(today, true);
-                  togglePopover();
+                  // Clear the value
+                  onChange?.("");
+                  setOpen(false);
                 }}
                 variant="outline"
               >
-                Today
-              </Button>
-              <Button
-                onClick={() => {
-                  const today = getDate();
-                  today.setDate(today.getDate() + 1);
-                  today.setHours(0, 0, 0, 0);
-                  selectDate(today, true);
-                  togglePopover();
-                }}
-                variant="outline"
-              >
-                Tomorrow
+                Clear
               </Button>
             </div>
-            <Button
-              onClick={() => {
-                // Clear the value
-                onChange?.("");
-                setOpen(false);
-              }}
-              variant="outline"
-            >
-              Clear
-            </Button>
-          </div>
+          )}
         </div>
       )}
     />
