@@ -138,7 +138,7 @@ export const useCalendar = (
     if (activeView === "Day") setCurrentDate((d) => d.subtract(1, "day"));
   }, [activeView]);
 
-  const formatter = useCallback((val: string) => {
+  const formatter = useCallback((val: Date|string) => {
     const date = dayjs(val);
     if (activeView === "Month") {
       return date.format("MMMM YYYY");

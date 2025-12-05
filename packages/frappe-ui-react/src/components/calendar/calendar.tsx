@@ -64,13 +64,15 @@ export const Calendar = ({
   };
 
   const headerProps = {
-    currentMonthYear: currentDate.format("MMMM, YYYY"),
+    currentMonthYear:  formatter(currentDate.toDate()),
     enabledModes,
     activeView,
     decrement,
     increment,
     updateActiveView: setActiveView,
     setCalendarDate: (date: Date) => setCurrentDate(dayjs(date)),
+    currentDate,
+    formatter,
   };
 
   return (
