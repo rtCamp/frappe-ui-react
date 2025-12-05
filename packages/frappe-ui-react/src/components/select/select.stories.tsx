@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Meta, StoryObj } from "@storybook/react-vite";
-import { SelectProps } from "./types";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { SelectProps } from "./types";
 import Select from "./select";
+import { User } from "lucide-react";
 
 export default {
   title: "Components/Select",
@@ -50,6 +51,17 @@ export default {
 } as Meta<typeof Select>;
 
 const Template: StoryObj<SelectProps> = {
+  args: {
+    value: "",
+    options: [
+      { label: "John Doe", value: "john-doe" },
+      { label: "Jane Doe", value: "jane-doe" },
+      { label: "John Smith", value: "john-smith" },
+      { label: "Jane Smith", value: "jane-smith", disabled: true },
+      { label: "John Wayne", value: "john-wayne" },
+      { label: "Jane Wayne", value: "jane-wayne" },
+    ],
+  },
   render: (args) => {
     const [value, setValue] = useState(args.value || "");
 
@@ -58,16 +70,7 @@ const Template: StoryObj<SelectProps> = {
         <Select
           {...args}
           value={value}
-          prefix={() => <span>👤</span>}
           onChange={(e) => setValue(e.target.value)}
-          options={[
-            { label: "John Doe", value: "john-doe" },
-            { label: "Jane Doe", value: "jane-doe" },
-            { label: "John Smith", value: "john-smith" },
-            { label: "Jane Smith", value: "jane-smith", disabled: true },
-            { label: "John Wayne", value: "john-wayne" },
-            { label: "Jane Wayne", value: "jane-wayne" },
-          ]}
         />
       </div>
     );
@@ -76,7 +79,12 @@ const Template: StoryObj<SelectProps> = {
 
 export const Default = {
   ...Template,
+};
+
+export const WithPrefix = {
+  ...Template,
   args: {
-    value: "",
+    ...Template.args,
+    prefix: () => <User size={16} className="text-ink-gray-9" />,
   },
 };

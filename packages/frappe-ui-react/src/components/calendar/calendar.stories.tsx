@@ -2,7 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import type { CalendarConfig, CalendarEvent } from "./types";
 import { Calendar } from "./calendar";
-import TabButtons from "../tabButtons";
+import { Button } from "../button";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { Select } from "../select";
+import { DatePicker } from "../datePicker";
+import { dayjs } from "../../utils/dayjs";
 
 const meta: Meta<typeof Calendar> = {
   title: "Components/Calendar",
@@ -143,39 +147,54 @@ export const CustomHeader: Story = {
       decrement,
       increment,
       enabledModes,
-      activeView,
       updateActiveView,
+      setCalendarDate,
+      formatter,
     }) => (
-      <div className="flex items-center justify-between p-4 border-b">
-        <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold text-ink-gray-8">
-            {currentMonthYear}
-          </h1>
-          <div className="flex items-center gap-1 text-ink-gray-8">
-            <button
-              onClick={decrement}
-              className="p-2 rounded hover:bg-gray-200"
+      <div className="mb-2 w-full flex justify-between items-center py-2">
+        <DatePicker
+          formatter={formatter}
+          value={currentMonthYear}
+          onChange={(val) =>
+            setCalendarDate(dayjs(Array.isArray(val) ? val[0] : val))
+          }
+          clearable={false}
+        >
+          {({ togglePopover, displayValue }) => (
+            <Button
+              variant="ghost"
+              className="text-lg font-medium text-ink-gray-7"
+              onClick={togglePopover}
+              iconRight="chevron-down"
             >
-              Previous
-            </button>
-            <button
-              onClick={increment}
-              className="p-2 rounded hover:bg-gray-200"
-            >
-              Next
-            </button>
-          </div>
-          <TabButtons
-            buttons={enabledModes.map(
-              (mode: { id: string; label: string }) => ({
-                value: mode.id,
-                label: mode.label,
-              })
-            )}
-            value={activeView}
-            onChange={updateActiveView}
+              {displayValue}
+            </Button>
+          )}
+        </DatePicker>
+        <div className="flex gap-x-1">
+          <Button
+            onClick={decrement}
+            variant="ghost"
+            icon={() => <ChevronLeft size={16} />}
+          />
+          <Button onClick={() => setCalendarDate(new Date())} variant="ghost">
+            Today
+          </Button>
+          <Button
+            onClick={increment}
+            variant="ghost"
+            icon={() => <ChevronRight size={16} />}
           />
         </div>
+        <Select
+          onChange={(e) => updateActiveView(e.target.value)}
+          options={enabledModes.map((mode: { id: string; label: string }) => ({
+            value: mode.id,
+            label: mode.label,
+          }))}
+          variant="ghost"
+          prefix={() => <ChevronDown size={16} className="text-ink-gray-4" />}
+        />
       </div>
     ),
   },

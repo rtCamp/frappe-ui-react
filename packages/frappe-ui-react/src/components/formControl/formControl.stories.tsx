@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import FormControl from "./formControl";
 import FeatherIcon from "../featherIcon";
 import { useState } from "react";
+import { Avatar } from "../avatar";
 
 const meta: Meta<typeof FormControl> = {
   title: "Components/FormControl",
@@ -184,10 +185,33 @@ export const Checkbox: Story = {
   },
 };
 
-export const WithPrefixIcon: Story = {
+export const PrefixSlotIcon: Story = {
   args: {
     type: "text",
     placeholder: "",
     prefix: () => <FeatherIcon className="w-4" name="search" />,
+  },
+};
+
+export const SuffixSlotIcon: Story = {
+  args: {
+    type: "text",
+    placeholder: "",
+    suffix: () => <FeatherIcon className="w-4" name="search" />,
+  },
+};
+
+export const PrefixSlotAvatar: Story = {
+  args: {
+    type: "text",
+    placeholder: "",
+    prefix: () => (
+      <Avatar
+        label="EY"
+        size="sm"
+        shape="circle"
+        image="https://avatars.githubusercontent.com/u/499550?s=60&v=4"
+      />
+    ),
   },
 };
