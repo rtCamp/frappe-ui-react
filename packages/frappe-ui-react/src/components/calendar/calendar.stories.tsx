@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { CalendarConfig, CalendarEvent } from "./types";
 import { Calendar } from "./calendar";
 import { Button } from "../button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { Select } from "../select";
 
 const meta: Meta<typeof Calendar> = {
@@ -173,6 +173,8 @@ export const CustomHeader: Story = {
             value: mode.id,
             label: mode.label,
           }))}
+          variant="ghost"
+          prefix={() => <ChevronDown size={16} className="text-ink-gray-4"/>}
         />
       </div>
     ),

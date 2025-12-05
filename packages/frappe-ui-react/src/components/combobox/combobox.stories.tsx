@@ -94,6 +94,17 @@ const groupedOptions = [
     options: [
       { label: "Carrot", value: "carrot", icon: <span>🥕</span> },
       { label: "Broccoli", value: "broccoli", icon: <span>🥦</span> },
+      { label: "Tomato", value: "tomato", icon: <span>🍅</span> },
+      { label: "Lettuce", value: "lettuce", icon: <span>🥬</span> },
+    ],
+  },
+  {
+    group: "Proteins",
+    options: [
+      { label: "Chicken", value: "chicken", icon: <span>🍗</span> },
+      { label: "Fish", value: "fish", icon: <span>🐟</span> },
+      { label: "Beef", value: "beef", icon: <span>🥩</span> },
+      { label: "Tofu", value: "tofu", icon: <span>🪤</span>, disabled: true },
     ],
   },
 ];

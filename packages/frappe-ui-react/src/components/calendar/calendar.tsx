@@ -107,6 +107,7 @@ export const Calendar = ({
                 )}
                 value={activeView}
                 onChange={(value) => setActiveView(String(value))}
+                className="ml-2"
               />
             </div>
           </div>
