@@ -79,7 +79,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       show={open}
       onUpdateShow={handleOpenChange}
       target={() => (
-        <div className="flex flex-col space-y-1.5">
+        <div className="flex w-full flex-col space-y-1.5">
           {label && (
             <label className="block text-xs text-ink-gray-5">{label}</label>
           )}
