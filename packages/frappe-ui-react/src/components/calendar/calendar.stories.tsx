@@ -5,6 +5,8 @@ import { Calendar } from "./calendar";
 import { Button } from "../button";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { Select } from "../select";
+import { DatePicker } from "../datePicker";
+import { dayjs } from "../../utils/dayjs";
 
 const meta: Meta<typeof Calendar> = {
   title: "Components/Calendar",
@@ -147,11 +149,28 @@ export const CustomHeader: Story = {
       enabledModes,
       updateActiveView,
       setCalendarDate,
+      formatter,
     }) => (
       <div className="mb-2 w-full flex justify-between items-center py-2">
-        <span className="text-lg font-medium text-ink-gray-8">
-          {currentMonthYear}
-        </span>
+        <DatePicker
+          formatter={formatter}
+          value={currentMonthYear}
+          onChange={(val) =>
+            setCalendarDate(dayjs(Array.isArray(val) ? val[0] : val))
+          }
+          clearable={false}
+        >
+          {({ togglePopover, displayValue }) => (
+            <Button
+              variant="ghost"
+              className="text-lg font-medium text-ink-gray-7"
+              onClick={togglePopover}
+              iconRight="chevron-down"
+            >
+              {displayValue}
+            </Button>
+          )}
+        </DatePicker>
         <div className="flex gap-x-1">
           <Button
             onClick={decrement}
@@ -174,7 +193,7 @@ export const CustomHeader: Story = {
             label: mode.label,
           }))}
           variant="ghost"
-          prefix={() => <ChevronDown size={16} className="text-ink-gray-4"/>}
+          prefix={() => <ChevronDown size={16} className="text-ink-gray-4" />}
         />
       </div>
     ),
