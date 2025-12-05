@@ -227,6 +227,7 @@ export const DateRangePicker: React.FC<DatePickerProps> = ({
                 variant="ghost"
               />
               <Button
+                className="text-xs"
                 variant="ghost"
                 onClick={() => {
                   handleToday();
@@ -371,17 +372,19 @@ export const DateRangePicker: React.FC<DatePickerProps> = ({
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end p-2 gap-1 border-t border-gray-200">
-            <Button
-              onClick={() => {
-                clearDates();
-                togglePopover();
-              }}
-              variant="outline"
-            >
-              Clear
-            </Button>
-          </div>
+          {fromDate && toDate && (
+            <div className="flex justify-end p-2 gap-1 border-t border-gray-200">
+              <Button
+                onClick={() => {
+                  clearDates();
+                  togglePopover();
+                }}
+                variant="outline"
+              >
+                Clear
+              </Button>
+            </div>
+          )}
         </div>
       )}
     />
