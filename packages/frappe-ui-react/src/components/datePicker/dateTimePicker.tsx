@@ -13,7 +13,9 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   formatter,
   placement,
   label,
+  clearable = true,
   onChange,
+  children,
 }) => {
   const [timeDropdownOpen, setTimeDropdownOpen] = useState(false);
   const handleChange = useMemo(() => {
@@ -78,21 +80,29 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       placement={placement || "bottom-start"}
       show={open}
       onUpdateShow={handleOpenChange}
-      target={() => (
-        <div className="flex w-full flex-col space-y-1.5">
-          {label && (
-            <label className="block text-xs text-ink-gray-5">{label}</label>
-          )}
-          <TextInput
-            type="text"
-            placeholder={placeholder}
-            value={formattedDisplayValue}
-            suffix={() => (
-              <FeatherIcon name="chevron-down" className="w-4 h-4" />
+      target={({ togglePopover }) =>
+        children ? (
+          children({
+            togglePopover,
+            isOpen: open,
+            displayValue: formattedDisplayValue,
+          })
+        ) : (
+          <div className="flex w-full flex-col space-y-1.5">
+            {label && (
+              <label className="block text-xs text-ink-gray-5">{label}</label>
             )}
-          />
-        </div>
-      )}
+            <TextInput
+              type="text"
+              placeholder={placeholder}
+              value={formattedDisplayValue}
+              suffix={() => (
+                <FeatherIcon name="chevron-down" className="w-4 h-4" />
+              )}
+            />
+          </div>
+        )
+      }
       body={() => (
         <div className="absolute min-w-60 z-10 mt-2 w-fit select-none text-base text-ink-gray-9 rounded-lg bg-surface-modal shadow-2xl border border-gray-200">
           {/* Header (Month/Year navigation) */}
@@ -114,6 +124,15 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                 onClick={prev}
                 variant="ghost"
               />
+              {!clearable && (
+                <Button
+                  className="text-xs"
+                  variant="outline"
+                  onClick={selectNow}
+                >
+                  Now
+                </Button>
+              )}
               <Button
                 className="h-7 w-7"
                 icon="chevron-right"
@@ -289,21 +308,23 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-between gap-1 p-2 border-t border-gray-200">
-            <div className="flex gap-1">
-              <Button variant="outline" onClick={selectNow}>
-                Now
-              </Button>
-              <Button variant="outline" onClick={selectTomorrow}>
-                Tomorrow
-              </Button>
+          {clearable && (
+            <div className="flex items-center justify-between gap-1 p-2 border-t border-gray-200">
+              <div className="flex gap-1">
+                <Button variant="outline" onClick={selectNow}>
+                  Now
+                </Button>
+                <Button variant="outline" onClick={selectTomorrow}>
+                  Tomorrow
+                </Button>
+              </div>
+              {(dateValue || timeValue) && (
+                <Button size="sm" variant="outline" onClick={clearValue}>
+                  Clear
+                </Button>
+              )}
             </div>
-            {(dateValue || timeValue) && (
-              <Button size="sm" variant="outline" onClick={clearValue}>
-                Clear
-              </Button>
-            )}
-          </div>
+          )}
         </div>
       )}
     />

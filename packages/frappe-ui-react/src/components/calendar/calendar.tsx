@@ -11,6 +11,7 @@ import NewEventModal from "./newEventModalContent";
 import { useCalendar } from "./hooks/useCalendar";
 import TabButtons from "../tabButtons";
 import { dayjs } from "../../utils/dayjs";
+import { DatePicker } from "../datePicker";
 
 interface CalendarProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,6 +42,7 @@ export const Calendar = ({
     decrement,
     setShowEventModal,
     setCurrentDate,
+    formatter,
   } = actions;
   const enabledModes = [
     { id: "Day", label: "Day" },
@@ -78,9 +80,25 @@ export const Calendar = ({
           <CustomHeader {...headerProps} />
         ) : (
           <div className="flex w-full items-center justify-between gap-4 py-2">
-            <h1 className="text-xl font-bold text-ink-gray-8">
-              {headerProps.currentMonthYear}
-            </h1>
+            <DatePicker
+              formatter={formatter}
+              value={currentDate.format("YYYY-MM-DD")}
+              onChange={(val) =>
+                setCurrentDate(dayjs(Array.isArray(val) ? val[0] : val))
+              }
+              clearable={false}
+            >
+              {({ togglePopover, displayValue }) => (
+                <Button
+                  variant="ghost"
+                  className="text-lg font-medium text-ink-gray-7"
+                  onClick={togglePopover}
+                  iconRight="chevron-down"
+                >
+                  {displayValue}
+                </Button>
+              )}
+            </DatePicker>
             <div className="flex gap-x-1">
               <Button
                 onClick={decrement}

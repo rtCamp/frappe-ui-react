@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
-import type { DatePickerProps } from "./types";
+import type { DateRangePickerProps } from "./types";
 import { useDatePicker } from "./useDatePicker";
 import { getDate, getDateValue } from "./utils";
 import { Popover } from "../popover";
@@ -135,12 +135,14 @@ function useDateRangePicker({
   };
 }
 
-export const DateRangePicker: React.FC<DatePickerProps> = ({
+export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   value,
   placeholder,
+  formatter,
   placement,
   label,
   onChange,
+  children,
 }) => {
   const {
     open,
@@ -183,28 +185,35 @@ export const DateRangePicker: React.FC<DatePickerProps> = ({
       placement={placement || "bottom-start"}
       show={open}
       onUpdateShow={handleOpenChange}
-      target={() => (
-        <div className="flex w-full flex-col space-y-1.5">
-          {label && (
-            <label className="block text-xs text-ink-gray-5">{label}</label>
-          )}
-          <TextInput
-            type="text"
-            placeholder={placeholder}
-            value={(() => {
-              const from = fromDate ? fromDate.slice(0, 10) : "";
-              const to = toDate ? toDate.slice(0, 10) : "";
-              console.log("Displaying value:", { from, to });
-              if (from && to) return `${from} to ${to}`;
-              if (from) return from;
-              return "";
-            })()}
-            suffix={() => (
-              <FeatherIcon name="chevron-down" className="w-4 h-4" />
+      target={({ togglePopover }) => {
+        const from = fromDate ? fromDate.slice(0, 10) : "";
+        const to = toDate ? toDate.slice(0, 10) : "";
+        const displayValue = formatter
+          ? formatter(from, to)
+          : from && to
+            ? `${from} to ${to}`
+            : from || "";
+
+        if (children) {
+          return children({ togglePopover, isOpen: open, displayValue });
+        }
+
+        return (
+          <div className="flex w-full flex-col space-y-1.5">
+            {label && (
+              <label className="block text-xs text-ink-gray-5">{label}</label>
             )}
-          />
-        </div>
-      )}
+            <TextInput
+              type="text"
+              placeholder={placeholder}
+              value={displayValue}
+              suffix={() => (
+                <FeatherIcon name="chevron-down" className="w-4 h-4" />
+              )}
+            />
+          </div>
+        );
+      }}
       body={({ togglePopover }) => (
         <div className="absolute min-w-60 z-10 mt-2 w-fit select-none text-base text-ink-gray-9 rounded-lg bg-surface-modal shadow-2xl border border-gray-200">
           {/* Month Switcher */}
