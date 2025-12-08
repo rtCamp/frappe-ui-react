@@ -7,6 +7,7 @@ import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { Select } from "../select";
 import { DatePicker } from "../datePicker";
 import { dayjs } from "../../utils/dayjs";
+import { action } from "storybook/actions";
 
 const meta: Meta<typeof Calendar> = {
   title: "Components/Calendar",
@@ -126,9 +127,12 @@ export const Default: Story = {
   args: {
     config: {
       ...config,
-      createNewEvent: (event: CalendarEvent) => console.log("Create Event", event),
-      updateEventState: (event: CalendarEvent) => console.log("Update Event", event),
-      deleteEvent: (eventId: string|number) => console.log("Delete Event", eventId),
+      createNewEvent: (event: CalendarEvent) =>
+        console.log("Create Event", event),
+      updateEventState: (event: CalendarEvent) =>
+        console.log("Update Event", event),
+      deleteEvent: (eventId: string | number) =>
+        console.log("Delete Event", eventId),
     },
     events,
   },
@@ -210,15 +214,9 @@ export const CustomClickEvents: Story = {
     config: {
       ...config,
       allowCustomClickEvents: true,
-      onClick: () => {
-        console.log("Cell clicked");
-      },
-      onDblClick: () => {
-        console.log("Cell double clicked");
-      },
-      onCellDblClick: () => {
-        console.log("Cell double clicked");
-      },
+      onClick: () => action("Cell clicked")(),
+      onDblClick: () => action("Cell double clicked")(),
+      onCellDblClick: () => action("Cell double clicked")(),
     },
     events,
   },

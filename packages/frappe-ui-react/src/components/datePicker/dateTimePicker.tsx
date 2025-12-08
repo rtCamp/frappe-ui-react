@@ -264,7 +264,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
               placement="bottom-start"
               show={timeDropdownOpen}
               onUpdateShow={setTimeDropdownOpen}
-              className="w-full"
+              className="w-full [&>*>*]:w-full"
               target={() => (
                 <TextInput
                   type="text"
@@ -273,7 +273,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                   suffix={() => (
                     <FeatherIcon name="chevron-down" className="w-4 h-4" />
                   )}
-                  className="w-full"
                 />
               )}
               body={() => (

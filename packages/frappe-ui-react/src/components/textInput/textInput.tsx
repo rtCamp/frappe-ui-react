@@ -150,8 +150,8 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           required={rest.required}
           onChange={handleChange}
           data-testid="text-input"
-          {...rest}
           className={`appearance-none ${inputClasses}`}
+          {...rest}
         />
         {suffix && (
           <div

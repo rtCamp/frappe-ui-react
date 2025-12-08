@@ -71,7 +71,6 @@ export const Calendar = ({
     increment,
     updateActiveView: setActiveView,
     setCalendarDate: (date: Date) => setCurrentDate(dayjs(date)),
-    currentDate,
     formatter,
   };
 
