@@ -60,7 +60,7 @@ function useDateRangePicker({
     } else if (fromDate && !toDate) {
       setToDate(v);
       swapDatesIfNecessary(fromDate, v);
-      onChange?.([fromDate, toDate]);
+      onChange?.([fromDate, v]);
       return true;
     } else {
       setFromDate(v);

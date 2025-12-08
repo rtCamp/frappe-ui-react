@@ -4,7 +4,6 @@ import type { CalendarConfig, CalendarEvent } from "../types";
 import { getCalendarDates, parseDate } from "../calendarUtils";
 import { dayjs } from "../../../utils/dayjs";
 
- 
 export const useCalendar = (
   initialConfig: Partial<CalendarConfig>,
   initialEvents: any[]
@@ -138,26 +137,31 @@ export const useCalendar = (
     if (activeView === "Day") setCurrentDate((d) => d.subtract(1, "day"));
   }, [activeView]);
 
-  const formatter = useCallback((val: Date|string) => {
-    const date = dayjs(val);
-    if (activeView === "Month") {
-      return date.format("MMMM YYYY");
-    } else if (activeView === "Week") {
-      const weekStart = datesInWeeks[weekIndex]?.[0];
-      const weekEnd = datesInWeeks[weekIndex]?.[6];
-      if (weekStart && weekEnd) {
-        const startMonth = dayjs(weekStart).month();
-        const endMonth = dayjs(weekEnd).month();
-        if (startMonth === endMonth) {
-          return dayjs(weekStart).format("MMMM YYYY");
+  const formatter = useCallback(
+    (val: Date | string) => {
+      const date = dayjs(val);
+      if (activeView === "Month") {
+        return date.format("MMMM YYYY");
+      } else if (activeView === "Week") {
+        const weekStart = datesInWeeks[weekIndex]?.[0];
+        const weekEnd = datesInWeeks[weekIndex]?.[6];
+        if (weekStart && weekEnd) {
+          const startMonth = dayjs(weekStart).month();
+          const endMonth = dayjs(weekEnd).month();
+          if (startMonth === endMonth) {
+            return dayjs(weekStart).format("MMMM YYYY");
+          }
+          return `${dayjs(weekStart).format("MMM")} - ${dayjs(weekEnd).format(
+            "MMM YYYY"
+          )}`;
         }
-        return `${dayjs(weekStart).format("MMM")} - ${dayjs(weekEnd).format("MMM YYYY")}`;
+        return date.format("MMMM YYYY");
+      } else {
+        return date.format("ddd, D MMM YYYY");
       }
-      return date.format("MMMM YYYY");
-    } else {
-      return date.format("ddd, D MMM YYYY");
-    }
-  }, [activeView, datesInWeeks, weekIndex]);
+    },
+    [activeView, datesInWeeks, weekIndex]
+  );
 
   useEffect(() => {
     if (!config.enableShortcuts) return;

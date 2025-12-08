@@ -144,7 +144,7 @@ export const SimpleStringOptions: Story = {
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState<string|null>("");
+    const [val, setVal] = React.useState<string | null>("");
     return (
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">Simple Options</label>
@@ -165,7 +165,7 @@ export const ObjectOptions: Story = {
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState<string|null>("");
+    const [val, setVal] = React.useState<string | null>("");
     return (
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">Object Options</label>
@@ -187,7 +187,7 @@ export const WithIcons: Story = {
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState<string|null>("");
+    const [val, setVal] = React.useState<string | null>("");
     return (
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">
@@ -211,7 +211,7 @@ export const Grouped: Story = {
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState<string|null>("");
+    const [val, setVal] = React.useState<string | null>("");
     return (
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">
@@ -253,7 +253,7 @@ export const PreselectedValue: Story = {
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState<string|null>("john-doe");
+    const [val, setVal] = React.useState<string | null>("john-doe");
     return (
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">
@@ -293,7 +293,7 @@ export const ComplexObject: Story = {
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState<string|null>("");
+    const [val, setVal] = React.useState<string | null>("");
     const selected = complexObjects.find((o) => o.value === val);
     return (
       <div className="flex flex-col w-80">
