@@ -119,7 +119,6 @@ export const Combobox: React.FC<ComboboxProps> = ({
             `}
             displayValue={displayValue}
             placeholder={placeholder}
-            value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() =>
               setQuery(selectedOption ? getLabel(selectedOption) : "")
