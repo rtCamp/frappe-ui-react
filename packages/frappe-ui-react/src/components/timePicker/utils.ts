@@ -43,7 +43,7 @@ export const parseFlexibleTimeHelper = (input: string): ParsedTime => {
 
 /**
  * Normalizes time strings to standard 24-hour format (HH:MM or HH:MM:SS) during initialization.
- * If already in correct format, returns as-is for performance, otherwise uses flexible parser.
+ * If already in correct format, returns as-is otherwise uses flexible parser.
  *
  * @param raw - Raw time string from external source
  * @returns Normalized time string in HH:MM or HH:MM:SS format, or empty string if invalid

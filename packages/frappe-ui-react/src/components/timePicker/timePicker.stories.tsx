@@ -86,7 +86,7 @@ export default {
         type: "dynamic",
       },
     },
-	layout: "centered",
+    layout: "centered",
   },
   tags: ["autodocs"],
 } as Meta<typeof TimePicker>;
@@ -100,9 +100,7 @@ export const Basic: Story = {
     return (
       <div className="p-2 space-y-2">
         <TimePicker {...args} value={value} onChange={setValue} />
-        <div className="text-xs text-ink-gray-6">
-          Value: {value || "—"}
-        </div>
+        <div className="text-xs text-ink-gray-6">Value: {value || "—"}</div>
       </div>
     );
   },

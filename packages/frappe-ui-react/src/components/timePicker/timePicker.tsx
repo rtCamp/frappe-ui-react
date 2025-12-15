@@ -73,8 +73,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
   });
 
   const getButtonClasses = (opt: Option, idx: number): string => {
-    if (idx === highlightIndex)
-      return "bg-surface-gray-3 text-ink-gray-8";
+    if (idx === highlightIndex) return "bg-surface-gray-3 text-ink-gray-8";
     const { selected, nearest } = selectedAndNearest;
     if (isTyping && !selected) {
       if (nearest && nearest.value === opt.value)
@@ -108,8 +107,10 @@ const TimePicker: React.FC<TimePickerProps> = ({
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
             if (e.key === "Enter") handleEnter(e);
             else if (e.key === "Escape") handleEscape(e);
-            else if (e.key === "ArrowDown") handleArrowDown(e, togglePopover, isOpen);
-            else if (e.key === "ArrowUp") handleArrowUp(e, togglePopover, isOpen);
+            else if (e.key === "ArrowDown")
+              handleArrowDown(e, togglePopover, isOpen);
+            else if (e.key === "ArrowUp")
+              handleArrowUp(e, togglePopover, isOpen);
           }}
           onBlur={handleBlur}
           prefix={prefix}
