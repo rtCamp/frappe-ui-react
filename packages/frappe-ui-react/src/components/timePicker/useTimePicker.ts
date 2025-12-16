@@ -1,4 +1,11 @@
-import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+  useId,
+} from "react";
 import type { Option, TimePickerProps } from "./types";
 import {
   findNearestIndex,
@@ -42,7 +49,7 @@ export function useTimePicker({
   const navUpdatingRef = useRef(false);
   const initHighlightRef = useRef<() => void>(() => {});
   const scheduleScrollRef = useRef<(targetIndex?: number) => void>(() => {});
-  const uid = useMemo(() => Math.random().toString(36).slice(2, 9), []);
+  const uid = useId();
 
   const minMinutes = useMemo(() => minutesFromHHMM(minTime), [minTime]);
   const maxMinutes = useMemo(() => minutesFromHHMM(maxTime), [maxTime]);
@@ -175,23 +182,36 @@ export function useTimePicker({
     [applyValue, autoClose]
   );
 
-  const selectedAndNearest = useMemo(() => {
+  const getTargetOption = useCallback((valueToMatch: string) => {
     const list = displayedOptions;
-    if (!list.length) return { selected: null, nearest: null };
+    if (!list.length || !valueToMatch) return null;
 
-    const candidate = isTyping ? normalize24(displayValue) : internalValue;
-    if (!candidate) return { selected: null, nearest: null };
-
+    const candidate = normalize24(valueToMatch);
     const candidateBase = getBaseTime(candidate);
-    const selected = list.find((o) => o.value === candidateBase) || null;
-    if (selected) return { selected, nearest: null };
+    const selected = list.find((o) => o.value === candidateBase);
+    if (selected) return selected;
 
     const parsed = parseFlexibleTimeHelper(candidate);
-    if (!parsed.valid) return { selected: null, nearest: null };
+    if (!parsed.valid) return null;
 
     const idx = findNearestIndex(parsed.total, list);
-    return { selected: null, nearest: idx > -1 ? list[idx] : null };
-  }, [displayedOptions, displayValue, isTyping, internalValue, getBaseTime]);
+    return idx > -1 ? list[idx] : null;
+  }, [displayedOptions, getBaseTime]);
+
+  const selectedAndNearest = useMemo(() => {
+    const candidate = isTyping ? displayValue : internalValue;
+    if (!candidate) return { selected: null, nearest: null };
+
+    const target = getTargetOption(candidate);
+    if (!target) return { selected: null, nearest: null };
+
+    const candidateBase = getBaseTime(normalize24(candidate));
+    const isExactMatch = target.value === candidateBase;
+    
+    return isExactMatch 
+      ? { selected: target, nearest: null }
+      : { selected: null, nearest: target };
+  }, [displayValue, isTyping, internalValue, getTargetOption, getBaseTime]);
 
   const initHighlight = useCallback(() => {
     const { selected, nearest } = selectedAndNearest;
@@ -208,17 +228,17 @@ export function useTimePicker({
     initHighlightRef.current = initHighlight;
   }, [initHighlight]);
 
-  const scheduleScroll = useCallback((targetIndex?: number) => {
+  const scheduleScroll = useCallback((targetIndex?: number, explicitValue?: string) => {
     requestAnimationFrame(() => {
       if (!panelRef.current || !showOptions) return;
       
-      const indexToUse = targetIndex ?? highlightIndex;
       let targetEl: HTMLElement | null = null;
       
-      if (indexToUse > -1) {
-        targetEl = panelRef.current.querySelector(`[data-index="${indexToUse}"]`);
+      if (targetIndex !== undefined && targetIndex > -1) {
+        targetEl = panelRef.current.querySelector(`[data-index="${targetIndex}"]`);
       } else {
-        const target = selectedAndNearest.selected || selectedAndNearest.nearest;
+        const valueToMatch = explicitValue ?? (isTyping ? displayValue : internalValue);
+        const target = getTargetOption(valueToMatch);
         if (target) {
           targetEl = panelRef.current.querySelector(`[data-value="${target.value}"]`);
         }
@@ -226,7 +246,7 @@ export function useTimePicker({
       
       targetEl?.scrollIntoView({ block: scrollMode });
     });
-  }, [highlightIndex, selectedAndNearest, showOptions, scrollMode]);
+  }, [showOptions, scrollMode, isTyping, displayValue, internalValue, getTargetOption]);
 
   useEffect(() => {
     scheduleScrollRef.current = scheduleScroll;
@@ -353,7 +373,9 @@ export function useTimePicker({
       
       if (navUpdatingRef.current) return;
       
-      if (showOptions) scheduleScroll();
+      if (showOptions) {
+        scheduleScroll(undefined, newValue);
+      }
       setIsTyping(true);
       setHighlightIndex(-1);
     },
@@ -369,11 +391,11 @@ export function useTimePicker({
     if (navUpdatingRef.current) {
       return;
     }
-    if (normalized !== internalValue) {
+    if (normalized !== internalValue && !isTyping) {
       setInternalValue(normalized);
       setDisplayValue(formatDisplay(normalized, use12Hour));
     }
-  }, [value, internalValue, use12Hour]);
+  }, [value, internalValue, use12Hour, isTyping]);
 
   useEffect(() => {
     if (showOptions) {
