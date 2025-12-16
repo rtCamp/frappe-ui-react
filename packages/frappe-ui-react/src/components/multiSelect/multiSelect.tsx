@@ -65,8 +65,15 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
 
   const selectAll = () => {
     setQuery("");
-    const allValues = options.map((opt) => opt.value);
+    const allValues = options.filter((opt) => !opt.disabled).map((opt) => opt.value);
     onChange?.(allValues);
+  };
+
+  const clearSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setQuery("");
+    searchInputRef.current?.focus();
   };
 
   const handleChange = (newValue: MultiSelectOption[]) => {
@@ -120,7 +127,16 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                     {loading && (
                       <LoadingIndicator className="size-4 text-ink-gray-5" />
                     )}
-                    <X className="size-4 text-ink-gray-9" />
+                    {query && (
+                      <button
+                        type="button"
+                        aria-label="Clear search"
+                        className="p-0 m-0 bg-transparent border-0 cursor-pointer hover:opacity-70 transition-opacity"
+                        onClick={clearSearch}
+                      >
+                        <X className="size-4 text-ink-gray-9" />
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
