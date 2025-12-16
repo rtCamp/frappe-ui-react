@@ -18,6 +18,7 @@ export * from "./errorMessage";
 export * from "./fileUploader";
 export * from "./formControl";
 export * from "./gridLayout";
+export * from "./dashboard";
 export * from "./hooks";
 export * from "./listview";
 export * from "./password";

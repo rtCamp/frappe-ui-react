@@ -82,6 +82,7 @@
     "*.yml": "prettier --write"
   },
   "dependencies": {
-    "react-docgen-typescript": "^2.4.0"
+    "react-docgen-typescript": "^2.4.0",
+    "react-grid-layout": "^2.1.0"
   }
 }

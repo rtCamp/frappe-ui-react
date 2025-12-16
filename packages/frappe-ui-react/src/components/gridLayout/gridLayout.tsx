@@ -1,9 +1,13 @@
 import React, { useState, useMemo, useEffect, ReactNode } from "react";
-import { Responsive, WidthProvider, Layout, Layouts } from "react-grid-layout";
+// react-grid-layout's type definitions use `export =` syntax, but the runtime
+// supports named exports. We rely on the runtime shape here.
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error react-grid-layout type definitions don't expose named exports
+import { Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 
-import type { GridLayoutProps } from "./types";
+import type { GridLayoutProps, Layouts, Layout } from "./types";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -54,9 +58,7 @@ const GridLayout: React.FC<MyGridLayoutProps> = ({
       breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
       {...options}
     >
-      {Object.values(layout)
-        .flat()
-        .map((l, index) => (
+      {(Object.values(layout).flat() as Layout[]).map((l, index) => (
           <div key={l.i} data-grid={l}>
             {layoutReady &&
               renderItem({
