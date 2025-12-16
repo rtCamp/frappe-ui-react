@@ -1,4 +1,4 @@
-import { Option } from "./types";
+import { TimePickerOption } from "./types";
 import { ParsedTime } from "./types";
 
 /**
@@ -155,7 +155,7 @@ export const formatDisplay = (val24: string, use12Hr: boolean): string => {
  */
 export function findNearestIndex(
   targetMinutes: number,
-  list: Option[]
+  list: TimePickerOption[]
 ): number {
   if (!list.length) return -1;
   const minutesArr = list.map((o) => {

@@ -6,7 +6,7 @@ import {
   useCallback,
   useId,
 } from "react";
-import type { Option, TimePickerProps } from "./types";
+import type { TimePickerOption, TimePickerProps } from "./types";
 import {
   findNearestIndex,
   formatDisplay,
@@ -76,7 +76,7 @@ export function useTimePicker({
     });
   }, []);
 
-  const displayedOptions = useMemo<Option[]>(() => {
+  const displayedOptions = useMemo<TimePickerOption[]>(() => {
     if (options.length) {
       return options.map((o) => {
         const val = normalize24(o.value);
@@ -87,7 +87,7 @@ export function useTimePicker({
       });
     }
 
-    const out: Option[] = [];
+    const out: TimePickerOption[] = [];
     for (let m = 0; m < 1440; m += interval) {
       if (minMinutes != null && m < minMinutes) continue;
       if (maxMinutes != null && m > maxMinutes) continue;
@@ -110,7 +110,7 @@ export function useTimePicker({
    * @param valueToMatch - Time value to match against options
    * @returns Matching or nearest option, or null if not found
    */
-  const getTargetOption = useCallback((valueToMatch: string): Option | null => {
+  const getTargetOption = useCallback((valueToMatch: string): TimePickerOption | null => {
     const list = displayedOptions;
     if (!list.length || !valueToMatch) return null;
 
@@ -129,7 +129,7 @@ export function useTimePicker({
   /**
    * Determines which option should be highlighted
    */
-  const selectedAndNearest = useMemo((): { selected: Option | null; nearest: Option | null } => {
+  const selectedAndNearest = useMemo((): { selected: TimePickerOption | null; nearest: TimePickerOption | null } => {
     const candidate = isTyping ? displayValue : internalValue;
     if (!candidate) return { selected: null, nearest: null };
 

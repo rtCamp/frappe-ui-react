@@ -9,7 +9,7 @@ import React from "react";
 import Popover from "../popover/popover";
 import TextInput from "../textInput/textInput";
 import FeatherIcon from "../featherIcon";
-import type { TimePickerProps, Option } from "./types";
+import type { TimePickerProps, TimePickerOption } from "./types";
 import { useTimePicker } from "./useTimePicker";
 
 const TimePicker: React.FC<TimePickerProps> = ({
@@ -72,7 +72,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
     maxTime,
   });
 
-  const getButtonClasses = (opt: Option, idx: number): string => {
+  const getButtonClasses = (opt: TimePickerOption, idx: number): string => {
     if (idx === highlightIndex) return "bg-surface-gray-3 text-ink-gray-8";
     const { selected, nearest } = selectedAndNearest;
     if (isTyping && !selected) {

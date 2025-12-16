@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import type { Placement } from "@popperjs/core";
 
-export interface Option {
+export interface TimePickerOption {
   value: string;
   label: string;
 }
