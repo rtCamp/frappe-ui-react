@@ -54,6 +54,11 @@ export function useTimePicker({
   const minMinutes = useMemo(() => minutesFromHHMM(minTime), [minTime]);
   const maxMinutes = useMemo(() => minutesFromHHMM(maxTime), [maxTime]);
 
+  /**
+   * Strips seconds from HH:MM:SS format
+   * @param time - Time string in HH:MM or HH:MM:SS format
+   * @returns Time string in HH:MM format
+   */
   const getBaseTime = useCallback((time: string): string => {
     return time.length === 8 ? time.slice(0, 5) : time;
   }, []);
@@ -99,6 +104,46 @@ export function useTimePicker({
     return out;
   }, [options, interval, minMinutes, maxMinutes, use12Hour]);
 
+  /**
+   * Finds the option that matches or is nearest to the given value.
+   * Returns exact match if exists, otherwise returns nearest option by time.
+   * @param valueToMatch - Time value to match against options
+   * @returns Matching or nearest option, or null if not found
+   */
+  const getTargetOption = useCallback((valueToMatch: string): Option | null => {
+    const list = displayedOptions;
+    if (!list.length || !valueToMatch) return null;
+
+    const candidate = normalize24(valueToMatch);
+    const candidateBase = getBaseTime(candidate);
+    const selected = list.find((o) => o.value === candidateBase);
+    if (selected) return selected;
+
+    const parsed = parseFlexibleTimeHelper(candidate);
+    if (!parsed.valid) return null;
+
+    const idx = findNearestIndex(parsed.total, list);
+    return idx > -1 ? list[idx] : null;
+  }, [displayedOptions, getBaseTime]);
+
+  /**
+   * Determines which option should be highlighted
+   */
+  const selectedAndNearest = useMemo((): { selected: Option | null; nearest: Option | null } => {
+    const candidate = isTyping ? displayValue : internalValue;
+    if (!candidate) return { selected: null, nearest: null };
+
+    const target = getTargetOption(candidate);
+    if (!target) return { selected: null, nearest: null };
+
+    const candidateBase = getBaseTime(normalize24(candidate));
+    const isExactMatch = target.value === candidateBase;
+    
+    return isExactMatch 
+      ? { selected: target, nearest: null }
+      : { selected: null, nearest: target };
+  }, [displayValue, isTyping, internalValue, getTargetOption, getBaseTime]);
+
   const isOutOfRange = useCallback(
     (totalMinutes: number): boolean => {
       if (minMinutes != null && totalMinutes < minMinutes) return true;
@@ -118,6 +163,11 @@ export function useTimePicker({
     [invalidState, onInvalidChange]
   );
 
+  /**
+   * Updates internal state and optionally calls onChange.
+   * @param val24 - Time value in 24-hour format
+   * @param commit - If true, always calls onChange. If false, only calls when not focused.
+   */
   const applyValue = useCallback(
     (val24: string, commit = false) => {
       setInternalValue(val24);
@@ -182,37 +232,6 @@ export function useTimePicker({
     [applyValue, autoClose]
   );
 
-  const getTargetOption = useCallback((valueToMatch: string) => {
-    const list = displayedOptions;
-    if (!list.length || !valueToMatch) return null;
-
-    const candidate = normalize24(valueToMatch);
-    const candidateBase = getBaseTime(candidate);
-    const selected = list.find((o) => o.value === candidateBase);
-    if (selected) return selected;
-
-    const parsed = parseFlexibleTimeHelper(candidate);
-    if (!parsed.valid) return null;
-
-    const idx = findNearestIndex(parsed.total, list);
-    return idx > -1 ? list[idx] : null;
-  }, [displayedOptions, getBaseTime]);
-
-  const selectedAndNearest = useMemo(() => {
-    const candidate = isTyping ? displayValue : internalValue;
-    if (!candidate) return { selected: null, nearest: null };
-
-    const target = getTargetOption(candidate);
-    if (!target) return { selected: null, nearest: null };
-
-    const candidateBase = getBaseTime(normalize24(candidate));
-    const isExactMatch = target.value === candidateBase;
-    
-    return isExactMatch 
-      ? { selected: target, nearest: null }
-      : { selected: null, nearest: target };
-  }, [displayValue, isTyping, internalValue, getTargetOption, getBaseTime]);
-
   const initHighlight = useCallback(() => {
     const { selected, nearest } = selectedAndNearest;
     const target = selected || nearest;
@@ -224,10 +243,11 @@ export function useTimePicker({
     setHighlightIndex(idx);
   }, [selectedAndNearest, displayedOptions]);
 
-  useEffect(() => {
-    initHighlightRef.current = initHighlight;
-  }, [initHighlight]);
-
+  /**
+   * Scrolls the dropdown to show the target option.
+   * @param targetIndex - Optional index to scroll to directly
+   * @param explicitValue - When provided, uses this value instead of current state
+   */
   const scheduleScroll = useCallback((targetIndex?: number, explicitValue?: string) => {
     requestAnimationFrame(() => {
       if (!panelRef.current || !showOptions) return;
@@ -247,10 +267,6 @@ export function useTimePicker({
       targetEl?.scrollIntoView({ block: scrollMode });
     });
   }, [showOptions, scrollMode, isTyping, displayValue, internalValue, getTargetOption]);
-
-  useEffect(() => {
-    scheduleScrollRef.current = scheduleScroll;
-  }, [scheduleScroll]);
 
   const moveHighlight = useCallback(
     (delta: number) => {
@@ -385,6 +401,14 @@ export function useTimePicker({
   const handleMouseEnter = useCallback((idx: number) => {
     setHighlightIndex(idx);
   }, []);
+
+  useEffect(() => {
+    initHighlightRef.current = initHighlight;
+  }, [initHighlight]);
+
+  useEffect(() => {
+    scheduleScrollRef.current = scheduleScroll;
+  }, [scheduleScroll]);
 
   useEffect(() => {
     const normalized = normalize24(value);

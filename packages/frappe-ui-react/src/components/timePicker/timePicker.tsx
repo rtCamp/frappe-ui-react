@@ -89,8 +89,8 @@ const TimePicker: React.FC<TimePickerProps> = ({
 
   return (
     <Popover
-      show={showOptions}
-      onUpdateShow={setShowOptions}
+      show={showOptions && !disabled}
+      onUpdateShow={(show) => !disabled && setShowOptions(show)}
       placement={placement}
       target={({ togglePopover, isOpen }) => (
         <TextInput
@@ -103,7 +103,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
           disabled={disabled}
           readOnly={!allowCustom}
           onFocus={handleFocus}
-          onClick={() => handleClickInput(isOpen, togglePopover)}
+          onClick={() => !disabled && handleClickInput(isOpen, togglePopover)}
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
             if (e.key === "Enter") handleEnter(e);
             else if (e.key === "Escape") handleEscape(e);

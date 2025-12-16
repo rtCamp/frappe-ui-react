@@ -79,6 +79,10 @@ export default {
       control: false,
       description: "Suffix element",
     },
+    options: {
+      control: "object",
+      description: "Custom time options",
+    },
   },
   parameters: {
     docs: {
@@ -143,23 +147,9 @@ export const CustomOptions: Story = {
   render: (args) => {
     const [value, setValue] = useState("09:00");
 
-    const customOptions = [
-      { value: "08:00" },
-      { value: "09:00" },
-      { value: "09:30" },
-      { value: "10:00" },
-      { value: "11:15" },
-      { value: "13:45" },
-    ];
-
     return (
       <div className="p-2 space-y-2">
-        <TimePicker
-          {...args}
-          value={value}
-          onChange={setValue}
-          options={customOptions}
-        />
+        <TimePicker {...args} value={value} onChange={setValue} />
         <div className="text-xs text-ink-gray-6">Value: {value}</div>
       </div>
     );
@@ -172,6 +162,14 @@ export const CustomOptions: Story = {
     variant: "subtle",
     placement: "bottom-start",
     scrollMode: "center",
+    options: [
+      { value: "08:00" },
+      { value: "09:00" },
+      { value: "09:30" },
+      { value: "10:00" },
+      { value: "11:15" },
+      { value: "13:45" },
+    ],
   },
 };
 
