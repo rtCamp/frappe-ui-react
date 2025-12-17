@@ -54,7 +54,7 @@ const tabsWithoutIcon = [
   {
     label: "Linkedin",
     content:
-      "LinkedIn is an American business and employment-oriented online service that operates via websites and mobile apps.",
+      "LinkedIn is an American business and employment‑oriented online networking service platform that operates primarily via websites and mobile apps.",
   },
 ];
 
@@ -74,7 +74,7 @@ const tabsWithIcon = [
   {
     label: "Linkedin",
     content:
-      "LinkedIn is an American business and employment-oriented online service that operates via websites and mobile apps.",
+      "LinkedIn is an American business and employment‑oriented online networking service platform that operates primarily via websites and mobile apps.",
     icon: <FeatherIcon name="linkedin" className="w-4 h-4" />,
   },
 ];

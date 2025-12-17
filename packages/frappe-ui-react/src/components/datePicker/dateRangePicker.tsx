@@ -1,11 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
-import type { DatePickerProps } from "./types";
+import type { DateRangePickerProps } from "./types";
 import { useDatePicker } from "./useDatePicker";
 import { getDate, getDateValue } from "./utils";
 import { Popover } from "../popover";
 import { Button } from "../button";
 import { TextInput } from "../textInput";
+import FeatherIcon from "../featherIcon";
 
 function useDateRangePicker({
   value,
@@ -14,42 +15,41 @@ function useDateRangePicker({
   value?: string[];
   onChange?: (v: string[]) => void;
 }) {
-  const today = useMemo(() => getDate(), []);
-  const [open, setOpen] = useState(false);
   // Internal selection state
   const [fromDate, setFromDate] = useState<string>(value?.[0] || "");
   const [toDate, setToDate] = useState<string>(value?.[1] || "");
-  // Applied (confirmed) state
-  const [appliedFromDate, setAppliedFromDate] = useState<string>(
-    value?.[0] || ""
-  );
-  const [appliedToDate, setAppliedToDate] = useState<string>(value?.[1] || "");
-  const [currentYear, setCurrentYear] = useState<number>(today.getFullYear());
-  const [currentMonth, setCurrentMonth] = useState<number>(
-    today.getMonth() + 1
-  );
 
   useEffect(() => {
     if (Array.isArray(value) && value.length === 2) {
       setFromDate(value[0] || "");
       setToDate(value[1] || "");
-      setAppliedFromDate(value[0] || "");
-      setAppliedToDate(value[1] || "");
     }
   }, [value]);
 
   const {
-    datesAsWeeks,
+    open,
+    setOpen,
     formattedMonth,
-    prevMonth,
-    nextMonth,
-    today: todayDate,
+    datesAsWeeks,
+    currentMonth,
+    currentYear,
+    view,
+    cycleView,
+    selectMonth,
+    selectYear,
+    yearRangeStart,
+    yearRange,
+    prev,
+    next,
+    resetView,
+    months,
+    today,
   } = useDatePicker({
     value: fromDate,
     onChange: () => {},
   });
 
-  function handleDateClick(date: Date) {
+  function handleDateClick(date: Date): boolean {
     // Zero out time for date
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
@@ -60,9 +60,12 @@ function useDateRangePicker({
     } else if (fromDate && !toDate) {
       setToDate(v);
       swapDatesIfNecessary(fromDate, v);
+      onChange?.([fromDate, v]);
+      return true;
     } else {
       setFromDate(v);
     }
+    return false;
   }
 
   function swapDatesIfNecessary(a: string, b: string) {
@@ -78,17 +81,21 @@ function useDateRangePicker({
     }
   }
 
+  function handleToday() {
+    const d = new Date(today);
+    d.setHours(0, 0, 0, 0);
+    const todayStr = getDateValue(d);
+    setFromDate(todayStr);
+    setToDate(todayStr);
+  }
+
   function clearDates() {
     setFromDate("");
     setToDate("");
-    setAppliedFromDate("");
-    setAppliedToDate("");
     onChange?.(["", ""]);
   }
 
   function selectDates() {
-    setAppliedFromDate(fromDate);
-    setAppliedToDate(toDate);
     onChange?.([fromDate, toDate]);
     setOpen(false);
   }
@@ -98,12 +105,6 @@ function useDateRangePicker({
     return date >= getDate(fromDate) && date <= getDate(toDate);
   }
 
-  function selectCurrentMonthYear() {
-    const date = toDate ? getDate(toDate) : today;
-    setCurrentYear(date.getFullYear());
-    setCurrentMonth(date.getMonth() + 1);
-  }
-
   return {
     open,
     setOpen,
@@ -111,181 +112,288 @@ function useDateRangePicker({
     setFromDate,
     toDate,
     setToDate,
-    appliedFromDate,
-    appliedToDate,
-    currentYear,
-    setCurrentYear,
-    currentMonth,
-    setCurrentMonth,
     formattedMonth,
-    prevMonth,
-    nextMonth,
     datesAsWeeks,
-    today: todayDate,
+    currentMonth,
+    currentYear,
+    view,
+    cycleView,
+    selectMonth,
+    selectYear,
+    yearRangeStart,
+    yearRange,
+    prev,
+    next,
+    resetView,
+    months,
+    today,
+    handleToday,
     handleDateClick,
     clearDates,
     selectDates,
     isInRange,
-    selectCurrentMonthYear,
   };
 }
 
-export const DateRangePicker: React.FC<DatePickerProps> = ({
+export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   value,
   placeholder,
+  formatter,
   placement,
   label,
   onChange,
+  children,
 }) => {
   const {
     open,
     setOpen,
     fromDate,
-    setFromDate,
     toDate,
-    setToDate,
-    appliedFromDate,
-    appliedToDate,
-    currentMonth,
     formattedMonth,
-    prevMonth,
-    nextMonth,
     datesAsWeeks,
+    currentMonth,
+    currentYear,
+    view,
+    cycleView,
+    selectMonth,
+    selectYear,
+    yearRangeStart,
+    yearRange,
+    prev,
+    next,
+    resetView,
+    months,
+    handleToday,
     handleDateClick,
     clearDates,
     isInRange,
   } = useDateRangePicker({
     value: Array.isArray(value) ? value : undefined,
-    onChange: undefined, // Only call onChange on Apply
+    onChange: undefined, // Only call onChange on second date selection
   });
+
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) {
+      resetView();
+    }
+  };
 
   return (
     <Popover
       trigger="click"
       placement={placement || "bottom-start"}
       show={open}
-      onUpdateShow={setOpen}
-      target={() => (
-        <div className="flex flex-col space-y-1.5">
-          {label && (
-            <label className="block text-xs text-ink-gray-5">{label}</label>
-          )}
-          <TextInput
-            type="text"
-            placeholder={placeholder}
-            value={(() => {
-              const from = appliedFromDate ? appliedFromDate.slice(0, 10) : "";
-              const to = appliedToDate ? appliedToDate.slice(0, 10) : "";
-              if (from && to) return `${from}, ${to}`;
-              if (from) return from;
-              return "";
-            })()}
-          />
-        </div>
-      )}
-      body={({ togglePopover }) => (
-        <div className="w-fit select-none text-base text-ink-gray-9 divide-y divide-outline-gray-modals rounded-lg bg-surface-modal shadow-2xl border border-gray-200 focus:outline-none">
-          {/* Month Switcher */}
-          <div className="flex items-center p-1 text-ink-gray-4">
-            <Button className="h-7 w-7" onClick={prevMonth} variant="ghost">
-              {"<"}
-            </Button>
-            <div className="flex-1 text-center text-base font-medium text-ink-gray-6">
-              {formattedMonth}
-            </div>
-            <Button className="h-7 w-7" onClick={nextMonth} variant="ghost">
-              {">"}
-            </Button>
-          </div>
-          {/* Date Range Inputs */}
-          <div className="flex items-center justify-center gap-1 p-1">
-            <TextInput
-              type="text"
-              value={fromDate ? fromDate.slice(0, 10) : ""}
-              onChange={(val) => setFromDate(String(val).slice(0, 10))}
-            />
-            <TextInput
-              type="text"
-              value={toDate ? toDate.slice(0, 10) : ""}
-              onChange={(val) => setToDate(String(val).slice(0, 10))}
-            />
-          </div>
-          {/* Calendar */}
-          <div className="flex flex-col items-center justify-center p-1 text-ink-gray-8">
-            <div className="flex items-center text-xs uppercase">
-              {["s", "m", "t", "w", "t", "f", "s"].map((d, i) => (
-                <div
-                  key={i}
-                  className="flex h-6 w-8 items-center justify-center text-center"
-                >
-                  {d}
-                </div>
-              ))}
-            </div>
-            {datesAsWeeks.map((week, i) => (
-              <div key={i} className="flex items-center">
-                {week.map((date) => {
-                  const val = getDateValue(date);
-                  const today = getDate();
-                  const isToday =
-                    date.getDate() === today.getDate() &&
-                    date.getMonth() === today.getMonth() &&
-                    date.getFullYear() === today.getFullYear() &&
-                    date.getMonth() === currentMonth - 1;
-                  const isToDate = toDate && getDateValue(date) === toDate;
-                  const isFromDate =
-                    fromDate && getDateValue(date) === fromDate;
+      onUpdateShow={handleOpenChange}
+      target={({ togglePopover }) => {
+        const from = fromDate ? fromDate.slice(0, 10) : "";
+        const to = toDate ? toDate.slice(0, 10) : "";
+        const displayValue = formatter
+          ? formatter(from, to)
+          : from && to
+            ? `${from} to ${to}`
+            : from || "";
 
-                  return (
+        if (children) {
+          return children({ togglePopover, isOpen: open, displayValue });
+        }
+
+        return (
+          <div className="flex w-full flex-col space-y-1.5">
+            {label && (
+              <label className="block text-xs text-ink-gray-5">{label}</label>
+            )}
+            <TextInput
+              type="text"
+              placeholder={placeholder}
+              value={displayValue}
+              suffix={() => (
+                <FeatherIcon name="chevron-down" className="w-4 h-4" />
+              )}
+            />
+          </div>
+        );
+      }}
+      body={({ togglePopover }) => (
+        <div className="absolute min-w-60 z-10 mt-2 w-fit select-none text-base text-ink-gray-9 rounded-lg bg-surface-modal shadow-2xl border border-gray-200">
+          {/* Month Switcher */}
+          <div className="flex items-center justify-between px-2 pt-2 gap-1">
+            <Button
+              size="sm"
+              className="text-sm font-medium text-ink-gray-7"
+              variant="ghost"
+              onClick={cycleView}
+            >
+              {view === "date" && formattedMonth}
+              {view === "month" && currentYear}
+              {view === "year" && `${yearRangeStart} - ${yearRangeStart + 11}`}
+            </Button>
+            <div className="flex items-center">
+              <Button
+                className="h-7 w-7"
+                icon="chevron-left"
+                onClick={prev}
+                variant="ghost"
+              />
+              <Button
+                className="text-xs"
+                variant="ghost"
+                onClick={() => {
+                  handleToday();
+                  togglePopover();
+                }}
+              >
+                Today
+              </Button>
+              <Button
+                className="h-7 w-7"
+                icon="chevron-right"
+                onClick={next}
+                variant="ghost"
+              />
+            </div>
+          </div>
+          {/* Calendar / Month Grid / Year Grid */}
+          <div className="p-2">
+            {view === "date" && (
+              <div className="flex flex-col items-center justify-center text-ink-gray-8">
+                <div className="flex items-center text-xs font-medium uppercase text-ink-gray-4 mb-1">
+                  {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
                     <div
-                      key={val}
-                      className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded hover:bg-surface-gray-2 ${
-                        date.getMonth() !== currentMonth - 1
-                          ? "text-ink-gray-3"
-                          : "text-ink-gray-9"
-                      } ${isToday ? "font-extrabold text-ink-gray-9" : ""} ${
-                        isInRange(date) && !isFromDate && !isToDate
-                          ? "rounded-none bg-surface-gray-3"
-                          : ""
-                      } ${
-                        isFromDate
-                          ? "rounded-l-md rounded-r-none bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
-                          : ""
-                      } ${
-                        isToDate
-                          ? "rounded-r-md rounded-l-none  bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                      key={i}
+                      className="flex h-6 w-8 items-center justify-center"
+                    >
+                      {d}
+                    </div>
+                  ))}
+                </div>
+                {datesAsWeeks.map((week, i) => (
+                  <div key={i} className="flex items-center">
+                    {week.map((date) => {
+                      const val = getDateValue(date);
+                      const today = getDate();
+                      const isToday =
+                        date.getDate() === today.getDate() &&
+                        date.getMonth() === today.getMonth() &&
+                        date.getFullYear() === today.getFullYear() &&
+                        date.getMonth() === currentMonth - 1;
+                      const isToDate = toDate && getDateValue(date) === toDate;
+                      const isFromDate =
+                        fromDate && getDateValue(date) === fromDate;
+
+                      return (
+                        <div
+                          key={val}
+                          className={`flex h-8 w-8 cursor-pointer items-center justify-center text-sm rounded hover:bg-surface-gray-2 ${
+                            date.getMonth() !== currentMonth - 1
+                              ? "text-ink-gray-3"
+                              : "text-ink-gray-8"
+                          } ${
+                            isToday ? "font-extrabold text-ink-gray-9" : ""
+                          } ${
+                            isInRange(date) && !isFromDate && !isToDate
+                              ? "rounded-none bg-surface-gray-3"
+                              : ""
+                          } ${
+                            (isFromDate || isToDate) && fromDate === toDate
+                              ? "rounded bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                              : `${
+                                  isFromDate
+                                    ? "rounded-l-md rounded-r-none bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                                    : ""
+                                } ${
+                                  isToDate
+                                    ? "rounded-r-md rounded-l-none  bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                                    : ""
+                                } `
+                          }
+                          `}
+                          onClick={() =>
+                            handleDateClick(date) && togglePopover()
+                          }
+                        >
+                          {date.getDate()}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {view === "month" && (
+              <div
+                className="grid grid-cols-3 gap-1"
+                role="grid"
+                aria-label="Select month"
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {months.map((m, i) => {
+                  const isSelected = i === currentMonth - 1;
+                  return (
+                    <button
+                      type="button"
+                      key={m}
+                      className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                        isSelected
+                          ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
                           : ""
                       }`}
-                      onClick={() => handleDateClick(date)}
+                      aria-selected={isSelected}
+                      onClick={() => selectMonth(i)}
                     >
-                      {date.getDate()}
-                    </div>
+                      {m.slice(0, 3)}
+                    </button>
                   );
                 })}
               </div>
-            ))}
+            )}
+
+            {view === "year" && (
+              <div
+                className="grid grid-cols-3 gap-1"
+                role="grid"
+                aria-label="Select year"
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {yearRange.map((y) => {
+                  const isSelected = y === currentYear;
+                  return (
+                    <button
+                      type="button"
+                      key={y}
+                      className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                        isSelected
+                          ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                          : ""
+                      }`}
+                      aria-selected={isSelected}
+                      onClick={() => selectYear(y)}
+                    >
+                      {y}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
+
           {/* Actions */}
-          <div className="flex justify-end space-x-1 p-1">
-            <Button
-              onClick={() => {
-                clearDates();
-                togglePopover();
-              }}
-            >
-              Clear
-            </Button>
-            <Button
-              variant="solid"
-              onClick={() => {
-                onChange?.([fromDate, toDate]);
-                togglePopover();
-              }}
-              disabled={!fromDate || !toDate}
-            >
-              Apply
-            </Button>
-          </div>
+          {fromDate && toDate && (
+            <div className="flex justify-end p-2 gap-1 border-t border-gray-200">
+              <Button
+                onClick={() => {
+                  clearDates();
+                  togglePopover();
+                }}
+                variant="outline"
+              >
+                Clear
+              </Button>
+            </div>
+          )}
         </div>
       )}
     />

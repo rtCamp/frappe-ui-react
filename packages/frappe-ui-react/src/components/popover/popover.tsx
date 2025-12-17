@@ -16,6 +16,7 @@ function getOrCreatePopoverRoot(): HTMLElement {
   if (!root) {
     root = document.createElement("div");
     root.id = popoverRootId;
+    root.style.position = "absolute";
     document.body.appendChild(root);
   }
   return root;
@@ -363,7 +364,7 @@ const Popover: React.FC<PopoverProps> = ({
 
       {createPortal(
         <div
-          style={{ width: targetWidth || "auto", height: "auto", zIndex: 99 }}
+          style={{ width: targetWidth || "auto", height: "auto", zIndex: 99, position: 'absolute' }}
         >
           <div
             ref={popperRef}

@@ -9,6 +9,9 @@ import { CalendarMonthly } from "./calendarMonthly";
 import { CalendarWeekly } from "./calendarWeekly";
 import NewEventModal from "./newEventModalContent";
 import { useCalendar } from "./hooks/useCalendar";
+import TabButtons from "../tabButtons";
+import { dayjs } from "../../utils/dayjs";
+import { DatePicker } from "../datePicker";
 
 interface CalendarProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,11 +36,18 @@ export const Calendar = ({
     weekIndex,
     datesInWeeks,
   } = state;
-  const { setActiveView, increment, decrement, setShowEventModal } = actions;
+  const {
+    setActiveView,
+    increment,
+    decrement,
+    setShowEventModal,
+    setCurrentDate,
+    formatter,
+  } = actions;
   const enabledModes = [
-    { id: "Month", label: "Month" },
-    { id: "Week", label: "Week" },
     { id: "Day", label: "Day" },
+    { id: "Week", label: "Week" },
+    { id: "Month", label: "Month" },
   ].filter((mode) => !config.disableModes?.includes(mode.label));
 
   const renderView = () => {
@@ -54,12 +64,14 @@ export const Calendar = ({
   };
 
   const headerProps = {
-    currentMonthYear: currentDate.format("MMMM, YYYY"),
+    currentMonthYear:  formatter(currentDate.toDate()),
     enabledModes,
     activeView,
     decrement,
     increment,
     updateActiveView: setActiveView,
+    setCalendarDate: (date: Date) => setCurrentDate(dayjs(date)),
+    formatter,
   };
 
   return (
@@ -68,10 +80,26 @@ export const Calendar = ({
         {CustomHeader ? (
           <CustomHeader {...headerProps} />
         ) : (
-          <div className="mb-2 flex justify-between">
-            <span className="text-lg font-medium text-ink-gray-8">
-              {headerProps.currentMonthYear}
-            </span>
+          <div className="flex w-full items-center justify-between gap-4 py-2">
+            <DatePicker
+              formatter={formatter}
+              value={currentDate.format("YYYY-MM-DD")}
+              onChange={(val) =>
+                setCurrentDate(dayjs(Array.isArray(val) ? val[0] : val))
+              }
+              clearable={false}
+            >
+              {({ togglePopover, displayValue }) => (
+                <Button
+                  variant="ghost"
+                  className="text-lg font-medium text-ink-gray-7"
+                  onClick={togglePopover}
+                  iconRight="chevron-down"
+                >
+                  {displayValue}
+                </Button>
+              )}
+            </DatePicker>
             <div className="flex gap-x-1">
               <Button
                 onClick={decrement}
@@ -79,9 +107,26 @@ export const Calendar = ({
                 icon={() => <ChevronLeft size={16} />}
               />
               <Button
+                onClick={() => headerProps.setCalendarDate(new Date())}
+                variant="ghost"
+              >
+                Today
+              </Button>
+              <Button
                 onClick={increment}
                 variant="ghost"
                 icon={() => <ChevronRight size={16} />}
+              />
+              <TabButtons
+                buttons={enabledModes.map(
+                  (mode: { id: string; label: string }) => ({
+                    value: mode.id,
+                    label: mode.label,
+                  })
+                )}
+                value={activeView}
+                onChange={(value) => setActiveView(String(value))}
+                className="ml-2"
               />
             </div>
           </div>

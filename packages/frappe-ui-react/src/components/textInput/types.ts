@@ -4,7 +4,7 @@ import { TextInputTypes } from "../../common/types";
 export interface TextInputProps {
   type?: TextInputTypes;
   size?: "sm" | "md" | "lg" | "xl";
-  variant?: "subtle" | "outline";
+  variant?: "subtle" | "outline" | "ghost";
   placeholder?: string;
   disabled?: boolean;
   htmlId?: string;

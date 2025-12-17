@@ -1,307 +1,329 @@
-import type { DatePickerProps } from "./types";
+import { useCallback, useMemo, useState } from "react";
+import type { DateTimePickerProps } from "./types";
 import { useDatePicker } from "./useDatePicker";
 import { getDate, getDateValue } from "./utils";
 import { Popover } from "../popover";
 import { Button } from "../button";
 import { TextInput } from "../textInput";
-import { useEffect, useState } from "react";
+import FeatherIcon from "../featherIcon";
 
-function twoDigit(n: number) {
-  return n.toString().padStart(2, "0");
-}
-
-function useDateTimePicker({
-  value,
-  onChange,
-}: {
-  value?: string;
-  onChange?: (v: string) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const [dateValue, setDateValue] = useState<string>(
-    typeof value === "string" ? value : ""
-  );
-  const [hour, setHour] = useState(0);
-  const [minute, setMinute] = useState(0);
-  const [second, setSecond] = useState(0);
-
-  useEffect(() => {
-    if (typeof value === "string") setDateValue(value);
-  }, [value]);
-
-  useEffect(() => {
-    if (dateValue) {
-      const d = getDate(dateValue);
-      setHour(d.getHours());
-      setMinute(d.getMinutes());
-      setSecond(d.getSeconds());
-    }
-  }, [dateValue]);
-
-  const {
-    currentMonth,
-    datesAsWeeks,
-    formattedMonth,
-    prevMonth,
-    nextMonth,
-    today: todayDate,
-  } = useDatePicker({
-    value: dateValue,
-    onChange: () => {},
-  });
-
-  function selectDate(date: Date | string, isNow = false) {
-    const d = typeof date === "string" ? getDate(date) : date;
-    let h = hour,
-      m = minute,
-      s = second;
-    if (isNow) {
-      h = d.getHours();
-      m = d.getMinutes();
-      s = d.getSeconds();
-    }
-    const val =
-      d.getFullYear() +
-      "-" +
-      twoDigit(d.getMonth() + 1) +
-      "-" +
-      twoDigit(d.getDate()) +
-      " " +
-      twoDigit(h) +
-      ":" +
-      twoDigit(m) +
-      ":" +
-      twoDigit(s);
-    setDateValue(val);
-    onChange?.(val);
-    setOpen(false);
-  }
-
-  function updateDate(val: string) {
-    const d = getDate(val);
-    setHour(d.getHours());
-    setMinute(d.getMinutes());
-    setSecond(d.getSeconds());
-    selectDate(d);
-  }
-
-  function selectNow() {
-    const now = getDate();
-    setHour(now.getHours());
-    setMinute(now.getMinutes());
-    setSecond(now.getSeconds());
-    selectDate(now, true);
-  }
-
-  function clearDate() {
-    setDateValue("");
-    onChange?.("");
-    setOpen(false);
-  }
-
-  return {
-    open,
-    setOpen,
-    dateValue,
-    hour,
-    setHour,
-    minute,
-    setMinute,
-    second,
-    setSecond,
-    currentMonth,
-    formattedMonth,
-    prevMonth,
-    nextMonth,
-    datesAsWeeks,
-    today: todayDate,
-    selectDate,
-    updateDate,
-    selectNow,
-    clearDate,
-  };
-}
-
-export const DateTimePicker: React.FC<DatePickerProps> = ({
+export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   value,
   placeholder,
   formatter,
   placement,
   label,
+  clearable = true,
   onChange,
+  children,
 }) => {
+  const [timeDropdownOpen, setTimeDropdownOpen] = useState(false);
+  const handleChange = useMemo(() => {
+    if (!onChange) return undefined;
+    return (val: string | string[]) => {
+      if (typeof val === "string") {
+        onChange(val);
+      }
+    };
+  }, [onChange]);
+
   const {
     open,
     setOpen,
     dateValue,
-    hour,
-    setHour,
-    minute,
-    setMinute,
-    second,
-    setSecond,
-    currentMonth,
     formattedMonth,
-    prevMonth,
-    nextMonth,
     datesAsWeeks,
-    selectDate,
-    updateDate,
+    currentMonth,
+    currentYear,
+    view,
+    cycleView,
+    selectMonth,
+    selectYear,
+    yearRangeStart,
+    yearRange,
+    prev,
+    next,
+    resetView,
+    months,
+    timeValue,
+    timeOptions,
+    selectTime,
     selectNow,
-    clearDate,
-  } = useDateTimePicker({
-    value: typeof value === "string" ? value : "",
-    onChange,
+    selectTomorrow,
+    clearValue,
+    displayValue,
+    selectDate,
+  } = useDatePicker({
+    value,
+    onChange: handleChange,
+    withTime: true,
   });
+
+  const handleOpenChange = useCallback(
+    (isOpen: boolean) => {
+      setOpen(isOpen);
+      if (!isOpen) {
+        resetView();
+        setTimeDropdownOpen(false);
+      }
+    },
+    [setOpen, resetView]
+  );
+
+  const formattedDisplayValue = formatter
+    ? formatter(displayValue)
+    : displayValue;
 
   return (
     <Popover
       trigger="click"
       placement={placement || "bottom-start"}
       show={open}
-      onUpdateShow={setOpen}
-      target={() => (
-        <div className="flex flex-col space-y-1.5">
-          {label && (
-            <label className="block text-xs text-ink-gray-5">{label}</label>
-          )}
-          <TextInput
-            type="text"
-            placeholder={placeholder}
-            value={dateValue && formatter ? formatter(dateValue) : dateValue}
-          />
-        </div>
-      )}
-      body={({ togglePopover }) => (
-        <div className="w-fit select-none text-base text-ink-gray-9 divide-y divide-outline-gray-modals rounded-lg bg-surface-modal shadow-2xl border border-gray-200 focus:outline-none">
-          {/* Month Switcher */}
-          <div className="flex items-center p-1 text-ink-gray-4">
-            <Button className="h-7 w-7" onClick={prevMonth} variant="ghost">
-              {"<"}
-            </Button>
-            <div className="flex-1 text-center text-base font-medium text-ink-gray-6">
-              {formattedMonth}
-            </div>
-            <Button className="h-7 w-7" onClick={nextMonth} variant="ghost">
-              {">"}
-            </Button>
-          </div>
-          {/* Date Time Input and Now button */}
-          <div className="flex items-center justify-center gap-1 p-1">
+      onUpdateShow={handleOpenChange}
+      target={({ togglePopover }) =>
+        children ? (
+          children({
+            togglePopover,
+            isOpen: open,
+            displayValue: formattedDisplayValue,
+          })
+        ) : (
+          <div className="flex w-full flex-col space-y-1.5">
+            {label && (
+              <label className="block text-xs text-ink-gray-5">{label}</label>
+            )}
             <TextInput
               type="text"
-              value={dateValue}
-              onChange={(val) => updateDate(String(val))}
+              placeholder={placeholder}
+              value={formattedDisplayValue}
+              suffix={() => (
+                <FeatherIcon name="chevron-down" className="w-4 h-4" />
+              )}
             />
-            <Button
-              className="text-sm"
-              onClick={() => {
-                selectNow();
-                togglePopover();
-              }}
-            >
-              Now
-            </Button>
           </div>
-          {/* Calendar */}
-          <div className="flex flex-col items-center justify-center p-1 text-ink-gray-8">
-            <div className="flex items-center text-xs uppercase">
-              {["s", "m", "t", "w", "t", "f", "s"].map((d, i) => (
-                <div
-                  key={i}
-                  className="flex h-6 w-8 items-center justify-center text-center"
+        )
+      }
+      body={() => (
+        <div className="absolute min-w-60 z-10 mt-2 w-fit select-none text-base text-ink-gray-9 rounded-lg bg-surface-modal shadow-2xl border border-gray-200">
+          {/* Header (Month/Year navigation) */}
+          <div className="flex items-center justify-between px-2 pt-2 gap-1">
+            <Button
+              size="sm"
+              className="text-sm font-medium text-ink-gray-7"
+              variant="ghost"
+              onClick={cycleView}
+            >
+              {view === "date" && formattedMonth}
+              {view === "month" && currentYear}
+              {view === "year" && `${yearRangeStart} - ${yearRangeStart + 11}`}
+            </Button>
+            <div className="flex items-center">
+              <Button
+                className="h-7 w-7"
+                icon="chevron-left"
+                onClick={prev}
+                variant="ghost"
+              />
+              {!clearable && (
+                <Button
+                  className="text-xs"
+                  variant="outline"
+                  onClick={selectNow}
                 >
-                  {d}
-                </div>
-              ))}
+                  Now
+                </Button>
+              )}
+              <Button
+                className="h-7 w-7"
+                icon="chevron-right"
+                onClick={next}
+                variant="ghost"
+              />
             </div>
-            {datesAsWeeks.map((week, i) => (
-              <div key={i} className="flex items-center">
-                {week.map((date) => {
-                  const val = getDateValue(date);
-                  const today = getDate();
-                  const isToday =
-                    date.getDate() === today.getDate() &&
-                    date.getMonth() === today.getMonth() &&
-                    date.getFullYear() === today.getFullYear() &&
-                    date.getMonth() === currentMonth - 1;
-                  return (
+          </div>
+
+          {/* Calendar / Month Grid / Year Grid */}
+          <div className="p-2">
+            {view === "date" && (
+              <div role="grid" aria-label="Calendar dates">
+                <div className="flex items-center text-xs font-medium uppercase text-ink-gray-4 mb-1">
+                  {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
                     <div
-                      key={val}
-                      className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded hover:bg-surface-gray-2 ${
-                        date.getMonth() !== currentMonth - 1
-                          ? "text-ink-gray-4"
-                          : ""
-                      } ${isToday ? " font-extrabold text-ink-gray-9" : ""} ${
-                        getDateValue(date) === dateValue.split(" ")[0]
-                          ? " bg-surface-gray-2"
+                      key={i}
+                      className="flex h-6 w-8 items-center justify-center"
+                    >
+                      {d}
+                    </div>
+                  ))}
+                </div>
+                {datesAsWeeks.map((week, i) => (
+                  <div key={i} className="flex" role="row">
+                    {week.map((date) => {
+                      const val = getDateValue(date);
+                      const today = getDate();
+                      const isToday =
+                        date.getDate() === today.getDate() &&
+                        date.getMonth() === today.getMonth() &&
+                        date.getFullYear() === today.getFullYear() &&
+                        date.getMonth() === currentMonth - 1;
+                      const isSelected = dateValue === val;
+                      const inMonth = date.getMonth() === currentMonth - 1;
+                      return (
+                        <button
+                          type="button"
+                          key={val}
+                          className={`flex h-8 w-8 items-center justify-center rounded cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                            inMonth ? "text-ink-gray-8" : "text-ink-gray-3"
+                          } ${
+                            isToday ? "font-extrabold text-ink-gray-9" : ""
+                          } ${
+                            isSelected
+                              ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                              : "hover:bg-surface-gray-2"
+                          }`}
+                          role="gridcell"
+                          aria-selected={isSelected}
+                          onClick={() => selectDate(date, true)}
+                        >
+                          {date.getDate()}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {view === "month" && (
+              <div
+                className="grid grid-cols-3 gap-1"
+                role="grid"
+                aria-label="Select month"
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {months.map((m, i) => {
+                  const isSelected = i === currentMonth - 1;
+                  return (
+                    <button
+                      type="button"
+                      key={m}
+                      className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                        isSelected
+                          ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
                           : ""
                       }`}
-                      onClick={() => {
-                        selectDate(date);
-                        togglePopover();
-                      }}
+                      aria-selected={isSelected}
+                      onClick={() => selectMonth(i)}
                     >
-                      {date.getDate()}
-                    </div>
+                      {m.slice(0, 3)}
+                    </button>
                   );
                 })}
               </div>
-            ))}
+            )}
+
+            {view === "year" && (
+              <div
+                className="grid grid-cols-3 gap-1"
+                role="grid"
+                aria-label="Select year"
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {yearRange.map((y) => {
+                  const isSelected = y === currentYear;
+                  return (
+                    <button
+                      type="button"
+                      key={y}
+                      className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                        isSelected
+                          ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                          : ""
+                      }`}
+                      aria-selected={isSelected}
+                      onClick={() => selectYear(y)}
+                    >
+                      {y}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
-          {/* Time Picker */}
-          <div className="flex items-center justify-around gap-2 p-1">
-            <div>
-              {twoDigit(hour)} : {twoDigit(minute)} : {twoDigit(second)}
+
+          {/* Time Picker Section */}
+          <div
+            className="flex w-full flex-col gap-2 p-2 pt-0"
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Popover
+              trigger="click"
+              placement="bottom-start"
+              show={timeDropdownOpen}
+              onUpdateShow={setTimeDropdownOpen}
+              className="w-full [&>*>*]:w-full"
+              target={() => (
+                <TextInput
+                  type="text"
+                  placeholder="Select Time"
+                  value={timeValue}
+                  suffix={() => (
+                    <FeatherIcon name="chevron-down" className="w-4 h-4" />
+                  )}
+                />
+              )}
+              body={() => (
+                <div
+                  className="mt-2 max-h-48 w-44 overflow-y-auto rounded-lg bg-surface-modal p-1 text-base shadow-2xl border border-gray-200"
+                  role="listbox"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {timeOptions.map((time) => {
+                    const isSelected = timeValue === time;
+                    return (
+                      <Button
+                        aria-selected={isSelected}
+                        size="sm"
+                        className={`w-full justify-start ${
+                          isSelected ? "bg-surface-gray-3! text-ink-gray-8" : ""
+                        }`}
+                        variant="ghost"
+                        onClick={() => {
+                          selectTime(time);
+                          setTimeDropdownOpen(false);
+                        }}
+                      >
+                        <span className="truncate">{time}</span>
+                      </Button>
+                    );
+                  })}
+                </div>
+              )}
+            />
+          </div>
+
+          {/* Footer Actions */}
+          {clearable && (
+            <div className="flex items-center justify-between gap-1 p-2 border-t border-gray-200">
+              <div className="flex gap-1">
+                <Button variant="outline" onClick={selectNow}>
+                  Now
+                </Button>
+                <Button variant="outline" onClick={selectTomorrow}>
+                  Tomorrow
+                </Button>
+              </div>
+              {(dateValue || timeValue) && (
+                <Button size="sm" variant="outline" onClick={clearValue}>
+                  Clear
+                </Button>
+              )}
             </div>
-            <div className="flex flex-col items-center justify-center accent-black dark:accent-white">
-              <div className="slider flex min-h-4 items-center justify-center">
-                <input
-                  name="hours"
-                  type="range"
-                  min={0}
-                  max={23}
-                  step={1}
-                  value={hour}
-                  onChange={(e) => setHour(Number(e.target.value))}
-                />
-              </div>
-              <div className="slider flex min-h-4 items-center justify-center">
-                <input
-                  name="minutes"
-                  type="range"
-                  min={0}
-                  max={59}
-                  step={1}
-                  value={minute}
-                  onChange={(e) => setMinute(Number(e.target.value))}
-                />
-              </div>
-              <div className="slider flex min-h-4 items-center justify-center">
-                <input
-                  name="seconds"
-                  type="range"
-                  min={0}
-                  max={59}
-                  step={1}
-                  value={second}
-                  onChange={(e) => setSecond(Number(e.target.value))}
-                />
-              </div>
-            </div>
-          </div>
-          {/* Actions */}
-          <div className="flex justify-end p-1">
-            <Button
-              className="text-sm"
-              onClick={() => {
-                clearDate();
-                togglePopover();
-              }}
-            >
-              Clear
-            </Button>
-          </div>
+          )}
         </div>
       )}
     />

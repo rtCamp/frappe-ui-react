@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { action } from "storybook/actions";
 
+import { useState } from "react";
 import Dropdown from "./dropdown";
 import { Button } from "../button";
-import { DropdownOptions } from "./types";
+import type { DropdownOptions } from "./types";
 
 export default {
   title: "Components/Dropdown",
@@ -73,18 +74,6 @@ const groupedActions: DropdownOptions = [
           {
             label: "Export",
             icon: "download",
-            submenu: [
-              {
-                label: "Export as PDF",
-                icon: "file-text",
-                onClick: () => action("Export as PDF clicked")(),
-              },
-              {
-                label: "Export as CSV",
-                icon: "file",
-                onClick: () => action("Export as CSV clicked")(),
-              },
-            ],
           },
           {
             label: "Share",
@@ -244,10 +233,76 @@ export const CenterAligned: StoryObj<typeof Dropdown> = {
 };
 
 export const WithSubmenus: StoryObj<typeof Dropdown> = {
-  ...DropdownTemplate,
   args: {
     options: submenuActions,
     button: { label: "With Submenus" },
+  },
+  render: function Render(args) {
+    const [collaborateValue, setCollaborateValue] = useState(false);
+
+    const options: DropdownOptions = [
+      ...submenuActions,
+      {
+        label: "Collaborate",
+        switch: true,
+        icon: "file-text",
+        switchValue: collaborateValue,
+        onClick: (val) => {
+          setCollaborateValue(val as boolean);
+          action("Collaborate switch value:")(val);
+        },
+      },
+    ];
+
+    return (
+      <div className="p-4 flex justify-center items-center h-40">
+        <Dropdown {...args} options={options} />
+      </div>
+    );
+  },
+};
+
+export const WithSwitches: StoryObj<typeof Dropdown> = {
+  args: {
+    button: { label: "With Switches" },
+  },
+  render: function Render(args) {
+    const [lockValue, setLockValue] = useState(true);
+    const [collaborateValue, setCollaborateValue] = useState(false);
+
+    const options: DropdownOptions = [
+      {
+        label: "Rename",
+        icon: "edit",
+        onClick: () => action("Rename clicked")(),
+      },
+      {
+        label: "Lock",
+        icon: "lock",
+        switch: true,
+        switchValue: lockValue,
+        onClick: (val) => {
+          setLockValue(val as boolean);
+          action("Lock switch value:")(val);
+        },
+      },
+      {
+        label: "Collaborate",
+        switch: true,
+        icon: "users",
+        switchValue: collaborateValue,
+        onClick: (val) => {
+          setCollaborateValue(val as boolean);
+          action("Collaborate switch value:")(val);
+        },
+      },
+    ];
+
+    return (
+      <div className="p-4 flex justify-center items-center h-40">
+        <Dropdown {...args} options={options} />
+      </div>
+    );
   },
 };
 

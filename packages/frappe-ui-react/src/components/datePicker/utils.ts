@@ -27,6 +27,11 @@ export function getDateTimeValue(date: Date | string) {
   return dayjs(date).format("YYYY-MM-DD HH:mm:ss");
 }
 
+export function formatDateTime12h(date: Date | string) {
+  if (!date || date.toString() === "Invalid Date") return "";
+  return dayjs(date).format("YYYY-MM-DD h:mm a");
+}
+
 export function getDatesAfter(date: Date, count: number) {
   let incrementer = 1;
   if (count < 0) {

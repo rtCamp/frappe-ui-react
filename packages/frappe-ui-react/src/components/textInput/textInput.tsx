@@ -78,6 +78,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         disabled: `border ${
           variant === "outline" ? "border-outline-gray-2" : "border-transparent"
         } bg-surface-gray-1 placeholder-ink-gray-3`,
+        ghost: 'border-0 focus:ring-0 focus-visible:ring-0',
       }[currentVariant];
 
       return [
@@ -148,8 +149,8 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           value={inputValue}
           required={rest.required}
           onChange={handleChange}
-          className={`appearance-none ${inputClasses}`}
           data-testid="text-input"
+          className={`appearance-none ${inputClasses}`}
           {...rest}
         />
         {suffix && (

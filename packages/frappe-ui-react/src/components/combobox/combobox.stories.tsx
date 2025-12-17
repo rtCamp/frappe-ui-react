@@ -94,6 +94,17 @@ const groupedOptions = [
     options: [
       { label: "Carrot", value: "carrot", icon: <span>🥕</span> },
       { label: "Broccoli", value: "broccoli", icon: <span>🥦</span> },
+      { label: "Tomato", value: "tomato", icon: <span>🍅</span> },
+      { label: "Lettuce", value: "lettuce", icon: <span>🥬</span> },
+    ],
+  },
+  {
+    group: "Proteins",
+    options: [
+      { label: "Chicken", value: "chicken", icon: <span>🍗</span> },
+      { label: "Fish", value: "fish", icon: <span>🐟</span> },
+      { label: "Beef", value: "beef", icon: <span>🥩</span> },
+      { label: "Tofu", value: "tofu", icon: <span>🪤</span>, disabled: true },
     ],
   },
 ];
@@ -129,11 +140,11 @@ export const SimpleStringOptions: Story = {
   args: {
     options: simpleOptions,
     value: "",
-    placeholder: "Select a person",
+    placeholder: "Select a person...",
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState("");
+    const [val, setVal] = React.useState<string | null>("");
     return (
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">Simple Options</label>
@@ -150,11 +161,11 @@ export const ObjectOptions: Story = {
   args: {
     options: objectOptions,
     value: "",
-    placeholder: "Select a person",
+    placeholder: "Select a person...",
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState("");
+    const [val, setVal] = React.useState<string | null>("");
     return (
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">Object Options</label>
@@ -172,11 +183,11 @@ export const WithIcons: Story = {
   args: {
     options: optionsWithIcons,
     value: "",
-    placeholder: "Select an item",
+    placeholder: "Select an item...",
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState("");
+    const [val, setVal] = React.useState<string | null>("");
     return (
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">
@@ -196,11 +207,11 @@ export const Grouped: Story = {
   args: {
     options: groupedOptions,
     value: "",
-    placeholder: "Select a food",
+    placeholder: "Select a food...",
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState("");
+    const [val, setVal] = React.useState<string | null>("");
     return (
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">
@@ -238,11 +249,11 @@ export const PreselectedValue: Story = {
   args: {
     options: objectOptions,
     value: "john-doe",
-    placeholder: "Select a person",
+    placeholder: "Select a person...",
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState("john-doe");
+    const [val, setVal] = React.useState<string | null>("john-doe");
     return (
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">
@@ -278,11 +289,11 @@ export const ComplexObject: Story = {
   args: {
     options: complexObjects,
     value: "",
-    placeholder: "Select a user",
+    placeholder: "Select a user...",
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState("");
+    const [val, setVal] = React.useState<string | null>("");
     const selected = complexObjects.find((o) => o.value === val);
     return (
       <div className="flex flex-col w-80">

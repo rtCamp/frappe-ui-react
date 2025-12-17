@@ -34,9 +34,6 @@ export const CalendarDaily = () => {
 
   return (
     <div className="h-[90%] min-h-[500px] min-w-[600px]">
-      <p className="pb-2 text-base font-semibold text-ink-gray-8">
-        {parseDateWithDay(currentDate.toDate(), true)}
-      </p>
       <div
         className={`flex shrink-0 h-fit border-outline-gray-1 ${
           config.noBorder ? 'border-t-[1px]' : 'border-[1px] border-b-0'
