@@ -80,3 +80,13 @@ export const OutlineVariant = {
     value: "",
   },
 };
+
+export const Disabled = {
+  ...Template,
+  args: {
+    placeholder: "Disabled textarea",
+    variant: "outline",
+    value: "",
+    disabled: true,
+  },
+};
