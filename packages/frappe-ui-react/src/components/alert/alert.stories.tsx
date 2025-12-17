@@ -47,10 +47,6 @@ export default {
       control: false,
       description: "Custom footer content for the alert",
     },
-    children: {
-      control: false,
-      description: "Additional custom content for the alert",
-    },
   },
   parameters: {
     docs: {

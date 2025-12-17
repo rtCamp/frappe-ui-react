@@ -2,6 +2,7 @@
  * External dependencies.
  */
 import React from "react";
+import clsx from "clsx";
 
 /**
  * Internal dependencies.
@@ -142,6 +143,9 @@ const TimePicker: React.FC<TimePickerProps> = ({
           style={{ display: isOpen ? "block" : "none" }}
           className="mt-2 max-h-48 w-44 overflow-y-auto rounded-lg bg-surface-modal p-1 text-base shadow-2xl ring-1 ring-black/5 focus:outline-none"
           role="listbox"
+          aria-activedescendant={
+            highlightIndex >= 0 ? optionId(highlightIndex) : undefined
+          }
         >
           {displayedOptions.map((opt, idx) => (
             <button
@@ -149,14 +153,15 @@ const TimePicker: React.FC<TimePickerProps> = ({
               data-value={opt.value}
               data-index={idx}
               type="button"
-              className={`group flex h-7 w-full items-center rounded px-2 text-left ${getButtonClasses(
-                opt,
-                idx
-              )}`}
+              className={clsx(
+                "group flex h-7 w-full items-center rounded px-2 text-left",
+                getButtonClasses(opt, idx)
+              )}
               onClick={() => select(opt.value)}
               onMouseEnter={() => handleMouseEnter(idx)}
               role="option"
               id={optionId(idx)}
+              aria-selected={opt.value === value}
             >
               <span className="truncate">{opt.label}</span>
             </button>
