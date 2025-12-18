@@ -635,15 +635,15 @@ input {
 
     /* Override semantic colors for dark theme */
     --color-ink-white: var(--color-dark-gray-900);
-    --color-ink-gray-1: var(--color-dark-gray-100);
-    --color-ink-gray-2: var(--color-dark-gray-200);
-    --color-ink-gray-3: var(--color-dark-gray-300);
+    --color-ink-gray-1: var(--color-dark-gray-700);
+    --color-ink-gray-2: var(--color-dark-gray-500);
+    --color-ink-gray-3: var(--color-dark-gray-400);
     --color-ink-gray-4: var(--color-dark-gray-400);
-    --color-ink-gray-5: #999999;
-    --color-ink-gray-6: #c7c7c7;
-    --color-ink-gray-7: #ededed;
-    --color-ink-gray-8: #f3f3f3;
-    --color-ink-gray-9: #f8f8f8;
+    --color-ink-gray-5: var(--color-dark-gray-300);
+    --color-ink-gray-6: var(--color-dark-gray-250);
+    --color-ink-gray-7: var(--color-dark-gray-200);
+    --color-ink-gray-8: var(--color-dark-gray-100);
+    --color-ink-gray-9: var(--color-dark-gray-50);
     --color-ink-red-1: var(--color-dark-red-50);
     --color-ink-red-2: var(--color-dark-red-100);
     --color-ink-red-3: var(--color-dark-red-200);
@@ -664,13 +664,13 @@ input {
 
     /* Surface Colors for dark theme */
     --color-surface-white: var(--color-dark-gray-900);
-    --color-surface-gray-1: var(--color-dark-gray-800);
-    --color-surface-gray-2: var(--color-dark-gray-700);
-    --color-surface-gray-3: var(--color-dark-gray-650);
-    --color-surface-gray-4: var(--color-dark-gray-600);
-    --color-surface-gray-5: var(--color-dark-gray-500);
-    --color-surface-gray-6: var(--color-dark-gray-400);
-    --color-surface-gray-7: #f8f8f8;
+    --color-surface-gray-1: var(--color-dark-gray-700);
+    --color-surface-gray-2: var(--color-dark-gray-650);
+    --color-surface-gray-3: var(--color-dark-gray-600);
+    --color-surface-gray-4: var(--color-dark-gray-500);
+    --color-surface-gray-5: var(--color-dark-gray-200);
+    --color-surface-gray-6: var(--color-dark-gray-100);
+    --color-surface-gray-7: var(--color-dark-gray-50);
     --color-surface-red-1: var(--color-dark-red-900);
     --color-surface-red-2: var(--color-dark-red-800);
     --color-surface-red-3: var(--color-dark-red-700);
@@ -700,18 +700,18 @@ input {
     --color-surface-cyan-2: var(--color-dark-cyan-600);
     --color-surface-pink-1: var(--color-dark-pink-900);
     --color-surface-pink-2: var(--color-dark-pink-600);
-    --color-surface-menu-bar: var(--color-dark-gray-800);
-    --color-surface-cards: var(--color-dark-gray-700);
-    --color-surface-modal: var(--color-dark-gray-650);
-    --color-surface-selected: var(--color-dark-gray-600);
+    --color-surface-menu-bar: var(--color-dark-gray-900);
+    --color-surface-cards: var(--color-dark-gray-800);
+    --color-surface-modal: var(--color-dark-gray-700);
+    --color-surface-selected: var(--color-dark-gray-500);
 
     /* Outline Colors for dark theme */
-    --color-outline-white: var(--color-dark-gray-900);
-    --color-outline-gray-1: var(--color-dark-gray-650);
+    --color-outline-white: var(--color-dark-gray-800);
+    --color-outline-gray-1: var(--color-dark-gray-700);
     --color-outline-gray-2: var(--color-dark-gray-600);
     --color-outline-gray-3: var(--color-dark-gray-500);
-    --color-outline-gray-4: var(--color-dark-gray-400);
-    --color-outline-gray-5: var(--color-gray-400);
+    --color-outline-gray-4: var(--color-dark-gray-300);
+    --color-outline-gray-5: var(--color-gray-200);
     --color-outline-red-1: var(--color-dark-red-600);
     --color-outline-red-2: var(--color-dark-red-500);
     --color-outline-red-3: var(--color-dark-red-400);
@@ -721,7 +721,7 @@ input {
     --color-outline-amber-2: var(--color-dark-amber-600);
     --color-outline-blue-1: var(--color-dark-blue-700);
     --color-outline-orange-1: var(--color-dark-orange-700);
-    --color-outline-gray-modals: var(--color-dark-gray-650);
+    --color-outline-gray-modals: var(--color-dark-gray-600);
 
     /* Dark theme shadows - make them more prominent */
     --shadow-sm: 0px 1px 2px rgba(0, 0, 0, 0.3);
