@@ -158,7 +158,7 @@ export const SingleOptionWithPrefixSlots: Story = {
             value?.image &&
             <img
               src={value?.image ?? ""}
-              className="ml-2 h-4 w-4 rounded-full"
+              className="h-4 w-4 rounded-full"
             />
           )}
           onChange={(_value) => {
