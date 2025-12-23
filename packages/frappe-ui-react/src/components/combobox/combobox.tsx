@@ -138,7 +138,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
         </ComboboxButton>
         <ComboboxOptions
           className={`
-            absolute z-[100] mt-1 px-1.5 py-1.5 w-full bg-surface-white border border-surface-gray-2 rounded-lg shadow-xl min-w-[160px] max-h-50 animate-fade-in overflow-y-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none] [-ms-overflow-style:'none'] [-webkit-overflow-scrolling:'touch']
+            absolute z-[100] mt-1 px-1.5 py-1.5 w-full bg-surface-modal border border-surface-gray-2 rounded-lg shadow-xl min-w-[160px] max-h-50 animate-fade-in overflow-y-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none] [-ms-overflow-style:'none'] [-webkit-overflow-scrolling:'touch']
           `}
         >
           {filteredOptions.length === 0 && (
