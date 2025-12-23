@@ -191,6 +191,7 @@ export const CustomHeader: Story = {
           />
         </div>
         <Select
+          defaultValue="Month"
           onChange={(e) => updateActiveView(e.target.value)}
           options={enabledModes.map((mode: { id: string; label: string }) => ({
             value: mode.id,

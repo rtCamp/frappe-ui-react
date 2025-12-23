@@ -1,4 +1,5 @@
-import { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useEffect, useState } from "react";
 
 import ListView from "./listView";
 import { Avatar } from "../avatar";
@@ -292,18 +293,31 @@ export const SimpleList: Story = {
 
 export const CustomList: Story = {
   render: (args) => {
-    return (
+    const [columns, _setColumns] = useState<typeof custom_columns>([]);
+    useEffect(() => {
+      _setColumns(custom_columns);
+    }, []);
+
+    return columns.length > 0 ? (
       <div>
-        <ListView
-          {...args}
-          columns={custom_columns}
-          rows={custom_rows}
-          rowKey="id"
-        >
+        <ListView {...args} columns={columns} rows={custom_rows} rowKey="id">
           <>
             <ListHeader>
-              {custom_columns.map((column, index) => (
-                <ListHeaderItem key={column.key} item={column}>
+              {columns.map((column, index) => (
+                <ListHeaderItem
+                  key={column.key}
+                  item={column}
+                  onColumnWidthUpdated={(width) => {
+                    _setColumns((prevColumns) => {
+                      const newColumns = [...prevColumns];
+                      newColumns[index] = {
+                        ...newColumns[index],
+                        width: `${width}px`,
+                      };
+                      return newColumns;
+                    });
+                  }}
+                >
                   <div
                     className={`flex items-center gap-2 ${
                       index === 0 ? "ml-4" : ""
@@ -318,8 +332,8 @@ export const CustomList: Story = {
             <ListRows>
               {custom_rows.map((row) => (
                 <ListRow key={row.id} row={row}>
-                  {custom_columns.map((column, index) => {
-                    //@ts-expects-error
+                  {columns.map((column, index) => {
+                    //@ts-expect-error item type
                     const item = row[column.key];
                     return (
                       <div className={`${index === 0 ? "ml-4" : ""}`}>
@@ -383,6 +397,8 @@ export const CustomList: Story = {
           </>
         </ListView>
       </div>
+    ) : (
+      <></>
     );
   },
   args: {
@@ -423,7 +439,7 @@ export const GroupedRows: Story = {
 
 export const CellSlot: Story = {
   render: (args) => {
-    //@ts-expects-error
+    //@ts-expect-error
     const CustomCell = ({ item, column }) => {
       if (column.key === "status") {
         return <Badge>{item}</Badge>;

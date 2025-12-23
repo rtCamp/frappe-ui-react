@@ -1,3 +1,6 @@
+/**
+ * External dependencies.
+ */
 import { useCallback, useMemo, useState } from "react";
 import {
   Combobox as ComboboxRoot,
@@ -6,8 +9,12 @@ import {
   ComboboxOptions,
   ComboboxOption,
 } from "@headlessui/react";
-import type { ComboboxProps, SimpleOption } from "./types";
 import { Check } from "lucide-react";
+
+/**
+ * Internal dependencies.
+ */
+import type { ComboboxProps, SimpleOption } from "./types";
 
 // Utility for display
 const getLabel = (option: SimpleOption) =>

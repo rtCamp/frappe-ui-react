@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import type { DateRangePickerProps } from "./types";
 import { useDatePicker } from "./useDatePicker";
@@ -49,26 +49,7 @@ function useDateRangePicker({
     onChange: () => {},
   });
 
-  function handleDateClick(date: Date): boolean {
-    // Zero out time for date
-    const d = new Date(date);
-    d.setHours(0, 0, 0, 0);
-    const v = getDateValue(d);
-    if (fromDate && toDate) {
-      setFromDate(v);
-      setToDate("");
-    } else if (fromDate && !toDate) {
-      setToDate(v);
-      swapDatesIfNecessary(fromDate, v);
-      onChange?.([fromDate, v]);
-      return true;
-    } else {
-      setFromDate(v);
-    }
-    return false;
-  }
-
-  function swapDatesIfNecessary(a: string, b: string) {
+  const swapDatesIfNecessary = useCallback((a: string, b: string) => {
     if (!a || !b) return;
     const from = getDate(a);
     from.setHours(0, 0, 0, 0);
@@ -79,31 +60,56 @@ function useDateRangePicker({
       setFromDate(getDateValue(to));
       setToDate(getDateValue(from));
     }
-  }
+  }, []);
 
-  function handleToday() {
+  const handleDateClick = useCallback(
+    (date: Date): boolean => {
+      // Zero out time for date
+      const d = new Date(date);
+      d.setHours(0, 0, 0, 0);
+      const v = getDateValue(d);
+      if (fromDate && toDate) {
+        setFromDate(v);
+        setToDate("");
+      } else if (fromDate && !toDate) {
+        setToDate(v);
+        swapDatesIfNecessary(fromDate, v);
+        onChange?.([fromDate, v]);
+        return true;
+      } else {
+        setFromDate(v);
+      }
+      return false;
+    },
+    [fromDate, toDate, onChange, swapDatesIfNecessary]
+  );
+
+  const handleToday = useCallback(() => {
     const d = new Date(today);
     d.setHours(0, 0, 0, 0);
     const todayStr = getDateValue(d);
     setFromDate(todayStr);
     setToDate(todayStr);
-  }
+  }, [today]);
 
-  function clearDates() {
+  const clearDates = useCallback(() => {
     setFromDate("");
     setToDate("");
     onChange?.(["", ""]);
-  }
+  }, [onChange]);
 
-  function selectDates() {
+  const selectDates = useCallback(() => {
     onChange?.([fromDate, toDate]);
     setOpen(false);
-  }
+  }, [fromDate, toDate, onChange, setOpen]);
 
-  function isInRange(date: Date) {
-    if (!fromDate || !toDate) return false;
-    return date >= getDate(fromDate) && date <= getDate(toDate);
-  }
+  const isInRange = useCallback(
+    (date: Date) => {
+      if (!fromDate || !toDate) return false;
+      return date >= getDate(fromDate) && date <= getDate(toDate);
+    },
+    [fromDate, toDate]
+  );
 
   return {
     open,
@@ -191,8 +197,8 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
         const displayValue = formatter
           ? formatter(from, to)
           : from && to
-            ? `${from} to ${to}`
-            : from || "";
+          ? `${from} to ${to}`
+          : from || "";
 
         if (children) {
           return children({ togglePopover, isOpen: open, displayValue });
