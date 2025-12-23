@@ -7,17 +7,19 @@ export interface SelectOption {
   value: string;
   label: string;
   disabled?: boolean;
+  [key: string]: any; // Allow extra props
 }
 
 export interface SelectProps {
   size?: SelectSize;
   variant?: SelectVariant;
   disabled?: boolean;
-  value?: string;
+  value?: SelectOption; // Changed from string to object for Headless UI
   placeholder?: string;
-  options: (string | SelectOption)[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  prefix?: (args?: any) => ReactNode;
-  htmlId?: string;
-  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  options: SelectOption[];
+  prefix?: ReactNode; // Simplified prefix type
+  label?: string; // Added label prop
+  error?: string; // Added error prop
+  onChange?: (value: SelectOption) => void;
+  className?: string;
 }

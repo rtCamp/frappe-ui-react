@@ -2,17 +2,21 @@ import React, {
   useMemo,
   useRef,
   useCallback,
-  InputHTMLAttributes,
   forwardRef,
 } from "react";
+import { clsx } from "clsx";
 import { debounce } from "../../utils/debounce";
-import { TextInputProps } from "./types";
+import type { TextInputProps } from "./types";
+
+// 1. Define valid keys for casting
+type SizeKey = "sm" | "md" | "lg" | "xl";
+type VariantKey = "subtle" | "outline" | "ghost";
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   (
     {
       type = "text",
-      size = "sm",
+      size = "md",
       variant = "subtle",
       disabled = false,
       value,
@@ -20,12 +24,19 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       debounce: debounceTime,
       prefix,
       suffix,
+      label,
+      description,
+      error,
+      className,
+      style,
+      htmlId,
       ...rest
     },
     ref
   ) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
+    // Handle Ref Merging
     const setRefs = useCallback(
       (node: HTMLInputElement) => {
         inputRef.current = node;
@@ -38,73 +49,45 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       [ref]
     );
 
-    const textColor = disabled ? "text-ink-gray-5" : "text-ink-gray-8";
+    // --- Styles ---
+    // Fix 1: Cast 'size' to SizeKey
+    const sizeClasses = {
+      sm: "text-sm h-7",
+      md: "text-base h-8",
+      lg: "text-lg h-10",
+      xl: "text-xl h-10",
+    }[size as SizeKey];
 
-    const inputClasses = useMemo(() => {
-      const sizeClasses = {
-        sm: "text-base rounded h-7",
-        md: "text-base rounded h-8",
-        lg: "text-lg rounded-md h-10",
-        xl: "text-xl rounded-md h-10",
-      }[size];
+    const paddingClasses = clsx(
+      "py-1.5",
+      prefix 
+        ? { sm: "pl-8", md: "pl-9", lg: "pl-11", xl: "pl-12" }[size as SizeKey] 
+        : { sm: "pl-2", md: "pl-2.5", lg: "pl-3", xl: "pl-3" }[size as SizeKey],
+      suffix 
+        ? { sm: "pr-8", md: "pr-9", lg: "pr-11", xl: "pr-12" }[size as SizeKey] 
+        : { sm: "pr-2", md: "pr-2.5", lg: "pr-3", xl: "pr-3" }[size as SizeKey]
+    );
 
-      const paddingClasses = {
-        sm: ["py-1.5", prefix ? "pl-9" : "pl-2", suffix ? "pr-8" : "pr-2"].join(
-          " "
-        ),
-        md: [
-          "py-1.5",
-          prefix ? "pl-10" : "pl-2.5",
-          suffix ? "pr-9" : "pr-2.5",
-        ].join(" "),
-        lg: [
-          "py-1.5",
-          prefix ? "pl-12" : "pl-3",
-          suffix ? "pr-10" : "pr-3",
-        ].join(" "),
-        xl: [
-          "py-1.5",
-          prefix ? "pl-13" : "pl-3",
-          suffix ? "pr-10" : "pr-3",
-        ].join(" "),
-      }[size];
+    // Fix 2: Cast 'variant' to VariantKey here!
+    const variantClasses = {
+      subtle: disabled
+        ? "bg-surface-gray-1 border-transparent text-ink-gray-5 placeholder-ink-gray-3"
+        : "bg-surface-gray-2 border-surface-gray-2 text-ink-gray-8 placeholder-ink-gray-4 hover:bg-surface-gray-3 focus:bg-surface-white focus:ring-2 focus:ring-outline-gray-3",
+      outline: disabled
+        ? "bg-surface-gray-1 border-outline-gray-2 text-ink-gray-5 placeholder-ink-gray-3"
+        : "bg-surface-white border-outline-gray-2 text-ink-gray-8 placeholder-ink-gray-4 hover:border-outline-gray-3 focus:ring-2 focus:ring-outline-gray-3",
+      ghost: "border-0 bg-transparent focus:ring-0",
+    }[variant as VariantKey];
 
-      const currentVariant = disabled ? "disabled" : variant;
-      const variantClasses = {
-        subtle:
-          "border border-surface-gray-2 bg-surface-gray-2 placeholder-ink-gray-4 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-        outline:
-          "border border-outline-gray-2 bg-surface-white placeholder-ink-gray-4 hover:border-outline-gray-3 hover:shadow-sm focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-        disabled: `border ${
-          variant === "outline" ? "border-outline-gray-2" : "border-transparent"
-        } bg-surface-gray-1 placeholder-ink-gray-3`,
-        ghost: 'border-0 focus:ring-0 focus-visible:ring-0',
-      }[currentVariant];
+    const errorClasses = error ? "border-red-500 focus:border-red-500 focus:ring-red-200" : "";
 
-      return [
-        sizeClasses,
-        paddingClasses,
-        variantClasses,
-        textColor,
-        "transition-colors w-full dark:[color-scheme:dark] outline-none",
-      ]
-        .filter(Boolean)
-        .join(" ");
-    }, [size, prefix, suffix, disabled, variant, textColor]);
-
-    const prefixClasses = useMemo(() => {
-      return { sm: "pl-2", md: "pl-2.5", lg: "pl-3", xl: "pl-3" }[size];
-    }, [size]);
-
-    const suffixClasses = useMemo(() => {
-      return { sm: "pr-2", md: "pr-2.5", lg: "pr-3", xl: "pr-3" }[size];
-    }, [size]);
-
+    // --- Logic ---
     const emitChange = useCallback(
-      (value: string) => {
+      (val: string) => {
         if (onChange) {
           const syntheticEvent = {
-            target: { value },
+            target: { value: val },
+            currentTarget: { value: val },
           } as React.ChangeEvent<HTMLInputElement>;
           onChange(syntheticEvent);
         }
@@ -114,55 +97,72 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
 
     const debouncedEmitChange = useMemo(() => {
       if (debounceTime) {
-        return debounce((value: string) => emitChange(value), debounceTime);
+        return debounce((val: string) => emitChange(val), debounceTime);
       }
       return emitChange;
     }, [debounceTime, emitChange]);
 
-    const handleChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (debounceTime) {
         debouncedEmitChange(e.target.value);
-      },
-      [debouncedEmitChange]
-    );
+      } else {
+        onChange?.(e);
+      }
+    };
 
-    const inputValue =
-      value ?? (rest as InputHTMLAttributes<HTMLInputElement>).value;
+    // Fix 3: Cast 'size' here too
+    const iconPos = { sm: "2", md: "2.5", lg: "3", xl: "3" }[size as SizeKey];
 
     return (
-      <div
-        className={`relative flex items-center ${rest?.className || ""}`}
-        style={rest?.style}
-      >
-        {prefix && (
-          <div
-            className={`absolute inset-y-0 left-0 flex items-center ${textColor} ${prefixClasses}`}
-          >
-            {prefix?.(size)}
-          </div>
+      <div className={clsx("w-full", className)} style={style}>
+        {label && (
+          <label className="mb-1.5 block text-xs font-medium text-ink-gray-5" htmlFor={htmlId}>
+            {label}
+          </label>
         )}
-        <input
-          ref={setRefs}
-          type={type}
-          disabled={disabled}
-          id={rest.htmlId}
-          value={inputValue}
-          required={rest.required}
-          onChange={handleChange}
-          data-testid="text-input"
-          className={`appearance-none ${inputClasses}`}
-          {...rest}
-        />
-        {suffix && (
-          <div
-            className={`absolute inset-y-0 right-0 flex items-center ${textColor} ${suffixClasses}`}
-          >
-            {suffix && suffix()}
-          </div>
+        
+        <div className="relative flex items-center">
+          {prefix && (
+            <div className={`absolute left-${iconPos} flex items-center text-ink-gray-5 pointer-events-none`}>
+              {typeof prefix === 'function' ? prefix(size) : prefix}
+            </div>
+          )}
+          
+          <input
+            ref={setRefs}
+            id={htmlId}
+            type={type}
+            disabled={disabled}
+            value={value}
+            onChange={handleChange}
+            required={rest.required}
+            className={clsx(
+              "w-full rounded transition-colors outline-none",
+              sizeClasses,
+              paddingClasses,
+              variantClasses,
+              errorClasses
+            )}
+            {...rest}
+          />
+
+          {suffix && (
+            <div className={`absolute right-${iconPos} flex items-center text-ink-gray-5 pointer-events-none`}>
+               {typeof suffix === 'function' ? suffix(size) : suffix}
+            </div>
+          )}
+        </div>
+
+        {description && !error && (
+          <p className="mt-1.5 text-xs text-ink-gray-4">{description}</p>
+        )}
+        {error && (
+          <p className="mt-1 text-xs text-red-600">{error}</p>
         )}
       </div>
     );
   }
 );
 
+TextInput.displayName = "TextInput";
 export default TextInput;

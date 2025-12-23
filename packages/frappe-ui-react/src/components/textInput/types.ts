@@ -1,8 +1,10 @@
-import type { ReactNode } from "react";
-import { TextInputTypes } from "../../common/types";
+import type { ReactNode, ChangeEvent, CSSProperties } from "react";
+// Remove "../common/types" if it causes issues, otherwise keep it. 
+// Assuming TextInputTypes is simple string union for now to be safe.
+export type TextInputType = "text" | "number" | "email" | "password" | "search" | "tel" | "url" | "date" | "datetime-local" | "time";
 
 export interface TextInputProps {
-  type?: TextInputTypes;
+  type?: TextInputType;
   size?: "sm" | "md" | "lg" | "xl";
   variant?: "subtle" | "outline" | "ghost";
   placeholder?: string;
@@ -11,11 +13,13 @@ export interface TextInputProps {
   value?: string | number;
   debounce?: number;
   required?: boolean;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  prefix?: (args?: any) => ReactNode;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  suffix?: (args?: any) => ReactNode;
+  label?: string;        // Added
+  description?: string;  // Added
+  error?: string;        // Added
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  prefix?: ReactNode;    // Simplified type
+  suffix?: ReactNode;    // Simplified type
   className?: string;
-  style?: Record<string, string | number | boolean>;
+  style?: CSSProperties; // Improved type
+  [key: string]: any;    // Allow other standard input props (onBlur, onFocus, etc.)
 }

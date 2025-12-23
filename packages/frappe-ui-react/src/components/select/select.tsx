@@ -1,142 +1,112 @@
-import React, { useMemo, useCallback } from "react";
-
-import type { SelectProps, SelectOption } from "./types";
+import React, { Fragment } from "react";
+import { Listbox, Transition } from "@headlessui/react";
+import { Check, ChevronDown } from "lucide-react";
+import { clsx } from "clsx";
+import type { SelectProps } from "./types";
 
 const Select: React.FC<SelectProps> = ({
-  size = "sm",
+  size = "md",
   variant = "subtle",
   disabled = false,
   value,
-  placeholder,
+  placeholder = "Select...",
   options,
   onChange,
-  htmlId,
   prefix,
+  label,
+  error,
+  className,
 }) => {
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      if (onChange) {
-        onChange(e);
-      }
-    },
-    [onChange]
-  );
-
-  const selectOptions = useMemo(() => {
-    return (
-      options
-        ?.map((option) => {
-          if (typeof option === "string") {
-            return {
-              label: option,
-              value: option,
-            } as SelectOption;
-          }
-          return option as SelectOption;
-        })
-        .filter(Boolean) || []
-    );
-  }, [options]);
-
-  const textColor = useMemo(() => {
-    return disabled ? "text-ink-gray-4" : "text-ink-gray-8";
-  }, [disabled]);
-
-  const fontSizeClasses = useMemo(() => {
-    return {
-      sm: "text-base",
-      md: "text-base",
-      lg: "text-lg",
-      xl: "text-xl",
-    }[size];
-  }, [size]);
-
-  const paddingClasses = useMemo(() => {
-    return {
-      sm: prefix ? "pl-8 pr-5" : "pl-2 pr-5",
-      md: prefix ? "pl-9 pr-5.5" : "pl-2.5 pr-5.5",
-      lg: prefix ? "pl-10 pr-6" : "pl-3 pr-6",
-      xl: prefix ? "pl-10 pr-6" : "pl-3 pr-6",
-    }[size];
-  }, [prefix, size]);
-
-  const selectClasses = useMemo(() => {
-    const sizeClasses = {
-      sm: "rounded h-7",
-      md: "rounded h-8",
-      lg: "rounded-md h-10",
-      xl: "rounded-md h-10",
-    }[size];
-
-    const currentVariant = disabled ? "disabled" : variant;
-    const variantClasses = {
-      subtle:
-        "border border-surface-gray-2 bg-surface-gray-2 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-      outline:
-        "border border-outline-gray-2 bg-surface-white hover:border-outline-gray-3 focus:border-outline-gray-4 focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-      ghost:
-        "bg-transparent border-transparent hover:bg-surface-gray-3 focus:bg-surface-gray-3 focus:border-outline-gray-4 focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-      disabled: `border ${variant !== "ghost" ? "bg-surface-gray-1" : ""} ${
-        variant === "outline" ? "border-outline-gray-2" : "border-transparent"
-      }`,
-    }[currentVariant];
-
-    return `
-      ${sizeClasses}
-      ${fontSizeClasses}
-      ${paddingClasses}
-      ${variantClasses}
-      ${textColor}
-      transition-colors w-full py-0 truncate appearance-none cursor-pointer
-      focus:outline-none
-    `;
-  }, [size, fontSizeClasses, paddingClasses, disabled, variant, textColor]);
-
-  const prefixClasses = useMemo(() => {
-    return {
-      sm: "pl-2",
-      md: "pl-2.5",
-      lg: "pl-3",
-      xl: "pl-3",
-    }[size];
-  }, [size]);
   
+  // 1. Size Styles
+  const sizeClasses = {
+    sm: "h-7 text-sm px-2",
+    md: "h-8 text-base px-2.5",
+    lg: "h-10 text-lg px-3",
+    xl: "h-12 text-xl px-3",
+  }[size];
+
+  // 2. Variant Styles (Using your repo's specific colors)
+  const variantClasses = {
+    subtle: disabled
+      ? "bg-surface-gray-1 border-transparent text-ink-gray-4"
+      : "bg-surface-gray-2 border-surface-gray-2 text-ink-gray-8 hover:bg-surface-gray-3 focus:ring-2 focus:ring-outline-gray-3",
+    outline: disabled
+      ? "bg-surface-gray-1 border-outline-gray-2 text-ink-gray-4"
+      : "bg-surface-white border-outline-gray-2 text-ink-gray-8 hover:border-outline-gray-3 focus:ring-2 focus:ring-outline-gray-3",
+    ghost: disabled
+      ? "text-ink-gray-4"
+      : "bg-transparent border-transparent text-ink-gray-8 hover:bg-surface-gray-3",
+  }[variant];
+
   return (
-    <div className="relative flex items-center">
-      {prefix && (
-        <div
-          className={`absolute inset-y-0 left-0 flex items-center ${textColor} ${prefixClasses} pointer-events-none`}
-        >
-          {prefix?.(size)}
-        </div>
+    <div className={clsx("w-full", className)}>
+      {label && (
+        <label className="mb-1.5 block text-xs font-medium text-ink-gray-5">
+          {label}
+        </label>
       )}
-      {placeholder && !value && (
-        <div
-          className={`pointer-events-none absolute text-ink-gray-4 truncate w-full ${fontSizeClasses} ${paddingClasses}`}
-        >
-          {placeholder}
-        </div>
-      )}
-      <select
-        className={selectClasses}
-        disabled={disabled}
-        id={htmlId}
-        value={value}
-        onChange={handleChange}
-        data-testid="select"
-      >
-        {placeholder && !value && <option />}
-        {selectOptions.map((option) => (
-          <option
-            selected={option.value === value}
-            key={option.value}
-            value={option.value}
-            disabled={option.disabled}
+      
+      <Listbox value={value} onChange={onChange} disabled={disabled}>
+        <div className="relative">
+          <Listbox.Button
+            className={clsx(
+              "relative w-full cursor-default rounded-md border flex items-center justify-between transition-all focus:outline-none",
+              sizeClasses,
+              variantClasses,
+              error && "border-red-500 focus:ring-red-200"
+            )}
           >
-            {option.label}
-          </option>
-        ))}
-      </select>
+            <div className="flex items-center gap-2 overflow-hidden">
+              {prefix && <span className="text-ink-gray-5">{prefix}</span>}
+              <span className={clsx("block truncate", !value && "text-ink-gray-4")}>
+                {value ? value.label : placeholder}
+              </span>
+            </div>
+            <span className="pointer-events-none flex items-center">
+              <ChevronDown className="h-4 w-4 text-ink-gray-5" aria-hidden="true" />
+            </span>
+          </Listbox.Button>
+
+          <Transition
+            as={Fragment}
+            leave="transition ease-in duration-100"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+              {options.map((option, idx) => (
+                <Listbox.Option
+                  key={idx}
+                  className={({ active }) =>
+                    clsx(
+                      "relative cursor-pointer select-none py-2 pl-10 pr-4",
+                      active ? "bg-surface-gray-2 text-ink-gray-8" : "text-ink-gray-8",
+                      option.disabled && "opacity-50 cursor-not-allowed"
+                    )
+                  }
+                  value={option}
+                  disabled={option.disabled}
+                >
+                  {({ selected }) => (
+                    <>
+                      <span className={clsx("block truncate", selected ? "font-medium" : "font-normal")}>
+                        {option.label}
+                      </span>
+                      {selected ? (
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-ink-gray-8">
+                          <Check className="h-4 w-4" aria-hidden="true" />
+                        </span>
+                      ) : null}
+                    </>
+                  )}
+                </Listbox.Option>
+              ))}
+            </Listbox.Options>
+          </Transition>
+        </div>
+      </Listbox>
+      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
     </div>
   );
 };
