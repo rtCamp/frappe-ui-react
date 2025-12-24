@@ -4,6 +4,7 @@ export * from "./avatar";
 export * from "./badge";
 export * from "./breadcrumbs";
 export * from "./button";
+export * from "./buttonGroup";
 export * from "./calendar";
 export * from "./charts";
 export * from "./checkbox";
