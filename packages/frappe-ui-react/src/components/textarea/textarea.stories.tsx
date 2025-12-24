@@ -63,4 +63,15 @@ export const OutlineVariant = {
     variant: "outline",
     rows: 3,
   },
+
 };
+
+export const Disabled = {
+  ...Template,
+  args: {
+    placeholder: "Disabled textarea",
+    variant: "outline",
+    value: "",
+    disabled: true,
+  },
+  };
