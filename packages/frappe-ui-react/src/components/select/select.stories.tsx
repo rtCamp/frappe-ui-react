@@ -1,15 +1,28 @@
+import type { Meta } from "@storybook/react-vite";
 import { useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { SelectProps } from "./types";
 import Select from "./select";
 import { User } from "lucide-react";
+import type { SelectOption } from "./types";
 
-export default {
+const meta: Meta<typeof Select> = {
   title: "Components/Select",
   component: Select,
-  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
+
+  parameters: {
+    docs: {
+      source: { type: "dynamic" },
+    },
+    layout: "centered",
+  },
   tags: ["autodocs"],
   argTypes: {
+    label: { control: "text", description: "Label for the select input" },
+    placeholder: { control: "text", description: "Placeholder text when no option is selected" },
+    disabled: { control: "boolean", description: "Disables the select interaction" },
+    value: { control: "object", description: "Current selected option object" },
+    options: { control: "object", description: "Array of options to display" },
+    error: { control: "text", description: "Error message to display" },
+    prefix: { control: "text", description: "Element to display before the value" },
     size: {
       control: { type: "select", options: ["sm", "md", "lg"] },
       description: "Size of the select input",
@@ -18,73 +31,46 @@ export default {
       control: { type: "select", options: ["outline", "subtle"] },
       description: "Visual variant of the select input",
     },
-    disabled: {
-      control: "boolean",
-      description: "If true, disables the select input",
-    },
-    value: {
-      control: "text",
-      description: "Current value of the select input",
-    },
-    placeholder: {
-      control: "text",
-      description: "Placeholder text when no value is selected",
-    },
-    options: {
-      control: "object",
-      description:
-        "Array of options to display in the dropdown, each with a label and value",
-    },
-    prefix: {
-      control: false,
-      description: "Element to display before the selected value",
-    },
-    htmlId: {
-      control: "text",
-      description: "HTML id attribute for the select input",
-    },
     onChange: {
       action: "changed",
       description: "Callback function when the selected value changes",
     },
   },
-} as Meta<typeof Select>;
-
-const Template: StoryObj<SelectProps> = {
-  args: {
-    value: "",
-    options: [
-      { label: "John Doe", value: "john-doe" },
-      { label: "Jane Doe", value: "jane-doe" },
-      { label: "John Smith", value: "john-smith" },
-      { label: "Jane Smith", value: "jane-smith", disabled: true },
-      { label: "John Wayne", value: "john-wayne" },
-      { label: "Jane Wayne", value: "jane-wayne" },
-    ],
-  },
-  render: (args) => {
-    const [value, setValue] = useState(args.value || "");
-
-    return (
-      <div className="p-4 w-[300px]">
-        <Select
-          {...args}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
-      </div>
-    );
-  },
 };
 
-export const Default = {
-  ...Template,
+export default meta;
+
+const options: SelectOption[] = [
+  { label: "John Doe", value: "john-doe" },
+  { label: "Jane Doe", value: "jane-doe" },
+  { label: "Disabled User", value: "disabled", disabled: true },
+];
+
+export const Default = () => {
+  const [selected, setSelected] = useState<SelectOption | undefined>(undefined);
+  return (
+    <div className="w-72">
+      <Select
+        label="Assignee"
+        options={options}
+        value={selected}
+        onChange={setSelected}
+      />
+    </div>
+  );
 };
 
-export const WithPrefix = {
-  ...Template,
-  args: {
-    ...Template.args,
-    prefix: () => <User size={16} className="text-ink-gray-9" />,
-  },
+export const WithPrefix = () => {
+  const [selected, setSelected] = useState<SelectOption>(options[0]);
+  return (
+    <div className="w-72">
+      <Select
+        label="User"
+        prefix={<User size={14} />}
+        options={options}
+        value={selected}
+        onChange={setSelected}
+      />
+    </div>
+  );
 };

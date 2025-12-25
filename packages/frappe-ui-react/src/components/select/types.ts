@@ -13,11 +13,13 @@ export interface SelectProps {
   size?: SelectSize;
   variant?: SelectVariant;
   disabled?: boolean;
-  value?: string;
+  value?: SelectOption;
   placeholder?: string;
-  options: (string | SelectOption)[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  prefix?: (args?: any) => ReactNode;
-  htmlId?: string;
-  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  options: SelectOption[];
+  prefix?: ReactNode;
+  label?: string;
+  error?: string;
+  onChange?: (value: SelectOption) => void;
+  className?: string;
 }
+

@@ -1,21 +1,16 @@
-import type { ReactNode } from "react";
-import { TextInputTypes } from "../../common/types";
+import { InputHTMLAttributes, ReactNode } from "react";
 
-export interface TextInputProps {
-  type?: TextInputTypes;
-  size?: "sm" | "md" | "lg" | "xl";
-  variant?: "subtle" | "outline" | "ghost";
-  placeholder?: string;
-  disabled?: boolean;
+export type SizeKey = "sm" | "md" | "lg" | "xl";
+export type VariantKey = "subtle" | "outline" | "ghost";
+
+export interface TextInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "prefix" | "suffix"> {
+  label?: string;
+  description?: string;
+  error?: string;
+  prefix?: ReactNode;
+  suffix?: ReactNode;
+  size?: SizeKey;
+  variant?: VariantKey;
   htmlId?: string;
-  value?: string | number;
   debounce?: number;
-  required?: boolean;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  prefix?: (args?: any) => ReactNode;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  suffix?: (args?: any) => ReactNode;
-  className?: string;
-  style?: Record<string, string | number | boolean>;
 }
