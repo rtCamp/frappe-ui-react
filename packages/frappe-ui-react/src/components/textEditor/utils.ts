@@ -1,38 +1,14 @@
-export const preProcessLink = (input: string) => {
-  const linkRegex = /\b((https?:\/\/|www\.)[^\s]+)\b/gi;
+import commands from "./commands";
+import { EditorButtonOption, EditorCommand } from "./types";
 
-  const processText = (text: string) => {
-    return text.replace(linkRegex, (url) => {
-      const href = url.startsWith("http") ? url : `https://${url}`;
-      return `<a 
-                href="${href}" 
-                class="text-blue-500 hover:text-blue-700 underline" 
-                target="_blank"
-                rel="noopener noreferrer">${url}</a>`;
-    });
-  };
-
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(input, "text/html");
-
-  const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT, null);
-  const textNodes = [];
-
-  while (walker.nextNode()) {
-    textNodes.push(walker.currentNode);
+export function createEditorButton(
+  option: EditorButtonOption
+): EditorCommand | EditorCommand[] {
+  if (Array.isArray(option)) {
+    return option.map(createEditorButton) as EditorCommand[];
   }
-
-  textNodes.forEach((node) => {
-    const parent = node.parentNode as HTMLElement;
-    if (parent && !parent.closest("a")) {
-      const processed = processText(node.textContent || "");
-      if (processed !== node.textContent) {
-        const wrapper = document.createElement("span");
-        wrapper.innerHTML = processed;
-        parent.replaceChild(wrapper, node);
-      }
-    }
-  });
-
-  return doc.body.innerHTML;
-};
+  if (typeof option === "object") {
+    return option;
+  }
+  return commands[option];
+}

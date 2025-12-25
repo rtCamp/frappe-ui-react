@@ -2,6 +2,7 @@ import React from "react";
 
 import FeatherIcon, { FeatherIconProps } from "../featherIcon";
 import LoadingIndicator from "../loadingIndicator";
+import { Tooltip } from "../tooltip";
 import { ButtonProps, ButtonThemeVariant } from "./types";
 
 const Button = ({
@@ -16,6 +17,7 @@ const Button = ({
   loadingText,
   disabled = false,
   link,
+  tooltip,
   children,
   onClick,
   className,
@@ -174,7 +176,7 @@ const Button = ({
     return <IconComponent className={slotClasses} />;
   };
 
-  return (
+  const buttonElement = (
     <button
       className={buttonClasses}
       onClick={handleClick}
@@ -199,6 +201,12 @@ const Button = ({
       {iconRight && renderIcon(iconRight)}
     </button>
   );
+
+  if (tooltip) {
+    return <Tooltip text={tooltip} disabled={!tooltip}>{buttonElement}</Tooltip>;
+  }
+
+  return buttonElement;
 };
 
 export default Button;
