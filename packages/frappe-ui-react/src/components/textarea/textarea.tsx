@@ -32,13 +32,12 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         if (typeof ref === "function") {
           ref(node);
         } else if (ref) {
-          (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = node;
+          (ref as { current: HTMLTextAreaElement | null }).current = node;
         }
       },
       [ref]
     );
 
-    // --- Styles ---
     const sizeClasses = {
       sm: "text-sm rounded p-2",
       md: "text-base rounded p-2.5",
@@ -57,7 +56,6 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     const errorClasses = error ? "border-red-500 focus:border-red-500 focus:ring-red-200" : "";
 
-    // --- Logic ---
     const emitChange = useCallback(
       (val: string) => {
         if (onChange) {

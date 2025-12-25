@@ -1,19 +1,57 @@
 import React, { useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import Textarea from "./textarea";
 import type { TextareaProps } from "./types";
 
 const meta: Meta<typeof Textarea> = {
   title: "Components/TextArea",
   component: Textarea,
+  parameters: {
+    docs: {
+      source: { type: "dynamic" },
+    },
+    layout: "centered",
+  },
   tags: ["autodocs"],
   argTypes: {
-    label: { control: "text" },
-    placeholder: { control: "text" },
-    disabled: { control: "boolean" },
-    variant: { control: "select", options: ["outline", "subtle"] },
-    size: { control: "select", options: ["sm", "md", "lg", "xl"] },
-    rows: { control: "number" },
+    label: { 
+      control: "text", 
+      description: "Label text displayed above the textarea" 
+    },
+    placeholder: { 
+      control: "text", 
+      description: "Placeholder text for the textarea" 
+    },
+    disabled: { 
+      control: "boolean", 
+      description: "If true, disables the textarea" 
+    },
+    variant: { 
+      control: "select", 
+      options: ["outline", "subtle"], 
+      description: "Visual variant of the textarea" 
+    },
+    size: { 
+      control: "select", 
+      options: ["sm", "md", "lg", "xl"], 
+      description: "Size of the textarea" 
+    },
+    rows: { 
+      control: "number", 
+      description: "Number of visible text lines" 
+    },
+    error: {
+      control: "text",
+      description: "Error message text displayed below the textarea"
+    },
+    value: {
+      control: "text",
+      description: "Current value of the textarea"
+    },
+    onChange: {
+      action: "changed",
+      description: "Callback function when the value changes"
+    },
   },
 };
 
@@ -63,15 +101,5 @@ export const OutlineVariant = {
     variant: "outline",
     rows: 3,
   },
-
 };
 
-export const Disabled = {
-  ...Template,
-  args: {
-    placeholder: "Disabled textarea",
-    variant: "outline",
-    value: "",
-    disabled: true,
-  },
-  };

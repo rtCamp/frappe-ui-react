@@ -6,11 +6,7 @@ import React, {
 } from "react";
 import { clsx } from "clsx";
 import { debounce } from "../../utils/debounce";
-import type { TextInputProps } from "./types";
-
-// 1. Define valid keys for casting
-type SizeKey = "sm" | "md" | "lg" | "xl";
-type VariantKey = "subtle" | "outline" | "ghost";
+import type { TextInputProps, SizeKey, VariantKey } from "./types";
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   (
@@ -36,7 +32,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   ) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // Handle Ref Merging
+    
     const setRefs = useCallback(
       (node: HTMLInputElement) => {
         inputRef.current = node;
@@ -49,8 +45,6 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       [ref]
     );
 
-    // --- Styles ---
-    // Fix 1: Cast 'size' to SizeKey
     const sizeClasses = {
       sm: "text-sm h-7",
       md: "text-base h-8",
@@ -68,7 +62,6 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         : { sm: "pr-2", md: "pr-2.5", lg: "pr-3", xl: "pr-3" }[size as SizeKey]
     );
 
-    // Fix 2: Cast 'variant' to VariantKey here!
     const variantClasses = {
       subtle: disabled
         ? "bg-surface-gray-1 border-transparent text-ink-gray-5 placeholder-ink-gray-3"
@@ -81,7 +74,6 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
 
     const errorClasses = error ? "border-red-500 focus:border-red-500 focus:ring-red-200" : "";
 
-    // --- Logic ---
     const emitChange = useCallback(
       (val: string) => {
         if (onChange) {
@@ -110,7 +102,6 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       }
     };
 
-    // Fix 3: Cast 'size' here too
     const iconPos = { sm: "2", md: "2.5", lg: "3", xl: "3" }[size as SizeKey];
 
     return (
@@ -124,7 +115,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         <div className="relative flex items-center">
           {prefix && (
             <div className={`absolute left-${iconPos} flex items-center text-ink-gray-5 pointer-events-none`}>
-              {typeof prefix === 'function' ? prefix(size) : prefix}
+              {prefix}
             </div>
           )}
           
@@ -148,7 +139,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
 
           {suffix && (
             <div className={`absolute right-${iconPos} flex items-center text-ink-gray-5 pointer-events-none`}>
-               {typeof suffix === 'function' ? suffix(size) : suffix}
+               {suffix}
             </div>
           )}
         </div>

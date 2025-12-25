@@ -7,19 +7,19 @@ export interface SelectOption {
   value: string;
   label: string;
   disabled?: boolean;
-  [key: string]: any; // Allow extra props
 }
 
 export interface SelectProps {
   size?: SelectSize;
   variant?: SelectVariant;
   disabled?: boolean;
-  value?: SelectOption; // Changed from string to object for Headless UI
+  value?: SelectOption;
   placeholder?: string;
   options: SelectOption[];
-  prefix?: ReactNode; // Simplified prefix type
-  label?: string; // Added label prop
-  error?: string; // Added error prop
+  prefix?: ReactNode;
+  label?: string;
+  error?: string;
   onChange?: (value: SelectOption) => void;
   className?: string;
 }
+

@@ -1,23 +1,14 @@
-import type { ChangeEvent, CSSProperties } from "react";
+import { TextareaHTMLAttributes } from "react";
 
 export type TextAreaSize = "sm" | "md" | "lg" | "xl";
 export type TextAreaVariant = "subtle" | "outline";
 
-export interface TextareaProps {
+export interface TextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "size"> {
   label?: string;
-  description?: string; // Added
-  error?: string;       // Added
+  description?: string;
+  error?: string;
   size?: TextAreaSize;
   variant?: TextAreaVariant;
-  placeholder?: string;
-  disabled?: boolean;
-  value?: string;
   debounce?: number;
-  rows?: number;
-  onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   htmlId?: string;
-  className?: string;
-  style?: CSSProperties;
-  required?: boolean;
-  [key: string]: any;   // Allow other standard props
 }

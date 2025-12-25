@@ -1,18 +1,70 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
+import React, { useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import TextInput from "./textInput";
-import { Search, Mail } from "lucide-react"; // Using installed icons
+import { Search } from "lucide-react";
 import type { TextInputProps } from "./types";
 
 const meta: Meta<typeof TextInput> = {
   title: "Components/TextInput",
   component: TextInput,
+  parameters: {
+    docs: {
+      source: { type: "dynamic" },
+    },
+    layout: "centered",
+  },
   tags: ["autodocs"],
   argTypes: {
-    type: { control: "select", options: ["text", "password", "email", "number"] },
-    size: { control: "select", options: ["sm", "md", "lg"] },
-    variant: { control: "select", options: ["subtle", "outline"] },
-    disabled: { control: "boolean" },
+    type: {
+      control: {
+        type: "select",
+        options: [
+          "text", "number", "email", "date", "datetime-local",
+          "password", "search", "tel", "time", "url"
+        ]
+      },
+      description: "Type of the text input (HTML input type attribute)",
+    },
+    size: {
+      control: { type: "select", options: ["sm", "md", "lg", "xl"] },
+      description: "Size of the text input",
+    },
+    variant: {
+      control: { type: "select", options: ["subtle", "outline", "ghost"] },
+      description: "Visual variant of the text input",
+    },
+    disabled: {
+      control: "boolean",
+      description: "If true, disables the text input",
+    },
+    placeholder: {
+      control: "text",
+      description: "Placeholder text for the input",
+    },
+    label: {
+      control: "text",
+      description: "Label text displayed above the input",
+    },
+    error: {
+      control: "text",
+      description: "Error message text displayed below the input",
+    },
+    value: {
+      control: "text",
+      description: "Current value of the text input",
+    },
+    prefix: {
+      control: false,
+      description: "Element to display before the input value (e.g., Icon)",
+    },
+    suffix: {
+      control: false,
+      description: "Element to display after the input value",
+    },
+    onChange: {
+      action: "changed",
+      description: "Callback function when the input value changes",
+    },
   },
 };
 
@@ -27,7 +79,7 @@ const Template: Story = {
         <TextInput
           {...args}
           value={val}
-          onChange={(e) => setVal(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setVal(e.target.value)}
         />
       </div>
     );

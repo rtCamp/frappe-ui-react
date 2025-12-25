@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Listbox, Transition } from "@headlessui/react";
+import { Listbox, ListboxButton, ListboxOptions, ListboxOption, Transition } from "@headlessui/react";
 import { Check, ChevronDown } from "lucide-react";
 import { clsx } from "clsx";
 import type { SelectProps } from "./types";
@@ -18,7 +18,6 @@ const Select: React.FC<SelectProps> = ({
   className,
 }) => {
   
-  // 1. Size Styles
   const sizeClasses = {
     sm: "h-7 text-sm px-2",
     md: "h-8 text-base px-2.5",
@@ -26,7 +25,6 @@ const Select: React.FC<SelectProps> = ({
     xl: "h-12 text-xl px-3",
   }[size];
 
-  // 2. Variant Styles (Using your repo's specific colors)
   const variantClasses = {
     subtle: disabled
       ? "bg-surface-gray-1 border-transparent text-ink-gray-4"
@@ -49,7 +47,7 @@ const Select: React.FC<SelectProps> = ({
       
       <Listbox value={value} onChange={onChange} disabled={disabled}>
         <div className="relative">
-          <Listbox.Button
+          <ListboxButton
             className={clsx(
               "relative w-full cursor-default rounded-md border flex items-center justify-between transition-all focus:outline-none",
               sizeClasses,
@@ -66,7 +64,7 @@ const Select: React.FC<SelectProps> = ({
             <span className="pointer-events-none flex items-center">
               <ChevronDown className="h-4 w-4 text-ink-gray-5" aria-hidden="true" />
             </span>
-          </Listbox.Button>
+          </ListboxButton>
 
           <Transition
             as={Fragment}
@@ -74,14 +72,14 @@ const Select: React.FC<SelectProps> = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+            <ListboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
               {options.map((option, idx) => (
-                <Listbox.Option
+                <ListboxOption
                   key={idx}
-                  className={({ active }) =>
+                  className={({ focus }) =>
                     clsx(
                       "relative cursor-pointer select-none py-2 pl-10 pr-4",
-                      active ? "bg-surface-gray-2 text-ink-gray-8" : "text-ink-gray-8",
+                      focus ? "bg-surface-gray-2 text-ink-gray-8" : "text-ink-gray-8",
                       option.disabled && "opacity-50 cursor-not-allowed"
                     )
                   }
@@ -100,9 +98,9 @@ const Select: React.FC<SelectProps> = ({
                       ) : null}
                     </>
                   )}
-                </Listbox.Option>
+                </ListboxOption>
               ))}
-            </Listbox.Options>
+            </ListboxOptions>
           </Transition>
         </div>
       </Listbox>
