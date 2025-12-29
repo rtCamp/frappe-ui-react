@@ -34,11 +34,13 @@ export interface DialogOptions {
     name: string;
     appearance?: "info" | "success" | "warning" | "danger";
   };
+  extraDialogPositionClasses?: string;
   actions?: DialogAction[];
 }
 
 export interface DialogProps {
   open: boolean;
+  sheetClasses?: string;
   onOpenChange: (open: boolean) => void;
   options?: DialogOptions;
   disableOutsideClickToClose?: boolean;
