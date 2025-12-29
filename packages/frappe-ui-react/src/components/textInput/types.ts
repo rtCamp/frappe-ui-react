@@ -1,7 +1,8 @@
 import { InputHTMLAttributes, ReactNode } from "react";
 
-export type SizeKey = "sm" | "md" | "lg" | "xl";
-export type VariantKey = "subtle" | "outline" | "ghost";
+export type SizeKey = "sm" | "md" | "lg";
+export type VariantKey = "subtle" | "outline" | "ghost" | "underline";
+export type TextInputState = "success" | "warning" | "error";
 
 export interface TextInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "prefix" | "suffix"> {
   label?: string;
@@ -11,6 +12,9 @@ export interface TextInputProps extends Omit<InputHTMLAttributes<HTMLInputElemen
   suffix?: ReactNode;
   size?: SizeKey;
   variant?: VariantKey;
+  state?: TextInputState;
+  loading?: boolean;
   htmlId?: string;
   debounce?: number;
 }
+

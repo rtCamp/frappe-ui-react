@@ -3,8 +3,10 @@ import React, {
   useRef,
   useCallback,
   forwardRef,
+  useId,
 } from "react";
 import { clsx } from "clsx";
+import { Loader2 } from "lucide-react";
 import { debounce } from "../../utils/debounce";
 import type { TextInputProps, SizeKey, VariantKey } from "./types";
 
@@ -14,6 +16,8 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       type = "text",
       size = "md",
       variant = "subtle",
+      state,
+      loading = false,
       disabled = false,
       value,
       onChange,
@@ -31,48 +35,99 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     ref
   ) => {
     const inputRef = useRef<HTMLInputElement>(null);
+    const generatedId = useId();
+    const id = htmlId || generatedId;
 
-    
     const setRefs = useCallback(
       (node: HTMLInputElement) => {
         inputRef.current = node;
         if (typeof ref === "function") {
           ref(node);
         } else if (ref) {
-          ref.current = node;
+          (ref as { current: HTMLInputElement | null }).current = node;
         }
       },
       [ref]
     );
 
+    const isDisabled = disabled || loading;
+
+    // --- Styles ---
     const sizeClasses = {
       sm: "text-sm h-7",
       md: "text-base h-8",
       lg: "text-lg h-10",
-      xl: "text-xl h-10",
     }[size as SizeKey];
 
     const paddingClasses = clsx(
       "py-1.5",
       prefix 
-        ? { sm: "pl-8", md: "pl-9", lg: "pl-11", xl: "pl-12" }[size as SizeKey] 
-        : { sm: "pl-2", md: "pl-2.5", lg: "pl-3", xl: "pl-3" }[size as SizeKey],
-      suffix 
-        ? { sm: "pr-8", md: "pr-9", lg: "pr-11", xl: "pr-12" }[size as SizeKey] 
-        : { sm: "pr-2", md: "pr-2.5", lg: "pr-3", xl: "pr-3" }[size as SizeKey]
+        ? { sm: "pl-10", md: "pl-11", lg: "pl-12" }[size as SizeKey] 
+        : { sm: "pl-2", md: "pl-2.5", lg: "pl-3" }[size as SizeKey],
+      (suffix || loading) 
+        ? { sm: "pr-10", md: "pr-11", lg: "pr-12" }[size as SizeKey] 
+        : { sm: "pr-2", md: "pr-2.5", lg: "pr-3" }[size as SizeKey]
     );
 
-    const variantClasses = {
-      subtle: disabled
-        ? "bg-surface-gray-1 border-transparent text-ink-gray-5 placeholder-ink-gray-3"
-        : "bg-surface-gray-2 border-surface-gray-2 text-ink-gray-8 placeholder-ink-gray-4 hover:bg-surface-gray-3 focus:bg-surface-white focus:ring-2 focus:ring-outline-gray-3",
-      outline: disabled
-        ? "bg-surface-gray-1 border-outline-gray-2 text-ink-gray-5 placeholder-ink-gray-3"
-        : "bg-surface-white border-outline-gray-2 text-ink-gray-8 placeholder-ink-gray-4 hover:border-outline-gray-3 focus:ring-2 focus:ring-outline-gray-3",
-      ghost: "border-0 bg-transparent focus:ring-0",
-    }[variant as VariantKey];
+    const getVariantClasses = () => {
+      if (isDisabled) {
+        return "bg-gray-100 border border-gray-100 text-gray-500 cursor-not-allowed dark:bg-gray-800 dark:border-gray-800 dark:text-gray-500";
+      }
 
-    const errorClasses = error ? "border-red-500 focus:border-red-500 focus:ring-red-200" : "";
+      if (variant === "subtle") {
+        switch (state) {
+          case "error":
+            return "bg-red-50 text-red-700 border border-red-50 hover:bg-red-100 focus:bg-white focus:ring-2 focus:ring-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/10 dark:hover:bg-red-500/20";
+          case "success":
+            return "bg-green-50 text-green-700 border border-green-50 hover:bg-green-100 focus:bg-white focus:ring-2 focus:ring-green-200 dark:bg-green-500/10 dark:text-green-400 dark:border-green-500/10 dark:hover:bg-green-500/20";
+          case "warning":
+            return "bg-orange-50 text-orange-700 border border-orange-50 hover:bg-orange-100 focus:bg-white focus:ring-2 focus:ring-orange-200 dark:bg-orange-500/10 dark:text-orange-400 dark:border-orange-500/10 dark:hover:bg-orange-500/20";
+          default:
+            return "bg-gray-100 text-gray-900 border border-gray-100 hover:bg-gray-200 focus:bg-white focus:ring-2 focus:ring-outline-gray-3 dark:bg-gray-800 dark:text-white dark:border-gray-800 dark:hover:bg-gray-700";
+        }
+      }
+
+      if (variant === "outline") {
+        switch (state) {
+          case "error":
+            return "bg-white text-red-700 border border-red-500 hover:border-red-600 focus:ring-2 focus:ring-red-200 dark:bg-gray-900 dark:text-red-400 dark:border-red-500";
+          case "success":
+            return "bg-white text-green-700 border border-green-500 hover:border-green-600 focus:ring-2 focus:ring-green-200 dark:bg-gray-900 dark:text-green-400 dark:border-green-500";
+          case "warning":
+            return "bg-white text-orange-700 border border-orange-500 hover:border-orange-600 focus:ring-2 focus:ring-orange-200 dark:bg-gray-900 dark:text-orange-400 dark:border-orange-500";
+          default:
+            return "bg-white text-gray-900 border border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-outline-gray-3 dark:bg-gray-900 dark:text-white dark:border-gray-700 dark:hover:border-gray-600";
+        }
+      }
+
+      if (variant === "ghost") {
+        switch (state) {
+          case "error":
+            return "text-red-700 hover:bg-red-50 focus:ring-2 focus:ring-red-200 dark:text-red-400 dark:hover:bg-red-500/10";
+          case "success":
+            return "text-green-700 hover:bg-green-50 focus:ring-2 focus:ring-green-200 dark:text-green-400 dark:hover:bg-green-500/10";
+          case "warning":
+            return "text-orange-700 hover:bg-orange-50 focus:ring-2 focus:ring-orange-200 dark:text-orange-400 dark:hover:bg-orange-500/10";
+          default:
+            return "text-gray-900 hover:bg-gray-100 focus:ring-2 focus:ring-outline-gray-3 dark:text-white dark:hover:bg-gray-800";
+        }
+      }
+
+      if (variant === "underline") {
+        switch (state) {
+          case "error":
+            return "bg-transparent border-b border-red-500 text-red-700 rounded-none px-0 hover:border-red-600 focus:ring-0 focus:border-red-600 dark:text-red-400 dark:border-red-500";
+          case "success":
+            return "bg-transparent border-b border-green-500 text-green-700 rounded-none px-0 hover:border-green-600 focus:ring-0 focus:border-green-600 dark:text-green-400 dark:border-green-500";
+          case "warning":
+            return "bg-transparent border-b border-orange-500 text-orange-700 rounded-none px-0 hover:border-orange-600 focus:ring-0 focus:border-orange-600 dark:text-orange-400 dark:border-orange-500";
+          default:
+            return "bg-transparent border-b border-gray-300 text-gray-900 rounded-none px-0 hover:border-gray-400 focus:ring-0 focus:border-gray-900 dark:text-white dark:border-gray-700 dark:hover:border-gray-500";
+        }
+      }
+
+      return "";
+    };
 
     const emitChange = useCallback(
       (val: string) => {
@@ -102,53 +157,52 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       }
     };
 
-    const iconPos = { sm: "2", md: "2.5", lg: "3", xl: "3" }[size as SizeKey];
+    const iconPos = { sm: "2", md: "2.5", lg: "3" }[size as SizeKey];
 
     return (
       <div className={clsx("w-full", className)} style={style}>
         {label && (
-          <label className="mb-1.5 block text-xs font-medium text-ink-gray-5" htmlFor={htmlId}>
+          <label className="mb-1.5 block text-xs font-medium text-gray-900 dark:text-white" htmlFor={id}>
             {label}
           </label>
         )}
         
         <div className="relative flex items-center">
           {prefix && (
-            <div className={`absolute left-${iconPos} flex items-center text-ink-gray-5 pointer-events-none`}>
+            <div className={`absolute left-${iconPos} flex items-center text-gray-700 dark:text-gray-400 pointer-events-none`}>
               {prefix}
             </div>
           )}
           
           <input
             ref={setRefs}
-            id={htmlId}
+            id={id}
             type={type}
-            disabled={disabled}
+            disabled={isDisabled}
             value={value}
             onChange={handleChange}
             required={rest.required}
             className={clsx(
-              "w-full rounded transition-colors outline-none",
+              "w-full rounded transition-colors outline-none appearance-none placeholder:text-gray-800 dark:placeholder:text-gray-500",
               sizeClasses,
               paddingClasses,
-              variantClasses,
-              errorClasses
+              getVariantClasses()
             )}
             {...rest}
           />
 
-          {suffix && (
-            <div className={`absolute right-${iconPos} flex items-center text-ink-gray-5 pointer-events-none`}>
-               {suffix}
+          {(suffix || loading) && (
+            <div className={`absolute right-${iconPos} flex items-center text-gray-700 dark:text-gray-400 pointer-events-none`}>
+               {loading ? <Loader2 className="animate-spin h-4 w-4" /> : suffix}
             </div>
           )}
         </div>
 
         {description && !error && (
-          <p className="mt-1.5 text-xs text-ink-gray-4">{description}</p>
+          <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">{description}</p>
         )}
         {error && (
-          <p className="mt-1 text-xs text-red-600">{error}</p>
+          <p className="mt-1 text-xs text-red-600 dark:text-red-400">{error}</p>
         )}
       </div>
     );
@@ -157,3 +211,4 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
 
 TextInput.displayName = "TextInput";
 export default TextInput;
+

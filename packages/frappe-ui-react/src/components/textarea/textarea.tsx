@@ -1,7 +1,7 @@
-import React, { useMemo, useRef, useCallback, forwardRef } from "react";
+import React, { useMemo, useRef, useCallback, forwardRef, useId } from "react";
 import { clsx } from "clsx";
 import { debounce } from "../../utils/debounce";
-import type { TextareaProps, TextAreaSize, TextAreaVariant } from "./types";
+import type { TextareaProps, TextAreaSize } from "./types";
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   (
@@ -11,6 +11,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       error,
       size = "md",
       variant = "subtle",
+      state,
+      loading = false,
       disabled = false,
       value,
       onChange,
@@ -25,6 +27,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     ref
   ) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const generatedId = useId();
+    const id = htmlId || generatedId;
 
     const setRefs = useCallback(
       (node: HTMLTextAreaElement) => {
@@ -38,23 +42,83 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       [ref]
     );
 
+    const isDisabled = disabled || loading;
+
+    // --- Styles ---
     const sizeClasses = {
       sm: "text-sm rounded p-2",
       md: "text-base rounded p-2.5",
       lg: "text-lg rounded-md p-3",
-      xl: "text-xl rounded-md p-3",
     }[size as TextAreaSize];
 
-    const variantClasses = {
-      subtle: disabled
-        ? "bg-surface-gray-1 border-transparent text-ink-gray-5 placeholder-ink-gray-3"
-        : "bg-surface-gray-2 border-surface-gray-2 text-ink-gray-8 placeholder-ink-gray-4 hover:bg-surface-gray-3 focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-      outline: disabled
-        ? "bg-surface-gray-1 border-outline-gray-2 text-ink-gray-5 placeholder-ink-gray-3"
-        : "bg-surface-white border-outline-gray-2 text-ink-gray-8 placeholder-ink-gray-4 hover:border-outline-gray-3 hover:shadow-sm focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-    }[variant as TextAreaVariant];
+    const getVariantClasses = () => {
+      if (isDisabled) {
+        // FIX: Changed border-transparent to border-gray-100 to fix "undetermined background"
+        return "bg-gray-100 border border-gray-100 text-gray-500 cursor-not-allowed dark:bg-gray-800 dark:border-gray-800 dark:text-gray-500 resize-none";
+      }
 
-    const errorClasses = error ? "border-red-500 focus:border-red-500 focus:ring-red-200" : "";
+      // 1. SUBTLE
+      if (variant === "subtle") {
+        switch (state) {
+          case "error":
+            // FIX: Removed border-transparent, matches bg color
+            return "bg-red-50 text-red-800 border border-red-50 hover:bg-red-100 focus:ring-2 focus:ring-red-200 dark:bg-red-500/10 dark:border-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20";
+          case "success":
+            // FIX: Removed border-transparent
+            return "bg-green-50 text-green-800 border border-green-50 hover:bg-green-100 focus:ring-2 focus:ring-green-200 dark:bg-green-500/10 dark:border-green-500/10 dark:text-green-400 dark:hover:bg-green-500/20";
+          case "warning":
+             // FIX: Removed border-transparent
+            return "bg-orange-50 text-orange-800 border border-orange-50 hover:bg-orange-100 focus:ring-2 focus:ring-orange-200 dark:bg-orange-500/10 dark:border-orange-500/10 dark:text-orange-400 dark:hover:bg-orange-500/20";
+          default:
+            // FIX: Changed border-transparent to border-gray-100 to prevent accessibility scanner confusion
+            return "bg-gray-100 text-gray-900 border border-gray-100 hover:bg-gray-200 focus:bg-white focus:ring-2 focus:ring-outline-gray-3 dark:bg-gray-800 dark:border-gray-800 dark:text-white dark:hover:bg-gray-700";
+        }
+      }
+
+      // 2. OUTLINE
+      if (variant === "outline") {
+        switch (state) {
+          case "error":
+            return "bg-white text-red-800 border border-red-500 hover:border-red-600 focus:ring-2 focus:ring-red-200 dark:bg-gray-900 dark:text-red-400 dark:border-red-500";
+          case "success":
+            return "bg-white text-green-800 border border-green-500 hover:border-green-600 focus:ring-2 focus:ring-green-200 dark:bg-gray-900 dark:text-green-400 dark:border-green-500";
+          case "warning":
+            return "bg-white text-orange-800 border border-orange-500 hover:border-orange-600 focus:ring-2 focus:ring-orange-200 dark:bg-gray-900 dark:text-orange-400 dark:border-orange-500";
+          default:
+            return "bg-white text-gray-900 border border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-outline-gray-3 dark:bg-gray-900 dark:text-white dark:border-gray-700 dark:hover:border-gray-600";
+        }
+      }
+
+      // 3. GHOST
+      if (variant === "ghost") {
+        switch (state) {
+          case "error":
+            return "text-red-800 hover:bg-red-50 focus:ring-2 focus:ring-red-200 dark:text-red-400 dark:hover:bg-red-500/10";
+          case "success":
+            return "text-green-800 hover:bg-green-50 focus:ring-2 focus:ring-green-200 dark:text-green-400 dark:hover:bg-green-500/10";
+          case "warning":
+            return "text-orange-800 hover:bg-orange-50 focus:ring-2 focus:ring-orange-200 dark:text-orange-400 dark:hover:bg-orange-500/10";
+          default:
+            return "text-gray-900 hover:bg-gray-100 focus:ring-2 focus:ring-outline-gray-3 dark:text-white dark:hover:bg-gray-800";
+        }
+      }
+
+      // 4. UNDERLINE
+      if (variant === "underline") {
+        switch (state) {
+          case "error":
+            return "bg-transparent border-b border-red-500 text-red-800 rounded-none px-0 hover:border-red-600 focus:ring-0 focus:border-red-600 dark:text-red-400 dark:border-red-500";
+          case "success":
+            return "bg-transparent border-b border-green-500 text-green-800 rounded-none px-0 hover:border-green-600 focus:ring-0 focus:border-green-600 dark:text-green-400 dark:border-green-500";
+          case "warning":
+            return "bg-transparent border-b border-orange-500 text-orange-800 rounded-none px-0 hover:border-orange-600 focus:ring-0 focus:border-orange-600 dark:text-orange-400 dark:border-orange-500";
+          default:
+            return "bg-transparent border-b border-gray-300 text-gray-900 rounded-none px-0 hover:border-gray-400 focus:ring-0 focus:border-gray-900 dark:text-white dark:border-gray-700 dark:hover:border-gray-500";
+        }
+      }
+
+      return "";
+    };
 
     const emitChange = useCallback(
       (val: string) => {
@@ -88,8 +152,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       <div className={clsx("w-full", className)} style={style}>
         {label && (
           <label 
-            className="mb-1.5 block text-xs font-medium text-ink-gray-5" 
-            htmlFor={htmlId}
+            className="mb-1.5 block text-xs font-medium text-gray-900 dark:text-white" 
+            htmlFor={id}
           >
             {label}
           </label>
@@ -97,26 +161,27 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         
         <textarea
           ref={setRefs}
-          id={htmlId}
+          id={id}
           rows={rows}
-          disabled={disabled}
+          disabled={isDisabled}
           value={value}
           onChange={handleChange}
           placeholder={placeholder}
           className={clsx(
-            "w-full block outline-none transition-colors resize-y",
+            // FIX: Added 'relative z-0' to define stacking context
+            // FIX: Kept 'resize-none' and dark placeholder colors
+            "w-full block outline-none appearance-none transition-colors resize-none placeholder:text-gray-800 dark:placeholder:text-gray-500 relative z-0",
             sizeClasses,
-            variantClasses,
-            errorClasses
+            getVariantClasses()
           )}
           {...rest}
         />
 
         {description && !error && (
-          <p className="mt-1.5 text-xs text-ink-gray-4">{description}</p>
+          <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">{description}</p>
         )}
         {error && (
-          <p className="mt-1 text-xs text-red-600">{error}</p>
+          <p className="mt-1 text-xs text-red-600 dark:text-red-400">{error}</p>
         )}
       </div>
     );
@@ -125,3 +190,4 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
 Textarea.displayName = "Textarea";
 export default Textarea;
+

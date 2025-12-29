@@ -1,7 +1,8 @@
 import { TextareaHTMLAttributes } from "react";
 
-export type TextAreaSize = "sm" | "md" | "lg" | "xl";
-export type TextAreaVariant = "subtle" | "outline";
+export type TextAreaSize = "sm" | "md" | "lg";
+export type TextAreaVariant = "subtle" | "outline" | "ghost" | "underline";
+export type TextAreaState = "success" | "warning" | "error";
 
 export interface TextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "size"> {
   label?: string;
@@ -9,6 +10,9 @@ export interface TextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaE
   error?: string;
   size?: TextAreaSize;
   variant?: TextAreaVariant;
+  state?: TextAreaState;
+  loading?: boolean;
   debounce?: number;
   htmlId?: string;
 }
+
