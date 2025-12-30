@@ -14,42 +14,58 @@ const Divider = ({
   position = "center",
   padding = 0,
   flexItem = false,
+  className = "",
 }: DividerProps) => {
-  const alignmentClasses =
-    orientation === "horizontal" ? "border-t w-full" : "border-l h-full";
+  const isHorizontal = orientation === "horizontal";
+  const flexClasses = flexItem ? "self-stretch h-auto" : "";
 
-  const flexClasses = flexItem ? "self-stretch h-auto" : "h-full";
+  if (!slot) {
+    return (
+      <hr
+        className={clsx(
+          "border-0 border-outline-gray-1",
+          isHorizontal ? "border-t w-full" : "border-l h-full",
+          flexClasses,
+          className
+        )}
+        style={
+          isHorizontal
+            ? { marginTop: padding, marginBottom: padding }
+            : { marginLeft: padding, marginRight: padding }
+        }
+      />
+    );
+  }
 
-  const positionClasses =
-    orientation === "horizontal"
-      ? {
-          start: "w-full justify-start items-center pl-4",
-          center: "w-full justify-center items-center",
-          end: "w-full justify-end items-center pr-4",
-        }[position]
-      : {
-          start: "h-full justify-center items-start pt-4",
-          center: "h-full justify-center items-center",
-          end: "h-full justify-center items-end pb-4",
-        }[position];
   return (
     <div
-      className={clsx("relative flex justify-center items-center", flexClasses)}
+      className={clsx(
+        "flex",
+        isHorizontal ? "w-full items-center" : "h-full flex-col items-center",
+        flexClasses,
+        className
+      )}
       style={
-        orientation === "horizontal"
+        isHorizontal
           ? { paddingTop: padding, paddingBottom: padding }
           : { paddingLeft: padding, paddingRight: padding }
       }
     >
       <hr
         className={clsx(
-          "absolute whitespace-nowrap border-0 border-outline-gray-1 z-0",
-          alignmentClasses
+          "border-0 border-outline-gray-1",
+          isHorizontal ? "border-t" : "border-l",
+          position === "start" ? (isHorizontal ? "w-4" : "h-4") : "flex-1"
         )}
       />
-      {slot ? (
-        <span className={clsx("flex z-1", positionClasses)}>{slot?.()}</span>
-      ) : null}
+      <span>{slot()}</span>
+      <hr
+        className={clsx(
+          "border-0 border-outline-gray-1",
+          isHorizontal ? "border-t" : "border-l",
+          position === "end" ? (isHorizontal ? "w-4" : "h-4") : "flex-1"
+        )}
+      />
     </div>
   );
 };

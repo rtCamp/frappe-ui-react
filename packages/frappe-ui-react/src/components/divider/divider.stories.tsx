@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { action } from "storybook/internal/actions";
+import { ChevronDown } from "lucide-react";
+
 import Divider from "./divider";
 import { Button } from "../button";
-import { action } from "storybook/internal/actions";
+import { Badge } from "../badge";
 
 const meta: Meta<typeof Divider> = {
   title: "Components/Divider",
@@ -21,7 +24,7 @@ const meta: Meta<typeof Divider> = {
     position: {
       control: { type: "select" },
       options: ["start", "center", "end"],
-      description: "Position of the action button",
+      description: "Position of the slot element",
     },
     padding: {
       control: "number",
@@ -30,6 +33,10 @@ const meta: Meta<typeof Divider> = {
     flexItem: {
       control: "boolean",
       description: "If true, adapts to flex container",
+    },
+    className: {
+      control: "text",
+      description: "Additional CSS classes to apply to the divider",
     },
   },
 };
@@ -174,6 +181,48 @@ export const SlotPositionsVertical: Story = {
           />
         )}
       />
+    </div>
+  ),
+};
+
+export const Timeline: Story = {
+  render: () => (
+    <div className="w-125 flex flex-col gap-8 items-center">
+      <Divider
+        position="start"
+        slot={() => <Badge label="Jun" size="lg" variant="outline" />}
+      />
+      <Divider
+        position="start"
+        slot={() => (
+          <Badge label="Today 2 hours ago" size="lg" variant="outline" />
+        )}
+      />
+      <Divider
+        position="center"
+        slot={() => (
+          <Button
+            label="Today"
+            size="sm"
+            variant="outline"
+            iconRight={() => <ChevronDown className="w-4 h-4" />}
+          />
+        )}
+      />
+      <Divider
+        position="start"
+        slot={() => <Badge label="New messages" size="lg" theme="blue" />}
+      />
+      <div className="w-80 flex flex-col gap-8 items-center">
+        <Divider
+          position="start"
+          slot={() => <Button label="Continue" size="sm" variant="outline" />}
+        />
+        <Divider
+          position="center"
+          slot={() => <Button icon="message-circle" variant="ghost" />}
+        />
+      </div>
     </div>
   ),
 };

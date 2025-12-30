@@ -7,4 +7,5 @@ export interface DividerProps {
   position?: "start" | "center" | "end";
   padding?: number;
   flexItem?: boolean;
+  className?: string;
 }
