@@ -1,65 +1,56 @@
-import { useMemo } from "react";
+/**
+ * External dependencies.
+ */
 import clsx from "clsx";
 
-import { Button } from "../button";
+/**
+ * Internal dependencies.
+ */
 import { DividerProps } from "./types";
 
 const Divider = ({
   orientation = "horizontal",
+  slot,
   position = "center",
+  padding = 0,
   flexItem = false,
-  action,
 }: DividerProps) => {
-  const alignmentClasses = useMemo(() => {
-    const spacerDimensionClasses = {
-      horizontal: "border-t w-full",
-      vertical: "border-l",
-    }[orientation];
+  const alignmentClasses =
+    orientation === "horizontal" ? "border-t w-full" : "border-l h-full";
 
-    const flexClasses = flexItem ? "self-stretch h-auto" : "h-full";
+  const flexClasses = flexItem ? "self-stretch h-auto" : "h-full";
 
-    return [spacerDimensionClasses, flexClasses];
-  }, [orientation, flexItem]);
-
-  const actionAlignmentClasses = useMemo(() => {
-    return {
-      horizontal: {
-        center: "left-1/2 top-0 -translate-y-1/2 -translate-x-1/2",
-        start: "left-0 top-0 -translate-y-1/2 ml-4",
-        end: "right-0 top-0 -translate-y-1/2 mr-4",
-      },
-      vertical: {
-        center: "-translate-x-1/2 top-1/2 left-0 -translate-y-1/2",
-        start: "-translate-x-1/2 top-0 mt-4 left-0",
-        end: "-translate-x-1/2 bottom-0 mb-4 left-0",
-      },
-    }[orientation][position];
-  }, [orientation, position]);
-
-  return action ? (
+  const positionClasses =
+    orientation === "horizontal"
+      ? {
+          start: "w-full justify-start items-center pl-4",
+          center: "w-full justify-center items-center",
+          end: "w-full justify-end items-center pr-4",
+        }[position]
+      : {
+          start: "h-full justify-center items-start pt-4",
+          center: "h-full justify-center items-center",
+          end: "h-full justify-center items-end pb-4",
+        }[position];
+  return (
     <div
-      className={clsx(
-        "relative whitespace-nowrap border-0 border-outline-gray-2",
-        alignmentClasses
-      )}
+      className={clsx("relative flex justify-center items-center", flexClasses)}
+      style={
+        orientation === "horizontal"
+          ? { paddingTop: padding, paddingBottom: padding }
+          : { paddingLeft: padding, paddingRight: padding }
+      }
     >
-      <span className={clsx("absolute", actionAlignmentClasses)}>
-        <Button
-          label={action.label}
-          loading={action.loading}
-          size="sm"
-          variant="outline"
-          onClick={action.handler}
-        />
-      </span>
+      <hr
+        className={clsx(
+          "absolute whitespace-nowrap border-0 border-outline-gray-1 z-0",
+          alignmentClasses
+        )}
+      />
+      {slot ? (
+        <span className={clsx("flex z-1", positionClasses)}>{slot?.()}</span>
+      ) : null}
     </div>
-  ) : (
-    <hr
-      className={clsx(
-        "relative whitespace-nowrap border-0 border-outline-gray-2",
-        alignmentClasses
-      )}
-    />
   );
 };
 
