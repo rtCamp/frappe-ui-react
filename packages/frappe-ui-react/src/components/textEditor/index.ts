@@ -1,0 +1,7 @@
+export { default } from './textEditor'
+export { default as TextEditor } from './textEditor'
+export { default as TextEditorBubbleMenu } from './textEditorBubbleMenu'
+export { default as TextEditorFixedMenu } from './textEditorFixedMenu'
+export { default as TextEditorFloatingMenu } from './textEditorFloatingMenu'
+export { EditorContent as TextEditorContent } from '@tiptap/react'
+export * from './types'

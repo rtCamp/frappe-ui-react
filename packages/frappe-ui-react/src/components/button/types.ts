@@ -16,5 +16,6 @@ export interface ButtonProps
   loadingText?: string;
   disabled?: boolean;
   link?: string;
+  tooltip?: string;
   children?: React.ReactNode;
 }
