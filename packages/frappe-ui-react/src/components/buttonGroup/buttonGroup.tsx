@@ -19,7 +19,13 @@ const ButtonGroup = ({
   return (
     <div className={clsx("flex gap-1 items-center", className)}>
       {buttons.map((buttonProps, index) => (
-        <Button key={`button-group-${index}`} size={size} variant={variant} theme={theme} {...buttonProps} />
+        <Button
+          key={buttonProps.id ?? index}
+          size={size}
+          variant={variant}
+          theme={theme}
+          {...buttonProps}
+        />
       ))}
     </div>
   );

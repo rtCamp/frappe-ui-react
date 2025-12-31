@@ -125,7 +125,7 @@ const Slider = ({
     knob
       ? disabled
         ? "[&::-moz-range-thumb]:bg-surface-gray-4"
-        : "[[&::-moz-range-thumb]:bg-white"
+        : "[&::-moz-range-thumb]:bg-white"
       : "[&::-moz-range-thumb]:bg-transparent",
     knob && "[&::-moz-range-thumb]:border-none",
     knob && "[&::-moz-range-thumb]:rounded-full",
@@ -150,9 +150,9 @@ const Slider = ({
 
   useEffect(() => {
     if (range) {
-      onChange({ min: minVal, max: maxVal });
+      onChange?.({ min: minVal, max: maxVal });
     } else {
-      onChange(minVal);
+      onChange?.(minVal);
     }
   }, [minVal, maxVal, onChange, range]);
 
@@ -226,6 +226,7 @@ const Slider = ({
             onPointerLeave={() => setShowMinTooltip(false)}
             disabled={disabled}
             className={clsx(thumbClasses, minVal > max - 100 ? "z-5" : "z-3")}
+            aria-label="Minimum value"
           />
         )}
         <input
@@ -240,6 +241,7 @@ const Slider = ({
           onPointerLeave={() => setShowMaxTooltip(false)}
           disabled={disabled}
           className={clsx(thumbClasses, "z-4")}
+          aria-label={range ? "Maximum value" : "Value"}
         />
         <div ref={trackRef} className="w-full relative">
           <div
@@ -264,7 +266,7 @@ const Slider = ({
         </div>
       </div>
       {showValue && (
-        <div className="w-full mt-2  flex justify-between">
+        <div className="w-full mt-2 flex justify-between">
           <div className={fontSizeClasses}>{min}</div>
           <div className={fontSizeClasses}>{max}</div>
         </div>

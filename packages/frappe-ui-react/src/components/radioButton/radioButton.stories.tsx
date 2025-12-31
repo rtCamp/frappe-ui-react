@@ -15,7 +15,7 @@ export default {
         "Additional CSS classes for the radio button group container",
     },
     size: {
-      control: { type: "select", options: ["sm", "md", "lg", "xl", "2xl"] },
+      control: { type: "select", options: ["sm", "md"] },
       description: "Size of the buttons in the group",
     },
     flow: {

@@ -42,12 +42,15 @@ export const Default: Story = {
   args: {
     buttons: [
       {
+        id: "btn-1",
         label: "Group by",
       },
       {
+        id: "btn-2",
         label: "Sort",
       },
       {
+        id: "btn-3",
         label: "Filters",
       },
     ],
@@ -65,12 +68,15 @@ export const IconSubtle: Story = {
   args: {
     buttons: [
       {
+        id: "btn-1",
         icon: "phone",
       },
       {
+        id: "btn-2",
         icon: "mail",
       },
       {
+        id: "btn-3",
         icon: "external-link",
       },
     ],
@@ -89,16 +95,20 @@ export const IconMixedVariant: Story = {
   args: {
     buttons: [
       {
+        id: "btn-1",
         icon: "corner-up-left",
       },
       {
+        id: "btn-2",
         icon: "map-pin",
       },
       {
+        id: "btn-3",
         variant: "subtle",
         icon: () => <SmilePlus className="w-4 h-4" />,
       },
       {
+        id: "btn-4",
         icon: "more-horizontal",
       },
     ],
@@ -117,23 +127,28 @@ export const IconWithLabelSubtle: Story = {
   args: {
     buttons: [
       {
+        id: "btn-1",
         label: "Save view",
         iconLeft: "plus",
       },
       {
+        id: "btn-2",
         label: "Sort",
         iconLeft: () => <ArrowUpDown className="w-4 h-4" />,
       },
       {
+        id: "btn-3",
         label: "Filter",
         iconLeft: () => <ListFilter className="w-4 h-4" />,
         iconRight: () => <ChevronDown className="w-4 h-4" />,
       },
       {
+        id: "btn-4",
         label: "Column",
         iconLeft: "columns",
       },
       {
+        id: "btn-5",
         icon: "more-horizontal",
       },
     ],
@@ -152,23 +167,28 @@ export const IconWithLabelOutline: Story = {
   args: {
     buttons: [
       {
+        id: "btn-1",
         label: "Save view",
         iconLeft: "plus",
       },
       {
+        id: "btn-2",
         label: "Sort",
         iconLeft: () => <ArrowUpDown className="w-4 h-4" />,
       },
       {
+        id: "btn-3",
         label: "Filter",
         iconLeft: () => <ListFilter className="w-4 h-4" />,
         iconRight: () => <ChevronDown className="w-4 h-4" />,
       },
       {
+        id: "btn-4",
         label: "Column",
         iconLeft: "columns",
       },
       {
+        id: "btn-5",
         icon: "more-horizontal",
       },
     ],

@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { action } from "storybook/internal/actions";
 import { ChevronDown } from "lucide-react";
 
 import Divider from "./divider";
@@ -85,14 +84,7 @@ export const WithSlot: Story = {
     orientation: "horizontal",
     position: "center",
     padding: 6,
-    slot: () => (
-      <Button
-        label="Load More"
-        size="sm"
-        variant="outline"
-        onClick={() => action("Action clicked!")}
-      />
-    ),
+    slot: () => <Button label="Load More" size="sm" variant="outline" />,
   },
 };
 
@@ -102,38 +94,17 @@ export const SlotPositionsHorizontal: Story = {
       <Divider
         orientation="horizontal"
         position="start"
-        slot={() => (
-          <Button
-            label="Start"
-            size="sm"
-            variant="outline"
-            onClick={() => action("Start clicked!")}
-          />
-        )}
+        slot={() => <Button label="Start" size="sm" variant="outline" />}
       />
       <Divider
         orientation="horizontal"
         position="center"
-        slot={() => (
-          <Button
-            label="Center"
-            size="sm"
-            variant="outline"
-            onClick={() => action("Center clicked!")}
-          />
-        )}
+        slot={() => <Button label="Center" size="sm" variant="outline" />}
       />
       <Divider
         orientation="horizontal"
         position="end"
-        slot={() => (
-          <Button
-            label="End"
-            size="sm"
-            variant="outline"
-            onClick={() => action("End clicked!")}
-          />
-        )}
+        slot={() => <Button label="End" size="sm" variant="outline" />}
       />
     </div>
   ),
@@ -146,40 +117,19 @@ export const SlotPositionsVertical: Story = {
         orientation="vertical"
         position="start"
         flexItem
-        slot={() => (
-          <Button
-            label="Start"
-            size="sm"
-            variant="outline"
-            onClick={() => action("Start clicked!")}
-          />
-        )}
+        slot={() => <Button label="Start" size="sm" variant="outline" />}
       />
       <Divider
         orientation="vertical"
         position="center"
         flexItem
-        slot={() => (
-          <Button
-            label="Center"
-            size="sm"
-            variant="outline"
-            onClick={() => action("Center clicked!")}
-          />
-        )}
+        slot={() => <Button label="Center" size="sm" variant="outline" />}
       />
       <Divider
         orientation="vertical"
         position="end"
         flexItem
-        slot={() => (
-          <Button
-            label="End"
-            size="sm"
-            variant="outline"
-            onClick={() => action("End clicked!")}
-          />
-        )}
+        slot={() => <Button label="End" size="sm" variant="outline" />}
       />
     </div>
   ),

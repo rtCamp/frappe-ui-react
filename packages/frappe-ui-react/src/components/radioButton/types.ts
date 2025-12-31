@@ -11,8 +11,5 @@ export interface RadioButtonProps {
   disabled?: boolean;
   className?: string;
   value?: string | null;
-  onChange?: (
-    value: string | null,
-    selectedOption?: RadioButtonOption | null
-  ) => void;
+  onChange?: (value: string | null) => void;
 }

@@ -57,13 +57,16 @@ const RadioButton = ({
             )}
           >
             <Radio
-              value={option.disabled || disabled ? null : option.value}
+              value={option.value}
               className={clsx(
                 "relative flex justify-center items-center shrink-0 transition-color duration-100 appearance-none border border-gray-500 rounded-full",
                 "data-checked:border-gray-900 data-checked:bg-gray-900",
-                "group-hover:border-gray-600 data-checked:group-hover:border-surface-gray-6 data-checked:group-hover:bg-surface-gray-6",
-                "group-active:border-gray-700 data-checked:group-active:border-surface-gray-6 data-checked:group-active:bg-surface-gray-6",
-                "group-focus:border-gray-900 focus:outline-none group-focus:ring-2 group-focus:ring-outline-gray-3",
+                !option.disabled &&
+                  !disabled && [
+                    "group-hover:border-gray-600 data-checked:group-hover:border-surface-gray-6 data-checked:group-hover:bg-surface-gray-6",
+                    "group-active:border-gray-700 data-checked:group-active:border-surface-gray-6 data-checked:group-active:bg-surface-gray-6",
+                    "group-focus:border-gray-900 focus:outline-none group-focus:ring-2 group-focus:ring-outline-gray-3",
+                  ],
                 "data-disabled:border-gray-200 data-disabled:bg-surface-gray-1 data-disabled:checked:border-surface-gray-2 data-disabled:checked:bg-surface-gray-2",
                 size === "sm" ? "w-3.5 h-3.5" : "w-4.25 h-4.25"
               )}

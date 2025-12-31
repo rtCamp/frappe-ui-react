@@ -46,10 +46,22 @@ const Tag = ({
       label={label}
       iconLeft={prefixIcon}
       iconRight={() => (
-        <SuffixIcon
-          className={clsx("w-3 h-3", !disabled && "cursor-pointer")}
+        <button
+          type="button"
+          className={clsx(
+            "flex items-center justify-center",
+            disabled && "cursor-auto!"
+          )}
           onClick={handleRemove}
-        />
+          disabled={disabled}
+          aria-label="Remove tag"
+        >
+          <SuffixIcon
+            className="w-3 h-3"
+            aria-hidden="true"
+            focusable="false"
+          />
+        </button>
       )}
       className={clsx(
         "focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-outline-gray-3 gap-1.25! cursor-auto!",

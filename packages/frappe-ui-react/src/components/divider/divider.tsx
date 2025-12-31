@@ -58,7 +58,7 @@ const Divider = ({
           position === "start" ? (isHorizontal ? "w-4" : "h-4") : "flex-1"
         )}
       />
-      <span>{slot()}</span>
+      <span>{slot?.()}</span>
       <hr
         className={clsx(
           "border-0 border-outline-gray-1",
