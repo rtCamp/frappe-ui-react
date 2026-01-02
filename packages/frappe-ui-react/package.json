@@ -3,6 +3,7 @@
   "version": "1.1.0",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "moduleResolution": "bundler",
   "types": "dist-types/index.d.ts",
   "description": "Package for Frappe UI Components created in react.",
   "author": {
