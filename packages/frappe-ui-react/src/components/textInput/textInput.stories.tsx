@@ -25,13 +25,13 @@ const meta: Meta<typeof TextInput> = {
       },
     },
     size: {
-      options: ["sm", "md", "lg"],
+      options: ["sm", "md", "lg", "xl"],
       control: { type: "select" },
       description: "Size of the text input",
       table: { defaultValue: { summary: "md" } },
     },
     variant: {
-      options: ["subtle", "outline", "ghost", "underline"],
+      options: ["subtle", "outline"],
       control: { type: "select" },
       description: "Visual variant",
       table: { defaultValue: { summary: "subtle" } },
@@ -52,7 +52,10 @@ const meta: Meta<typeof TextInput> = {
         control: { type: "select" },
         description: "Icon before value",
     },
-    suffix: { control: false },
+    suffix: { 
+      control: "text", 
+      description: "Element after value" 
+    },
     loading: { control: "boolean", description: "Shows loading spinner" },
     disabled: { control: "boolean", description: "If true, disables the text input" },
     placeholder: { control: "text", description: "Placeholder text" },
@@ -66,7 +69,7 @@ const meta: Meta<typeof TextInput> = {
 export default meta;
 type Story = StoryObj<TextInputProps>;
 
-const Template: Story = {
+export const Default: Story = {
   render: (args) => {
     const [val, setVal] = useState(args.value || "");
     return (
@@ -74,74 +77,45 @@ const Template: Story = {
         <TextInput
           {...args}
           value={val}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setVal(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setVal(e.target.value);
+            args.onChange?.(e);
+          }}
         />
       </div>
     );
   },
-};
-
-export const Default = {
-  ...Template,
-};
-
-Default.args = {
-  label: "Email",
-  placeholder: "user@example.com",
-  type: "email",
-  variant: "subtle",
-  size: "md",
-};
-
-export const WithIcons = {
-  ...Template,
   args: {
-    label: "Search",
-    placeholder: "Search...",
-    prefix: <Search size={16} />, 
-    suffix: <span className="text-xs text-gray-400"></span>,
+    label: "Email",
+    placeholder: "user@example.com",
+    type: "email",
+    variant: "outline",
+    size: "md",
   },
 };
 
-
-
-export const AllSubtle = () => (
-    <div className="space-y-6 w-72 p-6 border rounded bg-white dark:bg-gray-900 dark:border-gray-700">
-        <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase">Subtle Variants</h3>
-        <TextInput variant="subtle" placeholder="Default" />
-        <TextInput variant="subtle" state="success" placeholder="Success" value="Success" />
-        <TextInput variant="subtle" state="warning" placeholder="Warning" value="Warning" />
-        <TextInput variant="subtle" state="error" placeholder="Error" value="Error" />
-    </div>
-);
-
-export const AllOutline = () => (
-    <div className="space-y-6 w-72 p-6 border rounded bg-white dark:bg-gray-900 dark:border-gray-700">
-        <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase">Outline Variants</h3>
-        <TextInput variant="outline" placeholder="Default" />
-        <TextInput variant="outline" state="success" placeholder="Success" value="Success" />
-        <TextInput variant="outline" state="warning" placeholder="Warning" value="Warning" />
-        <TextInput variant="outline" state="error" placeholder="Error" value="Error" />
-    </div>
-);
-
-export const AllGhost = () => (
-    <div className="space-y-6 w-72 p-6 border rounded bg-white dark:bg-gray-900 dark:border-gray-700">
-        <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase">Ghost Variants</h3>
-        <TextInput variant="ghost" placeholder="Default" />
-        <TextInput variant="ghost" state="success" placeholder="Success" value="Success" />
-        <TextInput variant="ghost" state="warning" placeholder="Warning" value="Warning" />
-        <TextInput variant="ghost" state="error" placeholder="Error" value="Error" />
-    </div>
-);
-
-export const AllUnderline = () => (
-    <div className="space-y-6 w-72 p-6 border rounded bg-white dark:bg-gray-900 dark:border-gray-700">
-        <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase">Underline Variants</h3>
-        <TextInput variant="underline" placeholder="Default" />
-        <TextInput variant="underline" state="success" placeholder="Success" value="Success" />
-        <TextInput variant="underline" state="warning" placeholder="Warning" value="Warning" />
-        <TextInput variant="underline" state="error" placeholder="Error" value="Error" />
-    </div>
-);
+export const WithIcons: Story = {
+  render: (args) => {
+    const [val, setVal] = useState(args.value || "");
+    return (
+      <div className="w-72">
+        <TextInput
+          {...args}
+          value={val}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setVal(e.target.value);
+            args.onChange?.(e);
+          }}
+        />
+      </div>
+    );
+  },
+  args: {
+    ...Default.args,
+    label: "Search",
+    placeholder: "Search...",
+    prefix: <Search size={16} />,
+    suffix: <span className="text-xs text-gray-400">⌘K</span>,
+  },
+};
 

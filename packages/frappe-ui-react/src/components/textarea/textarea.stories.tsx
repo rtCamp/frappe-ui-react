@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import Textarea from "./textarea";
-import type { TextareaProps } from "./types";
 
 const meta: Meta<typeof Textarea> = {
-  title: "Components/TextArea",
+  title: "Components/Textarea",
   component: Textarea,
   parameters: {
     docs: {
@@ -43,9 +42,10 @@ const meta: Meta<typeof Textarea> = {
 };
 
 export default meta;
-type Story = StoryObj<TextareaProps>;
 
-const Template: Story = {
+type Story = StoryObj<typeof Textarea>;
+
+export const Default: Story = {
   render: (args) => {
     const [value, setValue] = useState(args.value || "");
     return (
@@ -53,64 +53,23 @@ const Template: Story = {
         <Textarea
           {...args}
           value={value}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setValue(e.target.value)}
+          onChange={(e) => {
+            setValue(e.target.value);
+            args.onChange?.(e);
+          }}
         />
       </div>
     );
   },
-};
-
-export const Default = {
-  ...Template,
-};
-
-Default.args = {
-  label: "Bio",
-  placeholder: "Tell us about yourself...",
-  rows: 4,
-  variant: "subtle",
-  size: "md",
+  args: {
+    label: "Bio",
+    placeholder: "Tell us about yourself...",
+    rows: 4,
+    variant: "outline",
+    size: "md",
+  },
 };
 
 
-export const AllSubtle = () => (
-    <div className="space-y-6 w-72 p-6 border rounded bg-white dark:bg-gray-900 dark:border-gray-700">
-        <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase">Subtle Variants</h3>
-        <Textarea variant="subtle" placeholder="Default" />
-        <Textarea variant="subtle" state="success" placeholder="Success" value="Success State" />
-        <Textarea variant="subtle" state="warning" placeholder="Warning" value="Warning State" />
-        <Textarea variant="subtle" state="error" placeholder="Error" value="Error State" />
-    </div>
-);
-
-export const AllOutline = () => (
-    <div className="space-y-6 w-72 p-6 border rounded bg-white dark:bg-gray-900 dark:border-gray-700">
-        <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase">Outline Variants</h3>
-        <Textarea variant="outline" placeholder="Default" />
-        <Textarea variant="outline" state="success" placeholder="Success" value="Success State" />
-        <Textarea variant="outline" state="warning" placeholder="Warning" value="Warning State" />
-        <Textarea variant="outline" state="error" placeholder="Error" value="Error State" />
-    </div>
-);
-
-export const AllGhost = () => (
-    <div className="space-y-6 w-72 p-6 border rounded bg-white dark:bg-gray-900 dark:border-gray-700">
-        <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase">Ghost Variants</h3>
-        <Textarea variant="ghost" placeholder="Default" />
-        <Textarea variant="ghost" state="success" placeholder="Success" value="Success State" />
-        <Textarea variant="ghost" state="warning" placeholder="Warning" value="Warning State" />
-        <Textarea variant="ghost" state="error" placeholder="Error" value="Error State" />
-    </div>
-);
-
-export const AllUnderline = () => (
-    <div className="space-y-6 w-72 p-6 border rounded bg-white dark:bg-gray-900 dark:border-gray-700">
-        <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase">Underline Variants</h3>
-        <Textarea variant="underline" placeholder="Default" />
-        <Textarea variant="underline" state="success" placeholder="Success" value="Success State" />
-        <Textarea variant="underline" state="warning" placeholder="Warning" value="Warning State" />
-        <Textarea variant="underline" state="error" placeholder="Error" value="Error State" />
-    </div>
-);
 
 

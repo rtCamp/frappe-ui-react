@@ -1,8 +1,8 @@
-import type { Meta } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import Select from "./select";
-import { Users, Calendar, Filter, ArrowUpDown, Circle } from "lucide-react";
-import type { SelectOption, SelectProps } from "./types";
+import { Users, ChevronDown } from "lucide-react";
+import type { SelectOption } from "./types";
 
 const meta: Meta<typeof Select> = {
   title: "Components/Select",
@@ -31,7 +31,6 @@ const meta: Meta<typeof Select> = {
       description: "Visual state (colors)",
     },
     className: { control: "text", description: "Custom CSS class" },
-    
     label: { control: "text", description: "Label for the select input" },
     placeholder: { control: "text", description: "Placeholder text" },
     disabled: { control: "boolean", description: "Disables interaction" },
@@ -39,12 +38,32 @@ const meta: Meta<typeof Select> = {
     value: { control: "object", description: "Current selected option" },
     options: { control: "object", description: "Array of options" },
     error: { control: "text", description: "Error message" },
-    prefix: { control: "text", description: "Element before value" },
+
+   
+    prefix: { control: "boolean", description: "Enable prefix icon" },
+    prefixIcon: {
+       control: { type: "select" },
+       options: ["none", "users"],
+       mapping: {
+       none: undefined,
+       users: <Users size={14} />,
+       },
+     },
+    suffix: { control: "boolean", description: "Enable suffix icon" },
+    suffixIcon: {
+     control: { type: "select" },
+     options: ["none", "chevron"],
+     mapping: {
+       none: undefined,
+       chevron: <ChevronDown size={14} />,
+       },
+    },
     onChange: { action: "changed", description: "Change callback" },
   },
 };
 
 export default meta;
+type Story = StoryObj<typeof Select>;
 
 const options: SelectOption[] = [
   { label: "Option 1", value: "1" },
@@ -52,104 +71,77 @@ const options: SelectOption[] = [
   { label: "Option 3", value: "3" },
 ];
 
-export const Default = (args: SelectProps) => {
-  const [selected, setSelected] = useState<SelectOption | undefined>(undefined);
-  return (
-    <div className="w-72">
-      <Select
-        {...args}
-        value={selected}
-        onChange={setSelected}
-      />
-    </div>
-  );
-};
+function autoInjectIcons(args: any) {
+  return {
+    ...args,
+        prefixIcon:
+          args.prefix && args.prefixIcon !== "none"
+          ? args.prefixIcon || <Users size={14} />
+          : undefined,
 
-Default.args = {
-  label: "Label",
-  placeholder: "Select...",
-  options: options,
-  disabled: false,
-  loading: false,
-  size: "md",
-  variant: "subtle"
-};
-
-
-export const AllOutline = () => {
-    return (
-        <div className="space-y-4 w-72 p-4 border rounded bg-white dark:bg-gray-900 dark:border-gray-700">
-            <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase">Outline Variants</h3>
-            <Select variant="outline" placeholder="Default" options={options} />
-            <Select variant="outline" state="success" placeholder="Success" options={options} />
-            <Select variant="outline" state="warning" placeholder="Warning" options={options} />
-            <Select variant="outline" state="error" placeholder="Error" options={options} />
-        </div>
-    )
+       suffixIcon:
+         args.suffix && args.suffixIcon !== "none"
+         ? args.suffixIcon || <ChevronDown size={14} />
+        : undefined,
+  };
 }
 
-export const AllSubtle = () => {
+export const Default: Story = {
+  render: (args) => {
+    const [selected, setSelected] = useState<SelectOption | undefined>(args.value);
+    const resolvedArgs = autoInjectIcons(args);
     return (
-        <div className="space-y-4 w-72 p-4 border rounded bg-white dark:bg-gray-900 dark:border-gray-700">
-            <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase">Subtle Variants</h3>
-            <Select variant="subtle" placeholder="Default" options={options} />
-            <Select variant="subtle" state="success" placeholder="Success" options={options} />
-            <Select variant="subtle" state="warning" placeholder="Warning" options={options} />
-            <Select variant="subtle" state="error" placeholder="Error" options={options} />
-        </div>
-    )
-}
-
-export const AllGhost = () => {
-    return (
-        <div className="space-y-4 w-72 p-4 border rounded bg-white dark:bg-gray-900 dark:border-gray-700">
-            <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase">Ghost Variants</h3>
-            <Select variant="ghost" placeholder="Default" options={options} />
-            <Select variant="ghost" state="success" placeholder="Success" options={options} />
-            <Select variant="ghost" state="warning" placeholder="Warning" options={options} />
-            <Select variant="ghost" state="error" placeholder="Error" options={options} />
-        </div>
-    )
-}
-
-export const EspressoExamples = () => {
-    return (
-        <div className="p-10 space-y-10 bg-white dark:bg-gray-900 w-full">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Real-world Examples</h3>
-            
-            <div className="flex flex-wrap gap-4 items-center justify-center">
-                <div className="w-32">
-                    <Select variant="outline" size="sm" prefix={<Users size={14} />} placeholder="Teams" options={options} />
-                </div>
-                <div className="w-32">
-                    <Select variant="outline" size="sm" prefix={<Calendar size={14} />} placeholder="Date" options={options} />
-                </div>
-                <div className="w-32">
-                    <Select variant="subtle" size="sm" prefix={<Filter size={14} />} placeholder="Filter" options={options} />
-                </div>
-                 <div className="w-32">
-                    <Select variant="subtle" size="sm" prefix={<ArrowUpDown size={14} />} placeholder="Sort by" options={options} />
-                </div>
-                 <div className="w-28">
-                    <Select variant="outline" size="sm" placeholder="Dark" options={options} />
-                </div>
-                <div className="w-32">
-                    <Select variant="ghost" size="sm" prefix={<Users size={14} />} placeholder="People" options={options} />
-                </div>
-                 <div className="w-48">
-                    <Select variant="subtle" size="md" placeholder="Select a plan" options={options} />
-                </div>
-                <div className="w-40">
-                    <Select variant="ghost" state="warning" size="sm" prefix={<Circle size={10} fill="currentColor" />} placeholder="In progress" options={options} />
-                </div>
-                 <div className="w-36">
-                    <Select variant="subtle" size="sm" placeholder="Send invite" options={options} />
-                </div>
-                <div className="w-40">
-                    <Select variant="outline" size="sm" prefix={<Circle size={10} fill="currentColor" />} placeholder="Qualification" options={options} />
-                </div>
-            </div>
-        </div>
-    )
+      <div className="w-72">
+        <Select
+          {...resolvedArgs}
+          value={selected}
+          onChange={(val) => {
+            setSelected(val);
+            args.onChange?.(val);
+          }}
+        />
+      </div>
+    );
+  },
+  args: {
+    label: "Label",
+    placeholder: "Select...",
+    options,
+    disabled: false,
+    loading: false,
+    size: "md",
+    variant: "outline",
+    prefix: false,
+    suffix: false,
+  },
 };
+
+export const WithPrefix: Story = {
+  render: (args) => {
+    const [selected, setSelected] = useState<SelectOption | undefined>(args.value);
+    const resolvedArgs = autoInjectIcons(args);
+    return (
+      <div className="w-72">
+        <Select
+          {...resolvedArgs}
+          value={selected}
+          onChange={(val) => {
+            setSelected(val);
+            args.onChange?.(val);
+          }}
+        />
+      </div>
+    );
+  },
+  args: {
+    ...Default.args,
+    label: "Assignee",
+    prefix: true,
+    suffix: true,
+    variant: "outline",
+  },
+};
+
+
+
 

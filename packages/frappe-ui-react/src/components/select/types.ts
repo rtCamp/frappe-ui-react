@@ -7,6 +7,7 @@ export type SelectState = "success" | "warning" | "error";
 export interface SelectOption {
   value: string;
   label: string;
+  icon?: ReactNode;
   disabled?: boolean;
 }
 
@@ -14,16 +15,20 @@ export interface SelectProps {
   size?: SelectSize;
   variant?: SelectVariant;
   state?: SelectState;
-  loading?: boolean;   
+  loading?: boolean;
   disabled?: boolean;
   value?: SelectOption;
   placeholder?: string;
   options: SelectOption[];
-  prefix?: ReactNode;
+  prefix?: boolean;
+  suffix?: boolean;
+  prefixIcon?: ReactNode;
+  suffixIcon?: ReactNode;
   label?: string;
   error?: string;
   onChange?: (value: SelectOption) => void;
   className?: string;
 }
+
 
 
