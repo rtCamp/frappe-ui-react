@@ -4,6 +4,7 @@ export type Breakpoint = 'lg' | 'md' | 'sm' | 'xs' | 'xxs';
 
 export interface WidgetLayout {
 	id: string;
+	key?: string;
 	x: number;
 	y: number;
 	w: number;

@@ -8,20 +8,32 @@ import clsx from "clsx";
  * Internal dependencies.
  */
 import type { DashboardWidgetGalleryItemProps } from "./types";
+import { useDashboardContext } from "./dashboardContext";
 
 export const DashboardWidgetGalleryItem: React.FC<
   DashboardWidgetGalleryItemProps
 > = ({ widget, onClick, mode = "list" }) => {
+  const context = useDashboardContext();
+
   const handleDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.setData(
-      "text/plain",
-      JSON.stringify({
-        widgetId: widget.id,
-        w: widget.preview?.defaultW || 4,
-        h: widget.preview?.defaultH || 3,
-      })
-    );
+    const widgetData = {
+      widgetId: widget.id,
+      w: widget.preview?.defaultW || 4,
+      h: widget.preview?.defaultH || 3,
+    };
+
+    if (context) {
+      context.setDraggingWidget({ ...widgetData, widget });
+    }
+
+    e.dataTransfer.setData("text/plain", JSON.stringify(widgetData));
     e.dataTransfer.effectAllowed = "copy";
+  };
+
+  const handleDragEnd = () => {
+    if (context) {
+      context.setDraggingWidget(null);
+    }
   };
 
   return (
@@ -32,6 +44,7 @@ export const DashboardWidgetGalleryItem: React.FC<
       )}
       draggable={true}
       onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
       onClick={() => onClick?.(widget)}
       title={`Drag to add ${widget.name} or click to insert`}
     >

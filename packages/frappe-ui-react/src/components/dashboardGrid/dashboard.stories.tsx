@@ -14,7 +14,11 @@ import {
   LucideX,
 } from "lucide-react";
 
-import { DashboardGrid as Dashboard, DashboardWidgetGallery } from "./index";
+import {
+  DashboardGrid as Dashboard,
+  DashboardWidgetGallery,
+  DashboardProvider,
+} from "./index";
 import { Button } from "../button";
 import { Progress } from "../progress";
 import { Badge } from "../badge";
@@ -804,44 +808,46 @@ export const HRDashboardExample: Story = {
     const isGalleryOpen = args.isGalleryOpen || false;
 
     return (
-      <div className="w-full h-screen bg-surface-gray-2 relative">
-        <div
-          className={clsx(
-            "absolute top-0 left-0 h-full w-80 bg-surface-cards border-r border-outline-gray-2 flex flex-col z-10 shadow-lg transition-transform duration-300",
-            isGalleryOpen ? "translate-x-0" : "-translate-x-full"
-          )}
-        >
-          <div className="p-4 border-b border-outline-gray-2 flex items-center justify-between">
-            <h3 className="font-semibold text-ink-gray-9">Widget Gallery</h3>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => updateArgs({ isGalleryOpen: false })}
-              icon={() => <LucideX size={16} />}
-            />
-          </div>
-          <div className="flex-1 overflow-y-auto p-4">
-            <DashboardWidgetGallery
-              widgets={hrWidgets}
-              mode="list"
-              description="Drag widgets to the dashboard."
-            />
-          </div>
-        </div>
-
-        <div className="relative w-full h-full overflow-auto">
-          <Button
-            variant="solid"
-            iconLeft={() => <LucidePlus size={16} />}
-            onClick={() => updateArgs({ isGalleryOpen: !isGalleryOpen })}
-            className="fixed bottom-2 right-2 z-1"
+      <DashboardProvider>
+        <div className="w-full h-screen bg-surface-gray-2 relative">
+          <div
+            className={clsx(
+              "absolute top-0 left-0 h-full w-80 bg-surface-cards border-r border-outline-gray-2 flex flex-col z-10 shadow-lg transition-transform duration-300",
+              isGalleryOpen ? "translate-x-0" : "-translate-x-full"
+            )}
           >
-            {isGalleryOpen ? "Close Gallery" : "Add Widget"}
-          </Button>
+            <div className="p-4 border-b border-outline-gray-2 flex items-center justify-between">
+              <h3 className="font-semibold text-ink-gray-9">Widget Gallery</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => updateArgs({ isGalleryOpen: false })}
+                icon={() => <LucideX size={16} />}
+              />
+            </div>
+            <div className="flex-1 overflow-y-auto p-4">
+              <DashboardWidgetGallery
+                widgets={hrWidgets}
+                mode="list"
+                description="Drag widgets to the dashboard."
+              />
+            </div>
+          </div>
 
-          <Dashboard onLayoutChange={handleLayoutChange} {...args} />
+          <div className="relative w-full h-full overflow-auto">
+            <Button
+              variant="solid"
+              iconLeft={() => <LucidePlus size={16} />}
+              onClick={() => updateArgs({ isGalleryOpen: !isGalleryOpen })}
+              className="fixed bottom-2 right-2 z-1"
+            >
+              {isGalleryOpen ? "Close Gallery" : "Add Widget"}
+            </Button>
+
+            <Dashboard onLayoutChange={handleLayoutChange} {...args} />
+          </div>
         </div>
-      </div>
+      </DashboardProvider>
     );
   },
   args: {
