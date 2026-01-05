@@ -55,9 +55,9 @@ const meta: Meta<typeof Dashboard> = {
     },
     compactType: {
       control: "select",
-      options: ["vertical", "horizontal", null],
+      options: ["vertical", "horizontal"],
       description:
-        "How to compact the layout: 'vertical' (default) moves widgets up to fill gaps, 'horizontal' moves widgets left, null disables compacting (widgets stay exactly where placed)",
+        "How to compact the layout: 'vertical' (default) moves widgets up to fill gaps, 'horizontal' moves widgets left",
     },
     isBounded: {
       control: "boolean",
@@ -809,6 +809,7 @@ export const HRDashboardExample: Story = {
               <DashboardWidgetGallery
                 widgets={hrWidgets}
                 description="Drag widgets to the dashboard."
+                onWidgetAdd={() => updateArgs({ isGalleryOpen: false })}
               />
             </div>
           </div>

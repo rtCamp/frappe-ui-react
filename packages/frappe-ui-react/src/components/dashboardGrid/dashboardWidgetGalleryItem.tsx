@@ -9,15 +9,20 @@ import clsx from "clsx";
  */
 import type { DashboardWidgetGalleryItemProps } from "./types";
 import { useDashboardContext } from "./dashboardContext";
+import { resolveWidgetSize } from "./dashboardUtil";
 
 export const DashboardWidgetGalleryItem: React.FC<
   DashboardWidgetGalleryItemProps
-> = ({ widget, onClick, mode = "list" }) => {
+> = ({ widget, view = "list", mode = "both", onWidgetAdd, onWidgetDrop }) => {
   const context = useDashboardContext();
 
   const handleDragStart = (e: React.DragEvent) => {
+    const { w, h } = resolveWidgetSize(widget);
+
     const widgetData = {
       widgetId: widget.id,
+      w,
+      h,
     };
 
     if (context) {
@@ -32,18 +37,28 @@ export const DashboardWidgetGalleryItem: React.FC<
     if (context) {
       context.setDraggingWidget(null);
     }
+    onWidgetDrop?.(widget.id);
   };
+
+  const handleClick = () => {
+    if (mode === "click" || mode === "both") {
+      context?.handleAddWidget?.(widget.id);
+      onWidgetAdd?.(widget.id);
+    }
+  };
+
+  const isDraggable = mode === "drag" || mode === "both";
 
   return (
     <div
       className={clsx(
         "cursor-pointer rounded-lg border border-outline-gray-2 bg-surface-cards overflow-hidden hover:border-outline-gray-3",
-        mode === "grid" && "text-center"
+        view === "grid" && "text-center"
       )}
-      draggable={true}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      onClick={() => onClick?.(widget)}
+      draggable={isDraggable}
+      onDragStart={isDraggable ? handleDragStart : undefined}
+      onDragEnd={isDraggable ? handleDragEnd : undefined}
+      onClick={handleClick}
       title={`Drag to add ${widget.name}`}
     >
       {widget.preview && (

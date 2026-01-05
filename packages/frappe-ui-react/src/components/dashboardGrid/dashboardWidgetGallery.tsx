@@ -12,11 +12,13 @@ import { DashboardWidgetGalleryItem } from "./dashboardWidgetGalleryItem";
 
 export const DashboardWidgetGallery: React.FC<DashboardWidgetGalleryProps> = ({
   widgets,
-  onAddWidget,
   title,
   description,
   className,
-  mode = "list",
+  view = "list",
+  mode = "both",
+  onWidgetAdd,
+  onWidgetDrop,
 }) => {
   return (
     <div className={className}>
@@ -32,15 +34,17 @@ export const DashboardWidgetGallery: React.FC<DashboardWidgetGalleryProps> = ({
       )}
       <div
         className={clsx(
-          mode === "grid" ? "grid grid-cols-2 gap-3" : "flex flex-col gap-2"
+          view === "grid" ? "grid grid-cols-2 gap-3" : "flex flex-col gap-2"
         )}
       >
         {widgets.map((widget) => (
           <DashboardWidgetGalleryItem
             key={widget.id}
             widget={widget}
-            onClick={onAddWidget}
+            view={view}
             mode={mode}
+            onWidgetAdd={onWidgetAdd}
+            onWidgetDrop={onWidgetDrop}
           />
         ))}
       </div>

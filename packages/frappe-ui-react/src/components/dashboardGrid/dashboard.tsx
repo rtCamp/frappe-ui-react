@@ -12,8 +12,10 @@ import {
   serializeLayout,
   normalizeLayout,
   deserializeLayout,
+  resolveWidgetSize,
 } from "./dashboardUtil";
 import type { DashboardProps, WidgetLayout } from "./types";
+import { useDashboardContext } from "./dashboardContext";
 
 export const DashboardGrid: React.FC<DashboardProps> = ({
   widgets,
@@ -23,6 +25,7 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
   sizes,
   ...rest
 }) => {
+  const context = useDashboardContext();
   const [layout, setLayout] = useState<WidgetLayout[]>(() => {
     if (savedLayout && savedLayout.length > 0) {
       const deserialized = deserializeLayout(savedLayout);
@@ -51,8 +54,8 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
     [onLayoutChange]
   );
 
-  const handleDrop = useCallback(
-    (widgetId: string, layoutData: { x: number; y: number }) => {
+  const addWidgetToLayout = useCallback(
+    (widgetId: string, position: { x: number; y: number }) => {
       const widgetDef = widgets.find((w) => w.id === widgetId);
       if (!widgetDef) return;
 
@@ -64,11 +67,15 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
         const newKey =
           existingCount === 0 ? widgetId : `${widgetId}-${existingCount}`;
 
+        const { w, h } = resolveWidgetSize(widgetDef, sizes);
+
         const newLayoutItem: WidgetLayout = {
           id: widgetId,
           key: newKey,
-          x: layoutData.x,
-          y: layoutData.y,
+          x: position.x,
+          y: position.y,
+          w,
+          h,
           size: widgetDef.size,
           isResizable: widgetDef.isResizable,
           isDraggable: widgetDef.isDraggable,
@@ -80,7 +87,14 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
         return updated;
       });
     },
-    [widgets, onLayoutChange]
+    [widgets, sizes, onLayoutChange]
+  );
+
+  const handleDrop = useCallback(
+    (widgetId: string, layoutData: { x: number; y: number }) => {
+      addWidgetToLayout(widgetId, layoutData);
+    },
+    [addWidgetToLayout]
   );
 
   const handleRemoveWidget = useCallback(
@@ -93,6 +107,25 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
     },
     [onLayoutChange]
   );
+
+  const handleAddWidget = useCallback(
+    (widgetId: string) => {
+      // Find the bottom-most Y position
+      const maxY = layout.reduce((max, item) => {
+        const itemBottom = (item.y || 0) + (item.h || 0);
+        return itemBottom > max ? itemBottom : max;
+      }, 0);
+
+      addWidgetToLayout(widgetId, { x: 0, y: maxY });
+    },
+    [addWidgetToLayout, layout]
+  );
+
+  useEffect(() => {
+    if (context) {
+      context.setHandleAddWidget(() => handleAddWidget);
+    }
+  }, [context, handleAddWidget]);
 
   return (
     <LayoutContainer
