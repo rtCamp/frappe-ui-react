@@ -1,22 +1,22 @@
 /**
  * External dependencies.
  */
-import React from "react";
+import React, { useContext } from "react";
 import clsx from "clsx";
 
 /**
  * Internal dependencies.
  */
 import type { DashboardWidgetGalleryItemProps } from "./types";
-import { useDashboardContext } from "./dashboardContext";
+import { DashboardContext } from "./dashboardContext";
 import { resolveWidgetSize } from "./dashboardUtil";
 
 export const DashboardWidgetGalleryItem: React.FC<
   DashboardWidgetGalleryItemProps
 > = ({ widget, view = "list", mode = "both", onWidgetAdd, onWidgetDrop }) => {
-  const context = useDashboardContext();
+  const context = useContext(DashboardContext);
 
-  const handleDragStart = (e: React.DragEvent) => {
+  const handleDragStart = () => {
     const { w, h } = resolveWidgetSize(widget);
 
     const widgetData = {
@@ -28,9 +28,6 @@ export const DashboardWidgetGalleryItem: React.FC<
     if (context) {
       context.setDraggingWidget({ ...widgetData, widget });
     }
-
-    e.dataTransfer.setData("text/plain", JSON.stringify(widgetData));
-    e.dataTransfer.effectAllowed = "copy";
   };
 
   const handleDragEnd = () => {

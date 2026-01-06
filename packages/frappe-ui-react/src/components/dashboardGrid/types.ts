@@ -34,6 +34,14 @@ export interface WidgetLayout {
 export type WidgetRow = Array<string | WidgetLayout>;
 export type DashboardLayout = WidgetRow[];
 
+export type DashboardLayouts = {
+  [key in Breakpoint]?: WidgetLayout[];
+};
+
+export type WidgetLayouts = {
+  [key in Breakpoint]?: DashboardLayout;
+};
+
 export interface WidgetDefinition {
   id: string;
   name: string;
@@ -53,9 +61,9 @@ export interface WidgetDefinition {
 
 export interface DashboardProps {
   widgets: WidgetDefinition[];
-  initialLayout?: DashboardLayout;
-  savedLayout?: WidgetLayout[];
-  onLayoutChange?: (layout: WidgetLayout[]) => void;
+  initialLayouts?: WidgetLayouts;
+  savedLayout?: DashboardLayouts;
+  onLayoutChange?: (layout: DashboardLayouts) => void;
   sizes?: WidgetSizePresets;
   breakpoints?: { [key in Breakpoint]?: number };
   cols?: { [key in Breakpoint]?: number };
@@ -71,8 +79,8 @@ export interface DashboardProps {
 
 export interface LayoutContainerProps {
   widgets: WidgetDefinition[];
-  layout: WidgetLayout[];
-  setLayout?: (layout: WidgetLayout[]) => void;
+  layouts: DashboardLayouts;
+  setLayouts?: (layouts: DashboardLayouts) => void;
   onDrop?: (
     widgetId: string,
     layout: { x: number; y: number; w: number; h: number }
@@ -101,12 +109,12 @@ export interface WidgetWrapperProps {
 }
 
 export interface DashboardWidgetGalleryProps {
-  widgets: WidgetDefinition[];
   title?: string;
   description?: string;
   className?: string;
   view?: "list" | "grid";
   mode?: "drag" | "click" | "both";
+  filterWidgets?: (widgets: WidgetDefinition[]) => WidgetDefinition[];
   onWidgetAdd?: (widgetId: string) => void;
   onWidgetDrop?: (widgetId: string) => void;
 }

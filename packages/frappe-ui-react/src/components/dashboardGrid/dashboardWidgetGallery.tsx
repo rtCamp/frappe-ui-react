@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import React from "react";
+import React, { useContext } from "react";
 import clsx from "clsx";
 
 /**
@@ -9,17 +9,22 @@ import clsx from "clsx";
  */
 import type { DashboardWidgetGalleryProps } from "./types";
 import { DashboardWidgetGalleryItem } from "./dashboardWidgetGalleryItem";
+import { DashboardContext } from "./dashboardContext";
 
 export const DashboardWidgetGallery: React.FC<DashboardWidgetGalleryProps> = ({
-  widgets,
   title,
   description,
   className,
   view = "list",
   mode = "both",
+  filterWidgets,
   onWidgetAdd,
   onWidgetDrop,
 }) => {
+  const context = useContext(DashboardContext)!;
+  const widgets = filterWidgets
+    ? filterWidgets(context.widgets)
+    : context.widgets;
   return (
     <div className={className}>
       {(title || description) && (

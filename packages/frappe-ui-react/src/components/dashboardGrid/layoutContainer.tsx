@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import { useCallback, useMemo, useEffect, useState } from "react";
+import { useCallback, useMemo, useEffect, useState, useContext } from "react";
 import clsx from "clsx";
 import {
   WidthProvider,
@@ -16,8 +16,13 @@ import "./dashboard.css";
  * Internal dependencies.
  */
 import { WidgetWrapper } from "./widgetWrapper";
-import type { LayoutContainerProps, WidgetLayout } from "./types";
-import { useDashboardContext } from "./dashboardContext";
+import type {
+  LayoutContainerProps,
+  WidgetLayout,
+  Breakpoint,
+  DashboardLayouts,
+} from "./types";
+import { DashboardContext } from "./dashboardContext";
 import { resolveWidgetSize } from "./dashboardUtil";
 import React from "react";
 
@@ -25,8 +30,8 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   widgets,
-  layout,
-  setLayout,
+  layouts,
+  setLayouts,
   onDrop,
   onRemove,
   sizes,
@@ -41,8 +46,9 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   isBounded = true,
   className = "",
 }) => {
-  const context = useDashboardContext();
+  const context = useContext(DashboardContext);
   const [isMounted, setIsMounted] = useState(false);
+  const [activeBreakpoint, setActiveBreakpoint] = useState<Breakpoint>("lg");
 
   useEffect(() => {
     const timer = setTimeout(() => setIsMounted(true), 100);
@@ -60,79 +66,91 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     [widgets]
   );
 
-  const rglLayout: RGLLayout[] = useMemo(
-    () =>
-      layout.map((item) => {
-        const widgetDef = widgetMap.get(item.id);
-        const size = resolveWidgetSize(item, sizes, widgetDef);
-        return {
-          i: item.key || item.id,
-          x: item.x ?? 0,
-          y: item.y ?? 0,
-          w: size.w,
-          h: size.h,
-          minW: size.minW,
-          minH: size.minH,
-          maxW: size.maxW,
-          maxH: size.maxH,
-          static: item.static,
-          isDraggable:
-            item.isDraggable !== undefined
-              ? item.isDraggable
-              : widgetDef?.isDraggable ?? !layoutLock,
-          isResizable: size.isResizable !== undefined ? size.isResizable : true,
-        };
-      }),
-    [layout, sizes, layoutLock, widgetMap]
-  );
+  const rglLayouts = useMemo(() => {
+    const result: { [key: string]: RGLLayout[] } = {};
+
+    for (const breakpoint in layouts) {
+      const layout = layouts[breakpoint as Breakpoint];
+      if (layout) {
+        result[breakpoint] = layout.map((item: WidgetLayout) => {
+          const widgetDef = widgetMap.get(item.id);
+          const size = resolveWidgetSize(item, sizes, widgetDef);
+          return {
+            i: item.key || item.id,
+            x: item.x ?? 0,
+            y: item.y ?? 0,
+            w: size.w,
+            h: size.h,
+            minW: size.minW,
+            minH: size.minH,
+            maxW: size.maxW,
+            maxH: size.maxH,
+            static: item.static,
+            isDraggable:
+              item.isDraggable !== undefined
+                ? item.isDraggable
+                : widgetDef?.isDraggable ?? !layoutLock,
+            isResizable:
+              size.isResizable !== undefined ? size.isResizable : true,
+          };
+        });
+      }
+    }
+
+    return result;
+  }, [layouts, sizes, layoutLock, widgetMap]);
 
   const handleLayoutChange = useCallback(
-    (newLayout: RGLLayout[]) => {
-      if (layoutLock || !setLayout) return;
+    (
+      _currentLayout: RGLLayout[],
+      allLayouts: { [key: string]: RGLLayout[] }
+    ) => {
+      if (layoutLock || !setLayouts) return;
 
-      const layoutMap = new Map(newLayout.map((item) => [item.i, item]));
-      const updatedLayout: WidgetLayout[] = layout.map((item) => {
-        const key = item.key || item.id;
-        const rglItem = layoutMap.get(key);
-        if (!rglItem) return item;
-        return {
-          ...item,
-          x: rglItem.x,
-          y: rglItem.y,
-          w: rglItem.w,
-          h: rglItem.h,
-          static: rglItem.static,
-          isDraggable: rglItem.isDraggable,
-          isResizable: rglItem.isResizable,
-        };
-      });
-      setLayout(updatedLayout);
+      const newLayouts: DashboardLayouts = {};
+
+      for (const breakpoint in allLayouts) {
+        const rglLayout = allLayouts[breakpoint];
+        const originalLayout = layouts[breakpoint as Breakpoint] || [];
+
+        const layoutMap = new Map(
+          rglLayout.map((item: RGLLayout) => [item.i, item])
+        );
+        const updatedLayout: WidgetLayout[] = originalLayout.map(
+          (item: WidgetLayout) => {
+            const key = item.key || item.id;
+            const rglItem = layoutMap.get(key);
+            if (!rglItem) return item;
+            return {
+              ...item,
+              x: rglItem.x,
+              y: rglItem.y,
+              w: rglItem.w,
+              h: rglItem.h,
+              static: rglItem.static,
+              isDraggable: rglItem.isDraggable,
+              isResizable: rglItem.isResizable,
+            };
+          }
+        );
+
+        newLayouts[breakpoint as Breakpoint] = updatedLayout;
+      }
+
+      setLayouts(newLayouts);
     },
-    [layout, setLayout, layoutLock]
+    [layouts, setLayouts, layoutLock]
   );
 
+  const handleBreakpointChange = useCallback((breakpoint: Breakpoint) => {
+    setActiveBreakpoint(breakpoint);
+  }, []);
+
   const handleDrop = useCallback(
-    (layoutItem: RGLLayout[], item: RGLLayout, e: Event) => {
+    (layoutItem: RGLLayout[], item: RGLLayout) => {
       if (!onDrop) return;
 
-      let widgetData = context?.draggingWidget;
-
-      // Fallback to dataTransfer if no context
-      if (!widgetData && e instanceof DragEvent) {
-        const dataTransfer = e.dataTransfer;
-        if (!dataTransfer) return;
-
-        try {
-          const data = JSON.parse(dataTransfer.getData("text/plain"));
-          widgetData = {
-            widgetId: data.widgetId,
-            w: data.w || 4,
-            h: data.h || 3,
-          };
-        } catch {
-          // no-op
-        }
-      }
+      const widgetData = context?.draggingWidget;
 
       if (widgetData?.widgetId) {
         onDrop(widgetData.widgetId, {
@@ -167,8 +185,8 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     ),
     rowHeight,
     margin,
-    onDragStop: handleLayoutChange,
-    onResizeStop: handleLayoutChange,
+    onLayoutChange: handleLayoutChange,
+    onBreakpointChange: handleBreakpointChange,
     onDrop: onDrop ? handleDrop : undefined,
     isDroppable: Boolean(onDrop),
     droppingItem: onDrop
@@ -189,15 +207,24 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     useCSSTransforms: true,
   };
 
+  const handleRemoveWidget = useCallback(
+    (widgetKey: string) => {
+      onRemove?.(widgetKey);
+    },
+    [onRemove]
+  );
+
+  const currentLayout = layouts[activeBreakpoint] || [];
+
   return (
     <div className={clsx("dashboard-grid-container h-full", className)}>
       <ResponsiveGridLayout
         {...commonProps}
         breakpoints={actualBreakpoints}
         cols={actualCols}
-        layouts={{ lg: rglLayout }}
+        layouts={rglLayouts}
       >
-        {layout.map((layoutItem) => {
+        {currentLayout.map((layoutItem: WidgetLayout) => {
           const widgetDef = widgetMap.get(layoutItem.id);
           if (!widgetDef) return null;
 
@@ -208,7 +235,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
             <div key={key} className="dashboard-grid-item">
               <WidgetWrapper
                 widgetId={key}
-                onRemove={onRemove}
+                onRemove={handleRemoveWidget}
                 layoutLock={layoutLock}
                 dragHandle={dragHandle}
                 dragHandleOnHover={dragHandleOnHover}

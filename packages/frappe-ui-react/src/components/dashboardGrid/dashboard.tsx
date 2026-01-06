@@ -1,55 +1,56 @@
 /**
  * External dependencies.
  */
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useContext } from "react";
 
 /**
  * Internal dependencies.
  */
 import { LayoutContainer } from "./layoutContainer";
 import {
-  ensureLayoutKeys,
-  serializeLayout,
-  normalizeLayout,
-  deserializeLayout,
   resolveWidgetSize,
+  serializeLayouts,
+  normalizeLayouts,
+  deserializeLayouts,
 } from "./dashboardUtil";
-import type { DashboardProps, WidgetLayout } from "./types";
-import { useDashboardContext } from "./dashboardContext";
+import type {
+  DashboardProps,
+  WidgetLayout,
+  DashboardLayouts,
+  Breakpoint,
+} from "./types";
+import { DashboardContext } from "./dashboardContext";
 
 export const DashboardGrid: React.FC<DashboardProps> = ({
   widgets,
-  initialLayout = [],
+  initialLayouts,
   savedLayout,
   onLayoutChange,
   sizes,
   ...rest
 }) => {
-  const context = useDashboardContext();
-  const [layout, setLayout] = useState<WidgetLayout[]>(() => {
-    if (savedLayout && savedLayout.length > 0) {
-      const deserialized = deserializeLayout(savedLayout);
-      if (deserialized.length > 0) {
-        return deserialized;
-      }
+  const context = useContext(DashboardContext);
+
+  const [layouts, setLayouts] = useState<DashboardLayouts>(() => {
+    if (savedLayout) {
+      return deserializeLayouts(savedLayout);
     }
-    const normalized = normalizeLayout(initialLayout || [], widgets, sizes);
-    return ensureLayoutKeys(normalized);
+    if (initialLayouts) {
+      return normalizeLayouts(initialLayouts, widgets, sizes);
+    }
+    return {};
   });
 
   useEffect(() => {
-    if (savedLayout && savedLayout.length > 0) {
-      const deserialized = deserializeLayout(savedLayout);
-      if (deserialized.length > 0) {
-        setLayout(deserialized);
-      }
+    if (savedLayout) {
+      setLayouts(deserializeLayouts(savedLayout));
     }
   }, [savedLayout]);
 
   const handleLayoutChange = useCallback(
-    (newLayout: WidgetLayout[]) => {
-      setLayout(newLayout);
-      onLayoutChange?.(serializeLayout(newLayout));
+    (newLayouts: DashboardLayouts) => {
+      setLayouts(newLayouts);
+      onLayoutChange?.(serializeLayouts(newLayouts));
     },
     [onLayoutChange]
   );
@@ -59,37 +60,43 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
       const widgetDef = widgets.find((w) => w.id === widgetId);
       if (!widgetDef) return;
 
-      setLayout((prev) => {
-        const existingCount = prev.filter(
-          (item) => item.id === widgetId
-        ).length;
+      setLayouts((prevLayouts) => {
+        const newLayouts: DashboardLayouts = { ...prevLayouts };
 
-        const newKey =
-          existingCount === 0 ? widgetId : `${widgetId}-${existingCount}`;
+        for (const bp in prevLayouts) {
+          const breakpoint = bp as Breakpoint;
+          const currentLayout = prevLayouts[breakpoint] || [];
 
-        const { w, h } = resolveWidgetSize(widgetDef, sizes);
+          const existingCount = currentLayout.filter(
+            (item) => item.id === widgetId
+          ).length;
 
-        const newLayoutItem: WidgetLayout = {
-          id: widgetId,
-          key: newKey,
-          x: position.x,
-          y: position.y,
-          w,
-          h,
-          size: widgetDef.size,
-          isResizable: widgetDef.isResizable,
-          isDraggable: widgetDef.isDraggable,
-        };
+          const newKey =
+            existingCount === 0 ? widgetId : `${widgetId}-${existingCount}`;
 
-        const updated = [...prev, newLayoutItem];
-        onLayoutChange?.(serializeLayout(updated));
+          const { w, h } = resolveWidgetSize(widgetDef, sizes);
 
-        return updated;
+          const newLayoutItem: WidgetLayout = {
+            id: widgetId,
+            key: newKey,
+            x: position.x,
+            y: position.y,
+            w,
+            h,
+            size: widgetDef.size,
+            isResizable: widgetDef.isResizable,
+            isDraggable: widgetDef.isDraggable,
+          };
+
+          newLayouts[breakpoint] = [...currentLayout, newLayoutItem];
+        }
+
+        onLayoutChange?.(serializeLayouts(newLayouts));
+        return newLayouts;
       });
     },
     [widgets, sizes, onLayoutChange]
   );
-
   const handleDrop = useCallback(
     (widgetId: string, layoutData: { x: number; y: number }) => {
       addWidgetToLayout(widgetId, layoutData);
@@ -99,10 +106,18 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
 
   const handleRemoveWidget = useCallback(
     (widgetKey: string) => {
-      setLayout((prev) => {
-        const updated = prev.filter((w) => (w.key || w.id) !== widgetKey);
-        onLayoutChange?.(serializeLayout(updated));
-        return updated;
+      setLayouts((prevLayouts) => {
+        const newLayouts: DashboardLayouts = {};
+
+        for (const breakpoint in prevLayouts) {
+          const currentLayout = prevLayouts[breakpoint as Breakpoint] || [];
+          newLayouts[breakpoint as Breakpoint] = currentLayout.filter(
+            (w) => (w.key || w.id) !== widgetKey
+          );
+        }
+
+        onLayoutChange?.(serializeLayouts(newLayouts));
+        return newLayouts;
       });
     },
     [onLayoutChange]
@@ -110,28 +125,34 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
 
   const handleAddWidget = useCallback(
     (widgetId: string) => {
-      // Find the bottom-most Y position
-      const maxY = layout.reduce((max, item) => {
-        const itemBottom = (item.y || 0) + (item.h || 0);
-        return itemBottom > max ? itemBottom : max;
-      }, 0);
+      // Find the bottom-most Y position across all breakpoints
+      let maxY = 0;
+      for (const bp in layouts) {
+        const currentLayout = layouts[bp as Breakpoint] || [];
+        const bottomY = currentLayout.reduce((max, item) => {
+          const itemBottom = (item.y || 0) + (item.h || 0);
+          return itemBottom > max ? itemBottom : max;
+        }, 0);
+        maxY = Math.max(maxY, bottomY);
+      }
 
       addWidgetToLayout(widgetId, { x: 0, y: maxY });
     },
-    [addWidgetToLayout, layout]
+    [addWidgetToLayout, layouts]
   );
 
   useEffect(() => {
     if (context) {
       context.setHandleAddWidget(() => handleAddWidget);
+      context.setWidgets(widgets);
     }
-  }, [context, handleAddWidget]);
+  }, [context, handleAddWidget, widgets]);
 
   return (
     <LayoutContainer
       widgets={widgets}
-      layout={layout}
-      setLayout={handleLayoutChange}
+      layouts={layouts}
+      setLayouts={handleLayoutChange}
       onDrop={handleDrop}
       onRemove={handleRemoveWidget}
       sizes={sizes}

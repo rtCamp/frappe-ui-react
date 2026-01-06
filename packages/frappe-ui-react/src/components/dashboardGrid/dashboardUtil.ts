@@ -1,4 +1,12 @@
-import type { WidgetLayout, WidgetSizePresets, WidgetDefinition, DashboardLayout } from "./types";
+import type {
+  WidgetLayout,
+  WidgetSizePresets,
+  WidgetDefinition,
+  DashboardLayout,
+  DashboardLayouts,
+  WidgetLayouts,
+  Breakpoint,
+} from "./types";
 
 /**
  * Convert DashboardLayout to flat WidgetLayout array with positions
@@ -15,23 +23,22 @@ export const normalizeLayout = (
 
   for (const row of layout) {
     if (!Array.isArray(row)) continue;
-    
+
     let currentX = 0;
     let maxRowHeight = 1;
 
     for (const item of row) {
-      const widgetLayout: WidgetLayout = typeof item === 'string' 
-        ? { id: item }
-        : { ...item };
+      const widgetLayout: WidgetLayout =
+        typeof item === "string" ? { id: item } : { ...item };
 
-      const widgetDef = widgets.find(w => w.id === widgetLayout.id);
+      const widgetDef = widgets.find((w) => w.id === widgetLayout.id);
       const resolved = resolveWidgetSize(widgetLayout, sizePresets, widgetDef);
-      
+
       widgetLayout.x = currentX;
       widgetLayout.y = currentY;
-      
+
       result.push(widgetLayout);
-      
+
       currentX += resolved.w;
       maxRowHeight = Math.max(maxRowHeight, resolved.h);
     }
@@ -39,7 +46,7 @@ export const normalizeLayout = (
     currentY += maxRowHeight;
   }
 
-  return result;
+  return ensureLayoutKeys(result);
 };
 
 /**
@@ -49,9 +56,11 @@ export const resolveWidgetSize = (
   layout: WidgetLayout,
   sizePresets?: WidgetSizePresets,
   widgetDef?: WidgetDefinition
-): Required<Pick<WidgetLayout, 'w' | 'h'>> & Pick<WidgetLayout, 'minW' | 'maxW' | 'minH' | 'maxH' | 'isResizable'> => {
+): Required<Pick<WidgetLayout, "w" | "h">> &
+  Pick<WidgetLayout, "minW" | "maxW" | "minH" | "maxH" | "isResizable"> => {
   const sizeName = layout.size ?? widgetDef?.size;
-  const preset = sizeName && sizePresets?.[sizeName] ? sizePresets[sizeName] : null;
+  const preset =
+    sizeName && sizePresets?.[sizeName] ? sizePresets[sizeName] : null;
 
   return {
     w: layout.w ?? preset?.w ?? 4,
@@ -60,7 +69,8 @@ export const resolveWidgetSize = (
     maxW: layout.maxW ?? preset?.maxW,
     minH: layout.minH ?? preset?.minH,
     maxH: layout.maxH ?? preset?.maxH,
-    isResizable: layout.isResizable ?? preset?.isResizable ?? widgetDef?.isResizable,
+    isResizable:
+      layout.isResizable ?? preset?.isResizable ?? widgetDef?.isResizable,
   };
 };
 
@@ -87,13 +97,13 @@ export const validateLayout = (layout: WidgetLayout[]): boolean => {
  */
 export const ensureLayoutKeys = (layouts: WidgetLayout[]): WidgetLayout[] => {
   const keyCount = new Map<string, number>();
-  
+
   return layouts.map((item) => {
     if (item.key) return item;
-    
+
     const count = keyCount.get(item.id) || 0;
     keyCount.set(item.id, count + 1);
-    
+
     return {
       ...item,
       key: count === 0 ? item.id : `${item.id}-${count}`,
@@ -102,19 +112,79 @@ export const ensureLayoutKeys = (layouts: WidgetLayout[]): WidgetLayout[] => {
 };
 
 /**
- * Serialize layout for saving by removing internal tracking keys.
+ * Normalize DashboardLayouts to WidgetLayout per breakpoint
  */
-export const serializeLayout = (layout: WidgetLayout[]): WidgetLayout[] => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  return layout.map(({ key, ...item }) => item);
+export const normalizeLayouts = (
+  layouts: WidgetLayouts,
+  widgets: WidgetDefinition[],
+  sizes?: WidgetSizePresets
+): DashboardLayouts => {
+  const normalized: DashboardLayouts = {};
+
+  for (const breakpoint in layouts) {
+    const layout = layouts[breakpoint as Breakpoint];
+    if (layout) {
+      normalized[breakpoint as Breakpoint] = ensureLayoutKeys(
+        normalizeLayout(layout, widgets, sizes)
+      );
+    }
+  }
+
+  // Fill missing breakpoints by copying nearest defined layout
+  const breakpointOrder: Breakpoint[] = ["lg", "md", "sm", "xs", "xxs"];
+
+  breakpointOrder.forEach((bp, i) => {
+    if (normalized[bp]) return;
+    const nearestLayout =
+      breakpointOrder
+        .slice(0, i)
+        .reverse()
+        .find((b) => normalized[b]) ||
+      breakpointOrder.slice(i + 1).find((b) => normalized[b]);
+
+    if (nearestLayout) {
+      normalized[bp] = normalized[nearestLayout]!.map((item) => ({ ...item }));
+    }
+  });
+
+  return normalized;
 };
 
 /**
- * Deserialize saved layout and restore with proper keys.
+ * Serialize layouts for saving by removing internal tracking keys.
  */
-export const deserializeLayout = (layout: WidgetLayout[]): WidgetLayout[] => {
-  if (!validateLayout(layout)) {
-    return [];
+export const serializeLayouts = (
+  layouts: DashboardLayouts
+): DashboardLayouts => {
+  const serialized: DashboardLayouts = {};
+
+  for (const breakpoint in layouts) {
+    const layout = layouts[breakpoint as Breakpoint];
+    if (layout) {
+      serialized[breakpoint as Breakpoint] = layout.map(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ({ key, ...item }) => item
+      );
+    }
   }
-  return ensureLayoutKeys(layout);
+
+  return serialized;
+};
+
+/**
+ * Deserialize saved layouts and restore with proper keys.
+ */
+export const deserializeLayouts = (
+  layouts: DashboardLayouts
+): DashboardLayouts => {
+  const deserialized: DashboardLayouts = {};
+
+  for (const breakpoint in layouts) {
+    const layout = layouts[breakpoint as Breakpoint];
+    if (layout && validateLayout(layout)) {
+      deserialized[breakpoint as Breakpoint] = ensureLayoutKeys(layout);
+    }
+  }
+
+  return deserialized;
 };
