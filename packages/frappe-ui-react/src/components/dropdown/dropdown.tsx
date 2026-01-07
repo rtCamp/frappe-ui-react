@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from "react";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { Menu } from "@base-ui/react/menu";
 
 import { Button, ButtonProps } from "../button";
 import { Switch } from "../switch";
@@ -180,64 +180,69 @@ const Dropdown: React.FC<DropdownProps> = ({
       );
     } else if (item.submenu) {
       return (
-        <DropdownMenu.Sub>
-          <DropdownMenu.SubTrigger asChild>
-            <Button
-              variant="ghost"
-              iconLeft={() =>
-                item.icon &&
-                (typeof item.icon === "string" ? (
+        <Menu.SubmenuRoot>
+          <Menu.SubmenuTrigger
+            render={
+              <Button
+                variant="ghost"
+                iconLeft={() =>
+                  item.icon &&
+                  (typeof item.icon === "string" ? (
+                    <FeatherIcon
+                      name={item.icon as FeatherIconProps["name"]}
+                      className={`${cssClasses.itemIcon} ${getIconColor(item)}`}
+                    />
+                  ) : React.isValidElement(item.icon) ? (
+                    item.icon
+                  ) : null)
+                }
+                iconRight={() => (
                   <FeatherIcon
-                    name={item.icon as FeatherIconProps["name"]}
-                    className={`${cssClasses.itemIcon} ${getIconColor(item)}`}
+                    name="chevron-right"
+                    className={cssClasses.chevronIcon}
+                    aria-hidden="true"
                   />
-                ) : React.isValidElement(item.icon) ? (
-                  item.icon
-                ) : null)
-              }
-              iconRight={() => (
-                <FeatherIcon
-                  name="chevron-right"
-                  className={cssClasses.chevronIcon}
-                  aria-hidden="true"
-                />
-              )}
-              className={`${
-                cssClasses.submenuTrigger
-              } ${getSubmenuBackgroundColor(item)}`}
-            >
-              <span className={cssClasses.itemLabel}>{item.label}</span>
-            </Button>
-          </DropdownMenu.SubTrigger>
-          <DropdownMenu.Portal>
-            <DropdownMenu.SubContent
-              className={cssClasses.dropdownContent}
-              sideOffset={4}
-            >
-              {processOptionsIntoGroups(item.submenu).map((submenuGroup) => (
-                <div
-                  key={submenuGroup.key}
-                  className={cssClasses.groupContainer}
-                >
-                  {submenuGroup.group && !submenuGroup.hideLabel && (
-                    <DropdownMenu.Label className={cssClasses.groupLabel}>
-                      {submenuGroup.group}
-                    </DropdownMenu.Label>
-                  )}
-                  {submenuGroup.items.map((subItem) => (
-                    <DropdownMenu.Item
-                      key={subItem.label}
-                      asChild
-                      onSelect={() => subItem.onClick?.()}
-                    >
-                      {renderDropdownItem(subItem)}
-                    </DropdownMenu.Item>
-                  ))}
-                </div>
-              ))}
-            </DropdownMenu.SubContent>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Sub>
+                )}
+                className={`${
+                  cssClasses.submenuTrigger
+                } ${getSubmenuBackgroundColor(item)}`}
+              >
+                <span className={cssClasses.itemLabel}>{item.label}</span>
+              </Button>
+            }
+            nativeButton={true}
+          />
+          <Menu.Portal>
+            <Menu.Positioner sideOffset={4}>
+              <Menu.Popup className={cssClasses.dropdownContent}>
+                {processOptionsIntoGroups(item.submenu).map((submenuGroup) => (
+                  <Menu.Group
+                    key={submenuGroup.key}
+                    className={cssClasses.groupContainer}
+                  >
+                    {submenuGroup.group && !submenuGroup.hideLabel && (
+                      <Menu.GroupLabel className={cssClasses.groupLabel}>
+                        {submenuGroup.group}
+                      </Menu.GroupLabel>
+                    )}
+                    {submenuGroup.items.map((subItem) => (
+                      <Menu.Item
+                        key={subItem.label}
+                        onSelect={() => subItem.onClick?.()}
+                        render={renderDropdownItem(subItem)}
+                        nativeButton={
+                          !subItem.switch &&
+                          !subItem.submenu &&
+                          !subItem.component
+                        }
+                      />
+                    ))}
+                  </Menu.Group>
+                ))}
+              </Menu.Popup>
+            </Menu.Positioner>
+          </Menu.Portal>
+        </Menu.SubmenuRoot>
       );
     } else {
       return (
@@ -262,49 +267,55 @@ const Dropdown: React.FC<DropdownProps> = ({
   };
 
   return (
-    <DropdownMenu.Root>
-      <DropdownMenu.Trigger asChild>
-        {children ? (
-          React.cloneElement(children as React.ReactElement, { ...attrs })
-        ) : (
-          <Button {...(button as ButtonProps)} {...attrs}>
-            {button?.label || "Options"}
-          </Button>
-        )}
-      </DropdownMenu.Trigger>
+    <Menu.Root>
+      <Menu.Trigger
+        render={
+          children ? (
+            React.cloneElement(children as React.ReactElement, { ...attrs })
+          ) : (
+            <Button {...(button as ButtonProps)} {...attrs}>
+              {button?.label || "Options"}
+            </Button>
+          )
+        }
+      />
 
-      <DropdownMenu.Portal>
-        <DropdownMenu.Content
-          className={`${cssClasses.dropdownContent} origin-top-left ${
-            placement === "left"
-              ? "origin-top-left"
-              : placement === "right"
-              ? "origin-top-right"
-              : "origin-top"
-          }`}
-          side={contentSide}
-          align={contentAlign}
-          sideOffset={0}
-        >
-          {groups.map((group) => (
-            <div key={group.key} className={cssClasses.groupContainer}>
-              {group.group && !group.hideLabel && (
-                <DropdownMenu.Label className={cssClasses.groupLabel}>
-                  {group.group}
-                </DropdownMenu.Label>
-              )}
-              {group.items.map((item) => (
-                <div data-testid="dropdown-item" key={item.label}>
-                  <DropdownMenu.Item asChild onSelect={() => !item.switch && item.onClick?.()}>
-                    {renderDropdownItem(item)}
-                  </DropdownMenu.Item>
-                </div>
-              ))}
-            </div>
-          ))}
-        </DropdownMenu.Content>
-      </DropdownMenu.Portal>
-    </DropdownMenu.Root>
+      <Menu.Portal>
+        <Menu.Positioner side={contentSide} align={contentAlign} sideOffset={0}>
+          <Menu.Popup
+            className={`${cssClasses.dropdownContent} origin-top-left ${
+              placement === "left"
+                ? "origin-top-left"
+                : placement === "right"
+                ? "origin-top-right"
+                : "origin-top"
+            }`}
+          >
+            {groups.map((group) => (
+              <Menu.Group key={group.key} className={cssClasses.groupContainer}>
+                {group.group && !group.hideLabel && (
+                  <Menu.GroupLabel className={cssClasses.groupLabel}>
+                    {group.group}
+                  </Menu.GroupLabel>
+                )}
+                {group.items.map((item) => (
+                  <div data-testid="dropdown-item" key={item.label}>
+                    <Menu.Item
+                      closeOnClick={!item.switch}
+                      onSelect={() => !item.switch && item.onClick?.()}
+                      render={renderDropdownItem(item)}
+                      nativeButton={
+                        !item.switch && !item.submenu && !item.component
+                      }
+                    />
+                  </div>
+                ))}
+              </Menu.Group>
+            ))}
+          </Menu.Popup>
+        </Menu.Positioner>
+      </Menu.Portal>
+    </Menu.Root>
   );
 };
 
