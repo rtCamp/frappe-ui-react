@@ -38,6 +38,7 @@
     "publish:remote": "npm publish"
   },
   "dependencies": {
+    "@base-ui/react": "^1.0.0",
     "@floating-ui/react": "^0.27.13",
     "@headlessui/react": "^2.2.6",
     "@popperjs/core": "^2.11.8",
