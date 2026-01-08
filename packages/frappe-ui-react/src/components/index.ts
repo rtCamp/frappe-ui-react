@@ -21,6 +21,7 @@ export * from "./gridLayout";
 export * from "./hooks";
 export * from "./listview";
 export * from "./multiSelect";
+export * from "./monthPicker";
 export * from "./password";
 export * from "./progress";
 export * from "./popover";
