@@ -1,4 +1,4 @@
-import { ToastObject } from "@base-ui/react";
+import type { ToastObject } from "@base-ui/react";
 import type { ReactNode } from "react";
 
 export interface ToastActionProps {
