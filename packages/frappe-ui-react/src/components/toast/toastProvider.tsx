@@ -1,5 +1,5 @@
 import React, { ReactNode, useCallback, useMemo } from "react";
-import { Toast, ToastObject } from "@base-ui/react/toast";
+import { Toast, type ToastObject } from "@base-ui/react/toast";
 import DOMPurify from "dompurify";
 import LoadingIndicator from "../loadingIndicator";
 import type {
