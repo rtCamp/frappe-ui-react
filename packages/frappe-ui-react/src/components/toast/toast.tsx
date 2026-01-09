@@ -31,8 +31,12 @@ const ToastComponent: React.FC<ToastProps> = ({ toast }) => {
   }, [icon, type]);
 
   return (
-    <Toast.Root toast={toast} swipeDirection="down">
-      <Toast.Content className="toast-root-animatable bg-surface-gray-6 dark:bg-gray-900 text-ink-white dark:text-white border-none rounded-md px-4 py-1.5 shadow-lg flex items-center justify-between gap-3 min-w-[280px] max-w-[400px] pointer-events-auto list-none">
+    <Toast.Root
+      toast={toast}
+      swipeDirection={closable === false ? [] : "down"}
+      className="toast-root-animatable"
+    >
+      <Toast.Content className="bg-surface-gray-6 dark:bg-gray-900 text-ink-white dark:text-white border-none rounded-md px-4 py-1.5 shadow-lg flex items-center justify-between gap-3 min-w-[280px] max-w-[400px] pointer-events-auto list-none">
         <div className="flex items-center gap-2 flex-grow overflow-hidden">
           {iconComponent}
           <div className="flex flex-col flex-grow overflow-hidden">
@@ -53,66 +57,46 @@ const ToastComponent: React.FC<ToastProps> = ({ toast }) => {
       </Toast.Content>
       <style>
         {`
-        @keyframes KSlideIn {
-          from {
-            transform: translateY(calc(100% + var(--viewport-padding, 32px))) scale(0.95);
+          .toast-root-animatable {
+            transition:
+              transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+          }
+
+          /* Enter animation */
+          .toast-root-animatable[data-starting-style] {
             opacity: 0;
+            transform: translateY(150%) scale(0.95);
           }
-          to {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-          }
-        }
 
-        @keyframes KHide {
-          from {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-          to {
+          /* Exit animation */
+          .toast-root-animatable[data-ending-style] {
             opacity: 0;
-            transform: translateY(calc(50% + var(--viewport-padding, 32px))) scale(0.95);
+            transform: translateY(150%) scale(0.95);
           }
-        }
 
-        @keyframes KSwipeOut {
-          from {
-            opacity: 1;
-            transform: translateY(var(--radix-toast-swipe-end-y)) scale(1);
+          /* Swipe exit directions */
+          .toast-root-animatable[data-ending-style][data-swipe-direction='down'] {
+            transform: translateY(calc(var(--toast-swipe-movement-y) + 150%));
           }
-          to {
-            opacity: 0;
-            transform: translateY(calc(100% + var(--viewport-padding, 32px))) scale(0.9);
+
+          .toast-root-animatable[data-ending-style][data-swipe-direction='up'] {
+            transform: translateY(calc(var(--toast-swipe-movement-y) - 150%));
           }
-        }
 
-        .toast-root-animatable {
-          transition: transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
+          .toast-root-animatable[data-ending-style][data-swipe-direction='left'] {
+            transform: translateX(calc(var(--toast-swipe-movement-x) - 150%));
+          }
 
-        .toast-root-animatable[data-state='open'] {
-          animation: KSlideIn 300ms cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
-        }
+          .toast-root-animatable[data-ending-style][data-swipe-direction='right'] {
+            transform: translateX(calc(var(--toast-swipe-movement-x) + 150%));
+          }
 
-        .toast-root-animatable[data-state='closed'] {
-          animation: KHide 250ms cubic-bezier(0.26, 0.09, 0.58, 1) forwards;
-        }
-
-        .toast-root-animatable[data-swipe='move'] {
-          transform: translateY(var(--radix-toast-swipe-move-y));
-          opacity: 1;
-          transition: none;
-        }
-
-        .toast-root-animatable[data-swipe='cancel'] {
-          transform: translateY(0);
-          transition: transform 250ms cubic-bezier(0.21, 1.02, 0.73, 1);
-          opacity: 1;
-        }
-
-        .toast-root-animatable[data-swipe='end'] {
-          animation: KSwipeOut 250ms cubic-bezier(0.26, 0.09, 0.58, 1) forwards;
-        }
+          /* Swipe in progress */
+          .toast-root-animatable[data-swiping] {
+            transform: translateY(var(--toast-swipe-movement-y)) translateX(var(--toast-swipe-movement-x));
+            transition: none;
+          }
         `}
       </style>
     </Toast.Root>
