@@ -30,12 +30,10 @@ const meta: Meta<typeof Textarea> = {
       control: { type: "select" },
       description: "Visual state (colors)",
     },
-    label: { control: "text", description: "Label text" },
     placeholder: { control: "text", description: "Placeholder text" },
     disabled: { control: "boolean", description: "Disables the textarea" },
     loading: { control: "boolean", description: "Shows loading state (disabled)" },
     rows: { control: "number", description: "Number of visible lines" },
-    error: { control: "text", description: "Error message" },
     value: { control: "text", description: "Current value" },
     onChange: { action: "changed", description: "Callback function" },
   },
@@ -45,7 +43,7 @@ export default meta;
 
 type Story = StoryObj<typeof Textarea>;
 
-export const Default: Story = {
+const Template: Story = {
   render: (args) => {
     const [value, setValue] = useState(args.value || "");
     return (
@@ -61,8 +59,21 @@ export const Default: Story = {
       </div>
     );
   },
+};
+
+export const Subtle: Story = {
+  ...Template,
   args: {
-    label: "Bio",
+    placeholder: "Tell us about yourself...",
+    rows: 4,
+    variant: "subtle",
+    size: "md",
+  },
+};
+
+export const Outline: Story = {
+  ...Template,
+  args: {
     placeholder: "Tell us about yourself...",
     rows: 4,
     variant: "outline",
@@ -70,6 +81,22 @@ export const Default: Story = {
   },
 };
 
+export const Ghost: Story = {
+  ...Template,
+  args: {
+    placeholder: "Tell us about yourself...",
+    rows: 4,
+    variant: "ghost",
+    size: "md",
+  },
+};
 
-
-
+export const Underline: Story = {
+  ...Template,
+  args: {
+    placeholder: "Tell us about yourself...",
+    rows: 4,
+    variant: "underline",
+    size: "md",
+  },
+};

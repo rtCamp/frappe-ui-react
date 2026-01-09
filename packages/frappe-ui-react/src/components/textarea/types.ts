@@ -1,18 +1,18 @@
 import { TextareaHTMLAttributes } from "react";
 
-export type TextAreaSize = "sm" | "md" | "lg";
-export type TextAreaVariant = "subtle" | "outline" | "ghost" | "underline";
-export type TextAreaState = "success" | "warning" | "error";
+export type TextareaSize = "sm" | "md" | "lg";
+export type TextareaVariant = "subtle" | "outline" | "ghost" | "underline";
+export type TextareaState = "success" | "warning" | "error";
 
 export interface TextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "size"> {
-  label?: string;
-  description?: string;
-  error?: string;
-  size?: TextAreaSize;
-  variant?: TextAreaVariant;
-  state?: TextAreaState;
+  size?: TextareaSize;
+  variant?: TextareaVariant;
+  state?: TextareaState;
   loading?: boolean;
   debounce?: number;
+  disabled?: boolean;
   htmlId?: string;
+  value?: string;
+  rows?: number;
+  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
-

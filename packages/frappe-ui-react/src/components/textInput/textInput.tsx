@@ -8,7 +8,7 @@ import React, {
 import { clsx } from "clsx";
 import { Loader2 } from "lucide-react";
 import { debounce } from "../../utils/debounce";
-import type { TextInputProps, SizeKey } from "./types";
+import type { TextInputProps, TextInputSize } from "./types";
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   (
@@ -24,9 +24,6 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       debounce: debounceTime,
       prefix,
       suffix,
-      label,
-      description,
-      error,
       className,
       style,
       htmlId,
@@ -53,68 +50,70 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     const isDisabled = disabled || loading;
     const stateKey = state ?? "default";
 
-
     const sizeClasses = {
       sm: "text-sm h-7",
       md: "text-base h-8",
       lg: "text-lg h-10",
       xl: "text-xl h-12",
-    }[size as SizeKey];
+    }[size as TextInputSize];
 
     const iconLeftPosClasses = {
       sm: "left-2",
       md: "left-2.5",
       lg: "left-3",
       xl: "left-3.5",
-    }[size as SizeKey];
+    }[size as TextInputSize];
 
     const iconRightPosClasses = {
       sm: "right-2",
       md: "right-2.5",
       lg: "right-3",
       xl: "right-3.5",
-    }[size as SizeKey];
+    }[size as TextInputSize];
 
     const paddingClasses = clsx(
       "py-1.5",
       prefix
-        ? { sm: "pl-10", md: "pl-11", lg: "pl-12", xl: "pl-14" }[size as SizeKey]
-        : { sm: "pl-2", md: "pl-2.5", lg: "pl-3", xl: "pl-3.5" }[size as SizeKey],
-      (suffix || loading)
-        ? { sm: "pr-10", md: "pr-11", lg: "pr-12", xl: "pr-14" }[size as SizeKey]
-        : { sm: "pr-2", md: "pr-2.5", lg: "pr-3", xl: "pr-3.5" }[size as SizeKey]
+        ? { sm: "pl-10", md: "pl-11", lg: "pl-12", xl: "pl-14" }[size as TextInputSize]
+        : { sm: "pl-2", md: "pl-2.5", lg: "pl-3", xl: "pl-3.5" }[size as TextInputSize],
+      suffix || loading
+        ? { sm: "pr-10", md: "pr-11", lg: "pr-12", xl: "pr-14" }[size as TextInputSize]
+        : { sm: "pr-2", md: "pr-2.5", lg: "pr-3", xl: "pr-3.5" }[size as TextInputSize]
     );
 
     const subtleClasses = {
-      
-      default: "bg-gray-100 text-gray-900 border border-gray-100 hover:bg-gray-200 focus:bg-white focus:ring-2 focus:ring-outline-gray-3 dark:bg-[var(--surface-white,rgba(15,15,15,1))] dark:text-[var(--text-icons-gray-8,rgba(212,212,212,1))] dark:border-gray-800 dark:hover:bg-gray-700",
-      error: "bg-red-50 text-red-700 border border-red-50 hover:bg-red-100 focus:bg-white focus:ring-2 focus:ring-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/10 dark:hover:bg-red-500/20",
-      success: "bg-green-50 text-green-700 border border-green-50 hover:bg-green-100 focus:bg-white focus:ring-2 focus:ring-green-200 dark:bg-green-500/10 dark:text-green-400 dark:border-green-500/10 dark:hover:bg-green-500/20",
-      warning: "bg-orange-50 text-orange-700 border border-orange-50 hover:bg-orange-100 focus:bg-white focus:ring-2 focus:ring-orange-200 dark:bg-orange-500/10 dark:text-orange-400 dark:border-orange-500/10 dark:hover:bg-orange-500/20",
+      default:
+        "bg-surface-gray-2 border border-surface-gray-2 hover:bg-surface-gray-3 focus:bg-surface-white focus:ring-2 focus:ring-outline-gray-3",
+      error:
+        "bg-surface-red-1 border border-surface-red-1 hover:bg-surface-red-2 focus:ring-2 focus:ring-outline-red-2",
+      success:
+        "bg-surface-green-2 border border-surface-green-2 hover:bg-surface-green-1 focus:ring-2 focus:ring-outline-green-2",
+      warning:
+        "bg-surface-amber-1 border border-surface-amber-1 hover:bg-surface-amber-2 focus:ring-2 focus:ring-outline-amber-2",
     };
 
     const outlineClasses = {
-    default:
-      "bg-white text-gray-900 border border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-outline-gray-3 dark:bg-transparent dark:text-[var(--text-icons-gray-5,rgba(128,128,128,1))] dark:border-white/10 dark:hover:border-white/20",
-    error:
-      "bg-white text-red-700 border border-red-500 hover:border-red-600 focus:ring-2 focus:ring-red-200 dark:bg-transparent dark:text-red-400 dark:border-red-500",
-    success:
-      "bg-white text-green-700 border border-green-500 hover:border-green-600 focus:ring-2 focus:ring-green-200 dark:bg-transparent dark:text-green-400 dark:border-green-500",
-    warning:
-      "bg-white text-orange-700 border border-orange-500 hover:border-orange-600 focus:ring-2 focus:ring-orange-200 dark:bg-transparent dark:text-orange-400 dark:border-orange-500",
-  };
+      default:
+        "bg-surface-white border border-outline-gray-2 hover:border-outline-gray-3 focus:ring-2 focus:ring-outline-gray-3",
+      error:
+        "bg-surface-white border border-outline-red-2 hover:border-outline-red-3 focus:ring-2 focus:ring-outline-red-2",
+      success:
+        "bg-surface-white border border-outline-green-2 hover:border-outline-green-3 focus:ring-2 focus:ring-outline-green-2",
+      warning:
+        "bg-surface-white border border-outline-amber-2 hover:border-outline-amber-3 focus:ring-2 focus:ring-outline-amber-2",
+    };
 
-    const disabledClass = "bg-gray-100 border border-gray-100 text-gray-500 cursor-not-allowed dark:bg-gray-800 dark:border-gray-800 dark:text-gray-500";
+    const disabledClass =
+      "bg-surface-gray-2 border border-outline-gray-2 text-ink-gray-4 cursor-not-allowed";
 
     const variantMap = {
       subtle: subtleClasses,
       outline: outlineClasses,
     };
 
-   const currentVariantClasses = isDisabled
-    ? disabledClass
-    : variantMap[variant][stateKey];
-
+    const currentVariantClasses = isDisabled
+      ? disabledClass
+      : variantMap[variant][stateKey];
 
     const emitChange = useCallback(
       (val: string) => {
@@ -146,19 +145,18 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
 
     return (
       <div className={clsx("w-full", className)} style={style}>
-        {label && (
-          <label className="mb-1.5 block text-xs font-medium text-gray-900 dark:text-white" htmlFor={id}>
-            {label}
-          </label>
-        )}
-        
         <div className="relative flex items-center">
           {prefix && (
-            <div className={clsx("absolute flex items-center text-gray-700 dark:text-gray-400 pointer-events-none", iconLeftPosClasses)}>
-              {prefix}
+            <div
+              className={clsx(
+                "absolute flex items-center text-ink-gray-6 pointer-events-none",
+                iconLeftPosClasses
+              )}
+            >
+              {prefix(size)}
             </div>
           )}
-          
+
           <input
             ref={setRefs}
             id={id}
@@ -166,29 +164,27 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             disabled={isDisabled}
             value={value}
             onChange={handleChange}
-            required={rest.required}
             className={clsx(
-              "w-full rounded transition-colors outline-none appearance-none placeholder:text-gray-800 dark:placeholder:text-gray-500",
+              "w-full rounded transition-colors outline-none appearance-none placeholder:text-ink-gray-5",
               sizeClasses,
               paddingClasses,
-              currentVariantClasses
+              currentVariantClasses,
+              !isDisabled && "text-ink-gray-8"
             )}
             {...rest}
           />
 
           {(suffix || loading) && (
-            <div className={clsx("absolute flex items-center text-gray-700 dark:text-gray-400 pointer-events-none", iconRightPosClasses)}>
-               {loading ? <Loader2 className="animate-spin h-4 w-4" /> : suffix}
+            <div
+              className={clsx(
+                "absolute flex items-center text-ink-gray-6 pointer-events-none",
+                iconRightPosClasses
+              )}
+            >
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : suffix?.(size)}
             </div>
           )}
         </div>
-
-        {description && !error && (
-          <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">{description}</p>
-        )}
-        {error && (
-          <p className="mt-1 text-xs text-red-600 dark:text-red-400">{error}</p>
-        )}
       </div>
     );
   }
@@ -196,4 +192,3 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
 
 TextInput.displayName = "TextInput";
 export default TextInput;
-

@@ -4,16 +4,6 @@ import "@testing-library/jest-dom";
 import TextInput from "../textInput";
 
 describe("TextInput", () => {
-  it("renders label", () => {
-    render(<TextInput label="My Label" value="" onChange={() => {}} />);
-    expect(screen.getByText("My Label")).toBeInTheDocument();
-  });
-
-  it("renders error message", () => {
-    render(<TextInput value="" onChange={() => {}} error="Something went wrong" />);
-    expect(screen.getByText("Something went wrong")).toBeInTheDocument();
-  });
-
   it("renders with placeholder", () => {
     render(<TextInput placeholder="Type here..." value="" onChange={() => {}} />);
     expect(screen.getByPlaceholderText("Type here...")).toBeInTheDocument();
@@ -28,7 +18,19 @@ describe("TextInput", () => {
   });
 
   it("renders prefix element", () => {
-    render(<TextInput value="" onChange={() => {}} prefix={<span>PREFIX</span>} />);
+    render(
+      <TextInput
+        value=""
+        onChange={() => {}}
+        prefix={() => <span>PREFIX</span>}
+      />
+    );
     expect(screen.getByText("PREFIX")).toBeInTheDocument();
+  });
+
+
+  it("is disabled when disabled prop is true", () => {
+    render(<TextInput value="" onChange={() => {}} disabled />);
+    expect(screen.getByRole("textbox")).toBeDisabled();
   });
 });

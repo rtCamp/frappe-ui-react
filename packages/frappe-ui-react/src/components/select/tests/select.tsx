@@ -4,13 +4,12 @@ import "@testing-library/jest-dom";
 import Select from "../select";
 import type { SelectOption } from "../types";
 
-// --- FIX: Mock ResizeObserver for Headless UI ---
 global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
 };
-// ------------------------------------------------
+
 
 describe("Select", () => {
   const options: SelectOption[] = [
@@ -28,7 +27,7 @@ describe("Select", () => {
         onChange={() => {}}
       />
     );
-    // Headless UI renders the button text
+   
     expect(screen.getByText("Select an option")).toBeInTheDocument();
   });
 
@@ -53,15 +52,15 @@ describe("Select", () => {
       />
     );
 
-    // 1. Click trigger to open dropdown
+    
     const trigger = screen.getByRole("button");
     fireEvent.click(trigger);
 
-    // 2. Click option
+   
     const optionToSelect = screen.getByText("Option 2");
     fireEvent.click(optionToSelect);
 
-    // 3. Verify
+   
     await waitFor(() => {
         expect(handleChange).toHaveBeenCalledTimes(1);
         expect(handleChange).toHaveBeenCalledWith(options[1]);

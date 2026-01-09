@@ -20,15 +20,8 @@ export interface SelectProps {
   value?: SelectOption;
   placeholder?: string;
   options: SelectOption[];
-  prefix?: boolean;
-  suffix?: boolean;
-  prefixIcon?: ReactNode;
-  suffixIcon?: ReactNode;
-  label?: string;
-  error?: string;
+  prefix?: ReactNode;
+  suffix?: ReactNode;
   onChange?: (value: SelectOption) => void;
   className?: string;
 }
-
-
-
