@@ -42,7 +42,6 @@
     "@floating-ui/react": "^0.27.13",
     "@headlessui/react": "^2.2.6",
     "@popperjs/core": "^2.11.8",
-    "@radix-ui/react-toast": "^1.2.15",
     "@tailwindcss/vite": "^4.1.11",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
