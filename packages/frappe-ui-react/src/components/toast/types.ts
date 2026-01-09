@@ -1,3 +1,4 @@
+import { ToastObject } from "@base-ui/react";
 import type { ReactNode } from "react";
 
 export interface ToastActionProps {
@@ -7,15 +8,7 @@ export interface ToastActionProps {
 }
 
 export interface ToastProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  message: string;
-  type?: ToastType;
-  icon?: ReactNode;
-  closable?: boolean;
-  duration?: number;
-  action?: ToastActionProps;
-  id: string;
+  toast: ToastObject<ToastDataInternal>;
 }
 
 export type ToastType = "success" | "warning" | "error" | "info";
@@ -26,8 +19,14 @@ export interface ToastActionProps {
   altText?: string;
 }
 
-export interface ToastOptions
-  extends Omit<Partial<ToastProps>, "open" | "message"> {
+export interface ToastOptions {
+  onOpenChange?: (open: boolean) => void;
+  type?: ToastType;
+  icon?: ReactNode;
+  closable?: boolean;
+  duration?: number;
+  action?: ToastActionProps;
+  id?: string;
   message: string;
 }
 
@@ -38,4 +37,9 @@ export interface ToastPromiseOptions<TData = any, TError = any> {
   successDuration?: number;
   errorDuration?: number;
   duration?: number;
+}
+
+export interface ToastDataInternal {
+  icon?: ReactNode;
+  closable?: boolean;
 }

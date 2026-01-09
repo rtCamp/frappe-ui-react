@@ -1,8 +1,12 @@
 import React, { ReactNode, useCallback, useMemo } from "react";
-import { Toast } from "@base-ui/react/toast";
+import { Toast, ToastObject } from "@base-ui/react/toast";
 import DOMPurify from "dompurify";
 import LoadingIndicator from "../loadingIndicator";
-import { ToastOptions, ToastPromiseOptions } from "./types";
+import type {
+  ToastDataInternal,
+  ToastOptions,
+  ToastPromiseOptions,
+} from "./types";
 import { ToastAPI, ToastContext } from "./context";
 import ToastComponent from "./toast";
 
@@ -10,7 +14,9 @@ interface ToastsProviderProps {
   children: ReactNode;
 }
 
+// Simple counter for generating unique toast IDs.
 let toastIdCounter = 0;
+
 const ToastsProvider: React.FC<ToastsProviderProps> = ({ children }) => {
   const toastManager = Toast.createToastManager();
 
@@ -28,13 +34,17 @@ const ToastContextProvider: React.FC<ToastsProviderProps> = ({ children }) => {
     (options: ToastOptions): string => {
       const id = `toast-${toastIdCounter++}`;
       const durationInMs =
-        options.duration != null ? options.duration * 1000 : 5000;
+        options.closable === false
+          ? options.duration
+            ? options.duration * 1000
+            : 5000
+          : 0;
 
       const sanitizedMessage = DOMPurify.sanitize(options.message, {
         ALLOWED_TAGS: ["a", "em", "strong", "i", "b", "u"],
       });
 
-      return toastManager.add({
+      return toastManager.add<ToastDataInternal>({
         id: options?.id || id,
         timeout: durationInMs,
         description: sanitizedMessage,
@@ -64,11 +74,11 @@ const ToastContextProvider: React.FC<ToastsProviderProps> = ({ children }) => {
       promiseToResolve: Promise<TData>,
       options: ToastPromiseOptions<TData, TError>
     ): Promise<TData> => {
-      return toastManager.promise(promiseToResolve, {
+      return toastManager.promise<TData, ToastDataInternal>(promiseToResolve, {
         loading: {
           description: options.loading,
           type: "info",
-          timeout: (options.duration ?? 0) * 1000,
+          timeout: 0,
           data: {
             icon: <LoadingIndicator className="text-ink-white size-4" />,
             closable: false,
@@ -82,8 +92,7 @@ const ToastContextProvider: React.FC<ToastsProviderProps> = ({ children }) => {
           type: "success",
           timeout: (options.successDuration ?? options.duration ?? 5) * 1000,
           data: {
-            icon: undefined as React.ReactNode,
-            closable: true,
+            icon: undefined,
           },
         }),
         error: (error) => ({
@@ -94,8 +103,7 @@ const ToastContextProvider: React.FC<ToastsProviderProps> = ({ children }) => {
           type: "error",
           timeout: (options.errorDuration ?? options.duration ?? 5) * 1000,
           data: {
-            icon: undefined as React.ReactNode,
-            closable: true,
+            icon: undefined,
           },
         }),
       });
@@ -104,7 +112,9 @@ const ToastContextProvider: React.FC<ToastsProviderProps> = ({ children }) => {
   );
 
   const removeAll = useCallback(() => {
-    toastManager.toasts.forEach((toast) => toastManager.close(toast.id));
+    toastManager.toasts.forEach((toast: ToastObject<ToastDataInternal>) =>
+      toastManager.close(toast.id)
+    );
   }, [toastManager]);
 
   const success = useCallback(
@@ -147,9 +157,8 @@ const ToastContextProvider: React.FC<ToastsProviderProps> = ({ children }) => {
       {children}
       <Toast.Portal>
         <Toast.Viewport className="fixed bottom-0 items-end right-0 flex flex-col p-5 gap-[10px] w-auto max-w-full z-[2147483647] outline-none pointer-events-none">
-          {/* Refactor this component next */}
-          {toastManager.toasts.map((toast) => (
-            <ToastComponent {...toast} />
+          {toastManager.toasts.map((toast: ToastObject<ToastDataInternal>) => (
+            <ToastComponent toast={toast} key={toast.id} />
           ))}
         </Toast.Viewport>
       </Toast.Portal>
