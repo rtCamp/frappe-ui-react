@@ -35,10 +35,10 @@ const ToastContextProvider: React.FC<ToastsProviderProps> = ({ children }) => {
       const id = `toast-${toastIdCounter++}`;
       const durationInMs =
         options.closable === false
-          ? options.duration
-            ? options.duration * 1000
-            : 5000
-          : 0;
+          ? 0
+          : options.duration
+          ? options.duration * 1000
+          : 5000;
 
       const sanitizedMessage = DOMPurify.sanitize(options.message, {
         ALLOWED_TAGS: ["a", "em", "strong", "i", "b", "u"],
