@@ -93,7 +93,7 @@ const Dialog = ({
     >
       <BaseDialog.Portal>
         <BaseDialog.Backdrop
-          className="dialog-backdrop fixed inset-0 bg-black-overlay-200 backdrop-filter backdrop-blur-[12px] overflow-y-auto"
+          className="dialog-backdrop fixed inset-0 bg-black-overlay-200 backdrop-filter backdrop-blur-[12px] overflow-y-auto z-[11]"
           data-dialog={"dialog"}
           onAnimationEnd={() => !open && onAfterLeave?.()}
         >

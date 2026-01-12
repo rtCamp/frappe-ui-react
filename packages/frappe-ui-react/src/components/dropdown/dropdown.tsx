@@ -14,7 +14,7 @@ import clsx from "clsx";
 
 const cssClasses = {
   dropdownContent:
-    "min-w-40 divide-y divide-outline-gray-modals rounded-lg bg-surface-modal shadow-2xl ring-black focus:outline-none dropdown-content border border-outline-gray-1 z-100",
+    "min-w-40 divide-y divide-outline-gray-modals rounded-lg bg-surface-modal shadow-2xl ring-black focus:outline-none dropdown-content border border-outline-gray-1",
   groupContainer: "p-1.5",
   groupLabel: "flex h-7 items-center px-2 text-sm font-medium text-ink-gray-7",
   itemLabel: "whitespace-nowrap",
@@ -24,6 +24,7 @@ const cssClasses = {
     "group flex h-7 w-full items-center rounded px-2 text-base focus:outline-none",
   submenuTrigger:
     "group flex h-7 w-full items-center rounded px-2 text-base text-ink-gray-6 focus:outline-none",
+  dropdownPositioner: "z-100",
 };
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -215,7 +216,7 @@ const Dropdown: React.FC<DropdownProps> = ({
             nativeButton={true}
           />
           <Menu.Portal>
-            <Menu.Positioner sideOffset={4}>
+            <Menu.Positioner sideOffset={4} className={cssClasses.dropdownPositioner}>
               <Menu.Popup className={cssClasses.dropdownContent}>
                 {processOptionsIntoGroups(item.submenu).map((submenuGroup) => (
                   <Menu.Group
@@ -283,7 +284,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       />
 
       <Menu.Portal>
-        <Menu.Positioner side={contentSide} align={contentAlign} sideOffset={0}>
+        <Menu.Positioner side={contentSide} align={contentAlign} sideOffset={0} className={cssClasses.dropdownPositioner}>
           <Menu.Popup
             className={clsx(cssClasses.dropdownContent, {
               "origin-top-left": placement === "left",
