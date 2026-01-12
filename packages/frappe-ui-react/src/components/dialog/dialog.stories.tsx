@@ -286,8 +286,8 @@ export const WithInteractiveComponents: Story = {
                 setAutocompleteValue(_value as AutocompleteOption)
               }
             />
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-700">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
                 Select an option:
               </label>
               <Dropdown options={dropdownOptions} placement="left">
