@@ -153,12 +153,16 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
       const widgetData = context?.draggingWidget;
 
       if (widgetData?.widgetId) {
-        onDrop(widgetData.widgetId, {
-          x: item.x,
-          y: item.y,
-          w: widgetData.w,
-          h: widgetData.h,
-        });
+        onDrop(
+          widgetData.widgetId,
+          {
+            x: item.x,
+            y: item.y,
+            w: widgetData.w,
+            h: widgetData.h,
+          },
+          layoutItem
+        );
       }
 
       if (context) {

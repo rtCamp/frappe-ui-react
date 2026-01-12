@@ -2,6 +2,7 @@
  * External dependencies.
  */
 import React, { useCallback, useEffect, useState, useContext } from "react";
+import type { Layout as RGLLayout } from "react-grid-layout";
 
 /**
  * Internal dependencies.
@@ -30,6 +31,7 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
   ...rest
 }) => {
   const context = useContext(DashboardContext);
+  const [disableCompaction, setDisableCompaction] = useState(false);
 
   const [layouts, setLayouts] = useState<DashboardLayouts>(() => {
     if (savedLayout) {
@@ -56,7 +58,11 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
   );
 
   const addWidgetToLayout = useCallback(
-    (widgetId: string, position: { x: number; y: number }) => {
+    (
+      widgetId: string,
+      position: { x: number; y: number },
+      isDropped = false
+    ) => {
       const widgetDef = widgets.find((w) => w.id === widgetId);
       if (!widgetDef) return;
 
@@ -86,6 +92,7 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
             size: widgetDef.size,
             isResizable: widgetDef.isResizable,
             isDraggable: widgetDef.isDraggable,
+            static: isDropped,
           };
 
           newLayouts[breakpoint] = [...currentLayout, newLayoutItem];
@@ -94,12 +101,69 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
         onLayoutChange?.(serializeLayouts(newLayouts));
         return newLayouts;
       });
+
+      if (isDropped) {
+        // Execute after current task completes to resolve maximum call stack issue
+        queueMicrotask(() => {
+          setLayouts((prevLayouts) => {
+            const newLayouts: DashboardLayouts = { ...prevLayouts };
+
+            for (const bp in prevLayouts) {
+              const breakpoint = bp as Breakpoint;
+              const currentLayout = prevLayouts[breakpoint] || [];
+
+              newLayouts[breakpoint] = currentLayout.map((item) => ({
+                ...item,
+                static: undefined,
+              }));
+            }
+
+            return newLayouts;
+          });
+
+          setDisableCompaction(false);
+        });
+      }
     },
     [widgets, sizes, onLayoutChange]
   );
   const handleDrop = useCallback(
-    (widgetId: string, layoutData: { x: number; y: number }) => {
-      addWidgetToLayout(widgetId, layoutData);
+    (
+      widgetId: string,
+      layoutData: { x: number; y: number },
+      currentLayout?: RGLLayout[]
+    ) => {
+      // Disable compaction and freeze all widgets at their current preview positions to ensure the widget is placed exactly where it was dropped
+      setDisableCompaction(true);
+      setLayouts((prevLayouts) => {
+        const newLayouts: DashboardLayouts = { ...prevLayouts };
+
+        for (const bp in prevLayouts) {
+          const breakpoint = bp as Breakpoint;
+          const layout = prevLayouts[breakpoint] || [];
+
+          newLayouts[breakpoint] = layout.map((item) => {
+            if (currentLayout) {
+              const rglItem = currentLayout.find(
+                (rgl) => rgl.i === (item.key || item.id)
+              );
+              if (rglItem) {
+                return {
+                  ...item,
+                  x: rglItem.x,
+                  y: rglItem.y,
+                  static: true,
+                };
+              }
+            }
+            return { ...item, static: true };
+          });
+        }
+
+        return newLayouts;
+      });
+
+      addWidgetToLayout(widgetId, layoutData, true);
     },
     [addWidgetToLayout]
   );
@@ -125,7 +189,7 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
 
   const handleAddWidget = useCallback(
     (widgetId: string) => {
-      // Find the bottom-most Y position across all breakpoints
+      // Find the bottom-most Y positions
       let maxY = 0;
       for (const bp in layouts) {
         const currentLayout = layouts[bp as Breakpoint] || [];
@@ -156,6 +220,7 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
       onDrop={handleDrop}
       onRemove={handleRemoveWidget}
       sizes={sizes}
+      compactType={disableCompaction ? null : rest.compactType}
       {...rest}
     />
   );
