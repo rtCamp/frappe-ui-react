@@ -191,7 +191,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                   (typeof item.icon === "string" ? (
                     <FeatherIcon
                       name={item.icon as FeatherIconProps["name"]}
-                      className={`${cssClasses.itemIcon} ${getIconColor(item)}`}
+                      className={clsx(cssClasses.itemIcon, getIconColor(item))}
                     />
                   ) : React.isValidElement(item.icon) ? (
                     item.icon
