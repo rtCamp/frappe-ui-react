@@ -117,7 +117,9 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
 
                 return {
                   ...item,
-                  static: widgetDef?.static ?? undefined,
+                  static: widgetDef?.static,
+                  isResizable: widgetDef?.isResizable,
+                  isDraggable: widgetDef?.isDraggable,
                 };
               });
             }
