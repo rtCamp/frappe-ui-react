@@ -228,7 +228,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                     {submenuGroup.items.map((subItem) => (
                       <Menu.Item
                         key={subItem.label}
-                        onSelect={() => subItem.onClick?.()}
+                        onClick={() => subItem.onClick?.()}
                         render={renderDropdownItem(subItem)}
                         nativeButton={
                           !subItem.switch &&
@@ -302,7 +302,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                   <div data-testid="dropdown-item" key={item.label}>
                     <Menu.Item
                       closeOnClick={!item.switch}
-                      onSelect={() => !item.switch && item.onClick?.()}
+                      onClick={() => !item.switch && item.onClick?.()}
                       render={renderDropdownItem(item)}
                       nativeButton={
                         !item.switch && !item.submenu && !item.component
