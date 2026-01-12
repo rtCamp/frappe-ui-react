@@ -10,6 +10,7 @@ import type {
   DropdownOptions,
 } from "./types";
 import FeatherIcon, { type FeatherIconProps } from "../featherIcon";
+import clsx from "clsx";
 
 const cssClasses = {
   dropdownContent:
@@ -283,13 +284,11 @@ const Dropdown: React.FC<DropdownProps> = ({
       <Menu.Portal>
         <Menu.Positioner side={contentSide} align={contentAlign} sideOffset={0}>
           <Menu.Popup
-            className={`${cssClasses.dropdownContent} origin-top-left ${
-              placement === "left"
-                ? "origin-top-left"
-                : placement === "right"
-                ? "origin-top-right"
-                : "origin-top"
-            }`}
+            className={clsx(cssClasses.dropdownContent, {
+              "origin-top-left": placement === "left",
+              "origin-top-right": placement === "right",
+              "origin-top": placement === "center",
+            })}
           >
             {groups.map((group) => (
               <Menu.Group key={group.key} className={cssClasses.groupContainer}>
