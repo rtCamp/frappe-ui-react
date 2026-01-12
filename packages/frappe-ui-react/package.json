@@ -3,6 +3,7 @@
   "version": "1.0.2",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "moduleResolution": "bundler",
   "types": "dist-types/index.d.ts",
   "description": "Package for Frappe UI Components created in react.",
   "author": {
@@ -38,6 +39,8 @@
     "publish:remote": "npm publish"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
     "@floating-ui/react": "^0.27.13",
     "@headlessui/react": "^2.2.6",
     "@popperjs/core": "^2.11.8",
@@ -60,7 +63,7 @@
     "quill-paste-smart": "^2.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-grid-layout": "^1.5.2",
+    "react-grid-layout": "^2.2.2",
     "react-quill-new": "^3.6.0",
     "react-resizable": "^3.0.5",
     "styled-components": "^6.1.19",
