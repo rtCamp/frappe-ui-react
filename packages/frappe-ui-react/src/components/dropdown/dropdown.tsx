@@ -204,9 +204,10 @@ const Dropdown: React.FC<DropdownProps> = ({
                     aria-hidden="true"
                   />
                 )}
-                className={`${
-                  cssClasses.submenuTrigger
-                } ${getSubmenuBackgroundColor(item)}`}
+                className={clsx(
+                  cssClasses.submenuTrigger,
+                  getSubmenuBackgroundColor(item)
+                )}
               >
                 <span className={cssClasses.itemLabel}>{item.label}</span>
               </Button>
