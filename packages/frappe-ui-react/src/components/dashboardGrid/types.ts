@@ -52,6 +52,7 @@ export interface WidgetDefinition {
   size?: string;
   isResizable?: boolean;
   isDraggable?: boolean;
+  static?: boolean;
   preview?: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     props?: Record<string, any>;

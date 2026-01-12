@@ -36,6 +36,7 @@ export const normalizeLayout = (
 
       widgetLayout.x = currentX;
       widgetLayout.y = currentY;
+      widgetLayout.static = widgetDef?.static;
 
       result.push(widgetLayout);
 
