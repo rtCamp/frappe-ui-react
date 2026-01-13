@@ -47,7 +47,7 @@ const ToastContextProvider: React.FC<ToastsProviderProps> = ({ children }) => {
       return toastManager.add<ToastDataInternal>({
         id: options?.id || id,
         timeout: durationInMs,
-        description: sanitizedMessage,
+        description: <span dangerouslySetInnerHTML={{ __html: sanitizedMessage }} />,
         type: options.type || "info",
         actionProps: {
           children: options.action?.label,
