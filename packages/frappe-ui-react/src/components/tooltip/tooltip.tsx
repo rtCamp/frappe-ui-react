@@ -17,6 +17,7 @@ const TooltipComponent: React.FC<TooltipProps> = ({
   hoverDelay = 0.5,
   arrowClass = "fill-surface-gray-7",
   disabled = false,
+  open,
 }) => {
   const delayDuration = useMemo(() => hoverDelay * 1000, [hoverDelay]);
 
@@ -42,7 +43,7 @@ const TooltipComponent: React.FC<TooltipProps> = ({
 
   return (
     <TooltipProvider delayDuration={delayDuration}>
-      <Root>
+      <Root open={open}>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipPortal>
           {tooltipContent && (
