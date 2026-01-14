@@ -210,7 +210,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                   getSubmenuBackgroundColor(item)
                 )}
               >
-                <span className={cssClasses.itemLabel}>{item.label}</span>
+                <span className={cssClasses.itemLabel} data-testid="dropdown-submenu-trigger">{item.label}</span>
               </Button>
             }
             nativeButton={true}
@@ -253,6 +253,7 @@ const Dropdown: React.FC<DropdownProps> = ({
           className={`${cssClasses.itemButton} ${getTextColor(
             item
           )} ${getSubmenuBackgroundColor(item)}`}
+          data-testid="dropdown-item-button"
         >
           {item.icon &&
             (typeof item.icon === "string" ? (
@@ -276,7 +277,7 @@ const Dropdown: React.FC<DropdownProps> = ({
           children ? (
             React.cloneElement(children as React.ReactElement, { ...attrs })
           ) : (
-            <Button {...(button as ButtonProps)} {...attrs}>
+            <Button {...(button as ButtonProps)} {...attrs} data-testid="dropdown-trigger">
               {button?.label || "Options"}
             </Button>
           )
