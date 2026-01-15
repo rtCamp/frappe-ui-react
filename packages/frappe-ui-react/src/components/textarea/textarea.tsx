@@ -17,6 +17,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       rows = 3,
       htmlId,
       placeholder,
+      required,
       className,
       style,
       ...rest
@@ -141,6 +142,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           id={id}
           rows={rows}
           disabled={isDisabled}
+          required={required}
           value={value}
           onChange={handleChange}
           placeholder={placeholder}

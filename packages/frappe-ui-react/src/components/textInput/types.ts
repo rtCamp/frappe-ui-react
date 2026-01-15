@@ -5,14 +5,22 @@ export type TextInputVariant = "subtle" | "outline";
 export type TextInputState = "success" | "warning" | "error";
 
 export interface TextInputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "prefix" | "suffix">
-{
-  prefix?: (size?: TextInputSize) => ReactNode;
-  suffix?: (size?: TextInputSize) => ReactNode;
+  extends Omit<
+    InputHTMLAttributes<HTMLInputElement>,
+    "size" | "prefix" | "suffix"
+  > {
   size?: TextInputSize;
   variant?: TextInputVariant;
   state?: TextInputState;
-  loading?: boolean;
+  placeholder?: string;
+  disabled?: boolean;
   htmlId?: string;
+  value?: string | number;
   debounce?: number;
+  required?: boolean;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  prefix?: (args?: TextInputSize) => ReactNode;
+  suffix?: (args?: TextInputSize) => ReactNode;
+  className?: string;
+  loading?: boolean;
 }

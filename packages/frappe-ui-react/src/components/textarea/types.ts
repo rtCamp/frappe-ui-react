@@ -14,5 +14,7 @@ export interface TextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaE
   htmlId?: string;
   value?: string;
   rows?: number;
+  placeholder?: string;
+  required?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }

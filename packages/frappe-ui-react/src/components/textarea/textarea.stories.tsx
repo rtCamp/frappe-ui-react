@@ -13,14 +13,14 @@ const meta: Meta<typeof Textarea> = {
   },
   tags: ["autodocs"],
   argTypes: {
-    size: { 
-      options: ["sm", "md", "lg"], 
+    size: {
+      options: ["sm", "md", "lg"],
       control: { type: "select" },
       description: "Size of the textarea",
       table: { defaultValue: { summary: "md" } },
     },
-    variant: { 
-      options: ["subtle", "outline", "ghost", "underline"], 
+    variant: {
+      options: ["subtle", "outline", "ghost", "underline"],
       control: { type: "select" },
       description: "Visual variant of the textarea",
       table: { defaultValue: { summary: "subtle" } },
@@ -30,12 +30,42 @@ const meta: Meta<typeof Textarea> = {
       control: { type: "select" },
       description: "Visual state (colors)",
     },
-    placeholder: { control: "text", description: "Placeholder text" },
-    disabled: { control: "boolean", description: "Disables the textarea" },
-    loading: { control: "boolean", description: "Shows loading state (disabled)" },
-    rows: { control: "number", description: "Number of visible lines" },
-    value: { control: "text", description: "Current value" },
-    onChange: { action: "changed", description: "Callback function" },
+    placeholder: {
+      control: "text",
+      description: "Placeholder text",
+    },
+    disabled: {
+      control: "boolean",
+      description: "Disables the textarea",
+    },
+    loading: {
+      control: "boolean",
+      description: "Shows loading state (disabled)",
+    },
+    rows: {
+      control: "number",
+      description: "Number of visible lines",
+    },
+    value: {
+      control: "text",
+      description: "Current value",
+    },
+    onChange: {
+      action: "changed",
+      description: "Callback function",
+    },
+    htmlId: {
+      control: "text",
+      description: "HTML id attribute",
+    },
+    debounce: {
+      control: "number",
+      description: "Debounce delay in milliseconds",
+    },
+    required: {
+      control: "boolean",
+      description: "Marks the textarea as required",
+    },
   },
 };
 

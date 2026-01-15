@@ -22,6 +22,7 @@ export interface SelectProps {
   options: SelectOption[];
   prefix?: ReactNode;
   suffix?: ReactNode;
+  htmlId?: string;
   onChange?: (value: SelectOption) => void;
   className?: string;
 }

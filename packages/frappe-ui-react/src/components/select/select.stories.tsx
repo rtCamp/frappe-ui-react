@@ -12,33 +12,62 @@ const meta: Meta<typeof Select> = {
   },
   tags: ["autodocs"],
   argTypes: {
-    size: {
-      options: ["sm", "md", "lg"],
-      control: { type: "select" },
-    },
-    variant: {
-      options: ["subtle", "outline", "ghost"],
-      control: { type: "select" },
-    },
-    state: {
-      options: ["success", "warning", "error", null],
-      control: { type: "select" },
-    },
-    disabled: { control: "boolean" },
-    loading: { control: "boolean" },
-    placeholder: { control: "text" },
-    options: { control: "object" },
-    prefix: {
-      control: false,
-      description: "ReactNode rendered before the selected value",
-    },
-    suffix: {
-      control: false,
-      description: "ReactNode rendered after the selected value",
-    },
-    onChange: { action: "changed", description: "Callback function" },
-
+  size: {
+    options: ["sm", "md", "lg"],
+    control: { type: "select" },
+    description: "Size of the select input",
   },
+  variant: {
+    options: ["subtle", "outline", "ghost"],
+    control: { type: "select" },
+    description: "Visual variant of the select component",
+  },
+  state: {
+    options: ["success", "warning", "error", null],
+    control: { type: "select" },
+    description: "Validation / feedback state",
+  },
+  disabled: {
+    control: "boolean",
+    description: "Disables the select input",
+  },
+  loading: {
+    control: "boolean",
+    description: "Shows loading indicator and disables the select",
+  },
+  placeholder: {
+    control: "text",
+    description: "Placeholder text shown when no value is selected",
+  },
+  options: {
+    control: "object",
+    description: "List of selectable options",
+  },
+  value: {
+    control: false,
+    description: "Currently selected option",
+  },
+  htmlId: {
+    control: "text",
+    description: "HTML id attribute for the select element",
+  },
+  className: {
+    control: "text",
+    description: "Custom CSS class applied to the select wrapper",
+  },
+  prefix: {
+    control: false,
+    description: "ReactNode rendered before the selected value",
+  },
+  suffix: {
+    control: false,
+    description: "ReactNode rendered after the selected value",
+  },
+  onChange: {
+    action: "changed",
+    description: "Callback triggered when the selected value changes",
+  },
+},
 };
 
 export default meta;

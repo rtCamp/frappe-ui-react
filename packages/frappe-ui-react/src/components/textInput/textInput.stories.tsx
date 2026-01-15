@@ -12,41 +12,82 @@ const meta: Meta<typeof TextInput> = {
   },
   tags: ["autodocs"],
   argTypes: {
-    type: {
-      options: [
-        "text",
-        "number",
-        "email",
-        "date",
-        "datetime-local",
-        "password",
-        "search",
-        "tel",
-        "time",
-        "url",
-      ],
-      control: { type: "select" },
-    },
-    size: {
-      options: ["sm", "md", "lg", "xl"],
-      control: { type: "select" },
-    },
-    variant: {
-      options: ["subtle", "outline"],
-      control: { type: "select" },
-    },
-    state: {
-      options: ["success", "warning", "error", null],
-      control: { type: "select" },
-    },
-    disabled: { control: "boolean" },
-    loading: { control: "boolean" },
-    placeholder: { control: "text" },
-    value: { control: "text" },
-    prefix: { control: false },
-    suffix: { control: false },
-    onChange: { action: "changed" },
+  type: {
+    options: [
+      "text",
+      "number",
+      "email",
+      "date",
+      "datetime-local",
+      "password",
+      "search",
+      "tel",
+      "time",
+      "url",
+    ],
+    control: { type: "select" },
+    description: "HTML input type",
   },
+  size: {
+    options: ["sm", "md", "lg", "xl"],
+    control: { type: "select" },
+    description: "Size of the text input",
+  },
+  variant: {
+    options: ["subtle", "outline"],
+    control: { type: "select" },
+    description: "Visual variant of the input",
+  },
+  state: {
+    options: ["success", "warning", "error", null],
+    control: { type: "select" },
+    description: "Validation / feedback state",
+  },
+  disabled: {
+    control: "boolean",
+    description: "Disables the input",
+  },
+  loading: {
+    control: "boolean",
+    description: "Shows loading spinner and disables input",
+  },
+  placeholder: {
+    control: "text",
+    description: "Placeholder text",
+  },
+  value: {
+    control: "text",
+    description: "Controlled value of the input",
+  },
+  prefix: {
+    control: false,
+    description: "Prefix slot (icon or custom element)",
+  },
+  suffix: {
+    control: false,
+    description: "Suffix slot (icon or custom element)",
+  },
+  onChange: {
+    action: "changed",
+    description: "Triggered when input value changes",
+  },
+  htmlId: {
+  control: "text",
+  description: "HTML id attribute",
+  },
+  debounce: {
+    control: "number",
+    description: "Debounce delay in milliseconds",
+  },
+  required: {
+    control: "boolean",
+    description: "Marks the input as required",
+  },
+  className: {
+    control: "text",
+    description: "Custom CSS class",
+  },
+ },
 };
 
 export default meta;

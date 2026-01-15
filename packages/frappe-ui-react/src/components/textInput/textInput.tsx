@@ -25,8 +25,8 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       prefix,
       suffix,
       className,
-      style,
       htmlId,
+      required,
       ...rest
     },
     ref
@@ -74,11 +74,19 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     const paddingClasses = clsx(
       "py-1.5",
       prefix
-        ? { sm: "pl-10", md: "pl-11", lg: "pl-12", xl: "pl-14" }[size as TextInputSize]
-        : { sm: "pl-2", md: "pl-2.5", lg: "pl-3", xl: "pl-3.5" }[size as TextInputSize],
+        ? { sm: "pl-10", md: "pl-11", lg: "pl-12", xl: "pl-14" }[
+            size as TextInputSize
+          ]
+        : { sm: "pl-2", md: "pl-2.5", lg: "pl-3", xl: "pl-3.5" }[
+            size as TextInputSize
+          ],
       suffix || loading
-        ? { sm: "pr-10", md: "pr-11", lg: "pr-12", xl: "pr-14" }[size as TextInputSize]
-        : { sm: "pr-2", md: "pr-2.5", lg: "pr-3", xl: "pr-3.5" }[size as TextInputSize]
+        ? { sm: "pr-10", md: "pr-11", lg: "pr-12", xl: "pr-14" }[
+            size as TextInputSize
+          ]
+        : { sm: "pr-2", md: "pr-2.5", lg: "pr-3", xl: "pr-3.5" }[
+            size as TextInputSize
+          ]
     );
 
     const subtleClasses = {
@@ -144,7 +152,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     };
 
     return (
-      <div className={clsx("w-full", className)} style={style}>
+      <div className={clsx("w-full", className)}>
         <div className="relative flex items-center">
           {prefix && (
             <div
@@ -162,6 +170,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             id={id}
             type={type}
             disabled={isDisabled}
+            required={required}
             value={value}
             onChange={handleChange}
             className={clsx(
@@ -181,7 +190,11 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
                 iconRightPosClasses
               )}
             >
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : suffix?.(size)}
+              {loading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                suffix?.(size)
+              )}
             </div>
           )}
         </div>
