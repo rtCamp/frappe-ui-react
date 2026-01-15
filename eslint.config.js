@@ -9,12 +9,12 @@ import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
 globalIgnores(["dist","storybook-static"]),
+reactHooks.configs.flat.recommended,
   {
     files: ["**/*.{ts,tsx}"],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
-      reactHooks.configs.recommended,
       reactRefresh.configs.vite,
       storybook.configs["flat/recommended"],
     ],
