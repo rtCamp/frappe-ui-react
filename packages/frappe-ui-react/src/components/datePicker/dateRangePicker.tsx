@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import type { DateRangePickerProps } from "./types";
 import { useDatePicker } from "./useDatePicker";
@@ -18,13 +18,6 @@ function useDateRangePicker({
   // Internal selection state
   const [fromDate, setFromDate] = useState<string>(value?.[0] || "");
   const [toDate, setToDate] = useState<string>(value?.[1] || "");
-
-  useEffect(() => {
-    if (Array.isArray(value) && value.length === 2) {
-      setFromDate(value[0] || "");
-      setToDate(value[1] || "");
-    }
-  }, [value]);
 
   const {
     open,
@@ -141,7 +134,6 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   formatter,
   placement,
   label,
-  onChange,
   children,
 }) => {
   const {
