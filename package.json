@@ -7,6 +7,7 @@
     "packages/*"
   ],
   "scripts": {
+    "prepare": "husky",
     "dev": "vite",
     "build": "npm run build -w @rtcamp/frappe-ui-react",
     "preview": "vite preview",
