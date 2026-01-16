@@ -36,6 +36,11 @@ export { default as TextEditor } from "./textEditor";
 export * from "./toast";
 export * from "./tooltip";
 export * from "./tree";
+export * from "./signaturePad";
+export * from "./kanbanBoard";
+export * from "./stepper";
+export * from "./dataTable";
+export * from "./timeline";
 
 export { default as Card } from "./card";
 export { default as featherIcon } from "./featherIcon";
