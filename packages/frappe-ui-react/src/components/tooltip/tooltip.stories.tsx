@@ -49,7 +49,11 @@ type Story = StoryObj<typeof meta>;
 export const WithText: Story = {
   render: (args) => {
     return (
-      <Tooltip text={args.text} hoverDelay={args.hoverDelay}>
+      <Tooltip
+        text={args.text}
+        hoverDelay={args.hoverDelay}
+        placement={args.placement}
+      >
         <Button theme="red">Delete</Button>
       </Tooltip>
     );
