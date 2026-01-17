@@ -1,7 +1,7 @@
-import type { ReactNode } from "react";
+import type { ReactNode, InputHTMLAttributes } from "react";
 import { TextInputTypes } from "../../common/types";
 
-export interface TextInputProps {
+export interface TextInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix' | 'onChange'> {
   type?: TextInputTypes;
   size?: "sm" | "md" | "lg" | "xl";
   variant?: "subtle" | "outline" | "ghost";

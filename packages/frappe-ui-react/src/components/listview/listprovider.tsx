@@ -1,4 +1,10 @@
-import React, { ReactNode, useCallback, useMemo, useState } from "react";
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { ListContext, ListOptionsProps } from "./listContext";
 
 interface ListProviderProps {
@@ -19,6 +25,10 @@ export const ListProvider: React.FC<ListProviderProps> = ({
   const [selections, setSelections] = useState<Set<any>>(new Set());
   const [activeRow, setActiveRow] = useState<any>(null);
   const [_columns, setColumns] = useState<any[]>(columns);
+
+  useEffect(() => {
+    setColumns(columns);
+  }, [columns]);
 
   const updateColumnWidth = useCallback((index: number, width: number) => {
     setColumns((prevColumns) => {

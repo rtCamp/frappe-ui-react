@@ -14,6 +14,7 @@ export interface SelectProps {
   variant?: SelectVariant;
   disabled?: boolean;
   value?: string;
+  defaultValue?: string;
   placeholder?: string;
   options: (string | SelectOption)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

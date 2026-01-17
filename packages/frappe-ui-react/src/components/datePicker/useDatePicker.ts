@@ -24,12 +24,23 @@ const MONTHS = [
   "December",
 ];
 
+/**
+ * Formats time in 12-hour format with AM/PM
+ * @param hours - Hour value (0-23)
+ * @param minutes - Minute value (0-59)
+ * @returns Formatted time string
+ */
 function formatTime12h(hours: number, minutes: number): string {
   const period = hours >= 12 ? "pm" : "am";
   const h = hours % 12 || 12;
   return `${h}:${minutes.toString().padStart(2, "0")} ${period}`;
 }
 
+/**
+ * Parses a 12-hour format time string into hours and minutes
+ * @param timeStr - Time string in format "h:mm am/pm"
+ * @returns Object containing hours and minutes
+ */
 function parseTimeValue(timeStr: string): { hours: number; minutes: number } {
   if (!timeStr) return { hours: 0, minutes: 0 };
   const [time, period] = timeStr.split(" ");
@@ -41,6 +52,10 @@ function parseTimeValue(timeStr: string): { hours: number; minutes: number } {
   return { hours, minutes: m };
 }
 
+/**
+ * Generates an array of time options in 15-minute intervals for a full day
+ * @returns Array of time strings in 12-hour format (e.g., ["12:00 am", "12:15 am", ...])
+ */
 function generateTimeOptions(): string[] {
   const options: string[] = [];
   for (let h = 0; h < 24; h++) {

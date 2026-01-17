@@ -140,25 +140,28 @@ export const useCalendar = (
   const formatter = useCallback(
     (val: Date | string) => {
       const date = dayjs(val);
+
       if (activeView === "Month") {
         return date.format("MMMM YYYY");
-      } else if (activeView === "Week") {
-        const weekStart = datesInWeeks[weekIndex]?.[0];
-        const weekEnd = datesInWeeks[weekIndex]?.[6];
-        if (weekStart && weekEnd) {
-          const startMonth = dayjs(weekStart).month();
-          const endMonth = dayjs(weekEnd).month();
-          if (startMonth === endMonth) {
-            return dayjs(weekStart).format("MMMM YYYY");
-          }
-          return `${dayjs(weekStart).format("MMM")} - ${dayjs(weekEnd).format(
-            "MMM YYYY"
-          )}`;
-        }
-        return date.format("MMMM YYYY");
-      } else {
+      }
+      if (activeView === "Day") {
         return date.format("ddd, D MMM YYYY");
       }
+
+      // In week view, format as month if week is within same month, otherwise show month range
+      const weekStart = datesInWeeks[weekIndex]?.[0];
+      const weekEnd = datesInWeeks[weekIndex]?.[6];
+      if (!weekStart || !weekEnd) {
+        return date.format("MMMM YYYY");
+      }
+
+      const startMonth = dayjs(weekStart).month();
+      const endMonth = dayjs(weekEnd).month();
+      if (startMonth === endMonth) {
+        return dayjs(weekStart).format("MMMM YYYY");
+      }
+
+      return `${dayjs(weekStart).format("MMM")} - ${dayjs(weekEnd).format("MMM YYYY")}`;
     },
     [activeView, datesInWeeks, weekIndex]
   );

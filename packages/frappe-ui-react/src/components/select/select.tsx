@@ -7,6 +7,7 @@ const Select: React.FC<SelectProps> = ({
   variant = "subtle",
   disabled = false,
   value,
+  defaultValue,
   placeholder,
   options,
   onChange,
@@ -100,7 +101,7 @@ const Select: React.FC<SelectProps> = ({
       xl: "pl-3",
     }[size];
   }, [size]);
-  
+
   return (
     <div className="relative flex items-center">
       {prefix && (
@@ -121,14 +122,13 @@ const Select: React.FC<SelectProps> = ({
         className={selectClasses}
         disabled={disabled}
         id={htmlId}
-        value={value}
+        {...(value !== undefined ? { value } : { defaultValue })}
         onChange={handleChange}
         data-testid="select"
       >
         {placeholder && !value && <option />}
         {selectOptions.map((option) => (
           <option
-            selected={option.value === value}
             key={option.value}
             value={option.value}
             disabled={option.disabled}

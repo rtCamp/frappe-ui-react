@@ -1,53 +1,96 @@
-import React, { useMemo } from "react";
+/**
+ * External dependencies.
+ */
+import React, { useCallback, useMemo, useState } from "react";
+import { CircleCheck, CircleX, Info, TriangleAlert, X } from "lucide-react";
+import clsx from "clsx";
 
+/**
+ * Internal dependencies.
+ */
 import type { AlertProps } from "./types";
 
 const Alert: React.FC<AlertProps> = ({
   title,
-  type = "warning",
-  actions,
-  children,
-  ...rest
+  theme,
+  variant = "subtle",
+  description,
+  dismissable = true,
+  visible: controlledVisible,
+  onVisibleChange,
+  icon,
+  footer,
 }) => {
+  const [internalVisible, setInternalVisible] = useState(true);
+
+  const isControlled = controlledVisible !== undefined;
+  const visible = isControlled ? controlledVisible : internalVisible;
+
+  const handleDismiss = useCallback(() => {
+    if (isControlled) {
+      onVisibleChange?.(false);
+    } else {
+      setInternalVisible(false);
+    }
+  }, [isControlled, onVisibleChange]);
+
   const classes = useMemo(() => {
-    const typeClasses: { [type: string]: string } = {
-      warning: "text-ink-gray-7 bg-surface-blue-1",
+    const subtleBgs = {
+      yellow: "bg-surface-amber-2",
+      blue: "bg-surface-blue-2",
+      red: "bg-surface-red-2",
+      green: "bg-surface-green-2",
     };
-    return typeClasses[type] || typeClasses["warning"];
-  }, [type]);
+
+    if (variant === "outline") return "border border-outline-gray-3";
+
+    return theme ? subtleBgs[theme] : "bg-surface-gray-2";
+  }, [theme, variant]);
+
+  const iconConfig = useMemo(() => {
+    const data = {
+      yellow: { component: TriangleAlert, css: "text-ink-amber-3" },
+      blue: { component: Info, css: "text-ink-blue-3" },
+      red: { component: CircleX, css: "text-ink-red-3" },
+      green: { component: CircleCheck, css: "text-ink-green-3" },
+    };
+    return theme ? data[theme] : null;
+  }, [theme]);
+
+  if (!visible) return null;
 
   return (
-    <div className="block w-full" {...rest}>
-      <div
-        className={`flex items-start rounded-md px-4 py-3.5 text-base md:px-5 ${classes}`}
-      >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            opacity="0.8"
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM12 10.5C12.5523 10.5 13 10.9477 13 11.5V17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17V11.5C11 10.9477 11.4477 10.5 12 10.5ZM13 7.99976C13 7.44747 12.5523 6.99976 12 6.99976C11.4477 6.99976 11 7.44747 11 7.99976V8.1C11 8.65228 11.4477 9.1 12 9.1C12.5523 9.1 13 8.65228 13 8.1V7.99976Z"
-            fill="#318AD8"
-          />
-        </svg>
-        <div className="ml-2 w-full">
-          <div className="flex flex-col md:flex-row md:items-baseline">
-            {title && (
-              <h3 className="text-lg font-medium text-ink-gray-9">{title}</h3>
-            )}
-            <div className="mt-1 md:ml-2 md:mt-0">{children}</div>
-            {actions && (
-              <div className="mt-3 md:ml-auto md:mt-0">{actions}</div>
-            )}
-          </div>
-        </div>
+    <div
+      role="alert"
+      className={clsx("grid grid-cols-[auto_1fr_auto] gap-3 rounded-md px-4 py-3.5 text-base items-start", classes)}
+    >
+      {icon ? (
+        icon()
+      ) : iconConfig ? (
+        <iconConfig.component className={clsx("h-4 w-4", iconConfig.css)} />
+      ) : null}
+
+      <div className={clsx("grid gap-2", !icon && !iconConfig && "col-span-2")}>
+        <span className="text-ink-gray-9">{title}</span>
+
+        {description ? (
+          typeof description === "string" ? (
+            <p className="text-ink-gray-6 text-base/normal font-[420]">
+              {description}
+            </p>
+          ) : (
+            description()
+          )
+        ) : null}
       </div>
+
+      {dismissable && (
+        <button onClick={handleDismiss} aria-label="Dismiss alert">
+          <X className="h-4 w-4" />
+        </button>
+      )}
+
+      {footer ? <div className="col-span-full">{footer()}</div> : null}
     </div>
   );
 };
