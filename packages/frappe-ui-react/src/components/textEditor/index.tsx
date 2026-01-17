@@ -2,7 +2,7 @@
  * External dependencies.
  */
 import { useMemo } from "react";
-import ReactQuill, { Quill, QuillOptionsStatic } from "react-quill-new";
+import ReactQuill, { Quill, type QuillOptionsStatic } from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -33,7 +33,7 @@ const TextEditor = ({
   value,
   ...props
 }: TextEditorProps) => {
-  const modules = useMemo(() => {
+  const modules = useMemo<QuillOptionsStatic["modules"]>(() => {
     const modules: QuillOptionsStatic["modules"] = {};
 
     if (allowImageUpload) {
