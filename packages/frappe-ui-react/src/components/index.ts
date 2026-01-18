@@ -13,6 +13,7 @@ export * from "./commandPalette";
 export * from "./datePicker";
 export * from "./dialog";
 export * from "./divider";
+export * from "./docTypeTable";
 export * from "./dropdown";
 export * from "./errorMessage";
 export * from "./fileUploader";
