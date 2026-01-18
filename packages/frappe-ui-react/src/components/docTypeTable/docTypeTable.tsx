@@ -104,7 +104,12 @@ const DocTypeTable: React.FC<DocTypeTableProps> = ({
   // Show loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-8" {...attrs}>
+      <div
+        className="flex items-center justify-center py-8"
+        role="status"
+        aria-live="polite"
+        {...attrs}
+      >
         {loadingComponent || <LoadingIndicator />}
       </div>
     );
