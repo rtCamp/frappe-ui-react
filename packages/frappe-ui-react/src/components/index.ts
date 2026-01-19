@@ -37,8 +37,6 @@ export * from "./toast";
 export * from "./tooltip";
 export * from "./tree";
 
-export { default as Card } from "./card";
-export { default as featherIcon } from "./featherIcon";
 export {
   default as FormLabel,
   type Size as FormLabelSize,
