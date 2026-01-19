@@ -29,7 +29,6 @@ export const EventModalContent = ({
   onEdit,
   onDelete,
 }: EventModalContentProps) => {
-
   return (
     <div className="w-80 rounded bg-surface-white p-4 text-ink-gray-8 shadow-lg">
       <div className="flex flex-row-reverse gap-3 text-ink-gray-5">

@@ -364,7 +364,12 @@ const Popover: React.FC<PopoverProps> = ({
 
       {createPortal(
         <div
-          style={{ width: targetWidth || "auto", height: "auto", zIndex: 99, position: 'absolute' }}
+          style={{
+            width: targetWidth || "auto",
+            height: "auto",
+            zIndex: 99,
+            position: "absolute",
+          }}
         >
           <div
             ref={popperRef}

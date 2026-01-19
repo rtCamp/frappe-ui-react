@@ -92,9 +92,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
         {crumbs.map((item, i) => {
           const isLast = i === crumbs.length - 1;
           const commonClasses = `flex items-center rounded px-0.5 py-1 text-lg font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3 ${
-            isLast
-              ? "text-ink-gray-9"
-              : "text-ink-gray-5 hover:text-ink-gray-7"
+            isLast ? "text-ink-gray-9" : "text-ink-gray-5 hover:text-ink-gray-7"
           }`;
 
           const handleClick = (

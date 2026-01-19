@@ -25,7 +25,7 @@
     "build:publish:remote": "npm run build && npm run publish:remote",
     "local-registry:start": "bash ./bin/setup-local-registry.sh",
     "local-registry:stop": "bash ./bin/stop-local-registry.sh",
-    "pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\""
+    "format": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\""
   },
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "^7.22.5",
@@ -75,7 +75,8 @@
   },
   "lint-staged": {
     "*.(cjs|js|ts|tsx)": [
-      "eslint --fix"
+      "eslint --fix",
+      "prettier --write"
     ],
     "*.json": [
       "prettier --write"

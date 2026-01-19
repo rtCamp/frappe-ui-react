@@ -27,7 +27,7 @@ export const useCalendarData = (events: CalendarEvent[], view = "") => {
             task.endTime = calculateMinutes(task.to_time || "00:00");
             return task;
           });
-          _value.sort((a, b) => a.startTime - b.startTime);
+        _value.sort((a, b) => a.startTime - b.startTime);
         sortedArray[key] = findOverlappingEventsCount(_value);
       }
     }

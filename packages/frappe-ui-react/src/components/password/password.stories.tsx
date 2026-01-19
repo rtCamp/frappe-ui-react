@@ -29,9 +29,9 @@ const Template: StoryObj<PasswordProps> = {
   render: (args) => {
     const [value, setValue] = useState(args.value || "");
 
-		useEffect(() => {
-			setValue(args.value || "");
-		}, [args.value]);
+    useEffect(() => {
+      setValue(args.value || "");
+    }, [args.value]);
 
     return (
       <div className="p-4 w-[300px]">

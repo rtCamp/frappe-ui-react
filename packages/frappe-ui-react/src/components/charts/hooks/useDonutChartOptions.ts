@@ -1,5 +1,5 @@
 import type {
-	TooltipComponentOption,
+  TooltipComponentOption,
   SingleAxisComponentOption,
   PieSeriesOption,
 } from "echarts";

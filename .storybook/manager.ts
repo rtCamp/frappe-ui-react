@@ -10,12 +10,12 @@ addons.setConfig({
     brandImage: undefined,
 
     // Sidebar/Toolbar active state color
-    barSelectedColor: 'rgb(153, 153, 153)',
+    barSelectedColor: "rgb(153, 153, 153)",
 
     // Primary accent color for buttons, links, focus states
-    colorPrimary: 'rgb(153, 153, 153)',
-    colorSecondary: 'rgb(153, 153, 153)',
+    colorPrimary: "rgb(153, 153, 153)",
+    colorSecondary: "rgb(153, 153, 153)",
     fontBase: '"Inter", sans-serif',
   }),
-  panelPosition: 'right', // Options: 'bottom' (default), 'right'
+  panelPosition: "right", // Options: 'bottom' (default), 'right'
 });
