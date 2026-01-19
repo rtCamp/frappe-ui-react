@@ -21,12 +21,10 @@ const Password: React.FC<PasswordProps> = ({ value, ...attrs }) => {
     };
 
     const inputElement = inputRef.current;
-    if (inputElement) {
-      inputElement.addEventListener("keydown", handleKeyDown);
+      inputElement?.addEventListener("keydown", handleKeyDown);
       return () => {
-        inputElement.removeEventListener("keydown", handleKeyDown);
+        inputElement?.removeEventListener("keydown", handleKeyDown);
       };
-    }
   }, []);
 
   return (

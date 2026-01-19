@@ -61,6 +61,8 @@ const Dialog = ({
     if (icon.appearance === "success") {
       return "bg-surface-green-2";
     }
+
+    return ""
   }, [icon]);
 
   const dialogIconClasses = useMemo(() => {
@@ -83,6 +85,8 @@ const Dialog = ({
     if (icon.appearance === "success") {
       return "text-ink-green-3";
     }
+
+    return ""
   }, [icon]);
 
   return (
