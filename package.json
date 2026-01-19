@@ -16,7 +16,7 @@
     "test:unit": "jest --config=tests/unitTest.jest.config.cjs",
     "lint": "npm-run-all --parallel lint:*",
     "lint:js": "eslint .",
-    "lint:types": "tsc ",
+    "lint:types": "tsc --build --noEmit",
     "lint:js:fix": "eslint --fix .",
     "publish:local": "npm run publish:local -w @rtcamp/frappe-ui-react",
     "unpublish:local": "npm run unpublish:local -w @rtcamp/frappe-ui-react",
