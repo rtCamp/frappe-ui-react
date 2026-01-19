@@ -7,7 +7,7 @@ import {
   getDateTimeValue,
   formatDateTime12h,
 } from "./utils";
-import { DatePickerViewMode } from "./types";
+import type { DatePickerViewMode } from "./types";
 
 const MONTHS = [
   "January",

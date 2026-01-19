@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Responsive, WidthProvider, Layout, Layouts } from "react-grid-layout";
+import { Responsive, WidthProvider, type Layout, type Layouts } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 

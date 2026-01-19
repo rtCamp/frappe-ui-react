@@ -3,10 +3,10 @@ import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 import { X } from "lucide-react";
 import clsx from "clsx";
 import { Button } from "../button";
-import FeatherIcon, { FeatherIconProps } from "../featherIcon";
+import FeatherIcon, { type FeatherIconProps } from "../featherIcon";
 import { DialogActionButton } from "./dialogActionButton";
 import "./dialog.css";
-import { DialogProps } from "./types";
+import type { DialogProps } from "./types";
 
 const Dialog = ({
   open,

@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from "react";
 import { FormControl } from "../formControl";
 import { Tooltip } from "../tooltip";
 import KeyboardShortcut from "../keyboardShortcut";
-import { PasswordProps } from "./types";
+import type { PasswordProps } from "./types";
 import { Eye, EyeOff } from "lucide-react";
 
 const Password: React.FC<PasswordProps> = ({ value, ...attrs }) => {

@@ -1,4 +1,4 @@
-import { ButtonProps } from "../button";
+import type { ButtonProps } from "../button";
 
 export interface DialogActionContext {
   close: () => void;

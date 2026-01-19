@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useMemo } from "react";
+import React, { type ReactNode, useCallback, useMemo } from "react";
 import { Toast, type ToastObject } from "@base-ui/react/toast";
 import DOMPurify from "dompurify";
 import LoadingIndicator from "../loadingIndicator";
@@ -7,7 +7,7 @@ import type {
   ToastOptions,
   ToastPromiseOptions,
 } from "./types";
-import { ToastAPI, ToastContext } from "./context";
+import { type ToastAPI, ToastContext } from "./context";
 import ToastComponent from "./toast";
 
 interface ToastsProviderProps {

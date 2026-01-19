@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from "react";
 import { Menu } from "@base-ui/react/menu";
 
-import { Button, ButtonProps } from "../button";
+import { Button, type ButtonProps } from "../button";
 import { Switch } from "../switch";
 import type {
   DropdownProps,

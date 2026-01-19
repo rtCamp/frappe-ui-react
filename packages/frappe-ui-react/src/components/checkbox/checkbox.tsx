@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from "react";
-import { CheckboxProps } from "./types";
+import type { CheckboxProps } from "./types";
 import type { SizeTypes } from "../../common/types";
 
 const Checkbox: React.FC<CheckboxProps> = ({

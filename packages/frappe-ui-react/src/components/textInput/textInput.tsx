@@ -2,11 +2,11 @@ import React, {
   useMemo,
   useRef,
   useCallback,
-  InputHTMLAttributes,
+  type InputHTMLAttributes,
   forwardRef,
 } from "react";
 import { debounce } from "../../utils/debounce";
-import { TextInputProps } from "./types";
+import type { TextInputProps } from "./types";
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   (

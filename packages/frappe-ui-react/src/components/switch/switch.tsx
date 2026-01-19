@@ -5,7 +5,7 @@ import {
   Label,
   Description,
 } from "@headlessui/react";
-import { SwitchProps } from "./types";
+import type { SwitchProps } from "./types";
 import FeatherIcon, { type FeatherIconProps } from "../featherIcon";
 
 enum SwitchVariant {

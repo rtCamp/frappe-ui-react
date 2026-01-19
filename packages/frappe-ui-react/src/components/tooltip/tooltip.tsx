@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { TooltipProps } from "./types";
+import type { TooltipProps } from "./types";
 import { Tooltip } from "@base-ui/react/tooltip";
 import clsx from "clsx";
 

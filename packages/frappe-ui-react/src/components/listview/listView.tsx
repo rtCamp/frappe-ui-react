@@ -1,4 +1,4 @@
-import React, { useMemo, ReactNode, HTMLAttributes } from "react";
+import React, { useMemo, type ReactNode, type HTMLAttributes } from "react";
 
 import ListEmptyState from "./emptyState";
 import ListHeader from "./listHeader";

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { RatingProps } from "./types";
+import type { RatingProps } from "./types";
 import FeatherIcon from "../featherIcon";
 
 const defaultProps = {

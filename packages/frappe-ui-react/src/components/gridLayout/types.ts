@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { Layouts, Layout as RGL_Layout } from "react-grid-layout";
+import type { ReactNode } from "react";
+import type { Layouts, Layout as RGL_Layout } from "react-grid-layout";
 
 export type Layout = RGL_Layout;
 

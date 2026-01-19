@@ -1,5 +1,5 @@
-import React, { ReactNode, useCallback, useMemo, useState } from "react";
-import { ListContext, ListOptionsProps } from "./listContext";
+import React, { type ReactNode, useCallback, useMemo, useState } from "react";
+import { ListContext, type ListOptionsProps } from "./listContext";
 
 interface ListProviderProps {
   options: ListOptionsProps;
