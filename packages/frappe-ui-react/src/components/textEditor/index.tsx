@@ -1,22 +1,18 @@
 /**
  * External dependencies.
  */
-import { useEffect, useState } from "react";
-import ReactQuill, {
-  Quill,
-  type DeltaStatic,
-  type EmitterSource,
-} from "react-quill-new";
+import { useMemo } from "react";
+import ReactQuill, { Quill, type QuillOptionsStatic } from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import ImageResize from "quill-image-resize-module-react";
+import ImageResize from "quill-resize-module/dist/resize.js";
+import "quill-resize-module/dist/resize.css";
 import "quill-paste-smart";
 
 /**
  * Internal dependencies.
  */
-import { preProcessLink } from "./utils";
 export interface TextEditorProps extends ReactQuill.ReactQuillProps {
   allowImageUpload?: boolean;
   allowVideoUpload?: boolean;
@@ -35,87 +31,64 @@ const TextEditor = ({
   className,
   onChange,
   hideToolbar = false,
+  value,
   ...props
 }: TextEditorProps) => {
-  const [editorValue, setEditorValue] = useState(props.value || "");
+  const modules = useMemo<QuillOptionsStatic["modules"]>(() => {
+    const modules: QuillOptionsStatic["modules"] = {};
 
-  useEffect(() => {
-    if (props?.value) {
-      setEditorValue(props.value);
+    if (allowImageUpload) {
+      modules.imageResize = {
+        modules: ["Resize", "DisplaySize", "Toolbar"],
+      };
     }
-  }, [props?.value]);
 
-  const toolbarOptions = [
-    ["bold", "italic"],
-    [{ color: [] }],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-    [{ align: [] }],
-    ["link"],
-  ];
+    const toolbarOptions = [
+      ["bold", "italic"],
+      [{ color: [] }],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
+      ],
+      [{ align: [] }],
+      ["link"],
+    ];
 
-  if (allowImageUpload) {
-    toolbarOptions.push(["image"]);
-  }
-
-  if (allowVideoUpload) {
-    toolbarOptions.push(["video"]);
-  }
-
-  const modules = {
-    toolbar: hideToolbar ? false : toolbarOptions,
-  };
-
-  if (allowImageUpload) {
-    // @ts-expect-error expected
-    modules.imageResize = {
-      modules: ["Resize", "DisplaySize", "Toolbar"],
-    };
-  }
-
-  const formatHtml = (html: string) => {
-    return preProcessLink(html);
-  };
-
-  const handleChange = (
-    value: string,
-    _: DeltaStatic,
-    __: EmitterSource,
-    editor: ReactQuill.UnprivilegedEditor
-  ) => {
-    const formattedValue = formatHtml(value);
-    setEditorValue(formattedValue);
-    if (editor.getText()?.trim()) {
-      onChange(formattedValue);
-    } else {
-      onChange("");
+    if (allowImageUpload) {
+      toolbarOptions.push(["image"]);
     }
-  };
+
+    if (allowVideoUpload) {
+      toolbarOptions.push(["video"]);
+    }
+
+    if (!hideToolbar) {
+      modules.toolbar = toolbarOptions;
+    }
+
+    return modules;
+  }, [allowImageUpload, hideToolbar, allowVideoUpload]);
 
   return (
-    <>
-      <ReactQuill
-        {...props}
-        style={{ resize: "vertical", overflow: "auto" }}
-        className={`
-          border rounded-md border-input [&>div:first-child]:border-t-0 [&>div:first-child]:border-r-0 [&>div:first-child]:border-l-0 [&>div:first-child]:border-input [&>div:first-child]:border-bottom [&>div:last-child]:border-none text-foreground bg-background whitespace-normal
-          ${
-            hideToolbar &&
-            "border-none !resize-none [&_.ql-editor]:min-h-0 [&_.ql-editor]:p-2"
-          }
-          ${!hideToolbar && "break-all"}
-          ${className}
-        `}
-        theme="snow"
-        modules={modules}
-        onChange={handleChange}
-        value={editorValue}
-      />
-    </>
+    <ReactQuill
+      {...props}
+      style={{ resize: "vertical", overflow: "auto" }}
+      className={`
+        border rounded-md border-input [&>div:first-child]:border-t-0 [&>div:first-child]:border-r-0 [&>div:first-child]:border-l-0 [&>div:first-child]:border-input [&>div:first-child]:border-bottom [&>div:last-child]:border-none text-foreground bg-background whitespace-normal
+        ${
+          hideToolbar &&
+          "border-none !resize-none [&_.ql-editor]:min-h-0 [&_.ql-editor]:p-2"
+        }
+        ${!hideToolbar && "break-all"}
+        ${className}
+    `}
+      theme="snow"
+      modules={modules}
+      onChange={onChange}
+      value={value}
+    />
   );
 };
 

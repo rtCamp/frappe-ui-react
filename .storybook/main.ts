@@ -32,6 +32,7 @@ const config: StorybookConfig = {
             __dirname,
             "../packages/frappe-ui-react/src"
           ),
+          Quill: require.resolve("quill"),
         },
       },
     };

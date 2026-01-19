@@ -1,13 +1,5 @@
-import React, { useMemo } from "react";
-import {
-  Root,
-  Portal,
-  Overlay,
-  Content,
-  Close,
-  Description,
-  Title,
-} from "@radix-ui/react-dialog";
+import { useMemo } from "react";
+import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 import { X } from "lucide-react";
 import clsx from "clsx";
 import { Button } from "../button";
@@ -33,12 +25,6 @@ const Dialog = ({
     icon: iconProp,
     actions = [],
   } = options;
-
-  const handleInteractOutside = (e: Event) => {
-    if (disableOutsideClickToClose) {
-      e.preventDefault();
-    }
-  };
 
   const closeDialog = () => onOpenChange(false);
 
@@ -100,20 +86,24 @@ const Dialog = ({
   }, [icon]);
 
   return (
-    <Root open={open} onOpenChange={onOpenChange}>
-      <Portal>
-        <Overlay
-          className="dialog-overlay fixed inset-0 bg-black-overlay-200 backdrop-filter backdrop-blur-[12px] overflow-y-auto z-[11]"
+    <BaseDialog.Root
+      open={open}
+      onOpenChange={onOpenChange}
+      disablePointerDismissal={disableOutsideClickToClose}
+    >
+      <BaseDialog.Portal>
+        <BaseDialog.Backdrop
+          className="dialog-backdrop fixed inset-0 bg-black-overlay-200 backdrop-filter backdrop-blur-[12px] overflow-y-auto z-[11]"
           data-dialog={"dialog"}
           onAnimationEnd={() => !open && onAfterLeave?.()}
         >
-          <div
+          <BaseDialog.Viewport
             className={clsx(
               "flex min-h-screen flex-col items-center px-4 py-4 text-center",
               dialogPositionClasses
             )}
           >
-            <Content
+            <BaseDialog.Popup
               className={clsx(
                 "dialog-content my-8 inline-block w-full transform overflow-hidden rounded-xl bg-surface-modal text-left align-middle shadow-xl",
                 {
@@ -130,8 +120,6 @@ const Dialog = ({
                   "max-w-xs": size === "xs",
                 }
               )}
-              onEscapeKeyDown={closeDialog}
-              onInteractOutside={handleInteractOutside}
             >
               <div className="bg-surface-modal px-4 pb-6 pt-5 sm:px-6">
                 <div className="flex">
@@ -152,41 +140,48 @@ const Dialog = ({
                             />
                           </div>
                         )}
-                        <Title asChild>
-                          {typeof title === "string" ? (
-                            <h3
-                              className="text-2xl font-semibold leading-6 text-ink-gray-9"
-                              data-testid="dialog-title"
-                            >
-                              {title || "Untitled"}
-                            </h3>
-                          ) : (
-                            title && title()
-                          )}
-                        </Title>
+                        <BaseDialog.Title
+                          render={
+                            typeof title === "string" || !title ? (
+                              <h3
+                                className="text-2xl font-semibold leading-6 text-ink-gray-9"
+                                data-testid="dialog-title"
+                              >
+                                {title || "Untitled"}
+                              </h3>
+                            ) : (
+                              title()
+                            )
+                          }
+                        />
                       </div>
-                      <Close asChild>
-                        <Button
-                          variant="ghost"
-                          onClick={closeDialog}
-                          data-testid="dialog-close"
-                        >
-                          <X className="h-4 w-4 text-ink-gray-9" />
-                        </Button>
-                      </Close>
+                      <BaseDialog.Close
+                        render={
+                          <Button
+                            variant="ghost"
+                            onClick={closeDialog}
+                            data-testid="dialog-close"
+                          >
+                            <X className="h-4 w-4 text-ink-gray-9" />
+                          </Button>
+                        }
+                        nativeButton={true}
+                      />
                     </div>
 
                     {children
                       ? children
                       : message && (
-                          <Description asChild>
-                            <p
-                              className="text-p-base text-ink-gray-7"
-                              data-testid="dialog-description"
-                            >
-                              {message}
-                            </p>
-                          </Description>
+                          <BaseDialog.Description
+                            render={
+                              <p
+                                className="text-p-base text-ink-gray-7"
+                                data-testid="dialog-description"
+                              >
+                                {message}
+                              </p>
+                            }
+                          />
                         )}
                   </div>
                 </div>
@@ -209,11 +204,11 @@ const Dialog = ({
                   )}
                 </div>
               )}
-            </Content>
-          </div>
-        </Overlay>
-      </Portal>
-    </Root>
+            </BaseDialog.Popup>
+          </BaseDialog.Viewport>
+        </BaseDialog.Backdrop>
+      </BaseDialog.Portal>
+    </BaseDialog.Root>
   );
 };
 

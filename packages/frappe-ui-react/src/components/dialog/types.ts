@@ -15,7 +15,7 @@ export interface DialogActionButtonProps {
 }
 
 export interface DialogOptions {
-  title?: (() => React.ReactNode) | string;
+  title?: (() => React.ReactElement) | string;
   message?: string;
   size?:
     | "xs"
