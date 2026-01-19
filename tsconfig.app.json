@@ -22,14 +22,6 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "forceConsistentCasingInFileNames": true,
-    "pretty": true,
-    "typeRoots": ["./typings", "./node_modules/@types"],
-    "types": ["jest", "jest-extended", "node"],
-    "noUncheckedSideEffectImports": true,
-    "baseUrl": ".",
-    "paths": {
-      "@rtcamp/*": ["packages/frappe-ui-react/src/*"]
-    }
-  },
-  "exclude": ["packages/*/node_modules/**"]
+    "pretty": true
+  }
 }
