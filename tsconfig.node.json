@@ -5,7 +5,7 @@
     "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
     "target": "esnext",
-    "module": "esnext",
+    "module": "node16",
     "lib": ["dom", "dom.iterable", "esnext"],
     "composite": true,
     "noEmit": true,
@@ -16,7 +16,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "verbatimModuleSyntax": true,
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "esModuleInterop": false,
     "resolveJsonModule": true,
     "allowUnreachableCode": false,
@@ -24,7 +24,7 @@
     "forceConsistentCasingInFileNames": true,
     "pretty": true,
     "typeRoots": ["./typings", "./node_modules/@types"],
-    "types": ["jest", "jest-extended", "node"]
+    "types": ["jest", "node"]
   },
-  "exclude": ["packages/*/node_modules/**"]
+  "exclude": ["packages/*/src/**", "packages/*/dist/**", "storybook-static/**"]
 }
