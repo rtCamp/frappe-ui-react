@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from "@storybook/react-vite/*";
+import { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 
 import TabButtons from ".";
