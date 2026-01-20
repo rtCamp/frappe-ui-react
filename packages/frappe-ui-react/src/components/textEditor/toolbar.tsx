@@ -23,9 +23,6 @@ import {
 import { Button } from "../button";
 import { useEffect, useState } from "react";
 
-/**
- * Color palette matching Quill's default colors.
- */
 const COLOR_PALETTE = [
   "#000000",
   "#ffffff",
