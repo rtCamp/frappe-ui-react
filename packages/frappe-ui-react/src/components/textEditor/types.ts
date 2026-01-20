@@ -3,16 +3,6 @@
  */
 export interface TextEditorProps {
   /**
-   * Enable image upload functionality.
-   */
-  allowImageUpload?: boolean;
-
-  /**
-   * Enable video upload functionality.
-   */
-  allowVideoUpload?: boolean;
-
-  /**
    * Additional CSS classes to apply to the editor container.
    */
   className?: string;

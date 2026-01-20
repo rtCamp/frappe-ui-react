@@ -7,14 +7,6 @@ const meta: Meta<typeof TextEditor> = {
   component: TextEditor,
   parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   argTypes: {
-    allowImageUpload: {
-      control: "boolean",
-      description: "Enable image upload functionality",
-    },
-    allowVideoUpload: {
-      control: "boolean",
-      description: "Enable video upload functionality",
-    },
     hideToolbar: {
       control: "boolean",
       description: "Hide the formatting toolbar",
@@ -36,7 +28,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
   args: {
-    allowImageUpload: true,
     placeholder: "Write something...",
     value: `
 		<p>This is a paragraph with <strong>bold</strong> and <em>italic</em> text.</p>

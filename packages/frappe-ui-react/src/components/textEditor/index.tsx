@@ -7,12 +7,8 @@ import StarterKit from "@tiptap/starter-kit";
 import { TextStyle } from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
 import TextAlign from "@tiptap/extension-text-align";
-import Link from "@tiptap/extension-link";
-import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
 import clsx from "clsx";
-import { Node as TiptapNode } from "@tiptap/core";
-
 /**
  * Internal dependencies.
  */
@@ -20,80 +16,9 @@ import type { TextEditorProps } from "./types";
 import Toolbar from "./toolbar";
 
 /**
- * Custom video extension for Tiptap.
- */
-
-const VideoExtension = TiptapNode.create({
-  name: "video",
-  group: "block",
-  atom: true,
-
-  addAttributes() {
-    return {
-      src: { default: null },
-      width: { default: "560" },
-      height: { default: "315" },
-    };
-  },
-
-  parseHTML() {
-    return [
-      {
-        tag: 'iframe[src*="youtube.com"]',
-      },
-      {
-        tag: 'iframe[src*="vimeo.com"]',
-      },
-      {
-        tag: "iframe[src]",
-      },
-    ];
-  },
-
-  renderHTML({ HTMLAttributes }) {
-    return [
-      "div",
-      {
-        style:
-          "position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden;",
-      },
-      [
-        "iframe",
-        {
-          src: HTMLAttributes.src,
-          frameborder: "0",
-          allow:
-            "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
-          allowfullscreen: "true",
-          style:
-            "position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 0.5rem;",
-        },
-      ],
-    ];
-  },
-
-  addCommands() {
-    return {
-      insertVideo:
-        (options: { src: string }) =>
-        ({ commands }: any) => {
-          return commands.insertContent({
-            type: this.name,
-            attrs: {
-              src: options.src,
-            },
-          });
-        },
-    } as any;
-  },
-}) as any;
-
-/**
  * TextEditor component using Tiptap.
  */
 const TextEditor = ({
-  allowImageUpload = false,
-  allowVideoUpload = false,
   className,
   onChange,
   hideToolbar = false,
@@ -106,7 +31,18 @@ const TextEditor = ({
    */
   const extensions = useMemo(() => {
     const baseExtensions = [
-      StarterKit.configure(),
+      StarterKit.configure({
+        bulletList: {
+          HTMLAttributes: {
+            class: "list-disc pl-4",
+          },
+        },
+        orderedList: {
+          HTMLAttributes: {
+            class: "list-decimal pl-4",
+          },
+        },
+      }),
       TextStyle,
       Color.configure({
         types: ["textStyle"],
@@ -115,34 +51,14 @@ const TextEditor = ({
         types: ["heading", "paragraph"],
         alignments: ["left", "center", "right"],
       }),
-      Link.configure({
-        openOnClick: false,
-        autolink: true,
-        HTMLAttributes: {
-          class: "text-blue-500 hover:text-blue-700 underline",
-          target: "_blank",
-          rel: "noopener noreferrer",
-        },
-      }),
-      Image.configure({
-        inline: true,
-        allowBase64: true,
-        HTMLAttributes: {
-          class: "rounded-md",
-        },
-      }),
       Placeholder.configure({
         placeholder,
         emptyEditorClass: "is-editor-empty",
       }),
     ];
 
-    if (allowVideoUpload) {
-      baseExtensions.push(VideoExtension);
-    }
-
     return baseExtensions;
-  }, [allowVideoUpload, placeholder]);
+  }, [placeholder]);
 
   /**
    * Initialize Tiptap editor.
@@ -202,13 +118,7 @@ const TextEditor = ({
       className={containerClasses}
       style={{ resize: "vertical", overflow: "auto" }}
     >
-      {!hideToolbar && (
-        <Toolbar
-          editor={editor}
-          allowImageUpload={allowImageUpload}
-          allowVideoUpload={allowVideoUpload}
-        />
-      )}
+      {!hideToolbar && <Toolbar editor={editor} />}
       <div
         className={clsx(
           "flex-1 overflow-auto",

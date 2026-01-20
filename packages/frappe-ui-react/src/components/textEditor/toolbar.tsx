@@ -4,12 +4,22 @@
 import { Editor } from "@tiptap/react";
 import clsx from "clsx";
 import { Popover } from "@base-ui/react";
+import {
+  Bold,
+  Italic,
+  List,
+  ListOrdered,
+  IndentDecrease,
+  IndentIncrease,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+} from "lucide-react";
 
 /**
  * Internal dependencies.
  */
 import { Button } from "../button";
-import { Bold, Italic } from "lucide-react";
 import { useEffect, useState } from "react";
 
 /**
@@ -105,40 +115,10 @@ const ColorPicker = ({ editor }: { editor: Editor }) => {
 /**
  * Toolbar component for the text editor.
  */
-export const Toolbar = ({
-  editor,
-  allowImageUpload = false,
-  allowVideoUpload = false,
-}: ToolbarProps) => {
+export const Toolbar = ({ editor }: ToolbarProps) => {
   if (!editor) {
     return null;
   }
-
-  const setLink = () => {
-    const url = window.prompt("Enter URL:");
-    if (url) {
-      editor.chain().focus().setLink({ href: url }).run();
-    }
-  };
-
-  const removeLink = () => {
-    editor.chain().focus().unsetLink().run();
-  };
-
-  const addImage = () => {
-    const url = window.prompt("Enter image URL:");
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
-    }
-  };
-
-  const addVideo = () => {
-    const url = window.prompt("Enter video URL (YouTube/Vimeo/etc):");
-    if (url) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (editor.chain().focus() as any).insertVideo({ src: url }).run();
-    }
-  };
 
   return (
     <div className="flex flex-wrap gap-1 items-center border-b border-input bg-background p-2">
@@ -178,7 +158,7 @@ export const Toolbar = ({
           className={editor.isActive("bulletList") ? "bg-surface-gray-3" : ""}
           title="Bullet list"
         >
-          •
+          <ListOrdered />
         </Button>
         <Button
           variant="ghost"
@@ -187,7 +167,7 @@ export const Toolbar = ({
           className={editor.isActive("orderedList") ? "bg-surface-gray-3" : ""}
           title="Ordered list"
         >
-          1.
+          <List />
         </Button>
         <Button
           variant="ghost"
@@ -196,7 +176,7 @@ export const Toolbar = ({
           disabled={!editor.can().liftListItem("listItem")}
           title="Decrease indent"
         >
-          ←
+          <IndentDecrease />
         </Button>
         <Button
           variant="ghost"
@@ -205,7 +185,7 @@ export const Toolbar = ({
           disabled={!editor.can().sinkListItem("listItem")}
           title="Increase indent"
         >
-          →
+          <IndentIncrease />
         </Button>
       </div>
 
@@ -220,7 +200,7 @@ export const Toolbar = ({
           }
           title="Align left"
         >
-          ◀
+          <AlignLeft />
         </Button>
         <Button
           variant="ghost"
@@ -231,7 +211,7 @@ export const Toolbar = ({
           }
           title="Align center"
         >
-          ≡
+          <AlignCenter />
         </Button>
         <Button
           variant="ghost"
@@ -242,56 +222,8 @@ export const Toolbar = ({
           }
           title="Align right"
         >
-          ▶
+          <AlignRight />
         </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().setTextAlign("justify").run()}
-          className={
-            editor.isActive({ textAlign: "justify" }) ? "bg-surface-gray-3" : ""
-          }
-          title="Justify"
-        >
-          ≣
-        </Button>
-      </div>
-
-      {/* Link section */}
-      <div className="flex gap-1 items-center border-r border-outline-gray-2 pr-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={editor.isActive("link") ? removeLink : setLink}
-          className={editor.isActive("link") ? "bg-surface-gray-3" : ""}
-          title={editor.isActive("link") ? "Remove link" : "Add link"}
-        >
-          🔗
-        </Button>
-      </div>
-
-      {/* Media section */}
-      <div className="flex gap-1 items-center">
-        {allowImageUpload && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={addImage}
-            title="Add image"
-          >
-            🖼️
-          </Button>
-        )}
-        {allowVideoUpload && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={addVideo}
-            title="Add video"
-          >
-            ▶️
-          </Button>
-        )}
       </div>
     </div>
   );
