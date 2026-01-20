@@ -9,6 +9,7 @@ import { Popover } from "@headlessui/react";
  * Internal dependencies.
  */
 import { Button } from "../button";
+import { Bold, Italic } from "lucide-react";
 
 /**
  * Toolbar props interface.
@@ -129,10 +130,10 @@ export const Toolbar = ({
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={editor.isActive("bold") ? "bg-surface-gray-3" : ""}
+          className={editor.isActive("bold") ? "bg-color-gray-400" : ""}
           title="Bold (Ctrl+B)"
         >
-          <strong>B</strong>
+          <Bold className="size-5" />
         </Button>
         <Button
           variant="ghost"
@@ -141,7 +142,7 @@ export const Toolbar = ({
           className={editor.isActive("italic") ? "bg-surface-gray-3" : ""}
           title="Italic (Ctrl+I)"
         >
-          <em>I</em>
+          <Italic className="size-5" />
         </Button>
       </div>
 

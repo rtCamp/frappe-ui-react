@@ -1,9 +1,4 @@
 /**
- * External dependencies.
- */
-import type { JSONContent } from "@tiptap/core";
-
-/**
  * TextEditor component props interface.
  */
 export interface TextEditorProps {
@@ -32,12 +27,6 @@ export interface TextEditorProps {
    * Required prop for controlled component usage.
    */
   onChange: (value: string) => void;
-
-  /**
-   * Callback fired when content changes, returns Tiptap JSON format.
-   * Optional prop for advanced use cases that need structured content.
-   */
-  onContentChange?: (json: JSONContent) => void;
 
   /**
    * The HTML content of the editor.

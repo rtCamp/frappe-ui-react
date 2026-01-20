@@ -22,7 +22,7 @@ import Toolbar from "./toolbar";
 /**
  * Custom video extension for Tiptap.
  */
- 
+
 const VideoExtension = TiptapNode.create({
   name: "video",
   group: "block",
@@ -73,7 +73,6 @@ const VideoExtension = TiptapNode.create({
   },
 
   addCommands() {
-     
     return {
       insertVideo:
         (options: { src: string }) =>
@@ -97,7 +96,6 @@ const TextEditor = ({
   allowVideoUpload = false,
   className,
   onChange,
-  onContentChange,
   hideToolbar = false,
   value,
   placeholder = "Write something...",
@@ -108,23 +106,14 @@ const TextEditor = ({
    */
   const extensions = useMemo(() => {
     const baseExtensions = [
-      StarterKit.configure({
-        bulletList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
-        orderedList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
-      }),
+      StarterKit.configure(),
       TextStyle,
       Color.configure({
         types: ["textStyle"],
       }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
-        alignments: ["left", "center", "right", "justify"],
+        alignments: ["left", "center", "right"],
       }),
       Link.configure({
         openOnClick: false,
@@ -165,11 +154,6 @@ const TextEditor = ({
     onUpdate: ({ editor: updatedEditor }) => {
       const html = updatedEditor.getHTML();
       onChange(html);
-
-      if (onContentChange) {
-        const json = updatedEditor.getJSON();
-        onContentChange(json);
-      }
     },
     editorProps: {
       attributes: {
