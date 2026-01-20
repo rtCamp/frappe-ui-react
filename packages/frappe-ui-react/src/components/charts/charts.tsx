@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { init, type ECharts } from "echarts";
+import "echarts/theme/rainbow";
 
 import { debounce } from "../../utils/debounce";
 import type { ChartsWrapperProps } from "./types";
@@ -18,7 +19,11 @@ const ChartsWrapper: React.FC<ChartsWrapperProps> = ({
       return;
     }
 
-    chartInstance.current = init(chartRef.current, theme, { renderer: "svg" });
+    chartInstance.current = init(
+      chartRef.current,
+      theme === "light" ? "rainbow" : "dark",
+      { renderer: "svg" }
+    );
 
     if (events?.click) {
       chartInstance.current.on("click", events.click);
