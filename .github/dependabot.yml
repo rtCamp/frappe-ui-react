@@ -5,11 +5,14 @@ updates:
     schedule:
       interval: "daily"
     target-branch: "develop"
+
   - package-ecosystem: "npm"
-    directory: "/packages/*/"
+    directories:
+      - "/packages/*/"
     schedule:
       interval: "daily"
     target-branch: "develop"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
