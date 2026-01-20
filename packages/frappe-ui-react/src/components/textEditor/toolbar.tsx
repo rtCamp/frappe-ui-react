@@ -7,7 +7,7 @@ import { Popover } from "@base-ui/react";
 import {
   Bold,
   Italic,
-  List,
+  List as ListIcon,
   ListOrdered,
   IndentDecrease,
   IndentIncrease,
@@ -180,8 +180,6 @@ const Format = ({ editor }: { editor: Editor }) => {
     };
   }, [editor]);
 
-  console.log(isBoldActive);
-
   return (
     <>
       <Button
@@ -201,6 +199,70 @@ const Format = ({ editor }: { editor: Editor }) => {
         title="Italic (Ctrl+I)"
       >
         <Italic className="size-5" />
+      </Button>
+    </>
+  );
+};
+
+/**
+ * List options component for text editor toolbar.
+ */
+const List = ({ editor }: { editor: Editor }) => {
+  const [isBulletListActive, setIsBulletListActive] = useState(
+    editor.isActive("bold") || false
+  );
+  const [isOrderedListActive, setIsOrderedListActive] = useState(
+    editor.isActive("italic") || false
+  );
+
+  useEffect(() => {
+    const updateState = ({ editor }: { editor: Editor }) => {
+      setIsBulletListActive(editor.isActive("bulletList"));
+      setIsOrderedListActive(editor.isActive("orderedList"));
+    };
+    editor.on("transaction", updateState);
+    return () => {
+      editor.off("transaction", updateState);
+    };
+  }, [editor]);
+
+  return (
+    <>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
+        className={isBulletListActive ? "bg-surface-gray-4!" : ""}
+        title="Bullet list"
+      >
+        <ListOrdered />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        className={isOrderedListActive ? "bg-surface-gray-4!" : ""}
+        title="Ordered list"
+      >
+        <ListIcon />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().liftListItem("listItem").run()}
+        disabled={!editor.can().liftListItem("listItem")}
+        title="Decrease indent"
+      >
+        <IndentDecrease />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().sinkListItem("listItem").run()}
+        disabled={!editor.can().sinkListItem("listItem")}
+        title="Increase indent"
+      >
+        <IndentIncrease />
       </Button>
     </>
   );
@@ -228,42 +290,7 @@ export const Toolbar = ({ editor }: ToolbarProps) => {
 
       {/* Lists section */}
       <div className="flex gap-1 items-center border-r border-outline-gray-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={editor.isActive("bulletList") ? "bg-surface-gray-4" : ""}
-          title="Bullet list"
-        >
-          <ListOrdered />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={editor.isActive("orderedList") ? "bg-surface-gray-4" : ""}
-          title="Ordered list"
-        >
-          <List />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().liftListItem("listItem").run()}
-          disabled={!editor.can().liftListItem("listItem")}
-          title="Decrease indent"
-        >
-          <IndentDecrease />
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().sinkListItem("listItem").run()}
-          disabled={!editor.can().sinkListItem("listItem")}
-          title="Increase indent"
-        >
-          <IndentIncrease />
-        </Button>
+        <List editor={editor} />
       </div>
 
       {/* Alignment section */}
