@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 
-import { BadgeProps } from "./types";
+import type { BadgeProps } from "./types";
 
 const Badge: React.FC<BadgeProps> = ({
   theme = "gray",

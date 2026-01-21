@@ -210,7 +210,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
       const emittedValue: OptionValue | OptionValue[] | null = multiple
         ? ((val as Option[]).map((o) => o.value) as OptionValue[])
-        : (val as Option)?.value ?? null;
+        : ((val as Option)?.value ?? null);
 
       if (!emittedValue) {
         return;

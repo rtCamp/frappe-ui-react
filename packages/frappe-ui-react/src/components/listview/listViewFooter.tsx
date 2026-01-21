@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useContext, ReactNode } from "react";
+import { useMemo, useCallback, useContext, type ReactNode } from "react";
 
 import { TableContext } from "./tableContext";
 import TabButtons from "../tabButtons";

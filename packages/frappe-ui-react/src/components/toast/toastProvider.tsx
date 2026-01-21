@@ -1,58 +1,74 @@
-import React, { ReactNode, useCallback, useMemo, useState } from "react";
-import { ToastProvider, ToastViewport } from "@radix-ui/react-toast";
+import React, { type ReactNode, useCallback, useMemo } from "react";
+import { Toast, type ToastObject } from "@base-ui/react/toast";
 import DOMPurify from "dompurify";
 import LoadingIndicator from "../loadingIndicator";
-import { ToastProps, ToastOptions, ToastPromiseOptions } from "./types";
-import { ToastContext } from "./context";
+import type {
+  ToastDataInternal,
+  ToastOptions,
+  ToastPromiseOptions,
+} from "./types";
+import { type ToastAPI, ToastContext } from "./context";
 import ToastComponent from "./toast";
 
 interface ToastsProviderProps {
   children: ReactNode;
 }
+
+// Simple counter for generating unique toast IDs.
 let toastIdCounter = 0;
+
 const ToastsProvider: React.FC<ToastsProviderProps> = ({ children }) => {
-  const [toasts, setToasts] = useState<ToastProps[]>([]);
+  const toastManager = Toast.createToastManager();
 
-  const create = useCallback((options: ToastOptions): string => {
-    const id = `toast-${toastIdCounter++}`;
-    const durationInMs =
-      options.duration != null ? options.duration * 1000 : 5000;
+  return (
+    <Toast.Provider toastManager={toastManager}>
+      <ToastContextProvider>{children}</ToastContextProvider>
+    </Toast.Provider>
+  );
+};
 
-    const sanitizedMessage = DOMPurify.sanitize(options.message, {
-      ALLOWED_TAGS: ["a", "em", "strong", "i", "b", "u"],
-    });
+const ToastContextProvider: React.FC<ToastsProviderProps> = ({ children }) => {
+  const toastManager = Toast.useToastManager();
 
-    const toastItem: ToastProps = {
-      id: options?.id || id,
-      open: true,
-      message: sanitizedMessage,
-      type: options.type || "info",
-      duration: durationInMs,
-      action: options.action,
-      icon: options.icon,
-      closable: options.closable ?? true,
-      onOpenChange: () => null,
-    };
+  const create = useCallback(
+    (options: ToastOptions): string => {
+      const id = `toast-${toastIdCounter++}`;
+      const durationInMs =
+        options.closable === false
+          ? 0
+          : options.duration
+            ? options.duration * 1000
+            : 5000;
 
-    setToasts((prev) => [...prev, toastItem]);
-    return toastItem.id;
-  }, []);
+      const sanitizedMessage = DOMPurify.sanitize(options.message, {
+        ALLOWED_TAGS: ["a", "em", "strong", "i", "b", "u"],
+      });
 
-  const remove = useCallback((id: string) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  }, []);
-
-  const removeAll = useCallback(() => {
-    setToasts([]);
-  }, []);
-
-  const updateToastInState = useCallback(
-    (id: string, updates: Partial<Omit<ToastProps, "id">>) => {
-      setToasts((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, ...updates, open: true } : t))
-      );
+      return toastManager.add<ToastDataInternal>({
+        id: options?.id || id,
+        timeout: durationInMs,
+        description: (
+          <span dangerouslySetInnerHTML={{ __html: sanitizedMessage }} />
+        ),
+        type: options.type || "info",
+        actionProps: {
+          children: options.action?.label,
+          onClick: options.action?.onClick,
+        },
+        data: {
+          icon: options.icon,
+          closable: options.closable,
+        },
+      });
     },
-    []
+    [toastManager]
+  );
+
+  const remove = useCallback(
+    (id: string) => {
+      toastManager.close(id);
+    },
+    [toastManager]
   );
 
   const promise = useCallback(
@@ -60,52 +76,48 @@ const ToastsProvider: React.FC<ToastsProviderProps> = ({ children }) => {
       promiseToResolve: Promise<TData>,
       options: ToastPromiseOptions<TData, TError>
     ): Promise<TData> => {
-      const loadingDurationInSeconds = options.duration ?? 0;
-      const toastId = create({
-        message: options.loading,
-        type: "info",
-        icon: <LoadingIndicator className="text-ink-white size-4" />,
-        duration: loadingDurationInSeconds,
-        closable: false,
-      });
-
-      try {
-        const data = await promiseToResolve;
-        const successMessage =
-          typeof options.success === "function"
-            ? options.success(data)
-            : options.success;
-        const successToastDurationInSeconds =
-          options.successDuration ?? options.duration ?? 5;
-
-        updateToastInState(toastId, {
-          message: successMessage,
+      return toastManager.promise<TData, ToastDataInternal>(promiseToResolve, {
+        loading: {
+          description: options.loading,
+          type: "info",
+          timeout: 0,
+          data: {
+            icon: <LoadingIndicator className="text-ink-white size-4" />,
+            closable: false,
+          },
+        },
+        success: (data) => ({
+          description:
+            typeof options.success === "function"
+              ? options.success(data)
+              : options.success,
           type: "success",
-          duration: successToastDurationInSeconds * 1000,
-          icon: undefined,
-          closable: true,
-        });
-        return data;
-      } catch (error) {
-        const errorMessage =
-          typeof options.error === "function"
-            ? options.error(error as TError)
-            : options.error;
-        const errorToastDurationInSeconds =
-          options.errorDuration ?? options.duration ?? 5;
-
-        updateToastInState(toastId, {
-          message: errorMessage,
+          timeout: (options.successDuration ?? options.duration ?? 5) * 1000,
+          data: {
+            icon: undefined,
+          },
+        }),
+        error: (error) => ({
+          description:
+            typeof options.error === "function"
+              ? options.error(error as TError)
+              : options.error,
           type: "error",
-          duration: errorToastDurationInSeconds * 1000,
-          icon: undefined,
-          closable: true,
-        });
-        throw error;
-      }
+          timeout: (options.errorDuration ?? options.duration ?? 5) * 1000,
+          data: {
+            icon: undefined,
+          },
+        }),
+      });
     },
-    [create, updateToastInState]
+    [toastManager]
   );
+
+  const removeAll = useCallback(() => {
+    toastManager.toasts.forEach((toast: ToastObject<ToastDataInternal>) =>
+      toastManager.close(toast.id)
+    );
+  }, [toastManager]);
 
   const success = useCallback(
     (message: string, options: Omit<ToastOptions, "message" | "type"> = {}) =>
@@ -128,7 +140,7 @@ const ToastsProvider: React.FC<ToastsProviderProps> = ({ children }) => {
     [create]
   );
 
-  const api = useMemo(
+  const api: ToastAPI = useMemo(
     () => ({
       create,
       remove,
@@ -141,23 +153,18 @@ const ToastsProvider: React.FC<ToastsProviderProps> = ({ children }) => {
     }),
     [create, remove, removeAll, promise, success, error, warning, info]
   );
+
   return (
-    <ToastProvider swipeDirection="down">
-      <ToastContext.Provider value={api}>
-        {children}
-        {toasts.map((t) => (
-          <ToastComponent
-            {...t}
-            onOpenChange={(isOpen) => {
-              if (!isOpen) {
-                remove(t.id);
-              }
-            }}
-          />
-        ))}
-        <ToastViewport className="fixed bottom-0 items-end right-0 flex flex-col p-5 gap-[10px] w-auto max-w-full z-[2147483647] outline-none pointer-events-none" />
-      </ToastContext.Provider>
-    </ToastProvider>
+    <ToastContext.Provider value={api}>
+      {children}
+      <Toast.Portal>
+        <Toast.Viewport className="fixed bottom-0 items-end right-0 flex flex-col p-5 gap-[10px] w-auto max-w-full z-[2147483647] outline-none pointer-events-none">
+          {toastManager.toasts.map((toast: ToastObject<ToastDataInternal>) => (
+            <ToastComponent toast={toast} key={toast.id} />
+          ))}
+        </Toast.Viewport>
+      </Toast.Portal>
+    </ToastContext.Provider>
   );
 };
 

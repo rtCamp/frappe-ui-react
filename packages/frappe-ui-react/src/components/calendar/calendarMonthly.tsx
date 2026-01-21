@@ -106,7 +106,9 @@ export const CalendarMonthly = () => {
                     ? "text-ink-gray-7"
                     : "text-ink-gray-3"
                 )}
-                onDoubleClick={(e) => handleCellDblClick(e, date.toLocaleDateString("en-CA"))}
+                onDoubleClick={(e) =>
+                  handleCellDblClick(e, date.toLocaleDateString("en-CA"))
+                }
               >
                 <span
                   className={clsx(

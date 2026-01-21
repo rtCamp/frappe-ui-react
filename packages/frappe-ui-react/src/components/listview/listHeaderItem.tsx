@@ -4,7 +4,7 @@ import React, {
   useMemo,
   useState,
   useCallback,
-  ReactNode,
+  type ReactNode,
 } from "react";
 
 import { ListContext } from "./listContext";

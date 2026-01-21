@@ -3,8 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import Dialog from "./dialog";
 import { Button } from "../button";
 import { Dropdown } from "../dropdown";
-import { Autocomplete, AutocompleteOption } from "../autoComplete";
-import { DialogOptions } from "./types";
+import { Autocomplete, type AutocompleteOption } from "../autoComplete";
+import type { DialogOptions } from "./types";
 
 const meta: Meta<typeof Dialog> = {
   title: "Components/Dialog",
@@ -286,8 +286,8 @@ export const WithInteractiveComponents: Story = {
                 setAutocompleteValue(_value as AutocompleteOption)
               }
             />
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-700">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
                 Select an option:
               </label>
               <Dropdown options={dropdownOptions} placement="left">

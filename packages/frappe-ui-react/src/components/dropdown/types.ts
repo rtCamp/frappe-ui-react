@@ -1,6 +1,6 @@
 import type { ReactNode, ComponentType } from "react";
-import { ButtonProps } from "@headlessui/react";
-import { ButtonTheme } from "../button";
+import type { ButtonProps } from "@headlessui/react";
+import type { ButtonTheme } from "../button";
 
 export interface DropdownOption {
   label: string;

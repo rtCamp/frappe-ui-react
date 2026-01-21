@@ -22,7 +22,7 @@ export interface CalendarConfig {
   isEditMode: boolean;
   eventIcons: Record<string, ReactNode>;
   redundantCellHeight: number;
-  timeFormat: '12h' | '24h';
+  timeFormat: "12h" | "24h";
   hourHeight: number;
   enableShortcuts: boolean;
   showIcon: boolean;

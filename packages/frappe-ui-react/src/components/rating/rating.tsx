@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { RatingProps } from "./types";
+import type { RatingProps } from "./types";
 import FeatherIcon from "../featherIcon";
 
 const defaultProps = {
@@ -35,7 +35,9 @@ const Rating: React.FC<RatingProps> = ({
       size === "xl" ? "size-7" : "",
       index <= hoveredRating && index > rating ? "!fill-yellow-200" : "",
       index <= rating ? "!fill-yellow-500" : "",
-      index > rating && index > hoveredRating ? "fill-gray-300 dark:fill-gray-900" : "",
+      index > rating && index > hoveredRating
+        ? "fill-gray-300 dark:fill-gray-900"
+        : "",
       !readonly ? "cursor-pointer" : "",
       "text-transparent",
       "mr-0.5",

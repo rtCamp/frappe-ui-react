@@ -1,19 +1,12 @@
 {
+  "extends": "../../tsconfig.app.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "lib": ["DOM", "ESNext"],
-    "jsx": "react-jsx",
-    "declaration": true,
-    "sourceMap": true,
-    "strict": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "dist",
-    "declarationDir": "dist-types"
+    "typeRoots": ["./typings", "./node_modules/@types"],
+    "noUncheckedSideEffectImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@rtcamp/*": ["packages/frappe-ui-react/src/*"]
+    }
   },
   "include": ["src"],
   "exclude": [

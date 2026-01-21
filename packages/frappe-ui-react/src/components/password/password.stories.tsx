@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import Password from "./password"; // Assuming your component is in Password.tsx
-import { PasswordProps } from "./types"; // Assuming your types are in types/password.ts
+import type { PasswordProps } from "./types"; // Assuming your types are in types/password.ts
 
 export default {
   title: "Components/Password",
@@ -29,9 +29,9 @@ const Template: StoryObj<PasswordProps> = {
   render: (args) => {
     const [value, setValue] = useState(args.value || "");
 
-		useEffect(() => {
-			setValue(args.value || "");
-		}, [args.value]);
+    useEffect(() => {
+      setValue(args.value || "");
+    }, [args.value]);
 
     return (
       <div className="p-4 w-[300px]">

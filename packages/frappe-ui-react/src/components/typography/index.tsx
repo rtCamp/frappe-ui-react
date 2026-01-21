@@ -1,4 +1,4 @@
-import React, { ElementType, HTMLAttributes } from "react";
+import React, { type ElementType, type HTMLAttributes } from "react";
 
 type Variant =
   | "h1"

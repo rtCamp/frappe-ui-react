@@ -67,8 +67,8 @@ export const Combobox: React.FC<ComboboxProps> = ({
         typeof opt === "string"
           ? opt.toLowerCase().includes(query.toLowerCase())
           : "group" in opt
-          ? opt.options.length > 0
-          : opt.label.toLowerCase().includes(query.toLowerCase())
+            ? opt.options.length > 0
+            : opt.label.toLowerCase().includes(query.toLowerCase())
       );
   }, [options, query, selectedOption]);
 

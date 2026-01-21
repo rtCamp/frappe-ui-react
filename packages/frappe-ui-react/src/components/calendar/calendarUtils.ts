@@ -82,14 +82,17 @@ export function groupBy<T>(
   fn: (item: T) => string
 ): { [key: string]: T[] } {
   if (typeof fn !== "function") throw new Error(`${fn} should be a function`);
-  return obj.reduce((acc, item) => {
-    const group = fn(item);
-    if (!acc[group]) {
-      acc[group] = [];
-    }
-    acc[group].push(item);
-    return acc;
-  }, {} as { [key: string]: T[] });
+  return obj.reduce(
+    (acc, item) => {
+      const group = fn(item);
+      if (!acc[group]) {
+        acc[group] = [];
+      }
+      acc[group].push(item);
+      return acc;
+    },
+    {} as { [key: string]: T[] }
+  );
 }
 
 export function calculateMinutes(time: string): number {
@@ -361,12 +364,14 @@ export function sortMonthlyEvents(events: CalendarEvent[]) {
     .filter((event) => !event.isFullDay)
     .sort((a, b) =>
       a.from_time !== b.from_time
-        ? calculateMinutes(a.from_time || '00:00') > calculateMinutes(b.from_time || '00:00')
+        ? calculateMinutes(a.from_time || "00:00") >
+          calculateMinutes(b.from_time || "00:00")
           ? 1
           : -1
-        : calculateMinutes(a.to_time || '00:00') > calculateMinutes(b.to_time || '00:00')
-        ? 1
-        : -1
+        : calculateMinutes(a.to_time || "00:00") >
+            calculateMinutes(b.to_time || "00:00")
+          ? 1
+          : -1
     );
 
   return [...fullDayEvents, ...timedEvents];

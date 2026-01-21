@@ -5,7 +5,7 @@ import {
   Label,
   Description,
 } from "@headlessui/react";
-import { SwitchProps } from "./types";
+import type { SwitchProps } from "./types";
 import FeatherIcon, { type FeatherIconProps } from "../featherIcon";
 
 enum SwitchVariant {
@@ -55,8 +55,8 @@ const Switch: React.FC<SwitchProps> = ({
         ? "translate-x-3 rtl:-translate-x-3"
         : "translate-x-0"
       : value
-      ? "translate-x-2.5 rtl:-translate-x-2.5"
-      : "translate-x-0",
+        ? "translate-x-2.5 rtl:-translate-x-2.5"
+        : "translate-x-0",
   ].join(" ");
 
   const switchLabelClasses = [

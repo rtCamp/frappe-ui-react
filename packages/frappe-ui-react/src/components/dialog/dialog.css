@@ -1,4 +1,4 @@
-@keyframes dialog-overlay-in {
+@keyframes dialog-backdrop-in {
   from {
     opacity: 0;
   }
@@ -7,7 +7,7 @@
   }
 }
 
-@keyframes dialog-overlay-out {
+@keyframes dialog-backdrop-out {
   from {
     opacity: 1;
   }
@@ -38,18 +38,18 @@
   }
 }
 
-.dialog-overlay[data-state='open'] {
-  animation: dialog-overlay-in 100ms ease-out;
+.dialog-backdrop[data-open] {
+  animation: dialog-backdrop-in 100ms ease-out;
 }
 
-.dialog-overlay[data-state='closed'] {
-  animation: dialog-overlay-out 150ms ease-in;
+.dialog-backdrop[data-closed] {
+  animation: dialog-backdrop-out 150ms ease-in;
 }
 
-.dialog-content[data-state='open'] {
+.dialog-content[data-open] {
   animation: dialog-content-in 100ms ease-out;
 }
 
-.dialog-content[data-state='closed'] {
+.dialog-content[data-closed] {
   animation: dialog-content-out 150ms ease-in;
 }

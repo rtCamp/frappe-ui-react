@@ -15,3 +15,8 @@ indent_size = 2
 # Markdown files
 [*.md]
 trim_trailing_whitespace = false
+
+# Style files
+[*.css]
+indent_size = 4
+ 

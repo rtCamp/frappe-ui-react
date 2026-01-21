@@ -40,11 +40,7 @@ export const CardDescription = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={`text-sm text-slate-500 ${className}`}
-    {...props}
-  />
+  <div ref={ref} className={`text-sm text-slate-500 ${className}`} {...props} />
 ));
 CardDescription.displayName = "CardDescription";
 

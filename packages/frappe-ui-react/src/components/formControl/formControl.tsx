@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { FormControlProps } from "./types";
+import type { FormControlProps } from "./types";
 import { Autocomplete } from "../autoComplete";
 import { Checkbox } from "../checkbox";
 import { TextInput } from "../textInput";
@@ -7,7 +7,7 @@ import type { SizeTypes } from "../../common/types";
 import FormLabel from "../formLabel";
 import Textarea from "../textarea/textarea";
 import { Select, type SelectOption } from "../select";
-import { AutocompleteOption } from "../autoComplete";
+import type { AutocompleteOption } from "../autoComplete";
 
 const FormControl: React.FC<FormControlProps> = ({
   label,

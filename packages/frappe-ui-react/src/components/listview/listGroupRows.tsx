@@ -1,4 +1,4 @@
-import React, { useContext, ReactNode } from "react";
+import React, { useContext, type ReactNode } from "react";
 
 import { ListContext } from "./listContext";
 import ListRow from "./listRow";

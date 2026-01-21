@@ -1,4 +1,4 @@
-import React, { useMemo, ReactNode } from "react";
+import React, { useMemo, type ReactNode } from "react";
 import { LucideOption } from "lucide-react";
 
 import FeatherIcon from "./featherIcon";

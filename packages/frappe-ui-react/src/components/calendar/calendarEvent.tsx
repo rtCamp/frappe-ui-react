@@ -120,7 +120,7 @@ export const CalendarEvent = ({
         </p>
         {!event.isFullDay && (
           <p className="text-ellipsis text-xs font-normal">
-            {  eventTime?.from_time &&
+            {eventTime?.from_time &&
               eventTime?.to_time &&
               formattedDuration(
                 eventTime.from_time,

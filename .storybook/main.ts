@@ -32,6 +32,7 @@ const config: StorybookConfig = {
             __dirname,
             "../packages/frappe-ui-react/src"
           ),
+          Quill: require.resolve("quill"),
         },
       },
     };
@@ -40,7 +41,8 @@ const config: StorybookConfig = {
     check: true,
     skipCompiler: true,
     reactDocgenTypescriptOptions: {
-      propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
+      propFilter: (prop) =>
+        prop.parent ? !/node_modules/.test(prop.parent.fileName) : true,
     },
   },
 };

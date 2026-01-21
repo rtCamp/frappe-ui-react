@@ -1,5 +1,4 @@
 import { InputHTMLAttributes, ReactNode } from "react";
-
 export type TextInputSize = "sm" | "md" | "lg" | "xl";
 export type TextInputVariant = "subtle" | "outline";
 export type TextInputState = "success" | "warning" | "error";
