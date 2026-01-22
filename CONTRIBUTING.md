@@ -75,7 +75,7 @@ git pull upstream main
 
 ```bash
 pnpm install
-pnpm run storybook
+pnpm storybook
 ```
 
 5. Create a new topic branch:
@@ -115,9 +115,9 @@ Make sure the following is true:
 We will only merge a PR when all tests pass.
 The following statements must be true:
 
-- The code is formatted. If the code was changed, run `pnpm run lint:js:fix`.
-- The code is linted. If the code was changed, run `pnpm run lint:js`.
-- The code is type-safe. If TypeScript sources or declarations were changed, run `pnpm run lint:types` to confirm that the check passes.
+- The code is formatted. If the code was changed, run `pnpm lint:js:fix`.
+- The code is linted. If the code was changed, run `pnpm lint:js`.
+- The code is type-safe. If TypeScript sources or declarations were changed, run `pnpm lint:types` to confirm that the check passes.
 - The pull request title follows the pattern `[Component/Area] Imperative commit message`. (See: [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/) for a great explanation).
 
 Don't worry if you miss a step—the Continuous Integration will run a thorough set of tests on your commits, and the maintainers of the project can assist you if you run into problems.
@@ -151,9 +151,9 @@ This ensures the package can be built successfully for distribution.
 Please follow the coding style of the project.
 It uses Prettier and ESLint, so if possible, enable linting in your editor to get real-time feedback.
 
-- `pnpm run lint:js:fix` reformats the code and fixes linting issues.
-- `pnpm run lint:js` runs the linting rules.
-- `pnpm run lint:types` checks TypeScript types.
+- `pnpm lint:js:fix` reformats the code and fixes linting issues.
+- `pnpm lint:js` runs the linting rules.
+- `pnpm lint:types` checks TypeScript types.
 
 When you submit a PR, these checks are run again by our continuous integration tools, but hopefully your code is already clean!
 
@@ -219,7 +219,7 @@ export const Default: Story = {
 Run Storybook locally to ensure your new story appears and works correctly:
 
 ```bash
-pnpm run storybook
+pnpm storybook
 ```
 
 #### 4. Submit your PR
