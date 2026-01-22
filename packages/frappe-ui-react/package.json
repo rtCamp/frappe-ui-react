@@ -17,8 +17,7 @@
     "dist/",
     "dist-types/",
     "package.json",
-    "README.md",
-    "tsconfig.json"
+    "README.md"
   ],
   "license": "MIT",
   "private": false,
