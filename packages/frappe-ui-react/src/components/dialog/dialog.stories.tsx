@@ -3,8 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import Dialog from "./dialog";
 import { Button } from "../button";
 import { Dropdown } from "../dropdown";
-import { Autocomplete, AutocompleteOption } from "../autoComplete";
-import { DialogOptions } from "./types";
+import { Autocomplete, type AutocompleteOption } from "../autoComplete";
+import type { DialogOptions } from "./types";
 
 const meta: Meta<typeof Dialog> = {
   title: "Components/Dialog",

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Meta, StoryObj } from "@storybook/react-vite";
-import { TextInputProps } from "./types";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { TextInputProps } from "./types";
 import TextInput from "./textInput";
 import { Avatar } from "../avatar";
 import FeatherIcon from "../featherIcon";
