@@ -5,6 +5,11 @@
   "module": "dist/index.js",
   "types": "dist-types/index.d.ts",
   "description": "Package for Frappe UI Components created in react.",
+  "engines": {
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": ">= 10.0.0"
+  },
   "author": {
     "name": "rtCamp"
   },

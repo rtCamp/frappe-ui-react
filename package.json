@@ -3,6 +3,11 @@
   "private": true,
   "version": "1.0.4",
   "type": "module",
+  "engines": {
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": ">= 10.0.0"
+  },
   "scripts": {
     "prepare": "husky",
     "dev": "vite",
@@ -84,5 +89,5 @@
   "dependencies": {
     "react-docgen-typescript": "^2.4.0"
   },
-  "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad"
+  "packageManager": "pnpm@10.13.1"
 }
