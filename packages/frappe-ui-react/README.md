@@ -11,10 +11,15 @@ You can set up `frappe-ui-react` in your existing Frappe app with the following 
 
 ### Step 1: Installation
 
-Install the package using npm.
+Install the package.
 
 ```bash
 npm install @rtcamp/frappe-ui-react
+```
+or 
+
+```bash
+pnpm install @rtcamp/frappe-ui-react
 ```
 
 ### Step 2: Configuration
