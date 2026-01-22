@@ -36,11 +36,11 @@
     "./tailwind/preset": "./dist/utils/tailwind.config.cjs"
   },
   "scripts": {
-    "build": "tsc -b && npm run copy-assets",
+    "build": "tsc -b && pnpm copy-assets",
     "copy-assets": "node scripts/copy-assets.js",
-    "publish:local": "npm publish --registry http://localhost:4873",
-    "unpublish:local": "npm unpublish --registry http://localhost:4873 --force",
-    "publish:remote": "npm publish"
+    "publish:local": "pnpm publish --registry http://localhost:4873",
+    "unpublish:local": "pnpm unpublish --registry http://localhost:4873 --force",
+    "publish:remote": "pnpm publish"
   },
   "dependencies": {
     "@base-ui/react": "^1.0.0",
