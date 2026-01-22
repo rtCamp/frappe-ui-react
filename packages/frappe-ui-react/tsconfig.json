@@ -1,6 +1,10 @@
 {
   "extends": "../../tsconfig.app.json",
   "compilerOptions": {
+    "noEmit": false,
+    "outDir": "dist",
+    "declaration": true,
+    "declarationDir": "dist-types",
     "typeRoots": ["./typings", "./node_modules/@types"],
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
@@ -8,11 +12,13 @@
       "@rtcamp/*": ["packages/frappe-ui-react/src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "src/utils/tailwindExtend.json"],
   "exclude": [
     "**/node_modules",
     "dist",
     "**/*.test.ts",
+    "**/*.test.ts",
+    "**/*.stories.ts",
     "**/*.stories.tsx",
     "**/tests/**/*.ts",
     "**/tests/**/*.tsx"
