@@ -16,7 +16,7 @@ curdir=$(dirname "$(realpath $0)")
 
 (cd && nohup npx verdaccio --config "$curdir/verdaccio-config.yml" &>$tmp_registry_log &)
 
-npm i --global verdaccio-memory
+pnpm i --global verdaccio-memory
 
 # Wait for Verdaccio to boot.
 grep -q 'http address' <(tail -f $tmp_registry_log)
