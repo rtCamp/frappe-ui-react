@@ -52,7 +52,7 @@
     "echarts": "^6.0.0",
     "feather-icons": "^4.29.2",
     "lodash": "^4.17.21",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "^4.17.23",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lucide-react": "^0.539.0",
