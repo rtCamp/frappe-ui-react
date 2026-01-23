@@ -1,14 +1,15 @@
-import React, { useMemo, useRef, useCallback, forwardRef } from "react";
-
+import React, { useMemo, useRef, useCallback, forwardRef, useId } from "react";
+import { clsx } from "clsx";
 import { debounce } from "../../utils/debounce";
-import type { TextareaProps } from "./types";
+import type { TextareaProps, TextareaSize } from "./types";
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   (
     {
-      label,
-      size = "sm",
+      size = "md",
       variant = "subtle",
+      state,
+      loading = false,
       disabled = false,
       value,
       onChange,
@@ -16,10 +17,16 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       rows = 3,
       htmlId,
       placeholder,
+      required,
+      className,
+      style,
+      ...rest
     },
     ref
   ) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const generatedId = useId();
+    const id = htmlId || generatedId;
 
     const setRefs = useCallback(
       (node: HTMLTextAreaElement) => {
@@ -27,59 +34,85 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         if (typeof ref === "function") {
           ref(node);
         } else if (ref) {
-          (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current =
-            node;
+          (ref as { current: HTMLTextAreaElement | null }).current = node;
         }
       },
       [ref]
     );
 
-    const inputClasses = useMemo(() => {
-      const sizeClasses = {
-        sm: "text-base rounded",
-        md: "text-base rounded",
-        lg: "text-lg rounded-md",
-        xl: "text-xl rounded-md",
-      }[size];
+    const isDisabled = disabled || loading;
+    const stateKey = state ?? "default";
 
-      const paddingClasses = {
-        sm: "py-1.5 px-2",
-        md: "py-1.5 px-2.5",
-        lg: "py-1.5 px-3",
-        xl: "py-1.5 px-3",
-      }[size];
+    const sizeClasses = {
+      sm: "text-sm rounded p-2",
+      md: "text-base rounded p-2.5",
+      lg: "text-lg rounded-md p-3",
+    }[size as TextareaSize];
 
-      const currentVariant = disabled ? "disabled" : variant;
-      const variantClasses = {
-        subtle:
-          "border border-surface-gray-2 bg-surface-gray-2 placeholder-ink-gray-4 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-        outline:
-          "border border-outline-gray-2 bg-surface-white placeholder-ink-gray-4 hover:border-outline-gray-3 hover:shadow-sm focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-        disabled: `border bg-surface-gray-1 placeholder-ink-gray-3 ${
-          variant === "outline" ? "border-outline-gray-2" : "border-transparent"
-        }`,
-      }[currentVariant];
+    const subtleClasses = {
+      default:
+        "bg-surface-gray-2 border border-surface-gray-2 hover:bg-surface-gray-3 focus:bg-surface-white focus:ring-2 focus:ring-outline-gray-3",
+      error:
+        "bg-surface-red-1 border border-surface-red-1 hover:bg-surface-red-2 focus:ring-2 focus:ring-outline-red-2",
+      success:
+        "bg-surface-green-2 border border-surface-green-2 hover:bg-surface-green-1 focus:ring-2 focus:ring-outline-green-2",
+      warning:
+        "bg-surface-amber-1 border border-surface-amber-1 hover:bg-surface-amber-2 focus:ring-2 focus:ring-outline-amber-2",
+    };
 
-      const textColor = disabled ? "text-ink-gray-5" : "text-ink-gray-8";
+    const outlineClasses = {
+      default:
+        "bg-surface-white border border-outline-gray-2 hover:border-outline-gray-3 focus:ring-2 focus:ring-outline-gray-3",
+      error:
+        "bg-surface-white border border-outline-red-2 hover:border-outline-red-3 focus:ring-2 focus:ring-outline-red-2",
+      success:
+        "bg-surface-white border border-outline-green-2 hover:border-outline-green-3 focus:ring-2 focus:ring-outline-green-2",
+      warning:
+        "bg-surface-white border border-outline-amber-2 hover:border-outline-amber-3 focus:ring-2 focus:ring-outline-amber-2",
+    };
 
-      return `resize-y transition-colors w-full block outline-none ${sizeClasses} ${paddingClasses} ${variantClasses} ${textColor}`;
-    }, [size, disabled, variant]);
+    const ghostClasses = {
+      default:
+        "hover:bg-surface-gray-3 focus:ring-2 focus:ring-outline-gray-3",
+      error:
+        "hover:bg-surface-red-2 focus:ring-2 focus:ring-outline-red-2",
+      success:
+        "hover:bg-surface-green-1 focus:ring-2 focus:ring-outline-green-2",
+      warning:
+        "hover:bg-surface-amber-2 focus:ring-2 focus:ring-outline-amber-2",
+    };
 
-    const labelClasses = useMemo(() => {
-      const sizeClasses = {
-        sm: "text-xs",
-        md: "text-base",
-        lg: "text-lg",
-        xl: "text-xl",
-      }[size];
-      return `block ${sizeClasses} text-ink-gray-5`;
-    }, [size]);
+    const underlineClasses = {
+      default:
+        "bg-transparent border-b border-outline-gray-2 rounded-none px-0 hover:border-outline-gray-3 focus:ring-0 focus:border-outline-gray-3",
+      error:
+        "bg-transparent border-b border-outline-red-2 rounded-none px-0 hover:border-outline-red-3 focus:ring-0 focus:border-outline-red-3",
+      success:
+        "bg-transparent border-b border-outline-green-2 rounded-none px-0 hover:border-outline-green-3 focus:ring-0 focus:border-outline-green-3",
+      warning:
+        "bg-transparent border-b border-outline-amber-2 rounded-none px-0 hover:border-outline-amber-3 focus:ring-0 focus:border-outline-amber-3",
+    };
+
+    const disabledClass =
+      "bg-surface-gray-2 border border-outline-gray-2 text-ink-gray-4 cursor-not-allowed resize-none";
+
+    const variantMap = {
+      subtle: subtleClasses,
+      outline: outlineClasses,
+      ghost: ghostClasses,
+      underline: underlineClasses,
+    };
+
+    const currentVariantClasses = isDisabled
+      ? disabledClass
+      : variantMap[variant][stateKey];
 
     const emitChange = useCallback(
-      (value: string) => {
+      (val: string) => {
         if (onChange) {
           const syntheticEvent = {
-            target: { value },
+            target: { value: val },
+            currentTarget: { value: val },
           } as React.ChangeEvent<HTMLTextAreaElement>;
           onChange(syntheticEvent);
         }
@@ -89,39 +122,42 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     const debouncedEmitChange = useMemo(() => {
       if (debounceTime) {
-        return debounce((value: string) => emitChange(value), debounceTime);
+        return debounce((val: string) => emitChange(val), debounceTime);
       }
       return emitChange;
     }, [debounceTime, emitChange]);
 
-    const handleChange = useCallback(
-      (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      if (debounceTime) {
         debouncedEmitChange(e.target.value);
-      },
-      [debouncedEmitChange]
-    );
+      } else {
+        onChange?.(e);
+      }
+    };
 
     return (
-      <div className="space-y-1.5">
-        {label && (
-          <label className={labelClasses} htmlFor={htmlId}>
-            {label}
-          </label>
-        )}
+      <div className={clsx("w-full", className)} style={style}>
         <textarea
           ref={setRefs}
+          id={id}
           rows={rows}
-          placeholder={placeholder}
-          className={inputClasses}
-          disabled={disabled}
-          id={htmlId}
+          disabled={isDisabled}
+          required={required}
           value={value}
           onChange={handleChange}
-          data-testid="textarea"
+          placeholder={placeholder}
+          className={clsx(
+            "w-full block outline-none appearance-none transition-colors resize-none placeholder:text-ink-gray-5 relative z-0",
+            sizeClasses,
+            currentVariantClasses,
+            !isDisabled && "text-ink-gray-8"
+          )}
+          {...rest}
         />
       </div>
     );
   }
 );
 
+Textarea.displayName = "Textarea";
 export default Textarea;

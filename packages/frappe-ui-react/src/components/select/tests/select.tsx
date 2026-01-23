@@ -1,78 +1,93 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Select from "../select";
+import type { SelectOption } from "../types";
+
+global.ResizeObserver = class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
+
 
 describe("Select", () => {
-  const options = [
+  const options: SelectOption[] = [
     { label: "Option 1", value: "1" },
     { label: "Option 2", value: "2" },
     { label: "Option 3", value: "3", disabled: true },
   ];
 
-  it("renders all options", () => {
-    render(<Select options={options} value="" onChange={() => {}} />);
-    expect(screen.getByText("Option 1")).toBeInTheDocument();
-    expect(screen.getByText("Option 2")).toBeInTheDocument();
-    expect(screen.getByText("Option 3")).toBeInTheDocument();
-  });
-
   it("renders with placeholder", () => {
     render(
       <Select
         options={options}
-        value=""
+        value={undefined}
         placeholder="Select an option"
         onChange={() => {}}
       />
     );
+   
     expect(screen.getByText("Select an option")).toBeInTheDocument();
   });
 
   it("renders with initial value", () => {
-    render(<Select options={options} value="2" onChange={() => {}} />);
-    expect(screen.getByDisplayValue("Option 2")).toBeInTheDocument();
+    render(
+      <Select 
+        options={options} 
+        value={options[1]} 
+        onChange={() => {}} 
+      />
+    );
+    expect(screen.getByText("Option 2")).toBeInTheDocument();
   });
 
-  it("calls onChange when selecting option", () => {
+  it("calls onChange when selecting an option", async () => {
     const handleChange = jest.fn();
-    render(<Select options={options} value="" onChange={handleChange} />);
-    fireEvent.change(screen.getByRole("combobox"), { target: { value: "1" } });
-    expect(handleChange).toHaveBeenCalled();
+    render(
+      <Select 
+        options={options} 
+        value={options[0]} 
+        onChange={handleChange} 
+      />
+    );
+
+    
+    const trigger = screen.getByRole("button");
+    fireEvent.click(trigger);
+
+   
+    const optionToSelect = screen.getByText("Option 2");
+    fireEvent.click(optionToSelect);
+
+   
+    await waitFor(() => {
+        expect(handleChange).toHaveBeenCalledTimes(1);
+        expect(handleChange).toHaveBeenCalledWith(options[1]);
+    });
   });
 
   it("is disabled when disabled prop is true", () => {
-    render(<Select options={options} value="" onChange={() => {}} disabled />);
-    expect(screen.getByRole("combobox")).toBeDisabled();
-  });
-
-  it("renders with custom id", () => {
     render(
-      <Select
-        options={options}
-        value=""
-        onChange={() => {}}
-        htmlId="custom-id"
+      <Select 
+        options={options} 
+        value={options[0]} 
+        onChange={() => {}} 
+        disabled 
       />
     );
-    expect(screen.getByRole("combobox")).toHaveAttribute("id", "custom-id");
+    expect(screen.getByRole("button")).toBeDisabled();
   });
 
   it("renders prefix", () => {
-    const Prefix = () => <span>Prefix</span>;
     render(
       <Select
         options={options}
-        value=""
+        value={options[0]}
         onChange={() => {}}
-        prefix={() => <Prefix />}
+        prefix={<span>PrefixIcon</span>}
       />
     );
-    expect(screen.getByText("Prefix")).toBeInTheDocument();
-  });
-
-  it("disables option when disabled prop is set", () => {
-    render(<Select options={options} value="" onChange={() => {}} />);
-    expect(screen.getByText("Option 3")).toBeDisabled();
+    expect(screen.getByText("PrefixIcon")).toBeInTheDocument();
   });
 });

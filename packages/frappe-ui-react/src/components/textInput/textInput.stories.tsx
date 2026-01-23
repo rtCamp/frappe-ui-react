@@ -1,233 +1,132 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { TextInputProps } from "./types";
 import TextInput from "./textInput";
-import { Avatar } from "../avatar";
-import FeatherIcon from "../featherIcon";
+import type { TextInputProps } from "./types";
 
-export default {
+const meta: Meta<typeof TextInput> = {
   title: "Components/TextInput",
   component: TextInput,
-  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
+  parameters: {
+    docs: { source: { type: "dynamic" } },
+    layout: "centered",
+  },
   tags: ["autodocs"],
   argTypes: {
-    type: {
-      control: {
-        type: "select",
-        options: [
-          "text",
-          "number",
-          "email",
-          "date",
-          "datetime-local",
-          "password",
-          "search",
-          "tel",
-          "time",
-          "url",
-        ],
-      },
-      description: "Type of the text input",
-    },
-    size: {
-      control: { type: "select", options: ["sm", "md", "lg"] },
-      description: "Size of the text input",
-    },
-    variant: {
-      control: { type: "select", options: ["outline", "subtle"] },
-      description: "Visual variant of the text input",
-    },
-    disabled: {
-      control: "boolean",
-      description: "If true, disables the text input",
-    },
-    placeholder: {
-      control: "text",
-      description: "Placeholder text for the text input",
-    },
-    htmlId: {
-      control: "text",
-      description: "HTML id attribute for the text input",
-    },
-    value: {
-      control: "text",
-      description: "Current value of the text input",
-    },
-    debounce: {
-      control: "number",
-      description: "Debounce time in milliseconds for the onChange event",
-    },
-    required: {
-      control: "boolean",
-      description: "If true, marks the text input as required",
-    },
-    onChange: {
-      action: "changed",
-      description: "Callback function when the input value changes",
-    },
-    prefix: {
-      control: false,
-      description: "Function to render a prefix element inside the input",
-    },
-    suffix: {
-      control: false,
-      description: "Function to render a suffix element inside the input",
-    },
-    className: {
-      control: "text",
-      description: "Custom CSS classes for the text input",
-    },
-    style: {
-      control: "object",
-      description: "Inline styles for the text input",
-    },
+  type: {
+    options: [
+      "text",
+      "number",
+      "email",
+      "date",
+      "datetime-local",
+      "password",
+      "search",
+      "tel",
+      "time",
+      "url",
+    ],
+    control: { type: "select" },
+    description: "HTML input type",
   },
-} as Meta<typeof TextInput>;
+  size: {
+    options: ["sm", "md", "lg", "xl"],
+    control: { type: "select" },
+    description: "Size of the text input",
+  },
+  variant: {
+    options: ["subtle", "outline"],
+    control: { type: "select" },
+    description: "Visual variant of the input",
+  },
+  state: {
+    options: ["success", "warning", "error", null],
+    control: { type: "select" },
+    description: "Validation / feedback state",
+  },
+  disabled: {
+    control: "boolean",
+    description: "Disables the input",
+  },
+  loading: {
+    control: "boolean",
+    description: "Shows loading spinner and disables input",
+  },
+  placeholder: {
+    control: "text",
+    description: "Placeholder text",
+  },
+  value: {
+    control: "text",
+    description: "Controlled value of the input",
+  },
+  prefix: {
+    control: false,
+    description: "Prefix slot (icon or custom element)",
+  },
+  suffix: {
+    control: false,
+    description: "Suffix slot (icon or custom element)",
+  },
+  onChange: {
+    action: "changed",
+    description: "Triggered when input value changes",
+  },
+  htmlId: {
+  control: "text",
+  description: "HTML id attribute",
+  },
+  debounce: {
+    control: "number",
+    description: "Debounce delay in milliseconds",
+  },
+  required: {
+    control: "boolean",
+    description: "Marks the input as required",
+  },
+  className: {
+    control: "text",
+    description: "Custom CSS class",
+  },
+ },
+};
 
-const Template: StoryObj<TextInputProps> = {
+export default meta;
+type Story = StoryObj<TextInputProps>;
+
+const Template: Story = {
   render: (args) => {
-    const [value, setValue] = useState(args.value || "");
-
+    const [val, setVal] = useState(args.value || "");
     return (
-      <div className="p-4 w-[300px]">
+      <div className="w-72">
         <TextInput
           {...args}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={val}
+          onChange={(e) => {
+            setVal(e.target.value);
+            args.onChange?.(e);
+          }}
         />
       </div>
     );
   },
 };
 
-export const Text = {
-  ...Template,
-  args: {
-    type: "text",
-    placeholder: "Placeholder",
-    value: "",
-  },
-};
-
-export const Number = {
-  ...Template,
-  args: {
-    type: "number",
-    placeholder: "Placeholder",
-    value: "",
-  },
-};
-
-export const Email = {
+export const Subtle: Story = {
   ...Template,
   args: {
     type: "email",
-    placeholder: "Placeholder",
-    value: "",
+    placeholder: "user@example.com",
+    variant: "subtle",
+    size: "md",
   },
 };
 
-export const Date = {
+export const Outline: Story = {
   ...Template,
   args: {
-    type: "date",
-    placeholder: "Placeholder",
-    value: "",
-  },
-};
-export const DateTimeLocal = {
-  ...Template,
-  args: {
-    type: "datetime-local",
-    value: "",
-  },
-};
-
-export const Password = {
-  ...Template,
-  args: {
-    type: "password",
-    placeholder: "Placeholder",
-    value: "",
-  },
-};
-
-export const Search = {
-  ...Template,
-  args: {
-    type: "search",
-    placeholder: "Placeholder",
-    value: "",
-  },
-};
-
-export const Telephone = {
-  ...Template,
-  args: {
-    type: "tel",
-    placeholder: "Placeholder",
-    value: "",
-  },
-};
-
-export const Time = {
-  ...Template,
-  args: {
-    type: "time",
-    value: "",
-  },
-};
-
-export const Url = {
-  ...Template,
-  args: {
-    type: "url",
-    placeholder: "Placeholder",
-    value: "",
-  },
-};
-
-export const PrefixSlotIcon = {
-  ...Template,
-  args: {
-    type: "url",
-    placeholder: "Placeholder",
-    prefix: (size) => (
-      <FeatherIcon className={size === "sm" ? "w-4" : "w-5"} name="search" />
-    ),
-    value: "",
-  },
-};
-
-export const SuffixSlotIcon = {
-  ...Template,
-  args: {
-    type: "url",
-    placeholder: "Placeholder",
-    suffix: () => <FeatherIcon className="w-4" name="search" />,
-    value: "",
-  },
-};
-
-export const PrefixSlotAvatar = {
-  ...Template,
-  args: {
-    type: "url",
-    placeholder: "Placeholder",
-    prefix: (size) => (
-      <Avatar
-        shape="circle"
-        image="https://avatars.githubusercontent.com/u/499550?s=60&v=4"
-        size={size}
-      />
-    ),
-    value: "",
-  },
-};
-
-export const Default = {
-  ...Template,
-  args: {
-    value: "",
+    type: "email",
+    placeholder: "user@example.com",
+    variant: "outline",
+    size: "md",
   },
 };

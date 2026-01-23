@@ -2,29 +2,38 @@ import React, {
   useMemo,
   useRef,
   useCallback,
-  type InputHTMLAttributes,
   forwardRef,
+  useId,
 } from "react";
+import { clsx } from "clsx";
+import { Loader2 } from "lucide-react";
 import { debounce } from "../../utils/debounce";
-import type { TextInputProps } from "./types";
+import type { TextInputProps, TextInputSize } from "./types";
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   (
     {
       type = "text",
-      size = "sm",
+      size = "md",
       variant = "subtle",
+      state,
+      loading = false,
       disabled = false,
       value,
       onChange,
       debounce: debounceTime,
       prefix,
       suffix,
+      className,
+      htmlId,
+      required,
       ...rest
     },
     ref
   ) => {
     const inputRef = useRef<HTMLInputElement>(null);
+    const generatedId = useId();
+    const id = htmlId || generatedId;
 
     const setRefs = useCallback(
       (node: HTMLInputElement) => {
@@ -32,79 +41,94 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         if (typeof ref === "function") {
           ref(node);
         } else if (ref) {
-          ref.current = node;
+          (ref as { current: HTMLInputElement | null }).current = node;
         }
       },
       [ref]
     );
 
-    const textColor = disabled ? "text-ink-gray-5" : "text-ink-gray-8";
+    const isDisabled = disabled || loading;
+    const stateKey = state ?? "default";
 
-    const inputClasses = useMemo(() => {
-      const sizeClasses = {
-        sm: "text-base rounded h-7",
-        md: "text-base rounded h-8",
-        lg: "text-lg rounded-md h-10",
-        xl: "text-xl rounded-md h-10",
-      }[size];
+    const sizeClasses = {
+      sm: "text-sm h-7",
+      md: "text-base h-8",
+      lg: "text-lg h-10",
+      xl: "text-xl h-12",
+    }[size as TextInputSize];
 
-      const paddingClasses = {
-        sm: ["py-1.5", prefix ? "pl-9" : "pl-2", suffix ? "pr-8" : "pr-2"].join(
-          " "
-        ),
-        md: [
-          "py-1.5",
-          prefix ? "pl-10" : "pl-2.5",
-          suffix ? "pr-9" : "pr-2.5",
-        ].join(" "),
-        lg: [
-          "py-1.5",
-          prefix ? "pl-12" : "pl-3",
-          suffix ? "pr-10" : "pr-3",
-        ].join(" "),
-        xl: [
-          "py-1.5",
-          prefix ? "pl-13" : "pl-3",
-          suffix ? "pr-10" : "pr-3",
-        ].join(" "),
-      }[size];
+    const iconLeftPosClasses = {
+      sm: "left-2",
+      md: "left-2.5",
+      lg: "left-3",
+      xl: "left-3.5",
+    }[size as TextInputSize];
 
-      const currentVariant = disabled ? "disabled" : variant;
-      const variantClasses = {
-        subtle:
-          "border border-surface-gray-2 bg-surface-gray-2 placeholder-ink-gray-4 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-        outline:
-          "border border-outline-gray-2 bg-surface-white placeholder-ink-gray-4 hover:border-outline-gray-3 hover:shadow-sm focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-        disabled: `border ${
-          variant === "outline" ? "border-outline-gray-2" : "border-transparent"
-        } bg-surface-gray-1 placeholder-ink-gray-3`,
-        ghost: "border-0 focus:ring-0 focus-visible:ring-0",
-      }[currentVariant];
+    const iconRightPosClasses = {
+      sm: "right-2",
+      md: "right-2.5",
+      lg: "right-3",
+      xl: "right-3.5",
+    }[size as TextInputSize];
 
-      return [
-        sizeClasses,
-        paddingClasses,
-        variantClasses,
-        textColor,
-        "transition-colors w-full dark:[color-scheme:dark] outline-none",
-      ]
-        .filter(Boolean)
-        .join(" ");
-    }, [size, prefix, suffix, disabled, variant, textColor]);
+    const paddingClasses = clsx(
+      "py-1.5",
+      prefix
+        ? { sm: "pl-10", md: "pl-11", lg: "pl-12", xl: "pl-14" }[
+            size as TextInputSize
+          ]
+        : { sm: "pl-2", md: "pl-2.5", lg: "pl-3", xl: "pl-3.5" }[
+            size as TextInputSize
+          ],
+      suffix || loading
+        ? { sm: "pr-10", md: "pr-11", lg: "pr-12", xl: "pr-14" }[
+            size as TextInputSize
+          ]
+        : { sm: "pr-2", md: "pr-2.5", lg: "pr-3", xl: "pr-3.5" }[
+            size as TextInputSize
+          ]
+    );
 
-    const prefixClasses = useMemo(() => {
-      return { sm: "pl-2", md: "pl-2.5", lg: "pl-3", xl: "pl-3" }[size];
-    }, [size]);
+    const subtleClasses = {
+      default:
+        "bg-surface-gray-2 border border-surface-gray-2 hover:bg-surface-gray-3 focus:bg-surface-white focus:ring-2 focus:ring-outline-gray-3",
+      error:
+        "bg-surface-red-1 border border-surface-red-1 hover:bg-surface-red-2 focus:ring-2 focus:ring-outline-red-2",
+      success:
+        "bg-surface-green-2 border border-surface-green-2 hover:bg-surface-green-1 focus:ring-2 focus:ring-outline-green-2",
+      warning:
+        "bg-surface-amber-1 border border-surface-amber-1 hover:bg-surface-amber-2 focus:ring-2 focus:ring-outline-amber-2",
+    };
 
-    const suffixClasses = useMemo(() => {
-      return { sm: "pr-2", md: "pr-2.5", lg: "pr-3", xl: "pr-3" }[size];
-    }, [size]);
+    const outlineClasses = {
+      default:
+        "bg-surface-white border border-outline-gray-2 hover:border-outline-gray-3 focus:ring-2 focus:ring-outline-gray-3",
+      error:
+        "bg-surface-white border border-outline-red-2 hover:border-outline-red-3 focus:ring-2 focus:ring-outline-red-2",
+      success:
+        "bg-surface-white border border-outline-green-2 hover:border-outline-green-3 focus:ring-2 focus:ring-outline-green-2",
+      warning:
+        "bg-surface-white border border-outline-amber-2 hover:border-outline-amber-3 focus:ring-2 focus:ring-outline-amber-2",
+    };
+
+    const disabledClass =
+      "bg-surface-gray-2 border border-outline-gray-2 text-ink-gray-4 cursor-not-allowed";
+
+    const variantMap = {
+      subtle: subtleClasses,
+      outline: outlineClasses,
+    };
+
+    const currentVariantClasses = isDisabled
+      ? disabledClass
+      : variantMap[variant][stateKey];
 
     const emitChange = useCallback(
-      (value: string) => {
+      (val: string) => {
         if (onChange) {
           const syntheticEvent = {
-            target: { value },
+            target: { value: val },
+            currentTarget: { value: val },
           } as React.ChangeEvent<HTMLInputElement>;
           onChange(syntheticEvent);
         }
@@ -114,55 +138,70 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
 
     const debouncedEmitChange = useMemo(() => {
       if (debounceTime) {
-        return debounce((value: string) => emitChange(value), debounceTime);
+        return debounce((val: string) => emitChange(val), debounceTime);
       }
       return emitChange;
     }, [debounceTime, emitChange]);
 
-    const handleChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (debounceTime) {
         debouncedEmitChange(e.target.value);
-      },
-      [debouncedEmitChange]
-    );
-
-    const inputValue =
-      value ?? (rest as InputHTMLAttributes<HTMLInputElement>).value;
+      } else {
+        onChange?.(e);
+      }
+    };
 
     return (
-      <div
-        className={`relative flex items-center ${rest?.className || ""}`}
-        style={rest?.style}
-      >
-        {prefix && (
-          <div
-            className={`absolute inset-y-0 left-0 flex items-center ${textColor} ${prefixClasses}`}
-          >
-            {prefix?.(size)}
-          </div>
-        )}
-        <input
-          ref={setRefs}
-          type={type}
-          disabled={disabled}
-          id={rest.htmlId}
-          value={inputValue}
-          required={rest.required}
-          onChange={handleChange}
-          data-testid="text-input"
-          className={`appearance-none ${inputClasses}`}
-          {...rest}
-        />
-        {suffix && (
-          <div
-            className={`absolute inset-y-0 right-0 flex items-center ${textColor} ${suffixClasses}`}
-          >
-            {suffix && suffix()}
-          </div>
-        )}
+      <div className={clsx("w-full", className)}>
+        <div className="relative flex items-center">
+          {prefix && (
+            <div
+              className={clsx(
+                "absolute flex items-center text-ink-gray-6 pointer-events-none",
+                iconLeftPosClasses
+              )}
+            >
+              {prefix(size)}
+            </div>
+          )}
+
+          <input
+            ref={setRefs}
+            id={id}
+            type={type}
+            disabled={isDisabled}
+            required={required}
+            value={value}
+            onChange={handleChange}
+            className={clsx(
+              "w-full rounded transition-colors outline-none appearance-none placeholder:text-ink-gray-5",
+              sizeClasses,
+              paddingClasses,
+              currentVariantClasses,
+              !isDisabled && "text-ink-gray-8"
+            )}
+            {...rest}
+          />
+
+          {(suffix || loading) && (
+            <div
+              className={clsx(
+                "absolute flex items-center text-ink-gray-6 pointer-events-none",
+                iconRightPosClasses
+              )}
+            >
+              {loading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                suffix?.(size)
+              )}
+            </div>
+          )}
+        </div>
       </div>
     );
   }
 );
 
+TextInput.displayName = "TextInput";
 export default TextInput;

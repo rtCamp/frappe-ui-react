@@ -1,23 +1,28 @@
 import type { ReactNode } from "react";
 
-export type SelectSize = "sm" | "md" | "lg" | "xl";
+export type SelectSize = "sm" | "md" | "lg";
 export type SelectVariant = "subtle" | "outline" | "ghost";
+export type SelectState = "success" | "warning" | "error";
 
 export interface SelectOption {
   value: string;
   label: string;
+  icon?: ReactNode;
   disabled?: boolean;
 }
 
 export interface SelectProps {
   size?: SelectSize;
   variant?: SelectVariant;
+  state?: SelectState;
+  loading?: boolean;
   disabled?: boolean;
-  value?: string;
+  value?: SelectOption;
   placeholder?: string;
-  options: (string | SelectOption)[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  prefix?: (args?: any) => ReactNode;
+  options: SelectOption[];
+  prefix?: ReactNode;
+  suffix?: ReactNode;
   htmlId?: string;
-  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  onChange?: (value: SelectOption) => void;
+  className?: string;
 }

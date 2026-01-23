@@ -1,92 +1,132 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { TextareaProps } from "./types";
-import TextArea from "./textarea";
+import Textarea from "./textarea";
 
-export default {
-  title: "Components/TextArea",
-  component: TextArea,
-  parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
+const meta: Meta<typeof Textarea> = {
+  title: "Components/Textarea",
+  component: Textarea,
+  parameters: {
+    docs: {
+      source: { type: "dynamic" },
+    },
+    layout: "centered",
+  },
   tags: ["autodocs"],
   argTypes: {
-    label: { control: "text", description: "Label for the textarea" },
+    size: {
+      options: ["sm", "md", "lg"],
+      control: { type: "select" },
+      description: "Size of the textarea",
+      table: { defaultValue: { summary: "md" } },
+    },
+    variant: {
+      options: ["subtle", "outline", "ghost", "underline"],
+      control: { type: "select" },
+      description: "Visual variant of the textarea",
+      table: { defaultValue: { summary: "subtle" } },
+    },
+    state: {
+      options: ["success", "warning", "error", null],
+      control: { type: "select" },
+      description: "Visual state (colors)",
+    },
     placeholder: {
       control: "text",
-      description: "Placeholder text for the textarea",
+      description: "Placeholder text",
     },
     disabled: {
       control: "boolean",
-      description: "If true, disables the textarea",
+      description: "Disables the textarea",
     },
-    variant: {
-      control: { type: "select", options: ["outline", "subtle"] },
-      description: "Visual variant of the textarea",
+    loading: {
+      control: "boolean",
+      description: "Shows loading state (disabled)",
     },
-    size: {
-      control: { type: "select", options: ["sm", "md", "lg"] },
-      description: "Size of the textarea",
-    },
-    id: { control: "text", description: "HTML id attribute for the textarea" },
-    value: { control: "text", description: "Current value of the textarea" },
     rows: {
       control: "number",
-      description: "Number of visible text lines for the textarea",
+      description: "Number of visible lines",
+    },
+    value: {
+      control: "text",
+      description: "Current value",
     },
     onChange: {
       action: "changed",
-      description: "Callback function when the textarea value changes",
-    },
-    debounce: {
-      control: "number",
-      description: "Debounce time in milliseconds for the onChange event",
+      description: "Callback function",
     },
     htmlId: {
       control: "text",
-      description: "HTML id attribute for the text input",
+      description: "HTML id attribute",
+    },
+    debounce: {
+      control: "number",
+      description: "Debounce delay in milliseconds",
+    },
+    required: {
+      control: "boolean",
+      description: "Marks the textarea as required",
     },
   },
-} as Meta<typeof TextArea>;
+};
 
-const Template: StoryObj<TextareaProps> = {
+export default meta;
+
+type Story = StoryObj<typeof Textarea>;
+
+const Template: Story = {
   render: (args) => {
     const [value, setValue] = useState(args.value || "");
-
     return (
-      <div className="p-4 w-[300px]">
-        <TextArea
+      <div className="w-72">
+        <Textarea
           {...args}
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => {
+            setValue(e.target.value);
+            args.onChange?.(e);
+          }}
         />
       </div>
     );
   },
 };
 
-export const SubtleVariant = {
+export const Subtle: Story = {
   ...Template,
   args: {
-    placeholder: "Placeholder",
+    placeholder: "Tell us about yourself...",
+    rows: 4,
     variant: "subtle",
-    value: "",
+    size: "md",
   },
 };
 
-export const OutlineVariant = {
+export const Outline: Story = {
   ...Template,
   args: {
-    placeholder: "Placeholder",
+    placeholder: "Tell us about yourself...",
+    rows: 4,
     variant: "outline",
-    value: "",
+    size: "md",
   },
 };
 
-export const Disabled = {
+export const Ghost: Story = {
   ...Template,
   args: {
-    placeholder: "Disabled textarea",
-    variant: "outline",
-    value: "",
-    disabled: true,
+    placeholder: "Tell us about yourself...",
+    rows: 4,
+    variant: "ghost",
+    size: "md",
+  },
+};
+
+export const Underline: Story = {
+  ...Template,
+  args: {
+    placeholder: "Tell us about yourself...",
+    rows: 4,
+    variant: "underline",
+    size: "md",
   },
 };

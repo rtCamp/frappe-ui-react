@@ -1,142 +1,154 @@
-import React, { useMemo, useCallback } from "react";
-
-import type { SelectProps, SelectOption } from "./types";
+import React, { useState } from "react";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+} from "@headlessui/react";
+import { Check, ChevronDown, Loader2 } from "lucide-react";
+import { clsx } from "clsx";
+import { Popover } from "../popover";
+import type { SelectProps, SelectSize } from "./types";
 
 const Select: React.FC<SelectProps> = ({
-  size = "sm",
+  htmlId,
+  size = "md",
   variant = "subtle",
+  state,
+  loading = false,
   disabled = false,
   value,
-  placeholder,
-  options,
+  placeholder = "Select...",
+  options = [],
   onChange,
-  htmlId,
   prefix,
+  suffix,
+  className,
 }) => {
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      if (onChange) {
-        onChange(e);
-      }
-    },
-    [onChange]
-  );
+  const isDisabled = disabled || loading;
+  const stateKey = state ?? "default";
+  const [open, setOpen] = useState(false);
 
-  const selectOptions = useMemo(() => {
-    return (
-      options
-        ?.map((option) => {
-          if (typeof option === "string") {
-            return {
-              label: option,
-              value: option,
-            } as SelectOption;
-          }
-          return option as SelectOption;
-        })
-        .filter(Boolean) || []
-    );
-  }, [options]);
+  const sizeClasses = {
+    sm: "h-7 text-sm px-2",
+    md: "h-8 text-base px-2.5",
+    lg: "h-10 text-lg px-3",
+  }[size as SelectSize];
 
-  const textColor = useMemo(() => {
-    return disabled ? "text-ink-gray-4" : "text-ink-gray-8";
-  }, [disabled]);
+  const subtleClasses = {
+    default:
+      "bg-surface-gray-2 border border-surface-gray-2 hover:bg-surface-gray-3 focus:bg-surface-white focus:ring-2 focus:ring-outline-gray-3",
+    error:
+      "bg-surface-red-2 border border-surface-red-2 hover:bg-surface-red-3 focus:ring-2 focus:ring-outline-red-2",
+    success:
+      "bg-surface-green-2 border border-surface-green-2 hover:bg-surface-green-1 focus:ring-2 focus:ring-outline-green-2",
+    warning:
+      "bg-surface-amber-1 border border-surface-amber-1 hover:bg-surface-amber-2 focus:ring-2 focus:ring-outline-amber-2",
+  };
 
-  const fontSizeClasses = useMemo(() => {
-    return {
-      sm: "text-base",
-      md: "text-base",
-      lg: "text-lg",
-      xl: "text-xl",
-    }[size];
-  }, [size]);
+  const outlineClasses = {
+    default:
+      "bg-surface-white border border-outline-gray-2 hover:border-outline-gray-3 focus:ring-2 focus:ring-outline-gray-3",
+    error:
+      "bg-surface-white border border-outline-red-2 hover:border-outline-red-3 focus:ring-2 focus:ring-outline-red-2",
+    success:
+      "bg-surface-white border border-outline-green-2 hover:border-outline-green-3 focus:ring-2 focus:ring-outline-green-2",
+    warning:
+      "bg-surface-white border border-outline-amber-2 hover:border-outline-amber-3 focus:ring-2 focus:ring-outline-amber-2",
+  };
 
-  const paddingClasses = useMemo(() => {
-    return {
-      sm: prefix ? "pl-8 pr-5" : "pl-2 pr-5",
-      md: prefix ? "pl-9 pr-5.5" : "pl-2.5 pr-5.5",
-      lg: prefix ? "pl-10 pr-6" : "pl-3 pr-6",
-      xl: prefix ? "pl-10 pr-6" : "pl-3 pr-6",
-    }[size];
-  }, [prefix, size]);
+  const ghostClasses = {
+    default: "hover:bg-surface-gray-3 focus:ring-2 focus:ring-outline-gray-3",
+    error: "hover:bg-surface-red-3 focus:ring-2 focus:ring-outline-red-2",
+    success: "hover:bg-surface-green-2 focus:ring-2 focus:ring-outline-green-2",
+    warning: "hover:bg-surface-amber-2 focus:ring-2 focus:ring-outline-amber-2",
+  };
 
-  const selectClasses = useMemo(() => {
-    const sizeClasses = {
-      sm: "rounded h-7",
-      md: "rounded h-8",
-      lg: "rounded-md h-10",
-      xl: "rounded-md h-10",
-    }[size];
+  const disabledClass =
+    "bg-surface-gray-2 text-ink-gray-4 border border-outline-gray-2 cursor-not-allowed";
 
-    const currentVariant = disabled ? "disabled" : variant;
-    const variantClasses = {
-      subtle:
-        "border border-surface-gray-2 bg-surface-gray-2 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-      outline:
-        "border border-outline-gray-2 bg-surface-white hover:border-outline-gray-3 focus:border-outline-gray-4 focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-      ghost:
-        "bg-transparent border-transparent hover:bg-surface-gray-3 focus:bg-surface-gray-3 focus:border-outline-gray-4 focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-      disabled: `border ${variant !== "ghost" ? "bg-surface-gray-1" : ""} ${
-        variant === "outline" ? "border-outline-gray-2" : "border-transparent"
-      }`,
-    }[currentVariant];
+  const variantMap = {
+    subtle: subtleClasses,
+    outline: outlineClasses,
+    ghost: ghostClasses,
+  };
 
-    return `
-      ${sizeClasses}
-      ${fontSizeClasses}
-      ${paddingClasses}
-      ${variantClasses}
-      ${textColor}
-      transition-colors w-full py-0 truncate appearance-none cursor-pointer
-      focus:outline-none
-    `;
-  }, [size, fontSizeClasses, paddingClasses, disabled, variant, textColor]);
-
-  const prefixClasses = useMemo(() => {
-    return {
-      sm: "pl-2",
-      md: "pl-2.5",
-      lg: "pl-3",
-      xl: "pl-3",
-    }[size];
-  }, [size]);
+  const currentVariantClasses = isDisabled
+    ? disabledClass
+    : variantMap[variant][stateKey];
 
   return (
-    <div className="relative flex items-center">
-      {prefix && (
-        <div
-          className={`absolute inset-y-0 left-0 flex items-center ${textColor} ${prefixClasses} pointer-events-none`}
-        >
-          {prefix?.(size)}
-        </div>
-      )}
-      {placeholder && !value && (
-        <div
-          className={`pointer-events-none absolute text-ink-gray-4 truncate w-full ${fontSizeClasses} ${paddingClasses}`}
-        >
-          {placeholder}
-        </div>
-      )}
-      <select
-        className={selectClasses}
-        disabled={disabled}
-        id={htmlId}
-        value={value}
-        onChange={handleChange}
-        data-testid="select"
-      >
-        {placeholder && !value && <option />}
-        {selectOptions.map((option) => (
-          <option
-            selected={option.value === value}
-            key={option.value}
-            value={option.value}
-            disabled={option.disabled}
-          >
-            {option.label}
-          </option>
-        ))}
-      </select>
+    <div className={clsx("w-full", className)}>
+      <Listbox value={value} onChange={onChange} disabled={isDisabled}>
+        <Popover
+          show={open}
+          onUpdateShow={setOpen}
+          placement="bottom-start"
+          target={({ togglePopover }) => (
+            <ListboxButton
+              id={htmlId}
+              onClick={togglePopover}
+              className={clsx(
+                "relative w-full rounded-md flex items-center justify-between transition-colors focus:outline-none",
+                sizeClasses,
+                currentVariantClasses,
+                !isDisabled && "text-ink-gray-8"
+              )}
+            >
+              <div className="flex items-center gap-2 w-full overflow-hidden">
+                {prefix && (
+                  <span className="flex-none text-ink-gray-6">{prefix}</span>
+                )}
+
+                <span
+                  className={clsx(
+                    "truncate flex-1 text-left",
+                    !value && "text-ink-gray-5"
+                  )}
+                >
+                  {value ? value.label : placeholder}
+                </span>
+              </div>
+
+              {loading ? (
+                <Loader2 className="ml-2 h-4 w-4 animate-spin text-ink-gray-6" />
+              ) : (
+                <span className="ml-2 flex-none text-ink-gray-6">
+                  {suffix ?? <ChevronDown className="h-4 w-4" />}
+                </span>
+              )}
+            </ListboxButton>
+          )}
+          body={() => (
+            <div className="mt-1 max-h-[15rem] overflow-y-auto rounded-lg bg-surface-modal p-1.5 shadow-2xl">
+              {options.map((option) => (
+                <ListboxOption
+                  key={option.value}
+                  value={option}
+                  disabled={option.disabled}
+                  className={({ focus }) =>
+                    clsx(
+                      "flex cursor-pointer items-center justify-between rounded px-2.5 py-1.5 text-base",
+                      focus && "bg-surface-gray-3",
+                      option.disabled && "opacity-50 cursor-not-allowed"
+                    )
+                  }
+                >
+                  {({ selected }) => (
+                    <>
+                      <span className="truncate text-ink-gray-7">
+                        {option.label}
+                      </span>
+                      {selected && (
+                        <Check className="h-4 w-4 text-ink-gray-7" />
+                      )}
+                    </>
+                  )}
+                </ListboxOption>
+              ))}
+            </div>
+          )}
+        />
+      </Listbox>
     </div>
   );
 };
