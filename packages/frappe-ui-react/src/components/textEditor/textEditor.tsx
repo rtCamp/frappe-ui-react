@@ -5,6 +5,8 @@ import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
+import Highlight from "@tiptap/extension-highlight";
+import { TextStyleKit } from "@tiptap/extension-text-style";
 import clsx from "clsx";
 
 /**
@@ -35,6 +37,8 @@ const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
+      TextStyleKit,
+      Highlight.configure({ multicolor: true }),
     ],
   });
 

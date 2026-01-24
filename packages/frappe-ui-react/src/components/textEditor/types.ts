@@ -21,6 +21,12 @@ export interface EditorCommand {
   label: string;
   text?: string;
   icon: React.ComponentType<{ className?: string }>;
-  action: (editor: Editor) => void;
+  action?: (editor: Editor) => void;
   isActive: (editor: Editor) => boolean;
+  component?: React.ComponentType<{
+    children: (props: {
+      isActive?: boolean;
+      onClick?: () => void;
+    }) => React.ReactNode;
+  }>;
 }
