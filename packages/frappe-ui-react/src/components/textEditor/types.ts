@@ -1,3 +1,6 @@
+/**
+ * External dependencies.
+ */
 import type { Editor } from "@tiptap/react";
 
 export interface TextEditorProps {
