@@ -1,3 +1,6 @@
+/**
+ * External dependencies.
+ */
 import type { Editor } from "@tiptap/react";
 
 export interface TextEditorProps {
@@ -15,12 +18,4 @@ export interface TextEditorProps {
   onBlur?: (event: FocusEvent) => void;
   onTransaction?: (editor: Editor) => void;
   className?: string;
-}
-
-export interface EditorCommand {
-  label: string;
-  text?: string;
-  icon: React.ComponentType<{ className?: string }>;
-  action: (editor: Editor) => void;
-  isActive: (editor: Editor) => boolean;
 }
