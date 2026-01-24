@@ -1,8 +1,10 @@
 /**
  * External dependencies.
  */
-import { EditorContent, useEditor } from "@tiptap/react";
+import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { TaskItem, TaskList } from "@tiptap/extension-list";
+import TextAlign from "@tiptap/extension-text-align";
 import clsx from "clsx";
 
 /**
@@ -11,6 +13,7 @@ import clsx from "clsx";
 import "./textEditor.css";
 import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
+import FixedMenu from "./menu/fixedMenu";
 
 const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
   const editor = useEditor({
@@ -23,10 +26,24 @@ const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
         ),
       },
     },
-    extensions: [StarterKit],
+    extensions: [
+      StarterKit,
+      TaskList,
+      TaskItem.configure({
+        nested: true,
+      }),
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
+    ],
   });
 
-  return <EditorContent editor={editor} />;
+  return (
+    <EditorContext.Provider value={{ editor }}>
+      <FixedMenu />
+      <EditorContent editor={editor} />
+    </EditorContext.Provider>
+  );
 };
 
 export default TextEditor;
