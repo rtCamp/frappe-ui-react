@@ -40,6 +40,7 @@ const DEFAULT_COMMANDS: Array<
   "align_center",
   "align_right",
   "separator",
+  "font_color",
 ];
 
 const Menu = ({ className }: MenuProps) => {
@@ -105,7 +106,7 @@ const Menu = ({ className }: MenuProps) => {
                             }}
                             title={command.label}
                           >
-                            <command.icon className="size-4 flex-shrink-0 text-ink-gray-6" />
+                            <command.icon className="size-4 shrink-0 text-ink-gray-6" />
                             <span className="whitespace-nowrap text-ink-gray-7">
                               {command.label}
                             </span>
@@ -127,7 +128,29 @@ const Menu = ({ className }: MenuProps) => {
             ></div>
           );
         }
+
         const command: EditorCommand = COMMANDS[command_key];
+
+        if (command.component) {
+          return (
+            <command.component>
+              {({ isActive, onClick }) => (
+                <button
+                  className={clsx(
+                    "flex rounded p-1 text-ink-gray-8 transition-colors",
+                    isButtonActive(command) || isActive
+                      ? "bg-surface-gray-3"
+                      : "hover:bg-surface-gray-2"
+                  )}
+                  onClick={() => onClick?.()}
+                  title={command.label}
+                >
+                  <command.icon className="h-4 w-4" />
+                </button>
+              )}
+            </command.component>
+          );
+        }
         const label = command.label;
         const Icon = command.icon;
         return (
@@ -139,7 +162,7 @@ const Menu = ({ className }: MenuProps) => {
                 ? "bg-surface-gray-3"
                 : "hover:bg-surface-gray-2"
             )}
-            onClick={() => command.action(editor)}
+            onClick={() => command.action?.(editor)}
             title={label}
           >
             <Icon className="size-4" />

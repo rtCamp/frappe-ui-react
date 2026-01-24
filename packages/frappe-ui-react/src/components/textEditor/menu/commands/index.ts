@@ -5,6 +5,7 @@ import {
   AlignCenterIcon,
   AlignLeftIcon,
   AlignRightIcon,
+  BaselineIcon,
   BoldIcon,
   Heading1Icon,
   Heading2Icon,
@@ -22,7 +23,8 @@ import {
 /**
  * Internal dependencies.
  */
-import type { EditorCommand } from "../types";
+import type { EditorCommand } from "../../types";
+import FontColor from "./fontColor";
 
 export const COMMANDS_KEYS = [
   "paragraph",
@@ -40,6 +42,7 @@ export const COMMANDS_KEYS = [
   "align_left",
   "align_center",
   "align_right",
+  "font_color",
 ] as const;
 
 export type TYPE_COMMANDS_KEYS = (typeof COMMANDS_KEYS)[number];
@@ -146,6 +149,13 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     icon: AlignRightIcon,
     action: (editor) => editor.chain().focus().setTextAlign("right").run(),
     isActive: (editor) => editor.isActive({ textAlign: "right" }),
+  },
+  font_color: {
+    label: "Font Color",
+    icon: BaselineIcon,
+    isActive: (editor) =>
+      editor.isActive("textStyle") || editor.isActive("highlight"),
+    component: FontColor,
   },
 };
 
