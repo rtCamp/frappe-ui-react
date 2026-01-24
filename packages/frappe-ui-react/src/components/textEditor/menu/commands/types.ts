@@ -19,6 +19,7 @@ export const COMMANDS_KEYS = [
   "align_left",
   "align_center",
   "align_right",
+  "font_color",
 ] as const;
 
 export type TYPE_COMMANDS_KEYS = (typeof COMMANDS_KEYS)[number];
@@ -27,7 +28,7 @@ export interface EditorCommand {
   label: string;
   text?: string;
   icon: React.ComponentType<{ className?: string }>;
-  action: (editor: Editor) => void;
+  action?: (editor: Editor) => void;
   isActive: (editor: Editor) => boolean;
   component?: React.ComponentType<{
     children: (props: {

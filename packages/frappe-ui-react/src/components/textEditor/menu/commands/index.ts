@@ -24,6 +24,7 @@ import {
  * Internal dependencies.
  */
 import type { TYPE_COMMANDS_KEYS, EditorCommand } from "./types";
+import FontColor from "./fontColor";
 
 export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
   paragraph: {
