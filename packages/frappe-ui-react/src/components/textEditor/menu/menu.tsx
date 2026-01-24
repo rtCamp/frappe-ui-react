@@ -8,9 +8,9 @@ import clsx from "clsx";
 /**
  * Internal dependencies.
  */
-import COMMANDS, { type TYPE_COMMANDS_KEYS } from "./commands";
-import type { EditorCommand } from "../types";
+import COMMANDS from "./commands";
 import { Popover } from "../../popover";
+import type { TYPE_COMMANDS_KEYS, EditorCommand } from "./commands/types";
 
 export interface MenuProps {
   className?: string;
