@@ -23,6 +23,7 @@ const TextEditor = ({
   content,
   placeholder = "",
   editorClass = "",
+  editable = true,
   onChange,
   onFocus,
   onBlur,
@@ -30,6 +31,7 @@ const TextEditor = ({
 }: TextEditorProps) => {
   const editor = useEditor({
     content,
+    editable,
     editorProps: {
       attributes: {
         class: clsx(
