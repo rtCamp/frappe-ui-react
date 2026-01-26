@@ -41,6 +41,7 @@ const DEFAULT_COMMANDS: Array<
   "align_center",
   "align_right",
   "separator",
+  "horizontal_rule",
 ];
 
 const Menu = ({ className }: MenuProps) => {

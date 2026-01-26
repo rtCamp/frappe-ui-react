@@ -5,6 +5,7 @@ import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
+import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Strike from "@tiptap/extension-strike";
 import clsx from "clsx";
 
@@ -37,6 +38,7 @@ const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
         types: ["heading", "paragraph"],
       }),
       Strike,
+      HorizontalRule,
     ],
   });
 

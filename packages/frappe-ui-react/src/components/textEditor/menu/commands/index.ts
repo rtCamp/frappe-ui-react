@@ -16,6 +16,7 @@ import {
   ListCheckIcon,
   ListIcon,
   ListOrderedIcon,
+  SeparatorHorizontal,
   StrikethroughIcon,
   TypeIcon,
 } from "lucide-react";
@@ -132,6 +133,12 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     label: "Strike",
     icon: StrikethroughIcon,
     action: (editor) => editor.chain().focus().toggleStrike().run(),
+    isActive: (editor) => editor.isActive("strike"),
+  },
+  horizontal_rule: {
+    label: "Horizontal Rule",
+    icon: SeparatorHorizontal,
+    action: (editor) => editor.chain().focus().setHorizontalRule().run(),
     isActive: (editor) => editor.isActive("strike"),
   },
 };
