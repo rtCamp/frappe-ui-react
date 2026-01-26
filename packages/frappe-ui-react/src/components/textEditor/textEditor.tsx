@@ -6,6 +6,7 @@ import StarterKit from "@tiptap/starter-kit";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
 import Strike from "@tiptap/extension-strike";
+import { TableKit } from "@tiptap/extension-table";
 import clsx from "clsx";
 
 /**
@@ -37,6 +38,7 @@ const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
         types: ["heading", "paragraph"],
       }),
       Strike,
+      TableKit,
     ],
   });
 
