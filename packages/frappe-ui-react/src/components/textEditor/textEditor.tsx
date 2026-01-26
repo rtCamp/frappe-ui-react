@@ -22,6 +22,9 @@ const TextEditor = ({
   placeholder = "",
   editorClass = "",
   editable = true,
+  autofocus = false,
+  extensions = [],
+  starterKitOptions = {},
   onChange,
   onFocus,
   onBlur,
@@ -30,6 +33,7 @@ const TextEditor = ({
   const editor = useEditor({
     content,
     editable,
+    autofocus,
     editorProps: {
       attributes: {
         class: clsx(
@@ -39,7 +43,9 @@ const TextEditor = ({
       },
     },
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        ...starterKitOptions,
+      }),
       Placeholder.configure({
         placeholder:
           typeof placeholder === "function" ? placeholder() : placeholder,
@@ -52,6 +58,7 @@ const TextEditor = ({
         types: ["heading", "paragraph"],
       }),
       Strike,
+      ...extensions,
     ],
     onUpdate: ({ editor }) => {
       onChange?.(editor.getHTML());

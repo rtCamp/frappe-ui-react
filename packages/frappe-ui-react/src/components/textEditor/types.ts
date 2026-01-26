@@ -1,7 +1,8 @@
 /**
  * External dependencies.
  */
-import type { Editor } from "@tiptap/react";
+import type { Editor, Extension } from "@tiptap/react";
+import type { StarterKitOptions } from "@tiptap/starter-kit";
 
 export interface TextEditorProps {
   // Props
@@ -10,11 +11,8 @@ export interface TextEditorProps {
   editorClass?: string | string[] | Record<string, boolean>;
   editable?: boolean;
   autofocus?: boolean;
-  bubbleMenu?: boolean;
-  bubbleMenuOptions?: Record<string, unknown>;
-  fixedMenu?: boolean;
-  floatingMenu?: boolean;
-  className?: string;
+  extensions?: Extension[];
+  starterKitOptions?: Partial<StarterKitOptions>;
   // Events
   onChange?: (content: string) => void;
   onFocus?: (event: FocusEvent) => void;
