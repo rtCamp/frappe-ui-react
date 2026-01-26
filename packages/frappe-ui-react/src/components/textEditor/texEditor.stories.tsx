@@ -34,7 +34,11 @@ export const Basic: Story = {
   <ul>
     <li>Item 1</li>
     <li>Item 2</li>
-  </ul>`);
+  </ul>
+    <pre><code class="language-javascript">import { Button } from '@rtcamp/frappe-ui-react'
+const value = ref(true);</code>
+  </pre>
+  `);
     return (
       <div className="m-2 w-[550px]">
         <TextEditor {...args} content={content} onChange={setContent} />

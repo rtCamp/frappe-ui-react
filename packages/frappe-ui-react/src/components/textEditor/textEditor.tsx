@@ -5,6 +5,8 @@ import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import { createLowlight, all } from "lowlight";
 import Strike from "@tiptap/extension-strike";
 import clsx from "clsx";
 
@@ -15,6 +17,8 @@ import "./textEditor.css";
 import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
+
+const lowlight = createLowlight(all);
 
 const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
   const editor = useEditor({
@@ -28,7 +32,10 @@ const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
       },
     },
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        strike: false,
+        codeBlock: false,
+      }),
       TaskList,
       TaskItem.configure({
         nested: true,
@@ -37,6 +44,9 @@ const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
         types: ["heading", "paragraph"],
       }),
       Strike,
+      CodeBlockLowlight.configure({
+        lowlight,
+      }),
     ],
   });
 
