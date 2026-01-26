@@ -16,6 +16,7 @@ import {
   ListCheckIcon,
   ListIcon,
   ListOrderedIcon,
+  QuoteIcon,
   StrikethroughIcon,
   TypeIcon,
 } from "lucide-react";
@@ -133,6 +134,12 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     icon: StrikethroughIcon,
     action: (editor) => editor.chain().focus().toggleStrike().run(),
     isActive: (editor) => editor.isActive("strike"),
+  },
+  blockquote: {
+    label: "Blockquote",
+    icon: QuoteIcon,
+    action: (editor) => editor.chain().focus().toggleBlockquote().run(),
+    isActive: (editor) => editor.isActive("blockquote"),
   },
 };
 
