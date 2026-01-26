@@ -5,6 +5,8 @@ import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import { createLowlight, all } from "lowlight";
 import Blockquote from "@tiptap/extension-blockquote";
 import Highlight from "@tiptap/extension-highlight";
 import { TextStyleKit } from "@tiptap/extension-text-style";
@@ -20,6 +22,8 @@ import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
 import Placeholder from "@tiptap/extension-placeholder";
+
+const lowlight = createLowlight(all);
 
 const TextEditor = ({
   content,
@@ -72,6 +76,9 @@ const TextEditor = ({
         Strike,
         Blockquote,
         TableKit,
+        CodeBlockLowlight.configure({
+          lowlight,
+        }),
         ...extensions,
       ],
       onUpdate: ({ editor }) => {

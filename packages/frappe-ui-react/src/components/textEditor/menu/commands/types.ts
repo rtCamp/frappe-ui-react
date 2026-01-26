@@ -37,6 +37,7 @@ export const COMMANDS_KEYS = [
   "blockquote",
   "undo",
   "redo",
+  "codeblock",
 ] as const;
 
 export type TYPE_COMMANDS_KEYS = (typeof COMMANDS_KEYS)[number];
