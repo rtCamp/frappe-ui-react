@@ -16,11 +16,13 @@ import {
   ListCheckIcon,
   ListIcon,
   ListOrderedIcon,
+  Redo2Icon,
   PaintBucketIcon,
   QuoteIcon,
   StrikethroughIcon,
   TableIcon,
   TypeIcon,
+  Undo2Icon,
 } from "lucide-react";
 
 /**
@@ -144,6 +146,20 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     icon: StrikethroughIcon,
     action: (editor) => editor.chain().focus().toggleStrike().run(),
     isActive: (editor) => editor.isActive("strike"),
+  },
+  undo: {
+    label: "Undo",
+    icon: Undo2Icon,
+    action: (editor) => editor.chain().focus().undo().run(),
+    isDisabled: (editor) => !editor.can().undo(),
+    isActive: () => false,
+  },
+  redo: {
+    label: "Undo",
+    icon: Redo2Icon,
+    action: (editor) => editor.chain().focus().redo().run(),
+    isDisabled: (editor) => !editor.can().redo(),
+    isActive: () => false,
   },
   insert_table: {
     label: "Insert Table",

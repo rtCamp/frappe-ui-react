@@ -35,6 +35,8 @@ export const COMMANDS_KEYS = [
   "toggle_header_cell",
   "delete_table",
   "blockquote",
+  "undo",
+  "redo",
 ] as const;
 
 export type TYPE_COMMANDS_KEYS = (typeof COMMANDS_KEYS)[number];
