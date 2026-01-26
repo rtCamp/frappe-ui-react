@@ -15,9 +15,11 @@ import "./textEditor.css";
 import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
+import Placeholder from "@tiptap/extension-placeholder";
 
 const TextEditor = ({
   content,
+  placeholder = "",
   editorClass = "",
   onChange,
   onFocus,
@@ -36,6 +38,10 @@ const TextEditor = ({
     },
     extensions: [
       StarterKit,
+      Placeholder.configure({
+        placeholder:
+          typeof placeholder === "function" ? placeholder() : placeholder,
+      }),
       TaskList,
       TaskItem.configure({
         nested: true,
