@@ -20,6 +20,8 @@ export const COMMANDS_KEYS = [
   "align_center",
   "align_right",
   "strike",
+  "undo",
+  "redo",
 ] as const;
 
 export type TYPE_COMMANDS_KEYS = (typeof COMMANDS_KEYS)[number];
@@ -30,4 +32,5 @@ export interface EditorCommand {
   icon: React.ComponentType<{ className?: string }>;
   action: (editor: Editor) => void;
   isActive: (editor: Editor) => boolean;
+  isDisabled?: (editor: Editor) => boolean;
 }
