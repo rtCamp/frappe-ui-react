@@ -17,7 +17,8 @@ import {
   ListCheckIcon,
   ListIcon,
   ListOrderedIcon,
-  TextIcon,
+  StrikethroughIcon,
+  TypeIcon,
 } from "lucide-react";
 
 /**
@@ -29,7 +30,7 @@ import FontColor from "./fontColor";
 export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
   paragraph: {
     label: "Paragraph",
-    icon: TextIcon,
+    icon: TypeIcon,
     action: (editor) => editor.chain().focus().setParagraph().run(),
     isActive: (editor) => editor.isActive("paragraph"),
   },
@@ -135,6 +136,12 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     isActive: (editor) =>
       editor.isActive("textStyle") || editor.isActive("highlight"),
     component: FontColor,
+  },
+  strike: {
+    label: "Strike",
+    icon: StrikethroughIcon,
+    action: (editor) => editor.chain().focus().toggleStrike().run(),
+    isActive: (editor) => editor.isActive("strike"),
   },
 };
 

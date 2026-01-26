@@ -7,6 +7,7 @@ import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
 import { TextStyleKit } from "@tiptap/extension-text-style";
+import Strike from "@tiptap/extension-strike";
 import clsx from "clsx";
 
 /**
@@ -39,6 +40,7 @@ const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
       }),
       TextStyleKit,
       Highlight.configure({ multicolor: true }),
+      Strike,
     ],
   });
 

@@ -19,6 +19,7 @@ export interface MenuProps {
 const DEFAULT_COMMANDS: Array<
   TYPE_COMMANDS_KEYS | "separator" | Array<TYPE_COMMANDS_KEYS>
 > = [
+  "paragraph",
   [
     "heading_1",
     "heading_2",
@@ -27,10 +28,10 @@ const DEFAULT_COMMANDS: Array<
     "heading_5",
     "heading_6",
   ],
-  "paragraph",
   "separator",
   "bold",
   "italic",
+  "strike",
   "separator",
   "bullet_list",
   "numbered_list",
@@ -157,7 +158,7 @@ const Menu = ({ className }: MenuProps) => {
           <button
             key={index}
             className={clsx(
-              "flex rounded p-1 text-ink-gray-8 transition-colors",
+              "flex rounded text-ink-gray-8 transition-colors focus-within:ring-0 p-1 hover:bg-surface-gray-2",
               isButtonActive(command)
                 ? "bg-surface-gray-3"
                 : "hover:bg-surface-gray-2"
