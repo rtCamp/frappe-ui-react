@@ -31,6 +31,7 @@ const DEFAULT_COMMANDS: Array<
   "separator",
   "bold",
   "italic",
+  "strike",
   "separator",
   "bullet_list",
   "numbered_list",

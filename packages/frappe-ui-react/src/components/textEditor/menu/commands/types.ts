@@ -20,6 +20,7 @@ export const COMMANDS_KEYS = [
   "align_center",
   "align_right",
   "font_color",
+  "strike",
 ] as const;
 
 export type TYPE_COMMANDS_KEYS = (typeof COMMANDS_KEYS)[number];

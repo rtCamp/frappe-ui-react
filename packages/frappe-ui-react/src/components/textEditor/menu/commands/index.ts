@@ -17,6 +17,7 @@ import {
   ListCheckIcon,
   ListIcon,
   ListOrderedIcon,
+  StrikethroughIcon,
   TextIcon,
 } from "lucide-react";
 
@@ -135,6 +136,12 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     isActive: (editor) =>
       editor.isActive("textStyle") || editor.isActive("highlight"),
     component: FontColor,
+  },
+  strike: {
+    label: "Strike",
+    icon: StrikethroughIcon,
+    action: (editor) => editor.chain().focus().toggleStrike().run(),
+    isActive: (editor) => editor.isActive("strike"),
   },
 };
 
