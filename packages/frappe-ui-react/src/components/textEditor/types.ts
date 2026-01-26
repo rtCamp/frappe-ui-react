@@ -1,8 +1,9 @@
 /**
  * External dependencies.
  */
-import type { Editor, Extension } from "@tiptap/react";
+import { Editor, type Extension } from "@tiptap/react";
 import type { StarterKitOptions } from "@tiptap/starter-kit";
+import type { FC } from "react";
 
 export interface TextEditorProps {
   // Props
@@ -19,4 +20,8 @@ export interface TextEditorProps {
   onFocus?: (event: FocusEvent) => void;
   onBlur?: (event: FocusEvent) => void;
   onTransaction?: (editor: Editor) => void;
+  // Slots
+  Top?: FC;
+  Editor?: FC<{ editor: Editor }>;
+  Bottom?: FC;
 }

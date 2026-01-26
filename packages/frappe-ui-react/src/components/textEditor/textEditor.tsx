@@ -30,6 +30,9 @@ const TextEditor = ({
   onFocus,
   onBlur,
   onTransaction,
+  Top,
+  Editor,
+  Bottom,
 }: TextEditorProps) => {
   const editor = useEditor({
     content,
@@ -77,9 +80,10 @@ const TextEditor = ({
 
   return (
     <EditorContext.Provider value={{ editor }}>
+      {Top && <Top />}
       {fixedMenu && <FixedMenu />}
-
-      <EditorContent editor={editor} />
+      {Editor ? <Editor editor={editor} /> : <EditorContent editor={editor} />}
+      {Bottom && <Bottom />}
     </EditorContext.Provider>
   );
 };
