@@ -8,6 +8,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
 import { TextStyleKit } from "@tiptap/extension-text-style";
 import Strike from "@tiptap/extension-strike";
+import { TableKit } from "@tiptap/extension-table";
 import clsx from "clsx";
 
 /**
@@ -66,6 +67,7 @@ const TextEditor = ({
       TextStyleKit,
       Highlight.configure({ multicolor: true }),
       Strike,
+      TableKit,
       ...extensions,
     ],
     onUpdate: ({ editor }) => {
