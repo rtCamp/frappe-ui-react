@@ -58,6 +58,7 @@ const DEFAULT_COMMANDS: Array<
   "blockquote",
   "undo",
   "redo",
+  "horizontal_rule",
 ];
 
 const Menu = ({ className }: MenuProps) => {

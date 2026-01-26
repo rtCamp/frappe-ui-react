@@ -38,6 +38,7 @@ export const COMMANDS_KEYS = [
   "undo",
   "redo",
   "codeblock",
+  "horizontal_rule",
 ] as const;
 
 export type TYPE_COMMANDS_KEYS = (typeof COMMANDS_KEYS)[number];

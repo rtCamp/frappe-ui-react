@@ -20,6 +20,7 @@ import {
   Redo2Icon,
   PaintBucketIcon,
   QuoteIcon,
+  SeparatorHorizontal,
   StrikethroughIcon,
   TableIcon,
   TypeIcon,
@@ -256,6 +257,12 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     icon: QuoteIcon,
     action: (editor) => editor.chain().focus().toggleBlockquote().run(),
     isActive: (editor) => editor.isActive("blockquote"),
+  },
+  horizontal_rule: {
+    label: "Horizontal Rule",
+    icon: SeparatorHorizontal,
+    action: (editor) => editor.chain().focus().setHorizontalRule().run(),
+    isActive: (editor) => editor.isActive("strike"),
   },
 };
 

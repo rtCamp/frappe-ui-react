@@ -8,6 +8,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import Blockquote from "@tiptap/extension-blockquote";
 import Highlight from "@tiptap/extension-highlight";
 import { TextStyleKit } from "@tiptap/extension-text-style";
+import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Strike from "@tiptap/extension-strike";
 import { TableKit } from "@tiptap/extension-table";
 import clsx from "clsx";
@@ -75,6 +76,7 @@ const TextEditor = ({
         Blockquote,
         TableKit,
         ExtendedCodeBlock,
+        HorizontalRule,
         ...extensions,
       ],
       onUpdate: ({ editor }) => {
