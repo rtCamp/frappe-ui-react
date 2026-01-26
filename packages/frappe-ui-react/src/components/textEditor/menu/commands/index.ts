@@ -5,7 +5,6 @@ import {
   AlignCenterIcon,
   AlignLeftIcon,
   AlignRightIcon,
-  BaselineIcon,
   BoldIcon,
   Heading1Icon,
   Heading2Icon,
@@ -17,6 +16,7 @@ import {
   ListCheckIcon,
   ListIcon,
   ListOrderedIcon,
+  PaintBucketIcon,
   StrikethroughIcon,
   TypeIcon,
 } from "lucide-react";
@@ -132,7 +132,7 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
   },
   font_color: {
     label: "Font Color",
-    icon: BaselineIcon,
+    icon: PaintBucketIcon,
     isActive: (editor) =>
       editor.isActive("textStyle") || editor.isActive("highlight"),
     component: FontColor,
