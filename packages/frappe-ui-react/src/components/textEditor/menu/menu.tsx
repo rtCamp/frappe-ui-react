@@ -32,6 +32,7 @@ const DEFAULT_COMMANDS: Array<
   "bold",
   "italic",
   "strike",
+  "font_color",
   "separator",
   "bullet_list",
   "numbered_list",
@@ -41,7 +42,6 @@ const DEFAULT_COMMANDS: Array<
   "align_center",
   "align_right",
   "separator",
-  "font_color",
 ];
 
 const Menu = ({ className }: MenuProps) => {
