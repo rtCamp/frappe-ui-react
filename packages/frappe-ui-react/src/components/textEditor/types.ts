@@ -13,6 +13,7 @@ export interface TextEditorProps {
   autofocus?: boolean;
   extensions?: Extension[];
   starterKitOptions?: Partial<StarterKitOptions>;
+  fixedMenu?: boolean;
   // Events
   onChange?: (content: string) => void;
   onFocus?: (event: FocusEvent) => void;
