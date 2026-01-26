@@ -16,6 +16,7 @@ import {
   ListCheckIcon,
   ListIcon,
   ListOrderedIcon,
+  StrikethroughIcon,
   TextIcon,
 } from "lucide-react";
 
@@ -126,6 +127,12 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     icon: AlignRightIcon,
     action: (editor) => editor.chain().focus().setTextAlign("right").run(),
     isActive: (editor) => editor.isActive({ textAlign: "right" }),
+  },
+  strike: {
+    label: "Strike",
+    icon: StrikethroughIcon,
+    action: (editor) => editor.chain().focus().toggleStrike().run(),
+    isActive: (editor) => editor.isActive("strike"),
   },
 };
 
