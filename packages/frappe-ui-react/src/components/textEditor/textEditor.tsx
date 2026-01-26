@@ -25,6 +25,7 @@ const TextEditor = ({
   autofocus = false,
   extensions = [],
   starterKitOptions = {},
+  fixedMenu = false,
   onChange,
   onFocus,
   onBlur,
@@ -76,7 +77,8 @@ const TextEditor = ({
 
   return (
     <EditorContext.Provider value={{ editor }}>
-      <FixedMenu />
+      {fixedMenu && <FixedMenu />}
+
       <EditorContent editor={editor} />
     </EditorContext.Provider>
   );
