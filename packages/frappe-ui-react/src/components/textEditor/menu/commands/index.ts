@@ -18,7 +18,7 @@ import {
   ListIcon,
   ListOrderedIcon,
   StrikethroughIcon,
-  TextIcon,
+  TypeIcon,
 } from "lucide-react";
 
 /**
@@ -30,7 +30,7 @@ import FontColor from "./fontColor";
 export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
   paragraph: {
     label: "Paragraph",
-    icon: TextIcon,
+    icon: TypeIcon,
     action: (editor) => editor.chain().focus().setParagraph().run(),
     isActive: (editor) => editor.isActive("paragraph"),
   },
