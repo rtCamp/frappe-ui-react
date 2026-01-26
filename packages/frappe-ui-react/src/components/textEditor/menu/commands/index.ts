@@ -17,6 +17,7 @@ import {
   ListIcon,
   ListOrderedIcon,
   PaintBucketIcon,
+  QuoteIcon,
   StrikethroughIcon,
   TableIcon,
   TypeIcon,
@@ -226,6 +227,12 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     action: (editor) => editor.chain().focus().toggleHeaderCell().run(),
     isActive: () => false,
     isDisabled: (editor) => !editor.can().toggleHeaderCell(),
+  },
+  blockquote: {
+    label: "Blockquote",
+    icon: QuoteIcon,
+    action: (editor) => editor.chain().focus().toggleBlockquote().run(),
+    isActive: (editor) => editor.isActive("blockquote"),
   },
 };
 

@@ -55,6 +55,7 @@ const DEFAULT_COMMANDS: Array<
     "toggle_header_cell",
     "delete_table",
   ],
+  "blockquote",
 ];
 
 const Menu = ({ className }: MenuProps) => {

@@ -5,6 +5,7 @@ import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
+import Blockquote from "@tiptap/extension-blockquote";
 import Highlight from "@tiptap/extension-highlight";
 import { TextStyleKit } from "@tiptap/extension-text-style";
 import Strike from "@tiptap/extension-strike";
@@ -67,6 +68,7 @@ const TextEditor = ({
       TextStyleKit,
       Highlight.configure({ multicolor: true }),
       Strike,
+      Blockquote,
       TableKit,
       ...extensions,
     ],
