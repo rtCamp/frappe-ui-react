@@ -16,7 +16,14 @@ import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
 
-const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
+const TextEditor = ({
+  content,
+  editorClass = "",
+  onChange,
+  onFocus,
+  onBlur,
+  onTransaction,
+}: TextEditorProps) => {
   const editor = useEditor({
     content,
     editorProps: {
@@ -38,6 +45,18 @@ const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
       }),
       Strike,
     ],
+    onUpdate: ({ editor }) => {
+      onChange?.(editor.getHTML());
+    },
+    onFocus: ({ event }) => {
+      onFocus?.(event);
+    },
+    onBlur: ({ event }) => {
+      onBlur?.(event);
+    },
+    onTransaction: () => {
+      onTransaction?.(editor);
+    },
   });
 
   return (
