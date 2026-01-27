@@ -17,12 +17,31 @@ import "./textEditor.css";
 import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
+import Placeholder from "@tiptap/extension-placeholder";
 
 const lowlight = createLowlight(all);
 
-const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
+const TextEditor = ({
+  content,
+  placeholder = "",
+  editorClass = "",
+  editable = true,
+  autofocus = false,
+  extensions = [],
+  starterKitOptions = {},
+  fixedMenu = false,
+  onChange,
+  onFocus,
+  onBlur,
+  onTransaction,
+  Top,
+  Editor,
+  Bottom,
+}: TextEditorProps) => {
   const editor = useEditor({
     content,
+    editable,
+    autofocus,
     editorProps: {
       attributes: {
         class: clsx(
@@ -35,6 +54,11 @@ const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
       StarterKit.configure({
         strike: false,
         codeBlock: false,
+        ...starterKitOptions,
+      }),
+      Placeholder.configure({
+        placeholder:
+          typeof placeholder === "function" ? placeholder() : placeholder,
       }),
       TaskList,
       TaskItem.configure({
@@ -47,13 +71,28 @@ const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
       CodeBlockLowlight.configure({
         lowlight,
       }),
+      ...extensions,
     ],
+    onUpdate: ({ editor }) => {
+      onChange?.(editor.getHTML());
+    },
+    onFocus: ({ event }) => {
+      onFocus?.(event);
+    },
+    onBlur: ({ event }) => {
+      onBlur?.(event);
+    },
+    onTransaction: () => {
+      onTransaction?.(editor);
+    },
   });
 
   return (
     <EditorContext.Provider value={{ editor }}>
-      <FixedMenu />
-      <EditorContent editor={editor} />
+      {Top && <Top />}
+      {fixedMenu && <FixedMenu />}
+      {Editor ? <Editor editor={editor} /> : <EditorContent editor={editor} />}
+      {Bottom && <Bottom />}
     </EditorContext.Provider>
   );
 };
