@@ -37,7 +37,12 @@ export const Basic: Story = {
   </ul>`);
     return (
       <div className="m-2 w-[550px]">
-        <TextEditor {...args} content={content} onChange={setContent} />
+        <TextEditor
+          {...args}
+          content={content}
+          onChange={setContent}
+          fixedMenu={true}
+        />
       </div>
     );
   },
