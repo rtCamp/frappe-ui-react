@@ -1,7 +1,6 @@
 /**
  * External dependencies.
  */
-
 import { useCurrentEditor, useEditorState } from "@tiptap/react";
 import clsx from "clsx";
 
@@ -67,7 +66,7 @@ const Menu = ({ className }: MenuProps) => {
   return (
     <div
       className={clsx(
-        "flex bg-surface-white px-1 py-1 w-full overflow-x-auto rounded-t-lg border border-outline-gray-modals items-center",
+        "flex gap-1 bg-surface-white px-1 py-1 w-full overflow-x-auto rounded-t-lg border border-outline-gray-modals items-center",
         className
       )}
     >
