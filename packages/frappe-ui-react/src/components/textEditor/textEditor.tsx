@@ -79,7 +79,18 @@ const TextEditor = ({
         onTransaction?.(editor);
       },
     },
-    [content, editable, autofocus, editorClass, starterkitOptions, extensions]
+    [
+      content,
+      editable,
+      autofocus,
+      editorClass,
+      starterkitOptions,
+      extensions,
+      onChange,
+      onFocus,
+      onBlur,
+      onTransaction,
+    ]
   );
 
   return (
