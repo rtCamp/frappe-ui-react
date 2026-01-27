@@ -13,7 +13,7 @@ export interface TextEditorProps {
   editable?: boolean;
   autofocus?: boolean;
   extensions?: Extension[];
-  starterKitOptions?: Partial<StarterKitOptions>;
+  starterkitOptions?: Partial<StarterKitOptions>;
   fixedMenu?: boolean;
   // Events
   onChange?: (content: string) => void;
