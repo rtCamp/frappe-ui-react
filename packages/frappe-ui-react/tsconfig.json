@@ -4,6 +4,7 @@
     "rootDir": "./src",
     "noEmit": false,
     "outDir": "dist",
+    "moduleResolution": "bundler",
     "declaration": true,
     "declarationDir": "dist-types",
     "sourceMap": true,

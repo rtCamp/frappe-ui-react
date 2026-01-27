@@ -13,6 +13,7 @@ import {
   Heading5Icon,
   Heading6Icon,
   ItalicIcon,
+  Link2,
   ListCheckIcon,
   ListIcon,
   ListOrderedIcon,
@@ -133,6 +134,12 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     icon: StrikethroughIcon,
     action: (editor) => editor.chain().focus().toggleStrike().run(),
     isActive: (editor) => editor.isActive("strike"),
+  },
+  link: {
+    label: "Link",
+    icon: Link2,
+    action: (editor) => editor.chain().focus().setLink({ href: "" }).run(),
+    isActive: (editor) => editor.isActive("link"),
   },
 };
 
