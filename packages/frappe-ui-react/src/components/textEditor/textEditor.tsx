@@ -7,6 +7,7 @@ import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Strike from "@tiptap/extension-strike";
+import Placeholder from "@tiptap/extension-placeholder";
 import clsx from "clsx";
 
 /**
@@ -17,9 +18,27 @@ import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
 
-const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
+const TextEditor = ({
+  content,
+  placeholder = "",
+  editorClass = "",
+  editable = true,
+  autofocus = false,
+  extensions = [],
+  starterKitOptions = {},
+  fixedMenu = false,
+  onChange,
+  onFocus,
+  onBlur,
+  onTransaction,
+  Top,
+  Editor,
+  Bottom,
+}: TextEditorProps) => {
   const editor = useEditor({
     content,
+    editable,
+    autofocus,
     editorProps: {
       attributes: {
         class: clsx(
@@ -29,7 +48,13 @@ const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
       },
     },
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        ...starterKitOptions,
+      }),
+      Placeholder.configure({
+        placeholder:
+          typeof placeholder === "function" ? placeholder() : placeholder,
+      }),
       TaskList,
       TaskItem.configure({
         nested: true,
@@ -37,15 +62,30 @@ const TextEditor = ({ content, editorClass = "" }: TextEditorProps) => {
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
-      Strike,
       HorizontalRule,
+      Strike,
+      ...extensions,
     ],
+    onUpdate: ({ editor }) => {
+      onChange?.(editor.getHTML());
+    },
+    onFocus: ({ event }) => {
+      onFocus?.(event);
+    },
+    onBlur: ({ event }) => {
+      onBlur?.(event);
+    },
+    onTransaction: () => {
+      onTransaction?.(editor);
+    },
   });
 
   return (
     <EditorContext.Provider value={{ editor }}>
-      <FixedMenu />
-      <EditorContent editor={editor} />
+      {Top && <Top />}
+      {fixedMenu && <FixedMenu />}
+      {Editor ? <Editor editor={editor} /> : <EditorContent editor={editor} />}
+      {Bottom && <Bottom />}
     </EditorContext.Provider>
   );
 };
