@@ -16,6 +16,8 @@ import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
 import Placeholder from "@tiptap/extension-placeholder";
+import LinkBubbleMenu from "./menu/linkBubbleMenu";
+import Link from "@tiptap/extension-link";
 
 const TextEditor = ({
   content,
@@ -48,6 +50,8 @@ const TextEditor = ({
     },
     extensions: [
       StarterKit.configure({
+        strike: false,
+        link: false,
         ...starterKitOptions,
       }),
       Placeholder.configure({
@@ -62,6 +66,7 @@ const TextEditor = ({
         types: ["heading", "paragraph"],
       }),
       Strike,
+      Link,
       ...extensions,
     ],
     onUpdate: ({ editor }) => {
@@ -81,6 +86,7 @@ const TextEditor = ({
   return (
     <EditorContext.Provider value={{ editor }}>
       {Top && <Top />}
+      <LinkBubbleMenu />
       {fixedMenu && <FixedMenu />}
       {Editor ? <Editor editor={editor} /> : <EditorContent editor={editor} />}
       {Bottom && <Bottom />}
