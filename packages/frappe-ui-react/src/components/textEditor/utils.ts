@@ -1,17 +1,44 @@
+const linkRegex =
+  /\b((https?:\/\/|www\.)[a-z0-9-]+(\.[a-z0-9-]+)+([/?#][^\s<>"')\]]*)?)/gi;
+
+const processText = (text: string): DocumentFragment => {
+  const fragment = document.createDocumentFragment();
+  const matches = [...text.matchAll(linkRegex)];
+  let lastIndex = 0;
+
+  matches.forEach((match) => {
+    const url = match[0];
+    const matchIndex = match.index || 0;
+
+    if (matchIndex > lastIndex) {
+      fragment.appendChild(
+        document.createTextNode(text.slice(lastIndex, matchIndex))
+      );
+    }
+
+    const href = url.startsWith("http") ? url : `https://${url}`;
+    if (href.startsWith("http://") || href.startsWith("https://")) {
+      const a = document.createElement("a");
+      a.setAttribute("href", href);
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener noreferrer");
+      a.textContent = url;
+      fragment.appendChild(a);
+    } else {
+      fragment.appendChild(document.createTextNode(url));
+    }
+
+    lastIndex = matchIndex + url.length;
+  });
+
+  if (lastIndex < text.length) {
+    fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
+  }
+
+  return fragment;
+};
+
 export const preProcessLink = (input: string) => {
-  const linkRegex = /\b((https?:\/\/|www\.)[^\s]+)\b/gi;
-
-  const processText = (text: string) => {
-    return text.replace(linkRegex, (url) => {
-      const href = url.startsWith("http") ? url : `https://${url}`;
-      return `<a 
-                href="${href}" 
-                class="text-blue-500 hover:text-blue-700 underline" 
-                target="_blank"
-                rel="noopener noreferrer">${url}</a>`;
-    });
-  };
-
   const parser = new DOMParser();
   const doc = parser.parseFromString(input, "text/html");
 
@@ -25,11 +52,11 @@ export const preProcessLink = (input: string) => {
   textNodes.forEach((node) => {
     const parent = node.parentNode as HTMLElement;
     if (parent && !parent.closest("a")) {
-      const processed = processText(node.textContent || "");
-      if (processed !== node.textContent) {
-        const wrapper = document.createElement("span");
-        wrapper.innerHTML = processed;
-        parent.replaceChild(wrapper, node);
+      const text = node.textContent || "";
+      const fragment = processText(text);
+
+      if (fragment.childNodes.length > 0) {
+        parent.replaceChild(fragment, node);
       }
     }
   });
