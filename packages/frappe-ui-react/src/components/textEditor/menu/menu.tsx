@@ -100,7 +100,7 @@ const Menu = ({ className }: MenuProps) => {
                           <button
                             className="w-full h-7 rounded px-2 text-base flex items-center gap-2 hover:bg-surface-gray-3"
                             onClick={() => {
-                              command.action(editor);
+                              command.action?.(editor);
                               close();
                             }}
                             title={command.label}
@@ -139,7 +139,7 @@ const Menu = ({ className }: MenuProps) => {
                 ? "bg-surface-gray-3"
                 : "hover:bg-surface-gray-2"
             )}
-            onClick={() => command.action(editor)}
+            onClick={() => command.action?.(editor)}
             title={label}
           >
             <Icon className="size-4" />
