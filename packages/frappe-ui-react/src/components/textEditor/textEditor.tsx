@@ -6,6 +6,7 @@ import StarterKit from "@tiptap/starter-kit";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
 import Strike from "@tiptap/extension-strike";
+import Placeholder from "@tiptap/extension-placeholder";
 import clsx from "clsx";
 
 /**
@@ -15,7 +16,7 @@ import "./textEditor.css";
 import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
-import Placeholder from "@tiptap/extension-placeholder";
+import IframeExtension from "./extensions/iframe";
 
 const TextEditor = ({
   content,
@@ -62,6 +63,7 @@ const TextEditor = ({
         types: ["heading", "paragraph"],
       }),
       Strike,
+      IframeExtension,
       ...extensions,
     ],
     onUpdate: ({ editor }) => {

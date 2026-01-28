@@ -18,12 +18,14 @@ import {
   ListOrderedIcon,
   StrikethroughIcon,
   TypeIcon,
+  YoutubeIcon,
 } from "lucide-react";
 
 /**
  * Internal dependencies.
  */
 import type { TYPE_COMMANDS_KEYS, EditorCommand } from "./types";
+import { InsertIframe } from "../../extensions/iframe";
 
 export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
   paragraph: {
@@ -133,6 +135,12 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     icon: StrikethroughIcon,
     action: (editor) => editor.chain().focus().toggleStrike().run(),
     isActive: (editor) => editor.isActive("strike"),
+  },
+  iframe: {
+    label: "Embed",
+    icon: YoutubeIcon,
+    isActive: (editor) => editor.isActive("iframe"),
+    component: InsertIframe,
   },
 };
 
