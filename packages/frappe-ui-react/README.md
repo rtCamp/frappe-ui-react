@@ -85,6 +85,7 @@ This library is built on top of several excellent open-source projects:
 - **[TailwindCSS](https://github.com/tailwindlabs/tailwindcss)**: Utility-first CSS framework for building design system-based UIs.
 - **[Headless UI](https://github.com/tailwindlabs/headlessui)**: Unstyled and accessible UI components.
 - **[Radix UI](https://github.com/radix-ui/themes)**: Low-level, unstyled, and accessible UI primitives.
+- **[React Quill](https://github.com/zenoamaro/react-quill)**: Rich text editor component for React.
 - **[dayjs](https://github.com/iamkun/dayjs)**: Lightweight JavaScript library for working with dates.
 
 ## Inspiration & Credits
