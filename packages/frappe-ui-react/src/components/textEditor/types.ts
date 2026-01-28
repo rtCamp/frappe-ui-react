@@ -5,6 +5,22 @@ import { Editor, type Extension } from "@tiptap/react";
 import type { StarterKitOptions } from "@tiptap/starter-kit";
 import type { FC } from "react";
 
+export interface UploadedFile {
+  file_name: string;
+  file_size: number;
+  file_url: string;
+  name?: string;
+  owner?: string;
+  creation?: string;
+  modified?: string;
+  modified_by?: string;
+  is_private?: 0 | 1;
+  file_type?: string;
+  folder?: string;
+  is_folder?: 0 | 1;
+  content_hash?: string;
+}
+
 export interface TextEditorProps {
   // Props
   content?: string | null;
@@ -24,4 +40,6 @@ export interface TextEditorProps {
   Top?: FC;
   Editor?: FC<{ editor: Editor }>;
   Bottom?: FC;
+  // handlers
+  uploadFunction?: (file: File) => Promise<UploadedFile>;
 }

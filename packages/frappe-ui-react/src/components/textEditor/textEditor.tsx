@@ -13,7 +13,7 @@ import clsx from "clsx";
  * Internal dependencies.
  */
 import "./textEditor.css";
-import { normalizeClasses } from "../../utils";
+import { getBase64File, normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -35,6 +35,7 @@ const TextEditor = ({
   Top,
   Editor,
   Bottom,
+  uploadFunction = getBase64File,
 }: TextEditorProps) => {
   const editor = useEditor(
     {
@@ -101,22 +102,19 @@ const TextEditor = ({
     ]
   );
 
-  const handleUpload: ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleUpload: ChangeEventHandler<HTMLInputElement> = async (e) => {
     const file = e.target.files?.[0];
     if (!file || !editor) return;
-
     if (!file.type.startsWith("image/")) {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const base64Url = event.target?.result as string;
-      if (base64Url) {
-        editor.chain().focus().setImage({ src: base64Url }).run();
-      }
-    };
-    reader.readAsDataURL(file);
+    const res = await uploadFunction(file);
+    const url = res.file_url;
+
+    if (url) {
+      editor.chain().focus().setImage({ src: url }).run();
+    }
 
     e.target.value = "";
   };
