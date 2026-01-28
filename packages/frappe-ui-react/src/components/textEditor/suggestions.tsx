@@ -2,7 +2,7 @@ import type { EmojiItem } from "@tiptap/extension-emoji";
 import type { SuggestionOptions, SuggestionProps } from "@tiptap/suggestion";
 import { computePosition } from "@floating-ui/dom";
 import { ReactRenderer } from "@tiptap/react";
-import { EmojiList } from "./emojiList";
+import { EmojiList, type EmojiListRef } from "./emojiList";
 
 type EmojiStorage = {
   emojis: EmojiItem[];
@@ -27,7 +27,7 @@ const EmojiSuggestions: Omit<SuggestionOptions, "editor"> = {
   allowSpaces: false,
 
   render: () => {
-    let component: ReactRenderer<unknown, SuggestionProps> | null = null;
+    let component: ReactRenderer<EmojiListRef, SuggestionProps> | null = null;
 
     const repositionComponent = (clientRect: DOMRect | null) => {
       if (!clientRect || !component) {
@@ -79,7 +79,7 @@ const EmojiSuggestions: Omit<SuggestionOptions, "editor"> = {
 
       onKeyDown(props) {
         if (!component) {
-          return;
+          return false;
         }
 
         if (props.event.key === "Escape" && component) {
@@ -90,7 +90,7 @@ const EmojiSuggestions: Omit<SuggestionOptions, "editor"> = {
           return true;
         }
         if (!component.ref) {
-          return;
+          return false;
         }
 
         return component.ref.onKeyDown(props) ?? false;
