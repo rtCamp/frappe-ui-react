@@ -2,7 +2,6 @@
  * External dependencies.
  */
 import type { Editor } from "@tiptap/react";
-import type { JSX } from "react";
 
 export const COMMANDS_KEYS = [
   "paragraph",
@@ -21,7 +20,6 @@ export const COMMANDS_KEYS = [
   "align_center",
   "align_right",
   "strike",
-  "iframe",
 ] as const;
 
 export type TYPE_COMMANDS_KEYS = (typeof COMMANDS_KEYS)[number];
@@ -29,7 +27,7 @@ export type TYPE_COMMANDS_KEYS = (typeof COMMANDS_KEYS)[number];
 export interface EditorCommand {
   label: string;
   text?: string;
-  icon: ({ className }: { className?: string }) => JSX.Element;
+  icon: React.FC<{ className?: string }>;
   action?: (editor: Editor) => void;
   isActive: (editor: Editor) => boolean;
   component?: React.FC<{
