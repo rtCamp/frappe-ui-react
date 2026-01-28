@@ -154,7 +154,10 @@ export const InsertIframe: EditorCommand["component"] = ({ editor }) => {
 
   return (
     <>
-      <Button onClick={openIframeDialog}>
+      <Button
+        onClick={openIframeDialog}
+        className="flex rounded text-ink-gray-8 transition-colors focus-within:ring-0 p-1 hover:bg-surface-gray-2 bg-transparent"
+      >
         <YoutubeIcon className="size-4" />
       </Button>
 

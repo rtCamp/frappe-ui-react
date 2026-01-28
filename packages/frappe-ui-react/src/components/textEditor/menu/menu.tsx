@@ -134,7 +134,7 @@ const Menu = ({ className }: MenuProps) => {
         const Icon = command.icon;
 
         if (command.component) {
-          return <command.component editor={editor} icon={command.icon} />;
+          return <command.component editor={editor} />;
         }
         return (
           <button
