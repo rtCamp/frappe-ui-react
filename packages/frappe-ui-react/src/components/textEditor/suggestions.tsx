@@ -82,15 +82,16 @@ const EmojiSuggestions: Omit<SuggestionOptions, "editor"> = {
           return false;
         }
 
+        if (!component.ref) {
+          return false;
+        }
+
         if (props.event.key === "Escape" && component) {
           if (document.body.contains(component.element)) {
             document.body.removeChild(component.element);
           }
           component.destroy();
           return true;
-        }
-        if (!component.ref) {
-          return false;
         }
 
         return component.ref.onKeyDown(props) ?? false;
