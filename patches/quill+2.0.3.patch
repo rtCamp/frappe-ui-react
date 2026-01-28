@@ -1,0 +1,53 @@
+diff --git a/node_modules/quill/formats/formula.js b/node_modules/quill/formats/formula.js
+index 1c1b1a5..79e6792 100644
+--- a/node_modules/quill/formats/formula.js
++++ b/node_modules/quill/formats/formula.js
+@@ -26,7 +26,19 @@ class Formula extends Embed {
+     const {
+       formula
+     } = this.value();
+-    return `<span>${formula}</span>`;
++    if (typeof document !== 'undefined') {
++      const span = document.createElement('span');
++      span.textContent = formula;
++      return span.outerHTML;
++    }
++    const escape = (str) => str.replace(/[&<>"']/g, (s) => ({
++      '&': '&amp;',
++      '<': '&lt;',
++      '>': '&gt;',
++      '"': '&quot;',
++      "'": '&#39;'
++    }[s]));
++    return `<span>${escape(formula)}</span>`;
+   }
+ }
+ export default Formula;
+diff --git a/node_modules/quill/formats/video.js b/node_modules/quill/formats/video.js
+index 135a297..984c9ba 100644
+--- a/node_modules/quill/formats/video.js
++++ b/node_modules/quill/formats/video.js
+@@ -41,7 +41,22 @@ class Video extends BlockEmbed {
+     const {
+       video
+     } = this.value();
+-    return `<a href="${video}">${video}</a>`;
++    const sanitizedVideo = Video.sanitize(video);
++    if (typeof document !== 'undefined') {
++      const a = document.createElement('a');
++      a.setAttribute('href', sanitizedVideo);
++      a.textContent = sanitizedVideo;
++      return a.outerHTML;
++    }
++    const escape = (str) => str.replace(/[&<>"']/g, (s) => ({
++      '&': '&amp;',
++      '<': '&lt;',
++      '>': '&gt;',
++      '"': '&quot;',
++      "'": '&#39;'
++    }[s]));
++    const escaped = escape(sanitizedVideo);
++    return `<a href="${escaped}">${escaped}</a>`;
+   }
+ }
+ export default Video;
