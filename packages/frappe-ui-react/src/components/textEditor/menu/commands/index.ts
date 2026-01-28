@@ -12,6 +12,7 @@ import {
   Heading4Icon,
   Heading5Icon,
   Heading6Icon,
+  Image,
   ItalicIcon,
   ListCheckIcon,
   ListIcon,
@@ -133,6 +134,17 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     icon: StrikethroughIcon,
     action: (editor) => editor.chain().focus().toggleStrike().run(),
     isActive: (editor) => editor.isActive("strike"),
+  },
+  image: {
+    label: "Image",
+    icon: Image,
+    action: () => {
+      const inpEle = document.getElementById("fileInput");
+      if (inpEle) {
+        inpEle.click();
+      }
+    },
+    isActive: () => false,
   },
 };
 

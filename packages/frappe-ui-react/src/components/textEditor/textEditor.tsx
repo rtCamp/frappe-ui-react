@@ -6,6 +6,7 @@ import StarterKit from "@tiptap/starter-kit";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
 import Strike from "@tiptap/extension-strike";
+import Image from "@tiptap/extension-image";
 import clsx from "clsx";
 
 /**
@@ -16,6 +17,7 @@ import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
 import Placeholder from "@tiptap/extension-placeholder";
+import type { ChangeEventHandler } from "react";
 
 const TextEditor = ({
   content,
@@ -64,6 +66,12 @@ const TextEditor = ({
           types: ["heading", "paragraph"],
         }),
         Strike,
+        Image.configure({
+          allowBase64: true,
+          resize: {
+            enabled: true,
+          },
+        }),
         ...extensions,
       ],
       onUpdate: ({ editor }) => {
@@ -93,8 +101,36 @@ const TextEditor = ({
     ]
   );
 
+  const handleUpload: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !editor) return;
+
+    if (!file.type.startsWith("image/")) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64Url = event.target?.result as string;
+      if (base64Url) {
+        editor.chain().focus().setImage({ src: base64Url }).run();
+      }
+    };
+    reader.readAsDataURL(file);
+
+    e.target.value = "";
+  };
+
   return (
     <EditorContext.Provider value={{ editor }}>
+      <input
+        id="fileInput"
+        type="file"
+        style={{
+          visibility: "hidden",
+        }}
+        onChange={handleUpload}
+      />
       {Top && <Top />}
       {fixedMenu && <FixedMenu />}
       {Editor ? <Editor editor={editor} /> : <EditorContent editor={editor} />}
