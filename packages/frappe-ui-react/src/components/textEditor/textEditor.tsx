@@ -3,6 +3,7 @@
  */
 import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import Emoji, { gitHubEmojis } from "@tiptap/extension-emoji";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
 import Strike from "@tiptap/extension-strike";
@@ -16,6 +17,7 @@ import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
 import Placeholder from "@tiptap/extension-placeholder";
+import EmojiSuggestions from "./suggestions";
 
 const TextEditor = ({
   content,
@@ -55,6 +57,10 @@ const TextEditor = ({
         Placeholder.configure({
           placeholder:
             typeof placeholder === "function" ? placeholder() : placeholder,
+        }),
+        Emoji.configure({
+          emojis: gitHubEmojis,
+          suggestion: EmojiSuggestions,
         }),
         TaskList,
         TaskItem.configure({
