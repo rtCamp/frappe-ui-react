@@ -1,0 +1,142 @@
+/* Typography prose color variables override */
+.prose {
+  --tw-prose-body: var(--color-ink-gray-8);
+  --tw-prose-headings: var(--color-ink-gray-9);
+  --tw-prose-lead: var(--color-ink-gray-5);
+  --tw-prose-links: var(--color-ink-gray-9);
+  --tw-prose-bold: var(--color-ink-gray-9);
+  --tw-prose-counters: var(--color-ink-gray-4);
+  --tw-prose-bullets: var(--color-ink-gray-2);
+  --tw-prose-hr: var(--color-ink-gray-1);
+  --tw-prose-quotes: var(--color-ink-gray-8);
+  --tw-prose-quote-borders: var(--color-ink-gray-1);
+  --tw-prose-captions: var(--color-ink-gray-4);
+  --tw-prose-kbd: var(--color-ink-gray-9);
+  --tw-prose-code: var(--color-ink-gray-9);
+  --tw-prose-pre-code: var(--color-ink-gray-1);
+  --tw-prose-pre-bg: var(--color-ink-gray-8);
+  --tw-prose-th-borders: var(--color-ink-gray-2);
+  --tw-prose-td-borders: var(--color-ink-gray-1);
+}
+
+.ProseMirror {
+  outline: none;
+  caret-color: var(--color-ink-gray-9);
+  word-break: break-word;
+}
+
+/* Firefox */
+.ProseMirror-focused:focus-visible {
+  outline: none;
+}
+
+/* Placeholder */
+.ProseMirror:not(.ProseMirror-focused) p.is-editor-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--color-ink-gray-4);
+  pointer-events: none;
+  height: 0;
+}
+
+.ProseMirror-selectednode video,
+img.ProseMirror-selectednode {
+  outline: 2px solid var(--color-outline-gray-2);
+}
+
+/* Table styles */
+.prose table p {
+  margin: 0;
+}
+
+/* Prosemirror specific table styles */
+.ProseMirror table .selectedCell:after {
+  z-index: 2;
+  position: absolute;
+  content: '';
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  background: var(--color-ink-blue-1);
+  opacity: 0.3;
+}
+
+.ProseMirror table .column-resize-handle {
+  position: absolute;
+  right: -1px;
+  top: 0;
+  bottom: -2px;
+  width: 4px;
+  background-color: var(--color-ink-blue-2);
+  pointer-events: none;
+}
+
+.ProseMirror ul[data-type='taskList'] {
+  list-style: none;
+  padding: 0;
+}
+
+.ProseMirror ul[data-type='taskList'] li {
+  align-items: flex-start;
+  display: flex;
+  margin: 0;
+}
+
+.ProseMirror ul[data-type='taskList'] li > label {
+  flex: 0 0 auto;
+  margin-right: 0.5rem;
+  margin-top: 0.25rem;
+  height: 1lh;
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
+.ProseMirror ul[data-type='taskList'] li > div {
+  flex: 1 1 auto;
+  margin-bottom: 0;
+}
+
+.ProseMirror ul[data-type='taskList'] li > div > p {
+  margin: 0.25rem 0;
+}
+
+.ProseMirror ul[data-type='taskList'] ul[data-type='taskList'] {
+  margin: 0;
+}
+
+.ProseMirror ul[data-type='taskList'] input[type='checkbox'] {
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  color: var(--color-ink-gray-9);
+}
+
+.resize-cursor {
+  cursor: ew-resize;
+  cursor: col-resize;
+}
+
+.tag-item,
+.tag-suggestion-active {
+  background-color: var(--color-surface-gray-1, #f8f8f8);
+  color: inherit;
+  border: 1px solid transparent;
+  padding: 0px 2px;
+  border-radius: 4px;
+  font-size: 1em;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.tag-item.ProseMirror-selectednode {
+  border-color: var(--color-outline-gray-3, #c7c7c7);
+}
+
+.tag-suggestion-active {
+  background-color: var(--color-surface-gray-2, #f3f3f3);
+}
+
