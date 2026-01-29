@@ -6,6 +6,7 @@ import {
   AlignLeftIcon,
   AlignRightIcon,
   BoldIcon,
+  CodeIcon,
   Heading1Icon,
   Heading2Icon,
   Heading3Icon,
@@ -138,6 +139,12 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     icon: StrikethroughIcon,
     action: (editor) => editor.chain().focus().toggleStrike().run(),
     isActive: (editor) => editor.isActive("strike"),
+  },
+  codeblock: {
+    label: "Code Block",
+    icon: CodeIcon,
+    action: (editor) => editor.chain().focus().toggleCodeBlock().run(),
+    isActive: (editor) => editor.isActive("codeBlock"),
   },
   horizontal_rule: {
     label: "Horizontal Rule",

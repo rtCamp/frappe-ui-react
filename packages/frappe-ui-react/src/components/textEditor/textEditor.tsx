@@ -19,6 +19,7 @@ import "./textEditor.css";
 import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
+import { ExtendedCodeBlock } from "./extension/codeBlock";
 
 const TextEditor = ({
   content,
@@ -53,6 +54,7 @@ const TextEditor = ({
       extensions: [
         StarterKit.configure({
           strike: false,
+          codeBlock: false,
           ...starterkitOptions,
         }),
         Placeholder.configure({
@@ -69,6 +71,7 @@ const TextEditor = ({
         Strike,
         Blockquote,
         TableKit,
+        ExtendedCodeBlock,
         HorizontalRule.configure({
           HTMLAttributes: {
             class: "not-prose border-outline-gray-1 m-0",
