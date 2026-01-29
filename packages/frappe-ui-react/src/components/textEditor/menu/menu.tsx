@@ -178,9 +178,6 @@ const Menu = ({ className }: MenuProps) => {
         const label = command.label;
         const Icon = command.icon;
 
-        if (command.component) {
-          return <command.component editor={editor} />;
-        }
         return (
           <button
             key={index}
