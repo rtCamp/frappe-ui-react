@@ -7,6 +7,7 @@ import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
 import Blockquote from "@tiptap/extension-blockquote";
 import Strike from "@tiptap/extension-strike";
+import { TableKit } from "@tiptap/extension-table";
 import clsx from "clsx";
 
 /**
@@ -66,6 +67,7 @@ const TextEditor = ({
         }),
         Strike,
         Blockquote,
+        TableKit,
         ...extensions,
       ],
       onUpdate: ({ editor }) => {
