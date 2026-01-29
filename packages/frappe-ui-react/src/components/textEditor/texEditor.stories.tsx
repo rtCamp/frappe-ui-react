@@ -75,12 +75,8 @@ export const Basic: Story = {
         <li>Item 1</li>
         <li>Item 2</li>
     </ul>
-        <pre>
-            <code class="language-javascript">
-                import { Button } from '@rtcamp/frappe-ui-react'
-                const value = ref(true);
-            </code>
-        </pre>
+        <pre><code class="language-javascript">import { Button } from '@rtcamp/frappe-ui-react'
+const value = ref(true);</code></pre>
     </ul>
   `,
     editorClass: "prose-sm min-h-[4rem] border rounded-b-lg border-t-0 p-2",
