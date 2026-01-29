@@ -8,6 +8,8 @@ import { createLowlight, all } from "lowlight";
  * Internal dependencies.
  */
 import { getCodeBlockCtx, INDENT, lineStartsBetween } from "./utils";
+import { ReactNodeViewRenderer } from "@tiptap/react";
+import CodeBlockComponent from "./codeBlockNode";
 
 const lowlight = createLowlight(all);
 
@@ -56,6 +58,9 @@ export const ExtendedCodeBlock = CodeBlockLowlight.extend({
         return true;
       },
     };
+  },
+  addNodeView() {
+    return ReactNodeViewRenderer(CodeBlockComponent);
   },
 }).configure({
   lowlight,
