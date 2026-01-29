@@ -5,6 +5,7 @@ import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
+import Blockquote from "@tiptap/extension-blockquote";
 import Strike from "@tiptap/extension-strike";
 import clsx from "clsx";
 
@@ -64,6 +65,7 @@ const TextEditor = ({
           types: ["heading", "paragraph"],
         }),
         Strike,
+        Blockquote,
         ...extensions,
       ],
       onUpdate: ({ editor }) => {

@@ -20,6 +20,7 @@ export const COMMANDS_KEYS = [
   "align_center",
   "align_right",
   "strike",
+  "blockquote",
   "undo",
   "redo",
 ] as const;
