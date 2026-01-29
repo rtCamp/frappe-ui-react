@@ -1,7 +1,6 @@
 /**
  * External dependencies.
  */
-
 import { useCurrentEditor, useEditorState } from "@tiptap/react";
 import clsx from "clsx";
 
@@ -42,6 +41,22 @@ const DEFAULT_COMMANDS: Array<
   "align_center",
   "align_right",
   "separator",
+  [
+    "insert_table",
+    "add_column_before",
+    "add_column_after",
+    "delete_column",
+    "add_row_before",
+    "add_row_after",
+    "delete_row",
+    "toggle_header_column",
+    "toggle_header_row",
+    "toggle_header_cell",
+    "delete_table",
+  ],
+  "blockquote",
+  "undo",
+  "redo",
 ];
 
 const Menu = ({ className }: MenuProps) => {
@@ -68,7 +83,7 @@ const Menu = ({ className }: MenuProps) => {
   return (
     <div
       className={clsx(
-        "flex bg-surface-white px-1 py-1 w-full overflow-x-auto rounded-t-lg border border-outline-gray-modals items-center",
+        "flex gap-1 bg-surface-white px-1 py-1 w-full overflow-x-auto rounded-t-lg border border-outline-gray-modals items-center",
         className
       )}
     >
@@ -90,24 +105,30 @@ const Menu = ({ className }: MenuProps) => {
                     className="rounded px-2 py-1 text-base font-medium text-ink-gray-8 transition-colors hover:bg-surface-gray-2"
                     onClick={() => togglePopover()}
                   >
-                    <ActiveIcon className="h-4 w-4" />
+                    {ActiveIcon && <ActiveIcon className="h-4 w-4" />}
                   </button>
                 )}
                 body={({ close }) => (
                   <ul className="w-fit p-1.5 mt-2 rounded-lg bg-surface-modal shadow-2xl ring-1 ring-black/5 focus:outline-none">
-                    {command_key.map((command_key, optionIndex) => {
+                    {command_key.map((command_key) => {
                       const command = COMMANDS[command_key];
+                      const isDisabled = command.isDisabled?.(editor);
+                      if (isDisabled) {
+                        return null;
+                      }
                       return (
-                        <li key={optionIndex}>
+                        <li key={command_key}>
                           <button
                             className="w-full h-7 rounded px-2 text-base flex items-center gap-2 hover:bg-surface-gray-3"
                             onClick={() => {
-                              command.action(editor);
+                              command.action?.(editor);
                               close();
                             }}
                             title={command.label}
                           >
-                            <command.icon className="size-4 shrink-0 text-ink-gray-6" />
+                            {command.icon && (
+                              <command.icon className="size-4 shrink-0 text-ink-gray-6" />
+                            )}
                             <span className="whitespace-nowrap text-ink-gray-7">
                               {command.label}
                             </span>
@@ -131,10 +152,12 @@ const Menu = ({ className }: MenuProps) => {
         }
 
         const command: EditorCommand = COMMANDS[command_key];
+        const label = command.label;
+        const Icon = command.icon;
 
         if (command.component) {
           return (
-            <command.component>
+            <command.component key={index}>
               {({ isActive, onClick }) => (
                 <button
                   className={clsx(
@@ -144,21 +167,21 @@ const Menu = ({ className }: MenuProps) => {
                       : "hover:bg-surface-gray-2"
                   )}
                   onClick={() => onClick?.()}
-                  title={command.label}
+                  title={label}
                 >
-                  <command.icon className="h-4 w-4" />
+                  {Icon && <Icon className="size-4" />}
                 </button>
               )}
             </command.component>
           );
         }
-        const label = command.label;
-        const Icon = command.icon;
+
         return (
           <button
             key={index}
+            disabled={command.isDisabled?.(editor) || false}
             className={clsx(
-              "flex rounded text-ink-gray-8 transition-colors focus-within:ring-0 p-1 hover:bg-surface-gray-2",
+              "flex rounded text-ink-gray-8 transition-colors focus-within:ring-0 p-1 hover:bg-surface-gray-2 disabled:opacity-50",
               isButtonActive(command)
                 ? "bg-surface-gray-3"
                 : "hover:bg-surface-gray-2"
@@ -166,7 +189,7 @@ const Menu = ({ className }: MenuProps) => {
             onClick={() => command.action?.(editor)}
             title={label}
           >
-            <Icon className="size-4" />
+            {Icon && <Icon className="size-4" />}
           </button>
         );
       })}

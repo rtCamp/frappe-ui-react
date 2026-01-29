@@ -2,6 +2,7 @@
  * External dependencies.
  */
 import type { Editor } from "@tiptap/react";
+import type { FC } from "react";
 
 export const COMMANDS_KEYS = [
   "paragraph",
@@ -21,6 +22,22 @@ export const COMMANDS_KEYS = [
   "align_right",
   "font_color",
   "strike",
+  "insert_table",
+  "add_column_before",
+  "add_column_after",
+  "delete_column",
+  "add_row_before",
+  "add_row_after",
+  "delete_row",
+  "merge_cells",
+  "split_cell",
+  "toggle_header_column",
+  "toggle_header_row",
+  "toggle_header_cell",
+  "delete_table",
+  "blockquote",
+  "undo",
+  "redo",
 ] as const;
 
 export type TYPE_COMMANDS_KEYS = (typeof COMMANDS_KEYS)[number];
@@ -28,10 +45,12 @@ export type TYPE_COMMANDS_KEYS = (typeof COMMANDS_KEYS)[number];
 export interface EditorCommand {
   label: string;
   text?: string;
-  icon: React.ComponentType<{ className?: string }>;
-  action?: (editor: Editor) => void;
+  icon?: React.ComponentType<{ className?: string }>;
   isActive: (editor: Editor) => boolean;
-  component?: React.ComponentType<{
+  isDisabled?: (editor: Editor) => boolean;
+  action?: (editor: Editor) => void;
+  component?: FC<{
+    editor: Editor;
     children: (props: {
       isActive?: boolean;
       onClick?: () => void;
