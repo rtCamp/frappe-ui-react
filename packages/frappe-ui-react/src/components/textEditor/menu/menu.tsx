@@ -126,7 +126,7 @@ const Menu = ({ className }: MenuProps) => {
                             title={command.label}
                           >
                             {command.icon && (
-                              <command.icon className="size-4 flex-shrink-0 text-ink-gray-6" />
+                              <command.icon className="size-4 shrink-0 text-ink-gray-6" />
                             )}
                             <span className="whitespace-nowrap text-ink-gray-7">
                               {command.label}
