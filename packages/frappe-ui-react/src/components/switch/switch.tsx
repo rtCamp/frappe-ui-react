@@ -39,7 +39,7 @@ const Switch: React.FC<SwitchProps> = ({
     "disabled:cursor-not-allowed disabled:bg-surface-gray-3",
     value
       ? "bg-surface-gray-7 enabled:hover:bg-surface-gray-6 active:bg-surface-gray-5"
-      : "bg-surface-gray-4 enabled:hover:bg-gray-400 active:bg-gray-500 dark:enabled:hover:bg-dark-gray-100 dark:active:bg-dark-gray-200",
+      : "bg-surface-gray-4 enabled:hover:bg-gray-400 active:bg-gray-500 dark:enabled:hover:bg-dark-gray-100 dark:enabled:active:bg-dark-gray-200",
     switchType === SwitchVariant.ONLY_LABEL &&
       (value
         ? "group-hover:enabled:bg-surface-gray-6"
