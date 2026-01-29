@@ -108,7 +108,10 @@ const FontColor = ({ children }: FontColorProps) => {
                     title={color.name}
                     aria-label={color.name}
                     className={clsx(
-                      "flex shrink-0 h-5 w-5 items-center justify-center rounded border border-outline-gray-1 text-base"
+                      "flex shrink-0 h-5 w-5 items-center justify-center rounded border border-outline-gray-1 text-base",
+                      {
+                        "border-transparent": color.name !== "Default",
+                      }
                     )}
                     style={{
                       backgroundColor: color.value,
