@@ -19,6 +19,7 @@ import {
   ListOrderedIcon,
   QuoteIcon,
   Redo2Icon,
+  SeparatorHorizontal,
   StrikethroughIcon,
   TableIcon,
   TypeIcon,
@@ -144,6 +145,12 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     icon: CodeIcon,
     action: (editor) => editor.chain().focus().toggleCodeBlock().run(),
     isActive: (editor) => editor.isActive("codeBlock"),
+  },
+  horizontal_rule: {
+    label: "Horizontal Rule",
+    icon: SeparatorHorizontal,
+    action: (editor) => editor.chain().focus().setHorizontalRule().run(),
+    isActive: (editor) => editor.isActive("strike"),
   },
   insert_table: {
     label: "Insert Table",

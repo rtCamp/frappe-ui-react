@@ -41,6 +41,7 @@ const DEFAULT_COMMANDS: Array<
   "align_right",
   "separator",
   "codeblock",
+  "horizontal_rule",
   [
     "insert_table",
     "add_column_before",
