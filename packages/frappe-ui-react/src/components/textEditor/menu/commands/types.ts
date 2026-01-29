@@ -22,6 +22,8 @@ export const COMMANDS_KEYS = [
   "align_right",
   "font_color",
   "strike",
+  "codeblock",
+  "horizontal_rule",
   "insert_table",
   "add_column_before",
   "add_column_after",

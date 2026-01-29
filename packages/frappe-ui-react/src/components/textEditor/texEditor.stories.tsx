@@ -65,15 +65,20 @@ export default meta;
 type Story = StoryObj<typeof TextEditor>;
 export const Basic: Story = {
   args: {
-    content: `<div>
-  <h2>Heading 2</h2>
-  <p>
-    This is a paragraph with <strong>bold</strong> and <em>italic</em> text.
-  </p>
-  <ul>
-    <li>Item 1</li>
-    <li>Item 2</li>
-  </ul>`,
+    content: `
+    <div>
+    <h2>Heading 2</h2>
+    <p>
+        This is a paragraph with <strong>bold</strong> and <em>italic</em> text.
+    </p>
+    <ul>
+        <li>Item 1</li>
+        <li>Item 2</li>
+    </ul>
+        <pre><code class="language-javascript">import { Button } from '@rtcamp/frappe-ui-react'
+const value = ref(true);</code></pre>
+    </ul>
+  `,
     editorClass: "prose-sm min-h-[4rem] border rounded-b-lg border-t-0 p-2",
     fixedMenu: true,
   },

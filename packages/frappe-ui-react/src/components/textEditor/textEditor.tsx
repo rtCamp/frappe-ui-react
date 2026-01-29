@@ -7,8 +7,7 @@ import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
 import { TextStyleKit } from "@tiptap/extension-text-style";
-import Blockquote from "@tiptap/extension-blockquote";
-import Strike from "@tiptap/extension-strike";
+import Placeholder from "@tiptap/extension-placeholder";
 import { TableKit } from "@tiptap/extension-table";
 import clsx from "clsx";
 
@@ -19,7 +18,7 @@ import "./textEditor.css";
 import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
-import Placeholder from "@tiptap/extension-placeholder";
+import { ExtendedCodeBlock } from "./extension/codeBlock";
 
 const TextEditor = ({
   content,
@@ -53,7 +52,12 @@ const TextEditor = ({
       },
       extensions: [
         StarterKit.configure({
-          strike: false,
+          codeBlock: false,
+          horizontalRule: {
+            HTMLAttributes: {
+              class: "not-prose border-outline-gray-1 m-0",
+            },
+          },
           ...starterkitOptions,
         }),
         Placeholder.configure({
@@ -67,11 +71,10 @@ const TextEditor = ({
         TextAlign.configure({
           types: ["heading", "paragraph"],
         }),
-        Strike,
-        Blockquote,
         TableKit,
         TextStyleKit,
         Highlight.configure({ multicolor: true }),
+        ExtendedCodeBlock,
         ...extensions,
       ],
       onUpdate: ({ editor }) => {
