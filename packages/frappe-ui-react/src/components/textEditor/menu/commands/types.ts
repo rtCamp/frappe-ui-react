@@ -45,12 +45,11 @@ export type TYPE_COMMANDS_KEYS = (typeof COMMANDS_KEYS)[number];
 export interface EditorCommand {
   label: string;
   text?: string;
-  icon?: React.ComponentType<{ className?: string }>;
+  icon?: FC<{ className?: string }>;
   isActive: (editor: Editor) => boolean;
   isDisabled?: (editor: Editor) => boolean;
   action?: (editor: Editor) => void;
   component?: FC<{
-    editor: Editor;
     children: (props: {
       isActive?: boolean;
       onClick?: () => void;
