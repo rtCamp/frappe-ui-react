@@ -17,8 +17,10 @@ import {
   ListIcon,
   ListOrderedIcon,
   QuoteIcon,
+  Redo2Icon,
   StrikethroughIcon,
   TypeIcon,
+  Undo2Icon,
 } from "lucide-react";
 
 /**
@@ -140,6 +142,20 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     icon: QuoteIcon,
     action: (editor) => editor.chain().focus().toggleBlockquote().run(),
     isActive: (editor) => editor.isActive("blockquote"),
+  },
+  undo: {
+    label: "Undo",
+    icon: Undo2Icon,
+    action: (editor) => editor.chain().focus().undo().run(),
+    isDisabled: (editor) => !editor.can().undo(),
+    isActive: () => false,
+  },
+  redo: {
+    label: "Undo",
+    icon: Redo2Icon,
+    action: (editor) => editor.chain().focus().redo().run(),
+    isDisabled: (editor) => !editor.can().redo(),
+    isActive: () => false,
   },
 };
 
