@@ -1,18 +1,19 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import { fileURLToPath } from "url";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import svgr from "vite-plugin-svgr";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const __filename = fileURLToPath((import.meta as any).url);
-const __dirname = path.dirname(__filename);
-
-// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
-  plugins: [react(), tailwindcss(), svgr({ include: "**/*.svg?react" })],
+  plugins: [
+    react(),
+    tailwindcss(),
+    svgr({
+      include: "**/*.svg?react",
+    }),
+  ],
   test: {
     projects: [
       {
@@ -26,7 +27,6 @@ export default defineConfig({
           name: "storybook",
           browser: {
             enabled: true,
-            headless: true,
             provider: "playwright",
             instances: [
               {
