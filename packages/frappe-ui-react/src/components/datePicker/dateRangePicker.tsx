@@ -80,6 +80,7 @@ function useDateRangePicker({
     const todayStr = getDateValue(d);
     setFromDate(todayStr);
     setToDate(todayStr);
+    onChange?.([todayStr, todayStr]);
   }
 
   function clearDates() {
@@ -135,6 +136,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   placement,
   label,
   children,
+  onChange,
 }) => {
   const {
     open,
@@ -161,7 +163,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
     isInRange,
   } = useDateRangePicker({
     value: Array.isArray(value) ? value : undefined,
-    onChange: undefined, // Only call onChange on second date selection
+    onChange,
   });
 
   const handleOpenChange = (isOpen: boolean) => {
