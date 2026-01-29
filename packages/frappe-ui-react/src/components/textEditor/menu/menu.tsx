@@ -1,7 +1,6 @@
 /**
  * External dependencies.
  */
-
 import { useCurrentEditor, useEditorState } from "@tiptap/react";
 import clsx from "clsx";
 
@@ -54,6 +53,9 @@ const DEFAULT_COMMANDS: Array<
     "toggle_header_cell",
     "delete_table",
   ],
+  "blockquote",
+  "undo",
+  "redo",
 ];
 
 const Menu = ({ className }: MenuProps) => {
@@ -80,7 +82,7 @@ const Menu = ({ className }: MenuProps) => {
   return (
     <div
       className={clsx(
-        "flex bg-surface-white px-1 py-1 w-full overflow-x-auto rounded-t-lg border border-outline-gray-modals items-center",
+        "flex gap-1 bg-surface-white px-1 py-1 w-full overflow-x-auto rounded-t-lg border border-outline-gray-modals items-center",
         className
       )}
     >
@@ -118,7 +120,7 @@ const Menu = ({ className }: MenuProps) => {
                           <button
                             className="w-full h-7 rounded px-2 text-base flex items-center gap-2 hover:bg-surface-gray-3"
                             onClick={() => {
-                              command.action(editor);
+                              command.action?.(editor);
                               close();
                             }}
                             title={command.label}
@@ -150,16 +152,21 @@ const Menu = ({ className }: MenuProps) => {
         const command: EditorCommand = COMMANDS[command_key];
         const label = command.label;
         const Icon = command.icon;
+
+        if (command.component) {
+          return <command.component editor={editor} />;
+        }
         return (
           <button
             key={index}
+            disabled={command.isDisabled?.(editor) || false}
             className={clsx(
-              "flex rounded text-ink-gray-8 transition-colors focus-within:ring-0 p-1 hover:bg-surface-gray-2",
+              "flex rounded text-ink-gray-8 transition-colors focus-within:ring-0 p-1 hover:bg-surface-gray-2 disabled:opacity-50",
               isButtonActive(command)
                 ? "bg-surface-gray-3"
                 : "hover:bg-surface-gray-2"
             )}
-            onClick={() => command.action(editor)}
+            onClick={() => command.action?.(editor)}
             title={label}
           >
             {Icon && <Icon className="size-4" />}

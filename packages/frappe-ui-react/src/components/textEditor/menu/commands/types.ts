@@ -33,6 +33,9 @@ export const COMMANDS_KEYS = [
   "toggle_header_row",
   "toggle_header_cell",
   "delete_table",
+  "blockquote",
+  "undo",
+  "redo",
 ] as const;
 
 export type TYPE_COMMANDS_KEYS = (typeof COMMANDS_KEYS)[number];
@@ -41,7 +44,10 @@ export interface EditorCommand {
   label: string;
   text?: string;
   icon?: React.ComponentType<{ className?: string }>;
-  action: (editor: Editor) => void;
+  action?: (editor: Editor) => void;
   isActive: (editor: Editor) => boolean;
   isDisabled?: (editor: Editor) => boolean;
+  component?: React.FC<{
+    editor: Editor;
+  }>;
 }
