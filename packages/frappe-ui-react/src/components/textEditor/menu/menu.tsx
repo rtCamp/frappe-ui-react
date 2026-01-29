@@ -40,6 +40,7 @@ const DEFAULT_COMMANDS: Array<
   "align_center",
   "align_right",
   "separator",
+  "horizontal_rule",
   [
     "insert_table",
     "add_column_before",

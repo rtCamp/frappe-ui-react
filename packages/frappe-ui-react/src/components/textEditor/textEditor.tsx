@@ -5,8 +5,10 @@ import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
-import Blockquote from "@tiptap/extension-blockquote";
+import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Strike from "@tiptap/extension-strike";
+import Placeholder from "@tiptap/extension-placeholder";
+import Blockquote from "@tiptap/extension-blockquote";
 import { TableKit } from "@tiptap/extension-table";
 import clsx from "clsx";
 
@@ -17,7 +19,6 @@ import "./textEditor.css";
 import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
-import Placeholder from "@tiptap/extension-placeholder";
 
 const TextEditor = ({
   content,
@@ -68,6 +69,11 @@ const TextEditor = ({
         Strike,
         Blockquote,
         TableKit,
+        HorizontalRule.configure({
+          HTMLAttributes: {
+            class: "not-prose border-outline-gray-1 m-0",
+          },
+        }),
         ...extensions,
       ],
       onUpdate: ({ editor }) => {
