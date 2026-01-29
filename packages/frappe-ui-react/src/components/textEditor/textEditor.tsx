@@ -10,6 +10,7 @@ import Highlight from "@tiptap/extension-highlight";
 import { TextStyleKit } from "@tiptap/extension-text-style";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Strike from "@tiptap/extension-strike";
+import Placeholder from "@tiptap/extension-placeholder";
 import { TableKit } from "@tiptap/extension-table";
 import clsx from "clsx";
 
@@ -20,7 +21,6 @@ import "./textEditor.css";
 import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
-import Placeholder from "@tiptap/extension-placeholder";
 import { ExtendedCodeBlock } from "./extension/codeBlock";
 
 const TextEditor = ({
@@ -55,8 +55,12 @@ const TextEditor = ({
       },
       extensions: [
         StarterKit.configure({
-          strike: false,
           codeBlock: false,
+          horizontalRule: {
+            HTMLAttributes: {
+              class: "not-prose border-outline-gray-1 m-0",
+            },
+          },
           ...starterkitOptions,
         }),
         Placeholder.configure({
@@ -82,6 +86,8 @@ const TextEditor = ({
             class: "not-prose border-outline-gray-1 m-0",
           },
         }),
+        TableKit,
+        ExtendedCodeBlock,
         ...extensions,
       ],
       onUpdate: ({ editor }) => {
