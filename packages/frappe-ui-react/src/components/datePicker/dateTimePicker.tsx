@@ -286,6 +286,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                     const isSelected = timeValue === time;
                     return (
                       <Button
+                        key={time}
                         aria-selected={isSelected}
                         size="sm"
                         className={`w-full justify-start ${
