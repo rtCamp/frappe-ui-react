@@ -40,6 +40,8 @@ const DEFAULT_COMMANDS: Array<
   "align_center",
   "align_right",
   "separator",
+  "undo",
+  "redo",
 ];
 
 const Menu = ({ className }: MenuProps) => {
@@ -137,8 +139,9 @@ const Menu = ({ className }: MenuProps) => {
         return (
           <button
             key={index}
+            disabled={command.isDisabled?.(editor) || false}
             className={clsx(
-              "flex rounded text-ink-gray-8 transition-colors focus-within:ring-0 p-1 hover:bg-surface-gray-2",
+              "flex rounded text-ink-gray-8 transition-colors focus-within:ring-0 p-1 hover:bg-surface-gray-2 disabled:opacity-50",
               isButtonActive(command)
                 ? "bg-surface-gray-3"
                 : "hover:bg-surface-gray-2"
