@@ -16,9 +16,13 @@ import {
   ListCheckIcon,
   ListIcon,
   ListOrderedIcon,
+  QuoteIcon,
+  Redo2Icon,
   SeparatorHorizontal,
   StrikethroughIcon,
+  TableIcon,
   TypeIcon,
+  Undo2Icon,
 } from "lucide-react";
 
 /**
@@ -140,6 +144,109 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     icon: SeparatorHorizontal,
     action: (editor) => editor.chain().focus().setHorizontalRule().run(),
     isActive: (editor) => editor.isActive("strike"),
+  },
+  insert_table: {
+    label: "Insert Table",
+    icon: TableIcon,
+    action: (editor) =>
+      editor
+        .chain()
+        .focus()
+        .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+        .run(),
+    isActive: () => false,
+  },
+  add_column_before: {
+    label: "Add Column Before",
+    action: (editor) => editor.chain().focus().addColumnBefore().run(),
+    isActive: () => false,
+    isDisabled: (editor) => !editor.can().addColumnBefore(),
+  },
+  add_column_after: {
+    label: "Add Column After",
+    action: (editor) => editor.chain().focus().addColumnAfter().run(),
+    isActive: () => false,
+    isDisabled: (editor) => !editor.can().addColumnAfter(),
+  },
+  delete_column: {
+    label: "Delete Column",
+    action: (editor) => editor.chain().focus().deleteColumn().run(),
+    isActive: () => false,
+    isDisabled: (editor) => !editor.can().deleteColumn(),
+  },
+  add_row_before: {
+    label: "Add Row Before",
+    action: (editor) => editor.chain().focus().addRowBefore().run(),
+    isActive: () => false,
+    isDisabled: (editor) => !editor.can().addRowBefore(),
+  },
+  add_row_after: {
+    label: "Add Row After",
+    action: (editor) => editor.chain().focus().addRowAfter().run(),
+    isActive: () => false,
+    isDisabled: (editor) => !editor.can().addRowAfter(),
+  },
+  delete_row: {
+    label: "Delete Row",
+    action: (editor) => editor.chain().focus().deleteRow().run(),
+    isActive: () => false,
+    isDisabled: (editor) => !editor.can().deleteRow(),
+  },
+  delete_table: {
+    label: "Delete Table",
+    action: (editor) => editor.chain().focus().deleteTable().run(),
+    isActive: () => false,
+    isDisabled: (editor) => !editor.can().deleteTable(),
+  },
+  merge_cells: {
+    label: "Merge Cells",
+    action: (editor) => editor.chain().focus().mergeCells().run(),
+    isActive: () => false,
+    isDisabled: (editor) => !editor.can().mergeCells(),
+  },
+  split_cell: {
+    label: "Split Cell",
+    action: (editor) => editor.chain().focus().splitCell().run(),
+    isActive: () => false,
+    isDisabled: (editor) => !editor.can().splitCell(),
+  },
+  toggle_header_column: {
+    label: "Toggle Header Column",
+    action: (editor) => editor.chain().focus().toggleHeaderColumn().run(),
+    isActive: () => false,
+    isDisabled: (editor) => !editor.can().toggleHeaderColumn(),
+  },
+  toggle_header_row: {
+    label: "Toggle Header Row",
+    action: (editor) => editor.chain().focus().toggleHeaderRow().run(),
+    isActive: () => false,
+    isDisabled: (editor) => !editor.can().toggleHeaderRow(),
+  },
+  toggle_header_cell: {
+    label: "Toggle Header Cell",
+    action: (editor) => editor.chain().focus().toggleHeaderCell().run(),
+    isActive: () => false,
+    isDisabled: (editor) => !editor.can().toggleHeaderCell(),
+  },
+  blockquote: {
+    label: "Blockquote",
+    icon: QuoteIcon,
+    action: (editor) => editor.chain().focus().toggleBlockquote().run(),
+    isActive: (editor) => editor.isActive("blockquote"),
+  },
+  undo: {
+    label: "Undo",
+    icon: Undo2Icon,
+    action: (editor) => editor.chain().focus().undo().run(),
+    isDisabled: (editor) => !editor.can().undo(),
+    isActive: () => false,
+  },
+  redo: {
+    label: "Undo",
+    icon: Redo2Icon,
+    action: (editor) => editor.chain().focus().redo().run(),
+    isDisabled: (editor) => !editor.can().redo(),
+    isActive: () => false,
   },
 };
 
