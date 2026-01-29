@@ -31,6 +31,7 @@ const DEFAULT_COMMANDS: Array<
   "bold",
   "italic",
   "strike",
+  "font_color",
   "separator",
   "bullet_list",
   "numbered_list",
@@ -111,14 +112,14 @@ const Menu = ({ className }: MenuProps) => {
                 )}
                 body={({ close }) => (
                   <ul className="w-fit p-1.5 mt-2 rounded-lg bg-surface-modal shadow-2xl ring-1 ring-black/5 focus:outline-none">
-                    {command_key.map((command_key, optionIndex) => {
+                    {command_key.map((command_key) => {
                       const command = COMMANDS[command_key];
                       const isDisabled = command.isDisabled?.(editor);
                       if (isDisabled) {
                         return null;
                       }
                       return (
-                        <li key={optionIndex}>
+                        <li key={command_key}>
                           <button
                             className="w-full h-7 rounded px-2 text-base flex items-center gap-2 hover:bg-surface-gray-3"
                             onClick={() => {
@@ -151,13 +152,32 @@ const Menu = ({ className }: MenuProps) => {
             ></div>
           );
         }
+
         const command: EditorCommand = COMMANDS[command_key];
         const label = command.label;
         const Icon = command.icon;
 
         if (command.component) {
-          return <command.component editor={editor} />;
+          return (
+            <command.component key={index}>
+              {({ isActive, onClick }) => (
+                <button
+                  className={clsx(
+                    "flex rounded p-1 text-ink-gray-8 transition-colors",
+                    isButtonActive(command) || isActive
+                      ? "bg-surface-gray-3"
+                      : "hover:bg-surface-gray-2"
+                  )}
+                  onClick={() => onClick?.()}
+                  title={label}
+                >
+                  {Icon && <Icon className="size-4" />}
+                </button>
+              )}
+            </command.component>
+          );
         }
+
         return (
           <button
             key={index}

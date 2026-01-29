@@ -5,6 +5,8 @@ import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
+import Highlight from "@tiptap/extension-highlight";
+import { TextStyleKit } from "@tiptap/extension-text-style";
 import Placeholder from "@tiptap/extension-placeholder";
 import { TableKit } from "@tiptap/extension-table";
 import clsx from "clsx";
@@ -70,6 +72,8 @@ const TextEditor = ({
           types: ["heading", "paragraph"],
         }),
         TableKit,
+        TextStyleKit,
+        Highlight.configure({ multicolor: true }),
         ExtendedCodeBlock,
         ...extensions,
       ],

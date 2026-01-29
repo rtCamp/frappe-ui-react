@@ -13,64 +13,64 @@ importers:
         version: 2.4.0(typescript@5.9.3)
     devDependencies:
       '@babel/plugin-transform-react-jsx':
-        specifier: ^7.28.6
+        specifier: ^7.22.5
         version: 7.28.6(@babel/core@7.28.6)
       '@babel/preset-env':
-        specifier: ^7.28.6
+        specifier: ^7.22.5
         version: 7.28.6(@babel/core@7.28.6)
       '@babel/preset-react':
-        specifier: ^7.28.5
+        specifier: ^7.22.5
         version: 7.28.5(@babel/core@7.28.6)
       '@babel/preset-typescript':
-        specifier: ^7.28.5
+        specifier: ^7.22.5
         version: 7.28.5(@babel/core@7.28.6)
       '@chromatic-com/storybook':
-        specifier: ^4.1.3
+        specifier: ^4.1.1
         version: 4.1.3(storybook@9.1.17(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2)))
       '@eslint/js':
-        specifier: ^9.39.2
+        specifier: ^9.30.1
         version: 9.39.2
       '@storybook/addon-a11y':
-        specifier: ^9.1.17
+        specifier: ^9.1.3
         version: 9.1.17(storybook@9.1.17(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2)))
       '@storybook/addon-docs':
         specifier: ^9.1.17
         version: 9.1.17(@types/react@19.2.10)(storybook@9.1.17(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2)))
       '@storybook/addon-onboarding':
-        specifier: ^9.1.17
+        specifier: ^9.1.3
         version: 9.1.17(storybook@9.1.17(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2)))
       '@storybook/addon-themes':
-        specifier: ^9.1.17
+        specifier: ^9.1.10
         version: 9.1.17(storybook@9.1.17(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2)))
       '@storybook/addon-vitest':
-        specifier: ^9.1.17
+        specifier: ^9.1.3
         version: 9.1.17(@vitest/browser@3.2.4)(@vitest/runner@3.2.4)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(storybook@9.1.17(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2)))(vitest@3.2.4)
       '@storybook/react-vite':
-        specifier: ^9.1.17
+        specifier: ^9.1.3
         version: 9.1.17(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(rollup@4.57.0)(storybook@9.1.17(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2)))(typescript@5.9.3)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2))
       '@tailwindcss/vite':
-        specifier: ^4.1.18
+        specifier: ^4.1.11
         version: 4.1.18(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2))
       '@testing-library/jest-dom':
-        specifier: ^6.9.1
+        specifier: ^6.8.0
         version: 6.9.1
       '@testing-library/react':
-        specifier: ^16.3.2
+        specifier: ^16.3.0
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@types/jest':
         specifier: ^30.0.0
         version: 30.0.0
       '@types/node':
-        specifier: ^24.10.9
+        specifier: ^24.1.0
         version: 24.10.9
       '@types/react':
-        specifier: ^19.2.10
+        specifier: ^19.1.8
         version: 19.2.10
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.10)
       '@vitejs/plugin-react':
-        specifier: ^4.7.0
+        specifier: ^4.6.0
         version: 4.7.0(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2))
       '@vitest/browser':
         specifier: ^3.2.4
@@ -79,13 +79,13 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@vitest/browser@3.2.4)(vitest@3.2.4)
       babel-jest:
-        specifier: ^30.2.0
+        specifier: ^30.1.2
         version: 30.2.0(@babel/core@7.28.6)
       babel-plugin-styled-components:
         specifier: ^2.1.4
         version: 2.1.4(@babel/core@7.28.6)(styled-components@6.3.8(react-dom@19.2.4(react@19.2.4))(react@19.2.4))
       baseline-browser-mapping:
-        specifier: ^2.9.19
+        specifier: ^2.9.15
         version: 2.9.19
       eslint:
         specifier: ^9.39.2
@@ -100,34 +100,34 @@ importers:
         specifier: ^0.4.26
         version: 0.4.26(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-storybook:
-        specifier: ^9.1.17
+        specifier: ^9.1.3
         version: 9.1.17(eslint@9.39.2(jiti@2.6.1))(storybook@9.1.17(@testing-library/dom@10.4.1)(prettier@3.8.1)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2)))(typescript@5.9.3)
       globals:
-        specifier: ^17.2.0
+        specifier: ^17.0.0
         version: 17.2.0
       husky:
         specifier: ^9.1.7
         version: 9.1.7
       jest:
-        specifier: ^30.2.0
+        specifier: ^30.1.3
         version: 30.2.0(@types/node@24.10.9)(esbuild-register@3.6.0(esbuild@0.25.12))
       jest-environment-jsdom:
-        specifier: ^30.2.0
+        specifier: ^30.1.2
         version: 30.2.0
       jest-extended:
         specifier: ^6.0.0
         version: 6.0.0(jest@30.2.0(@types/node@24.10.9)(esbuild-register@3.6.0(esbuild@0.25.12)))(typescript@5.9.3)
       lint-staged:
-        specifier: ^16.2.7
+        specifier: ^16.2.6
         version: 16.2.7
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
       playwright:
-        specifier: ^1.58.0
+        specifier: ^1.57.0
         version: 1.58.0
       prettier:
-        specifier: ^3.8.1
+        specifier: ^3.7.4
         version: 3.8.1
       rimraf:
         specifier: ^6.1.2
@@ -139,13 +139,13 @@ importers:
         specifier: ~5.9.3
         version: 5.9.3
       typescript-eslint:
-        specifier: ^8.54.0
+        specifier: ^8.53.0
         version: 8.54.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
       vite:
         specifier: ^7.3.1
         version: 7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2)
       vite-plugin-svgr:
-        specifier: ^4.5.0
+        specifier: ^4.3.0
         version: 4.5.0(rollup@4.57.0)(typescript@5.9.3)(vite@7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2))
       vitest:
         specifier: ^3.2.4
@@ -168,6 +168,9 @@ importers:
       '@tiptap/extension-code-block-lowlight':
         specifier: ^3.17.1
         version: 3.17.1(@tiptap/core@3.17.1(@tiptap/pm@3.17.1))(@tiptap/extension-code-block@3.17.1(@tiptap/core@3.17.1(@tiptap/pm@3.17.1))(@tiptap/pm@3.17.1))(@tiptap/pm@3.17.1)(highlight.js@11.11.1)(lowlight@3.3.0)
+      '@tiptap/extension-highlight':
+        specifier: ^3.17.1
+        version: 3.18.0(@tiptap/core@3.17.1(@tiptap/pm@3.17.1))
       '@tiptap/extension-list':
         specifier: ^3.17.1
         version: 3.17.1(@tiptap/core@3.17.1(@tiptap/pm@3.17.1))(@tiptap/pm@3.17.1)
@@ -181,6 +184,9 @@ importers:
         specifier: ^3.17.1
         version: 3.17.1(@tiptap/extension-list@3.17.1(@tiptap/core@3.17.1(@tiptap/pm@3.17.1))(@tiptap/pm@3.17.1))
       '@tiptap/extension-text-align':
+        specifier: ^3.17.1
+        version: 3.17.1(@tiptap/core@3.17.1(@tiptap/pm@3.17.1))
+      '@tiptap/extension-text-style':
         specifier: ^3.17.1
         version: 3.17.1(@tiptap/core@3.17.1(@tiptap/pm@3.17.1))
       '@tiptap/pm':
@@ -2108,6 +2114,11 @@ packages:
     peerDependencies:
       '@tiptap/core': ^3.17.1
 
+  '@tiptap/extension-highlight@3.18.0':
+    resolution: {integrity: sha512-syk2WsqfcZN+QZ8AS97hu7atqaLYi8MHQQRrjgO9z+CQzlA7qrTHFl9VF54vfCMQV3arVZlO/qLqFxDZ05tWyw==}
+    peerDependencies:
+      '@tiptap/core': ^3.18.0
+
   '@tiptap/extension-horizontal-rule@3.17.1':
     resolution: {integrity: sha512-CHG6LBtxV+3qj5EcCRVlpvSW5udKD6KbnXIGhP+Tvy+OabLGzO4HNxz3+duDE0pMR4eKX1libsnqffj0vq7mnQ==}
     peerDependencies:
@@ -2174,6 +2185,11 @@ packages:
 
   '@tiptap/extension-text-align@3.17.1':
     resolution: {integrity: sha512-CyJbZf823dqPZ/1zwRsza5pk/NQwFZwILdFYLVkV88I4+Ua9YVztI9kmwTB6dJyuKT4kTc7nhQHdaa957alGZQ==}
+    peerDependencies:
+      '@tiptap/core': ^3.17.1
+
+  '@tiptap/extension-text-style@3.17.1':
+    resolution: {integrity: sha512-TCMsEU92r/TfZkN8AKo/WIcJ1uNq/5NiZxloq5drF1HXxDDjwliurgwBw3OTGUlKQmer0N9hV0AAePY/G+5Akw==}
     peerDependencies:
       '@tiptap/core': ^3.17.1
 
@@ -7186,6 +7202,10 @@ snapshots:
     dependencies:
       '@tiptap/core': 3.17.1(@tiptap/pm@3.17.1)
 
+  '@tiptap/extension-highlight@3.18.0(@tiptap/core@3.17.1(@tiptap/pm@3.17.1))':
+    dependencies:
+      '@tiptap/core': 3.17.1(@tiptap/pm@3.17.1)
+
   '@tiptap/extension-horizontal-rule@3.17.1(@tiptap/core@3.17.1(@tiptap/pm@3.17.1))(@tiptap/pm@3.17.1)':
     dependencies:
       '@tiptap/core': 3.17.1(@tiptap/pm@3.17.1)
@@ -7240,6 +7260,10 @@ snapshots:
       '@tiptap/extension-list': 3.17.1(@tiptap/core@3.17.1(@tiptap/pm@3.17.1))(@tiptap/pm@3.17.1)
 
   '@tiptap/extension-text-align@3.17.1(@tiptap/core@3.17.1(@tiptap/pm@3.17.1))':
+    dependencies:
+      '@tiptap/core': 3.17.1(@tiptap/pm@3.17.1)
+
+  '@tiptap/extension-text-style@3.17.1(@tiptap/core@3.17.1(@tiptap/pm@3.17.1))':
     dependencies:
       '@tiptap/core': 3.17.1(@tiptap/pm@3.17.1)
 
