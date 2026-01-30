@@ -78,6 +78,7 @@ export const Basic: Story = {
         <pre><code class="language-javascript">import { Button } from '@rtcamp/frappe-ui-react'
 const value = ref(true);</code></pre>
     </ul>
+    </div>
   `,
     editorClass: "prose-sm min-h-[4rem] border rounded-b-lg border-t-0 p-2",
     fixedMenu: true,

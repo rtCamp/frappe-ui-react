@@ -159,7 +159,7 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     label: "Horizontal Rule",
     icon: SeparatorHorizontal,
     action: (editor) => editor.chain().focus().setHorizontalRule().run(),
-    isActive: (editor) => editor.isActive("strike"),
+    isActive: (editor) => editor.isActive("horizontalRule"),
   },
   insert_table: {
     label: "Insert Table",
@@ -258,7 +258,7 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     isActive: () => false,
   },
   redo: {
-    label: "Undo",
+    label: "Redo",
     icon: Redo2Icon,
     action: (editor) => editor.chain().focus().redo().run(),
     isDisabled: (editor) => !editor.can().redo(),
