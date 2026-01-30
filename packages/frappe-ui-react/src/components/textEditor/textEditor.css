@@ -19,6 +19,86 @@
   --tw-prose-td-borders: var(--color-ink-gray-1);
 }
 
+/* Heading font weights */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h1 strong,
+.prose h2 strong,
+.prose h3 strong,
+.prose h4 strong,
+.prose h5 strong {
+  font-weight: 600;
+}
+
+/* Image alignment */
+.prose img[data-align='right'] {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.prose img[data-align='center'] {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Small prose variant */
+.prose-sm {
+  font-size: 14px;
+  font-weight: 420;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.prose-sm h1 {
+  font-size: calc(20 / 14 * 1em);
+}
+
+.prose-sm h2 {
+  font-size: calc(18 / 14 * 1em);
+}
+
+.prose-sm h3 {
+  font-size: calc(16 / 14 * 1em);
+}
+
+.prose-sm h4 {
+  font-size: calc(14 / 14 * 1em);
+}
+
+.prose-sm h5 {
+  font-size: calc(13 / 14 * 1em);
+}
+
+.prose-sm p {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-sm ul > li,
+.prose-sm ol > li {
+  margin: 0.5rem 0;
+}
+
+.prose-sm ul > li > p,
+.prose-sm ul > li > p:first-child:last-child,
+.prose-sm ol > li > p,
+.prose-sm ol > li > p:first-child:last-child {
+  margin: 0.5rem 0;
+}
+
+.prose-sm ul > li > p:first-child,
+.prose-sm ol > li > p:first-child {
+  margin-top: 0.5rem;
+}
+
+.prose-sm ul > li > p:last-child,
+.prose-sm ol > li > p:last-child {
+  margin-bottom: 0.5rem;
+}
+
 .ProseMirror {
   outline: none;
   caret-color: var(--color-ink-gray-9);
@@ -139,4 +219,3 @@ img.ProseMirror-selectednode {
 .tag-suggestion-active {
   background-color: var(--color-surface-gray-2, #f3f3f3);
 }
-
