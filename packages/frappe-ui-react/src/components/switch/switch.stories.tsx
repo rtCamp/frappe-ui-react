@@ -165,8 +165,8 @@ export const Classes: Story = {
     );
   },
   play: async () => {
-    const Switch = screen.getByRole("switch");
-    await userEvent.click(Switch);
-    expect(Switch).toHaveAttribute("aria-checked", "true");
+    const switchElement = screen.getByRole("switch");
+    await userEvent.click(switchElement);
+    expect(switchElement).toHaveAttribute("aria-checked", "true");
   },
 };
