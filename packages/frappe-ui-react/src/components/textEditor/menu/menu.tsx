@@ -65,9 +65,9 @@ const Menu = ({ className }: MenuProps) => {
   const { editor } = useCurrentEditor();
   const editorState = useEditorState({
     editor,
-    selector: (ctx) => ({
-      selection: ctx?.editor?.state?.selection,
-      focused: ctx?.editor?.state?.selection,
+    selector: ({ editor }) => ({
+      selection: editor?.state?.selection,
+      focused: editor?.isFocused ?? false,
     }),
   });
 
