@@ -17,6 +17,7 @@ import {
   ListCheckIcon,
   ListIcon,
   ListOrderedIcon,
+  PaintBucketIcon,
   QuoteIcon,
   Redo2Icon,
   SeparatorHorizontal,
@@ -30,6 +31,7 @@ import {
  * Internal dependencies.
  */
 import type { TYPE_COMMANDS_KEYS, EditorCommand } from "./types";
+import FontColor from "./fontColor";
 
 export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
   paragraph: {
@@ -133,6 +135,13 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     icon: AlignRightIcon,
     action: (editor) => editor.chain().focus().setTextAlign("right").run(),
     isActive: (editor) => editor.isActive({ textAlign: "right" }),
+  },
+  font_color: {
+    label: "Font Color",
+    icon: PaintBucketIcon,
+    isActive: (editor) =>
+      editor.isActive("textStyle") || editor.isActive("highlight"),
+    component: FontColor,
   },
   strike: {
     label: "Strike",

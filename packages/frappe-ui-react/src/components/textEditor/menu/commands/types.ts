@@ -2,6 +2,7 @@
  * External dependencies.
  */
 import type { Editor } from "@tiptap/react";
+import type { FC } from "react";
 
 export const COMMANDS_KEYS = [
   "paragraph",
@@ -19,6 +20,7 @@ export const COMMANDS_KEYS = [
   "align_left",
   "align_center",
   "align_right",
+  "font_color",
   "strike",
   "codeblock",
   "horizontal_rule",
@@ -45,11 +47,14 @@ export type TYPE_COMMANDS_KEYS = (typeof COMMANDS_KEYS)[number];
 export interface EditorCommand {
   label: string;
   text?: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  action?: (editor: Editor) => void;
+  icon?: FC<{ className?: string }>;
   isActive: (editor: Editor) => boolean;
   isDisabled?: (editor: Editor) => boolean;
-  component?: React.FC<{
-    editor: Editor;
+  action?: (editor: Editor) => void;
+  component?: FC<{
+    children: (props: {
+      isActive?: boolean;
+      onClick?: () => void;
+    }) => React.ReactNode;
   }>;
 }
