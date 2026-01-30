@@ -16,13 +16,6 @@ const config: StorybookConfig = {
     getAbsolutePath("@storybook/addon-themes"),
     getAbsolutePath("@storybook/addon-vitest"),
   ],
-  build: {
-    test: {
-      test: {
-        disabledAddons: ["@storybook/addon-a11y", "@storybook/addon-vitest"],
-      },
-    },
-  },
   framework: {
     name: getAbsolutePath("@storybook/react-vite"),
     options: {},

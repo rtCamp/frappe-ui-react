@@ -39,7 +39,7 @@ jobs:
           pnpm install || true
 
       - name: Build Storybook
-        run: pnpm build-storybook --test
+        run: pnpm build-storybook
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
