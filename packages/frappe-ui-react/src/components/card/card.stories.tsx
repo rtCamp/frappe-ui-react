@@ -14,12 +14,8 @@ export default {
   component: Card,
   tags: ["autodocs"],
   parameters: {
-    docs: {
-      description: {
-        component:
-          "Card component for grouping related content. Includes header, title, description, content, and footer.",
-      },
-    },
+    docs: { source: { type: "dynamic" } },
+    layout: "centered",
   },
 };
 
