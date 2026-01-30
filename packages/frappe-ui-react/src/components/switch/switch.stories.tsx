@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import Switch from "./switch";
+import { screen, userEvent, expect } from "@storybook/test";
 
 const sizes = ["sm", "md"] as const;
 
@@ -162,5 +163,10 @@ export const Classes: Story = {
         <Switch {...args} value={checked} onChange={setChecked} />
       </div>
     );
+  },
+  play: async () => {
+    const switchElement = screen.getByRole("switch");
+    await userEvent.click(switchElement);
+    expect(switchElement).toHaveAttribute("aria-checked", "true");
   },
 };
