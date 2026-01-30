@@ -29,7 +29,7 @@ export default {
 
 const Template: StoryObj<{ status: TaskStatusProps }> = {
   render: (args) => (
-    <div className="p-4 flex flex-col gap-2 w-[300px]">
+    <div className="p-4 flex flex-col items-center gap-2 w-[300px]">
       <TaskStatus {...args} />
     </div>
   ),
@@ -66,7 +66,7 @@ export const Cancelled = {
 
 export const AllVariants = {
   render: () => (
-    <div className="p-4 flex flex-col gap-2 w-[300px]">
+    <div className="p-4 flex flex-col items-center gap-2 w-[300px]">
       {[
         "Open",
         "Working",

@@ -6,12 +6,8 @@ export default {
   component: Typography,
   tags: ["autodocs"],
   parameters: {
-    docs: {
-      description: {
-        component:
-          "Typography component for headings, paragraphs, and text variants. Supports custom tags and class names.",
-      },
-    },
+    docs: { source: { type: "dynamic" } },
+    layout: "centered",
   },
   args: {
     variant: "p",
