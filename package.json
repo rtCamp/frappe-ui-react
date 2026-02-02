@@ -88,7 +88,9 @@
     "*.yml": "prettier --write"
   },
   "dependencies": {
-    "react-docgen-typescript": "^2.4.0"
+    "react": "^19.2.4",
+    "react-docgen-typescript": "^2.4.0",
+    "react-dom": "^19.2.4"
   },
   "packageManager": "pnpm@10.13.1"
 }
