@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { screen, userEvent, expect } from "@storybook/test";
+import { screen, userEvent, expect, within } from "storybook/test";
 import TextEditor from "./textEditor";
-import { within } from "@storybook/test";
 
 const meta: Meta<typeof TextEditor> = {
   title: "Components/TextEditor/Interactions",
