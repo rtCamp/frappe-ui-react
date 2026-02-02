@@ -10,6 +10,7 @@ import clsx from "clsx";
 import COMMANDS from "./commands";
 import { Popover } from "../../popover";
 import type { TYPE_COMMANDS_KEYS, EditorCommand } from "./commands/types";
+import { Button } from "../../button";
 
 export interface MenuProps {
   className?: string;
@@ -97,18 +98,22 @@ const Menu = ({ className }: MenuProps) => {
             : command_key[0];
 
           const ActiveIcon = COMMANDS[activeCommand].icon;
+          const title = command_key[0] === "heading_1" ? "heading" : "table";
 
           return (
             <div key={index} className="shrink-0">
               <Popover
                 transition="default"
                 target={({ togglePopover }) => (
-                  <button
+                  <Button
+                    role="button"
+                    title={title}
+                    name={title}
                     className="rounded px-2 py-1 text-base font-medium text-ink-gray-8 transition-colors hover:bg-surface-gray-2"
                     onClick={() => togglePopover()}
                   >
                     {ActiveIcon && <ActiveIcon className="h-4 w-4" />}
-                  </button>
+                  </Button>
                 )}
                 body={({ close }) => (
                   <ul className="w-fit p-1.5 mt-2 rounded-lg bg-surface-modal shadow-2xl ring-1 ring-black/5 focus:outline-none">
@@ -121,6 +126,8 @@ const Menu = ({ className }: MenuProps) => {
                       return (
                         <li key={command_key}>
                           <button
+                            role="menuitem"
+                            name={command_key}
                             className="w-full h-7 rounded px-2 text-base flex items-center gap-2 hover:bg-surface-gray-3"
                             onClick={() => {
                               command.action?.(editor);
@@ -162,6 +169,8 @@ const Menu = ({ className }: MenuProps) => {
             <command.component key={index}>
               {({ isActive, onClick }) => (
                 <button
+                  role="button"
+                  name={command_key}
                   className={clsx(
                     "flex rounded p-1 text-ink-gray-8 transition-colors",
                     isButtonActive(command) || isActive

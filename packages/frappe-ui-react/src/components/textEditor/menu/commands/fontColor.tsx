@@ -105,8 +105,8 @@ const FontColor = ({ children }: FontColorProps) => {
               {backgroundColors.map((color) => (
                 <div key={color.name} className="flex">
                   <button
-                    title={color.name}
-                    aria-label={color.name}
+                    title={"Highlight " + color.name}
+                    aria-label={"Highlight " + color.name}
                     className={clsx(
                       "flex shrink-0 h-5 w-5 items-center justify-center rounded border border-outline-gray-1 text-base",
                       {
