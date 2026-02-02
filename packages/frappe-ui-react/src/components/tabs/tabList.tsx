@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { TabItem } from "./tabs";
+import type { TabItem } from "./tabs";
 
 interface TabListProps {
   tabs: TabItem[];

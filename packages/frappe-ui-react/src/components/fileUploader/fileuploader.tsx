@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback } from "react";
-import { FileUploadHandler, UploadOptions, UploadedFile } from "../../utils";
+import { FileUploadHandler, type UploadOptions, type UploadedFile } from "../../utils";
 
 export interface FileUploaderProps {
   fileTypes?: string | string[];

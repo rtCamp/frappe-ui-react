@@ -5,7 +5,7 @@ import {
   Label,
   Description,
 } from "@headlessui/react";
-import { SwitchProps } from "./types";
+import type { SwitchProps } from "./types";
 import FeatherIcon, { type FeatherIconProps } from "../featherIcon";
 
 enum SwitchVariant {
@@ -39,7 +39,7 @@ const Switch: React.FC<SwitchProps> = ({
     "disabled:cursor-not-allowed disabled:bg-surface-gray-3",
     value
       ? "bg-surface-gray-7 enabled:hover:bg-surface-gray-6 active:bg-surface-gray-5"
-      : "bg-surface-gray-4 enabled:hover:bg-gray-400 active:bg-gray-500 dark:enabled:hover:bg-dark-gray-100 dark:active:bg-dark-gray-200",
+      : "bg-surface-gray-4 enabled:hover:bg-gray-400 active:bg-gray-500 dark:enabled:hover:bg-dark-gray-100 dark:enabled:active:bg-dark-gray-200",
     switchType === SwitchVariant.ONLY_LABEL &&
       (value
         ? "group-hover:enabled:bg-surface-gray-6"
@@ -55,8 +55,8 @@ const Switch: React.FC<SwitchProps> = ({
         ? "translate-x-3 rtl:-translate-x-3"
         : "translate-x-0"
       : value
-      ? "translate-x-2.5 rtl:-translate-x-2.5"
-      : "translate-x-0",
+        ? "translate-x-2.5 rtl:-translate-x-2.5"
+        : "translate-x-0",
   ].join(" ");
 
   const switchLabelClasses = [

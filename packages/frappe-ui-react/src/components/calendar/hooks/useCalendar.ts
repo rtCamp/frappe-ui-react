@@ -29,7 +29,7 @@ export const useCalendar = (
 
   const parsedEvents = useMemo(() => {
     return (initialEvents || []).map((event) => {
-      const { fromDate, fromTime, toTime, toDate, ...rest } = event;
+      const { fromDate, fromTime, toTime, ...rest } = event;
       const date = parseDate(fromDate);
       return event.isFullDay
         ? { ...rest, date }

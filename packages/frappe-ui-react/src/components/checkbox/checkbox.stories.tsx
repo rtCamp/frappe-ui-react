@@ -1,9 +1,9 @@
 import { action } from "storybook/actions";
 import { useState } from "react";
-import { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import Checkbox from "./checkbox";
-import { CheckboxProps } from "./types";
+import type { CheckboxProps } from "./types";
 
 export default {
   title: "Components/Checkbox",

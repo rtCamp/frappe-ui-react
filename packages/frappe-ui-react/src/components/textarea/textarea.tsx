@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useCallback, forwardRef } from "react";
 
 import { debounce } from "../../utils/debounce";
-import { TextareaProps } from "./types";
+import type { TextareaProps } from "./types";
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   (

@@ -6,7 +6,7 @@ import clsx from "clsx";
 /**
  * Internal dependencies.
  */
-import { DividerProps } from "./types";
+import type { DividerProps } from "./types";
 
 const Divider = ({
   orientation = "horizontal",

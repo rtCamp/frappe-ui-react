@@ -2,11 +2,11 @@ import React, {
   useMemo,
   useRef,
   useCallback,
-  InputHTMLAttributes,
+  type InputHTMLAttributes,
   forwardRef,
 } from "react";
 import { debounce } from "../../utils/debounce";
-import { TextInputProps } from "./types";
+import type { TextInputProps } from "./types";
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   (
@@ -78,7 +78,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         disabled: `border ${
           variant === "outline" ? "border-outline-gray-2" : "border-transparent"
         } bg-surface-gray-1 placeholder-ink-gray-3`,
-        ghost: 'border-0 focus:ring-0 focus-visible:ring-0',
+        ghost: "border-0 focus:ring-0 focus-visible:ring-0",
       }[currentVariant];
 
       return [

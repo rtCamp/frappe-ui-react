@@ -1,12 +1,12 @@
 import type {
-	TooltipComponentOption,
+  TooltipComponentOption,
   SingleAxisComponentOption,
   PieSeriesOption,
 } from "echarts";
 
 import { getTitleOptions } from "./useEchartsOptions";
 import { formatValue } from "../helpers";
-import { DonutChartConfig } from "../types";
+import type { DonutChartConfig } from "../types";
 
 export default function useDonutChartOptions(config: DonutChartConfig) {
   let data = config.data || [];

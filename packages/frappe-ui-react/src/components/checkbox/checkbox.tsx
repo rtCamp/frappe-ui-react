@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from "react";
-import { CheckboxProps } from "./types";
+import type { CheckboxProps } from "./types";
 import type { SizeTypes } from "../../common/types";
 
 const Checkbox: React.FC<CheckboxProps> = ({
@@ -30,8 +30,8 @@ const Checkbox: React.FC<CheckboxProps> = ({
     const interactionClasses = disabled
       ? ""
       : padding
-      ? "focus:ring-0"
-      : "hover:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 active:bg-surface-gray-2";
+        ? "focus:ring-0"
+        : "hover:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 active:bg-surface-gray-2";
 
     const sizeClasses: string = {
       sm: "w-3.5 h-3.5",

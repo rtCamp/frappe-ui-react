@@ -1,6 +1,6 @@
 import useEchartsOptions from "./useEchartsOptions";
 import { formatValue, mergeDeep } from "../helpers";
-import {
+import type {
   AreaSeriesConfig,
   AxisChartConfig,
   BarSeriesConfig,
@@ -31,7 +31,7 @@ function getBarSeriesOptions(config: AxisChartConfig, series: BarSeriesConfig) {
 }
 
 function getLineSeriesOptions(
-  config: AxisChartConfig,
+  _config: AxisChartConfig,
   series: LineSeriesConfig
 ) {
   const showSymbol = series.showDataPoints || series.showDataLabels;
@@ -49,7 +49,7 @@ function getLineSeriesOptions(
 }
 
 function getAreaSeriesOptions(
-  config: AxisChartConfig,
+  _config: AxisChartConfig,
   series: AreaSeriesConfig
 ) {
   return {

@@ -6,7 +6,7 @@ import {
   TITLE_HEIGHT,
 } from "./useEchartsOptions";
 import { formatValue } from "../helpers";
-import { ChartsWrapperProps, FunnelChartConfig } from "../types";
+import type { ChartsWrapperProps, FunnelChartConfig } from "../types";
 
 export default function useFunnelChartOptions(
   config: FunnelChartConfig

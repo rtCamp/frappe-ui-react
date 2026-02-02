@@ -39,8 +39,10 @@ interface PopoverTransitionClasses {
   leaveToClass?: string;
 }
 
-export interface PopoverProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, "children" | "onSelect"> {
+export interface PopoverProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "children" | "onSelect"
+> {
   show?: boolean;
   trigger?: "click" | "hover";
   hoverDelay?: number;
@@ -141,11 +143,14 @@ const Popover: React.FC<PopoverProps> = ({
     }
     if (trigger === "hover") {
       if (hoverDelay) {
-        hoverTimer.current = setTimeout(() => {
-          if (pointerOverTargetOrPopupRef.current) {
-            open();
-          }
-        }, Number(hoverDelay) * 1000);
+        hoverTimer.current = setTimeout(
+          () => {
+            if (pointerOverTargetOrPopupRef.current) {
+              open();
+            }
+          },
+          Number(hoverDelay) * 1000
+        );
       } else {
         open();
       }
@@ -164,11 +169,14 @@ const Popover: React.FC<PopoverProps> = ({
         clearTimeout(leaveTimer.current);
       }
       if (leaveDelay) {
-        leaveTimer.current = setTimeout(() => {
-          if (!pointerOverTargetOrPopupRef.current) {
-            close();
-          }
-        }, Number(leaveDelay) * 1000);
+        leaveTimer.current = setTimeout(
+          () => {
+            if (!pointerOverTargetOrPopupRef.current) {
+              close();
+            }
+          },
+          Number(leaveDelay) * 1000
+        );
       } else {
         if (!pointerOverTargetOrPopupRef.current) {
           close();
@@ -364,7 +372,12 @@ const Popover: React.FC<PopoverProps> = ({
 
       {createPortal(
         <div
-          style={{ width: targetWidth || "auto", height: "auto", zIndex: 99, position: 'absolute' }}
+          style={{
+            width: targetWidth || "auto",
+            height: "auto",
+            zIndex: 99,
+            position: "absolute",
+          }}
         >
           <div
             ref={popperRef}

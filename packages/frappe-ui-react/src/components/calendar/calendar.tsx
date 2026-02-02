@@ -64,7 +64,7 @@ export const Calendar = ({
   };
 
   const headerProps = {
-    currentMonthYear:  formatter(currentDate.toDate()),
+    currentMonthYear: formatter(currentDate.toDate()),
     enabledModes,
     activeView,
     decrement,

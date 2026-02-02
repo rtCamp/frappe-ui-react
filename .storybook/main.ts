@@ -11,11 +11,10 @@ const config: StorybookConfig = {
     "../**/src/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
   addons: [
-    getAbsolutePath("@chromatic-com/storybook"),
     getAbsolutePath("@storybook/addon-docs"),
-    getAbsolutePath("@storybook/addon-onboarding"),
     getAbsolutePath("@storybook/addon-a11y"),
     getAbsolutePath("@storybook/addon-themes"),
+    getAbsolutePath("@storybook/addon-vitest"),
   ],
   framework: {
     name: getAbsolutePath("@storybook/react-vite"),
@@ -40,7 +39,8 @@ const config: StorybookConfig = {
     check: true,
     skipCompiler: true,
     reactDocgenTypescriptOptions: {
-      propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
+      propFilter: (prop) =>
+        prop.parent ? !/node_modules/.test(prop.parent.fileName) : true,
     },
   },
 };

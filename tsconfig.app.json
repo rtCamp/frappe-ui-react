@@ -3,7 +3,7 @@
     "allowJs": true,
     "checkJs": true,
     "allowSyntheticDefaultImports": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "target": "esnext",
     "module": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -17,19 +17,11 @@
     "noFallthroughCasesInSwitch": true,
     "verbatimModuleSyntax": true,
     "moduleResolution": "node",
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "resolveJsonModule": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "forceConsistentCasingInFileNames": true,
-    "pretty": true,
-    "typeRoots": ["./typings", "./node_modules/@types"],
-    "types": ["jest", "jest-extended", "node"],
-    "noUncheckedSideEffectImports": true,
-    "baseUrl": ".",
-    "paths": {
-      "@rtcamp/*": ["packages/frappe-ui-react/src/*"]
-    }
-  },
-  "exclude": ["packages/*/node_modules/**"]
+    "pretty": true
+  }
 }

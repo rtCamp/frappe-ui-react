@@ -7,7 +7,7 @@ module.exports = {
     path.resolve(__dirname, "./packages/**/src/**/*.{stories}.{tsx,ts,js}"),
   ],
   theme: {
-  extend,
+    extend,
   },
   plugins: [],
 };

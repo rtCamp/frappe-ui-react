@@ -7,7 +7,7 @@ import {
   getDateTimeValue,
   formatDateTime12h,
 } from "./utils";
-import { DatePickerViewMode } from "./types";
+import type { DatePickerViewMode } from "./types";
 
 const MONTHS = [
   "January",
@@ -64,7 +64,9 @@ export function useDatePicker({
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<DatePickerViewMode>("date");
   const [dateValue, setDateValue] = useState<string>("");
-  const [timeValue, setTimeValue] = useState<string>(withTime ? "12:00 am" : "");
+  const [timeValue, setTimeValue] = useState<string>(
+    withTime ? "12:00 am" : ""
+  );
   const [currentYear, setCurrentYear] = useState<number>(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState<number>(
     today.getMonth() + 1
@@ -213,7 +215,8 @@ export function useDatePicker({
 
     if (withTime) {
       const time =
-        timeValue || formatTime12h(getDate().getHours(), getDate().getMinutes());
+        timeValue ||
+        formatTime12h(getDate().getHours(), getDate().getMinutes());
       if (!timeValue) setTimeValue(time);
       const { hours, minutes } = parseTimeValue(time);
       tomorrow.setHours(hours, minutes, 0, 0);
