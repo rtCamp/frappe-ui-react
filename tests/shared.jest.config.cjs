@@ -24,8 +24,6 @@ module.exports = {
       require.resolve("chalk").split("chalk")[0],
       "chalk/source/vendor/supports-color/index.js"
     ),
-    "^lodash-es$": "lodash",
-    "lodash-es/isEqual": "lodash/isEqual",
   },
   testMatch: [
     "**/tests/**/*.{js,jsx,ts,tsx}",
