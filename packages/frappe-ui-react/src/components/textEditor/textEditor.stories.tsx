@@ -98,6 +98,7 @@ export const Basic: Story = {
 };
 
 export const EditorHeading: Story = {
+  tags: ["!dev"],
   args: {
     content: CONTENT,
     editorClass: "prose-sm min-h-[4rem] border rounded-b-lg border-t-0 p-2",
@@ -139,6 +140,7 @@ export const EditorHeading: Story = {
 };
 
 export const EditorBold: Story = {
+  tags: ["!dev"],
   args: {
     content: CONTENT,
     editorClass: "prose-sm min-h-[4rem] border rounded-b-lg border-t-0 p-2",
@@ -173,6 +175,7 @@ export const EditorBold: Story = {
 };
 
 export const EditorItalic: Story = {
+  tags: ["!dev"],
   args: {
     content: CONTENT,
     editorClass: "prose-sm min-h-[4rem] border rounded-b-lg border-t-0 p-2",
@@ -203,6 +206,7 @@ export const EditorItalic: Story = {
 };
 
 export const EditorStrike: Story = {
+  tags: ["!dev"],
   args: {
     content: CONTENT,
     editorClass: "prose-sm min-h-[4rem] border rounded-b-lg border-t-0 p-2",
@@ -233,6 +237,7 @@ export const EditorStrike: Story = {
 };
 
 export const EditorFontColor: Story = {
+  tags: ["!dev"],
   args: {
     content: CONTENT,
     editorClass: "prose-sm min-h-[4rem] border rounded-b-lg border-t-0 p-2",
