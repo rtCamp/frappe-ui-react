@@ -33,7 +33,7 @@ export * from "./tabs";
 export { default as TaskStatus } from "./taskStatus";
 export * from "./textInput";
 export * from "./textarea";
-export { default as TextEditor } from "./textEditor";
+export * from "./textEditor";
 export * from "./toast";
 export * from "./tooltip";
 export * from "./tree";
