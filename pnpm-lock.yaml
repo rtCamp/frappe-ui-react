@@ -8,9 +8,18 @@ importers:
 
   .:
     dependencies:
+      and:
+        specifier: ^0.0.3
+        version: 0.0.3
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
       react-docgen-typescript:
         specifier: ^2.4.0
         version: 2.4.0(typescript@5.9.3)
+      react-dom:
+        specifier: ^19.2.4
+        version: 19.2.4(react@19.2.4)
     devDependencies:
       '@babel/plugin-transform-react-jsx':
         specifier: ^7.22.5
@@ -2589,6 +2598,9 @@ packages:
 
   ajv@6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
+
+  and@0.0.3:
+    resolution: {integrity: sha512-ns0tgq+jQFbDhAu5wrE+M7V87E4L3N8ZTJfRKVxafi7g0BSEM6JnwhL57HyR1XMHBeRfGPWZxq+SH1bZeUTiTw==}
 
   ansi-escapes@4.3.2:
     resolution: {integrity: sha512-gKXj5ALrKWQLsYG9jlTRmR/xKluxHV+Z9QEwNIgCfM1/uwPMCuzVVnh5mwTd+OuBZcwSIMbqssNWRm1lE51QaQ==}
@@ -7791,6 +7803,8 @@ snapshots:
       fast-json-stable-stringify: 2.1.0
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
+
+  and@0.0.3: {}
 
   ansi-escapes@4.3.2:
     dependencies:
