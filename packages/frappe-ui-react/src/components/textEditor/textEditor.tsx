@@ -99,7 +99,7 @@ const TextEditor = ({
       onBlur: ({ event }) => {
         onBlur?.(event);
       },
-      onTransaction: () => {
+      onTransaction: ({ editor }) => {
         onTransaction?.(editor);
       },
     },
