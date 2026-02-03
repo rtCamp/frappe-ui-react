@@ -44,7 +44,7 @@ export const ListProvider: React.FC<ListProviderProps> = ({
   children,
 }) => {
   const [selections, setSelections] = useState<Set<string | number>>(new Set());
-  const [activeRow, setActiveRow] = useState<ActiveRowState | null>(null);
+  const [activeRow, setActiveRow] = useState<ActiveRowState>({ value: null });
   const [_columns, setColumns] = useState<ColumnDefinition[]>(columns);
 
   useEffect(() => {
@@ -104,9 +104,13 @@ export const ListProvider: React.FC<ListProviderProps> = ({
     }
 
     if (showGroupedRows) {
-      return (
-        selections.size === rows.reduce((acc, row) => acc + row.rows.length, 0)
-      );
+      const totalRows = rows.reduce((acc, row) => {
+        if ("rows" in row && Array.isArray(row.rows)) {
+          return acc + row.rows.length;
+        }
+        return acc;
+      }, 0);
+      return selections.size === totalRows;
     }
 
     return selections.size === rows.length;
