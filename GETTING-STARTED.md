@@ -53,7 +53,7 @@ module.exports = {
     require('@rtcamp/frappe-ui-react/tailwind/preset')
   ],
   content: [
-    path.resolve(__dirname, "../../node_modules/@rtcamp/frappe-ui-react/dist")
+    path.resolve(__dirname, "./node_modules/@rtcamp/frappe-ui-react/dist/**/*.{tsx,jsx,ts,js}")
   ]
   // Additional configuration...
 }
@@ -91,6 +91,7 @@ This library is built on top of several excellent open-source projects:
 - **[Headless UI](https://github.com/tailwindlabs/headlessui)**: Unstyled and accessible UI components.
 - **[Radix UI](https://github.com/radix-ui/themes)**: Low-level, unstyled, and accessible UI primitives.
 - **[dayjs](https://github.com/iamkun/dayjs)**: Lightweight JavaScript library for working with dates.
+- **[TipTap](https://tiptap.dev/docs)**: Headless Text Editor 
 
 ## Inspiration & Credits
 
