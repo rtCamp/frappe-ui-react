@@ -51,12 +51,15 @@ const Dropdown: React.FC<DropdownProps> = ({
   const getBackgroundColor = (item: DropdownOption) =>
     item.theme === "red"
       ? "focus:bg-surface-red-3 data-[highlighted]:bg-surface-red-3 data-[state=open]:bg-surface-red-3"
-      : "focus:bg-surface-gray-4 data-[highlighted]:bg-surface-gray-4 data-[state=open]:bg-surface-gray-4";
+      : "focus:bg-surface-gray-3 data-[highlighted]:bg-surface-gray-3 data-[state=open]:bg-surface-gray-3";
 
   const getSubmenuBackgroundColor = (item: DropdownOption) =>
-    getBackgroundColor(item) +
-    " data-[state=open]:bg-surface-" +
-    (item.theme === "red" ? "red-3" : "gray-4");
+    clsx(
+      getBackgroundColor(item),
+      item.theme === "red"
+        ? " data-[state=open]:bg-surface-red-3"
+        : " data-[state=open]:bg-surface-gray-4"
+    );
 
   const normalizeDropdownItem = useCallback(
     (option: DropdownOption): DropdownOption => {
