@@ -97,7 +97,7 @@ This library is built on top of several excellent open-source projects:
 - **[Headless UI](https://github.com/tailwindlabs/headlessui)**: Unstyled and accessible UI components.
 - **[Radix UI](https://github.com/radix-ui/themes)**: Low-level, unstyled, and accessible UI primitives.
 - **[dayjs](https://github.com/iamkun/dayjs)**: Lightweight JavaScript library for working with dates.
-
+- **[TipTap](https://tiptap.dev/docs)**: Headless Text Editor 
 ## Inspiration & Credits
 
 This project, **Frappe UI React**, is heavily inspired by the original **[Frappe UI](https://github.com/frappe/frappe-ui)** project. Frappe UI is a fantastic Vue.js component library, and our goal with Frappe UI React is to bring a similar aesthetic and component experience to the React ecosystem.
