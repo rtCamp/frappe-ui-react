@@ -193,6 +193,7 @@ img.ProseMirror-selectednode {
   height: 14px;
   border-radius: 4px;
   color: var(--color-ink-gray-9);
+  accent-color: var(--color-ink-gray-9);
 }
 
 .resize-cursor {
