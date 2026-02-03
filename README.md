@@ -59,7 +59,7 @@ module.exports = {
     require('@rtcamp/frappe-ui-react/tailwind/preset')
   ],
   content: [
-    path.resolve(__dirname, "../../node_modules/@rtcamp/frappe-ui-react/dist")
+    path.resolve(__dirname, "./node_modules/@rtcamp/frappe-ui-react/dist/**/*.{tsx,jsx,ts,js}")
   ]
   // Additional configuration...
 }
