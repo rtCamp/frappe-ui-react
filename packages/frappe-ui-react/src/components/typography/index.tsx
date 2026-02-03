@@ -1,3 +1,7 @@
+/**
+ * External dependencies.
+ */
+import clsx from "clsx";
 import React, { type ElementType, type HTMLAttributes } from "react";
 
 type Variant =
@@ -33,12 +37,12 @@ const tags: Record<Variant, ElementType> = {
 };
 
 const sizes: Record<Variant, string> = {
-  h1: "text-3xl font-bold ",
+  h1: "text-3xl font-bold",
   h2: "text-2xl font-bold",
-  h3: "text-xl font-bold ",
-  h4: "text-lg font-bold ",
+  h3: "text-xl font-bold",
+  h4: "text-lg font-bold",
   h5: "text-md font-bold",
-  h6: "text-base font-bold ",
+  h6: "text-base font-bold",
   p: "text-sm font-normal",
   large: "text-lg sm:text-md font-bold",
   muted: "text-muted-foreground text-sm font-normal",
@@ -51,17 +55,12 @@ const Typography = ({
   className,
   as,
   ...props
-}: TypographyProps & HTMLAttributes<Variant>) => {
+}: TypographyProps & HTMLAttributes<HTMLElement>) => {
   const sizeClasses = sizes[variant];
   const Tag = as || tags[variant];
 
   return (
-    <Tag
-      className={`text-primary ${sizeClasses} ${
-        className ? `${className}` : ""
-      }`}
-      {...props}
-    >
+    <Tag className={clsx("text-primary", sizeClasses, className)} {...props}>
       {children}
     </Tag>
   );

@@ -44,7 +44,7 @@ export const ExtendedCodeBlock = CodeBlockLowlight.extend({
         const tr = state.tr;
         for (const off of lineStartsBetween(text, fromOffset, toOffset)) {
           let len = 0;
-          if (text.substr(off, 4) === INDENT) len = 4;
+          if (text.slice(off, off + 4) === INDENT) len = 4;
           else if (text[off] === "\t") len = 1;
 
           if (len > 0) {

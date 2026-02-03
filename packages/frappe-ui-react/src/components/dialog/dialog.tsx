@@ -62,7 +62,7 @@ const Dialog = ({
       return "bg-surface-green-2";
     }
 
-    return ""
+    return "";
   }, [icon]);
 
   const dialogIconClasses = useMemo(() => {
@@ -86,7 +86,7 @@ const Dialog = ({
       return "text-ink-green-3";
     }
 
-    return ""
+    return "";
   }, [icon]);
 
   return (
