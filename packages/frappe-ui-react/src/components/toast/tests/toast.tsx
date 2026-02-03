@@ -379,8 +379,8 @@ describe("Toast", () => {
         });
       });
 
-      expect(await screen.findByText("important")).toBe("STRONG");
-      expect(screen.getByText("urgent")).toBe("EM");
+      expect((await screen.findByText("important")).tagName).toBe("STRONG");
+      expect(screen.getByText("urgent").tagName).toBe("EM");
     });
 
     it("renders link tags in message", async () => {
