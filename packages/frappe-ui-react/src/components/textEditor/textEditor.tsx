@@ -79,14 +79,11 @@ const TextEditor = ({
         Strike,
         Blockquote,
         TableKit,
-        ExtendedCodeBlock,
-        HorizontalRule,
         HorizontalRule.configure({
           HTMLAttributes: {
             class: "not-prose border-outline-gray-1 m-0",
           },
         }),
-        TableKit,
         ExtendedCodeBlock,
         ...extensions,
       ],
