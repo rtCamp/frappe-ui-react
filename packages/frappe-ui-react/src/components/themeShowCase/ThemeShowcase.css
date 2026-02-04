@@ -484,10 +484,6 @@
   color: var(--color-ink-gray-8);
 }
 
-.dark .default-token-note p {
-  color: var(--color-ink-gray-1);
-}
-
 /* Responsive adjustments for default tokens */
 @media (max-width: 768px) {
   .default-token-grid {

@@ -1,8 +1,8 @@
 import React from "react";
 
-import FeatherIcon, { FeatherIconProps } from "../featherIcon";
+import FeatherIcon, { type FeatherIconProps } from "../featherIcon";
 import LoadingIndicator from "../loadingIndicator";
-import { ButtonProps, ButtonThemeVariant } from "./types";
+import type { ButtonProps, ButtonThemeVariant } from "./types";
 
 const Button = ({
   theme = "gray",

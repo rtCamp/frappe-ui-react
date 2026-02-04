@@ -1,12 +1,39 @@
-import React, { ReactNode, useCallback, useMemo, useState } from "react";
-import { ListContext, ListOptionsProps } from "./listContext";
+import React, {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { ListContext, type ListOptionsProps } from "./listContext";
+
+interface ColumnDefinition {
+  [key: string]: unknown;
+  width?: string;
+}
+
+interface BaseRow {
+  [key: string]: unknown;
+}
+
+interface GroupedRow {
+  group: string;
+  rows: BaseRow[];
+  [key: string]: unknown;
+}
+
+type Row = BaseRow | GroupedRow;
+
+interface ActiveRowState {
+  value: string | number | null;
+}
 
 interface ListProviderProps {
   options: ListOptionsProps;
   children: ReactNode;
-  rows: any[];
+  rows: Row[];
   rowKey: string;
-  columns: any[];
+  columns: ColumnDefinition[];
 }
 
 export const ListProvider: React.FC<ListProviderProps> = ({
@@ -16,9 +43,13 @@ export const ListProvider: React.FC<ListProviderProps> = ({
   columns,
   children,
 }) => {
-  const [selections, setSelections] = useState<Set<any>>(new Set());
-  const [activeRow, setActiveRow] = useState<any>(null);
-  const [_columns, setColumns] = useState<any[]>(columns);
+  const [selections, setSelections] = useState<Set<string | number>>(new Set());
+  const [activeRow, setActiveRow] = useState<ActiveRowState>({ value: null });
+  const [_columns, setColumns] = useState<ColumnDefinition[]>(columns);
+
+  useEffect(() => {
+    setColumns(columns);
+  }, [columns]);
 
   const updateColumnWidth = useCallback((index: number, width: number) => {
     setColumns((prevColumns) => {
@@ -73,15 +104,19 @@ export const ListProvider: React.FC<ListProviderProps> = ({
     }
 
     if (showGroupedRows) {
-      return (
-        selections.size === rows.reduce((acc, row) => acc + row.rows.length, 0)
-      );
+      const totalRows = rows.reduce((acc, row) => {
+        if ("rows" in row && Array.isArray(row.rows)) {
+          return acc + row.rows.length;
+        }
+        return acc;
+      }, 0);
+      return selections.size === totalRows;
     }
 
     return selections.size === rows.length;
   }, [rows, showGroupedRows, selections.size]);
 
-  const toggleRow = useCallback((id: any) => {
+  const toggleRow = useCallback((id: string | number) => {
     setSelections((prev) => {
       const newSelections = new Set(prev);
       if (newSelections.has(id)) {
@@ -100,20 +135,32 @@ export const ListProvider: React.FC<ListProviderProps> = ({
         setSelections(new Set());
         return;
       }
-      const newSelections = new Set();
+      const newSelections = new Set<string | number>();
       if (showGroupedRows) {
         rows.forEach((row) => {
-          row.rows.forEach((r: any) => newSelections.add(r[rowKey]));
+          if ("rows" in row && Array.isArray(row.rows)) {
+            row.rows.forEach((r: BaseRow) => {
+              const key = r[rowKey];
+              if (typeof key === "string" || typeof key === "number") {
+                newSelections.add(key);
+              }
+            });
+          }
         });
       } else {
-        rows.forEach((row) => newSelections.add(row[rowKey]));
+        rows.forEach((row) => {
+          const key = row[rowKey];
+          if (typeof key === "string" || typeof key === "number") {
+            newSelections.add(key);
+          }
+        });
       }
       setSelections(newSelections);
     },
     [allRowsSelected, rows, showGroupedRows, rowKey]
   );
 
-  useMemo(() => {
+  useEffect(() => {
     if (selections.size > 0) {
       setActiveRow({
         value: null,

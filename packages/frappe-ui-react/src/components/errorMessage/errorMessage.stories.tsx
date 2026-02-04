@@ -1,6 +1,6 @@
-import { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import ErrorMessage from "./errorMessage";
-import { ErrorMessageProps } from "./types";
+import type { ErrorMessageProps } from "./types";
 
 export default {
   title: "Components/ErrorMessage",

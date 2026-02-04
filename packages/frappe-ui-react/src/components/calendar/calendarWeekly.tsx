@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import clsx from "clsx";
 
 import {
@@ -26,8 +26,6 @@ export const CalendarWeekly = ({ weeklyDates }: CalendarWeeklyProps) => {
   const { timedEvents, fullDayEvents } = useCalendarData(events, "Week");
 
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [showCollapsable, setShowCollapsable] = useState(true);
-
   const gridRef = useRef<HTMLDivElement>(null);
   const allDayCellsRef = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -37,8 +35,7 @@ export const CalendarWeekly = ({ weeklyDates }: CalendarWeeklyProps) => {
 
   const isToday = (date: Date) =>
     new Date(date).toDateString() === new Date().toDateString();
-
-  useEffect(() => {
+  const showCollapsable = useMemo(() => {
     const relevantDates = weeklyDates.map((d) => parseDate(d));
     const eventsInWeek = Object.entries(fullDayEvents).filter(([date]) =>
       relevantDates.includes(date)
@@ -47,9 +44,8 @@ export const CalendarWeekly = ({ weeklyDates }: CalendarWeeklyProps) => {
       0,
       ...eventsInWeek.map(([, dayEvents]) => dayEvents.length)
     );
-
-    setShowCollapsable(maxEventsInDay > 3);
-  }, [fullDayEvents, weeklyDates, isCollapsed, config.redundantCellHeight]);
+    return maxEventsInDay > 3;
+  }, [weeklyDates, fullDayEvents]);
 
   useEffect(() => {
     if (gridRef.current) {
@@ -178,14 +174,32 @@ export const CalendarWeekly = ({ weeklyDates }: CalendarWeeklyProps) => {
                           i === timeArray.length - 1 && "border-b-0"
                         )}
                         style={{ height: `${hourHeight}px` }}
-                        data-time-attr={index === 0 && i >= 1 ? timeArray[i] : undefined}
-                        onDoubleClick={(e) => handleCellDblClick(e, date.toLocaleDateString("en-CA"), time)}
-                        onClick={(e) => handleCellDblClick(e, date.toLocaleDateString("en-CA"), time)}
+                        data-time-attr={
+                          index === 0 && i >= 1 ? timeArray[i] : undefined
+                        }
+                        onDoubleClick={(e) =>
+                          handleCellDblClick(
+                            e,
+                            date.toLocaleDateString("en-CA"),
+                            time
+                          )
+                        }
+                        onClick={(e) =>
+                          handleCellDblClick(
+                            e,
+                            date.toLocaleDateString("en-CA"),
+                            time
+                          )
+                        }
                       />
                     </div>
                   ))}
                   {(timedEvents[parseDate(date)] || []).map((event, idx) => (
-                    <CalendarEvent key={event.id} event={{ ...event, idx }} date={date} />
+                    <CalendarEvent
+                      key={event.id}
+                      event={{ ...event, idx }}
+                      date={date}
+                    />
                   ))}
                   <CalendarTimeMarker date={date} />
                 </div>
