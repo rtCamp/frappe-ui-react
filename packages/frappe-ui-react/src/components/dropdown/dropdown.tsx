@@ -87,7 +87,7 @@ const Dropdown: React.FC<DropdownProps> = ({
           (option) =>
             !("group" in option) &&
             ("condition" in option
-              ? (option as DropdownOption).condition?.() ?? true
+              ? ((option as DropdownOption).condition?.() ?? true)
               : true)
         )
         .map((option) => normalizeDropdownItem(option as DropdownOption));
@@ -213,13 +213,21 @@ const Dropdown: React.FC<DropdownProps> = ({
                   getSubmenuBackgroundColor(item)
                 )}
               >
-                <span className={cssClasses.itemLabel} data-testid="dropdown-submenu-trigger">{item.label}</span>
+                <span
+                  className={cssClasses.itemLabel}
+                  data-testid="dropdown-submenu-trigger"
+                >
+                  {item.label}
+                </span>
               </Button>
             }
             nativeButton={true}
           />
           <Menu.Portal>
-            <Menu.Positioner sideOffset={4} className={cssClasses.dropdownPositioner}>
+            <Menu.Positioner
+              sideOffset={4}
+              className={cssClasses.dropdownPositioner}
+            >
               <Menu.Popup className={cssClasses.dropdownContent}>
                 {processOptionsIntoGroups(item.submenu).map((submenuGroup) => (
                   <Menu.Group
@@ -280,7 +288,11 @@ const Dropdown: React.FC<DropdownProps> = ({
           children ? (
             React.cloneElement(children as React.ReactElement, { ...attrs })
           ) : (
-            <Button {...(button as ButtonProps)} {...attrs} data-testid="dropdown-trigger">
+            <Button
+              {...(button as ButtonProps)}
+              {...attrs}
+              data-testid="dropdown-trigger"
+            >
               {button?.label || "Options"}
             </Button>
           )
@@ -288,7 +300,12 @@ const Dropdown: React.FC<DropdownProps> = ({
       />
 
       <Menu.Portal>
-        <Menu.Positioner side={contentSide} align={contentAlign} sideOffset={0} className={cssClasses.dropdownPositioner}>
+        <Menu.Positioner
+          side={contentSide}
+          align={contentAlign}
+          sideOffset={0}
+          className={cssClasses.dropdownPositioner}
+        >
           <Menu.Popup
             className={clsx(cssClasses.dropdownContent, {
               "origin-top-left": placement === "left",

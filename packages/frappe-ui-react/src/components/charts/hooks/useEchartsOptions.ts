@@ -290,8 +290,7 @@ export default function useEchartsOptions(config: AxisChartConfig) {
                   <div class="font-bold">${formatted}</div>
                 </div>
               `;
-        }
-        else {
+        } else {
           const t = params.map((p, idx) => {
             const xValue = config.swapXY ? p.value[1] : p.value[0];
             const yValue = config.swapXY ? p.value[0] : p.value[1];

@@ -8,8 +8,8 @@ import tseslint from "typescript-eslint";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-globalIgnores(["dist","storybook-static"]),
-reactHooks.configs.flat.recommended,
+  globalIgnores(["dist", "storybook-static"]),
+  reactHooks.configs.flat.recommended,
   {
     files: ["**/*.{ts,tsx}"],
     extends: [

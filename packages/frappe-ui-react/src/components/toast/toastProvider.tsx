@@ -37,8 +37,8 @@ const ToastContextProvider: React.FC<ToastsProviderProps> = ({ children }) => {
         options.closable === false
           ? 0
           : options.duration
-          ? options.duration * 1000
-          : 5000;
+            ? options.duration * 1000
+            : 5000;
 
       const sanitizedMessage = DOMPurify.sanitize(options.message, {
         ALLOWED_TAGS: ["a", "em", "strong", "i", "b", "u"],
@@ -47,7 +47,9 @@ const ToastContextProvider: React.FC<ToastsProviderProps> = ({ children }) => {
       return toastManager.add<ToastDataInternal>({
         id: options?.id || id,
         timeout: durationInMs,
-        description: <span dangerouslySetInnerHTML={{ __html: sanitizedMessage }} />,
+        description: (
+          <span dangerouslySetInnerHTML={{ __html: sanitizedMessage }} />
+        ),
         type: options.type || "info",
         actionProps: {
           children: options.action?.label,

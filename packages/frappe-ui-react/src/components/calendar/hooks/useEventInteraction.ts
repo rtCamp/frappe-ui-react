@@ -7,7 +7,13 @@ import {
   type ExtendedRefs,
   type ReferenceType,
 } from "@floating-ui/react";
-import React, { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 
 import type { CalendarConfig, CalendarEvent } from "../types";
 import { calculateMinutes, convertMinutesToHours } from "../calendarUtils";
@@ -33,26 +39,26 @@ export const useEventInteraction = (
   event: CalendarEvent,
   config: CalendarConfig
 ): {
-    eventTime: { from_time: string; to_time: string } | undefined;
-    isPopoverOpen: boolean;
-    isEditModalOpen: boolean;
-    isResizing: boolean;
-    isRepositioning: boolean;
-    repositionState: { xAxis: number; yAxis: number };
-    eventRef: React.RefObject<HTMLDivElement | null>;
-    floatingRefs: {
-        reference: React.RefObject<ReferenceType | null>;
-        floating: React.RefObject<HTMLElement | null>;
-        setReference: (node: ReferenceType | null) => void;
-        setFloating: (node: HTMLElement | null) => void;
-    } & ExtendedRefs<ReferenceType>;
-    floatingStyles: React.CSSProperties;
-    setEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    setPopoverOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    handleEventClick: (_event: React.MouseEvent<HTMLDivElement>) => void;
-    handleEventDelete: () => void;
-    handleResizeMouseDown: (_event: React.MouseEvent<HTMLDivElement>) => void;
-    handleRepositionMouseDown: (e: React.MouseEvent) => void;
+  eventTime: { from_time: string; to_time: string } | undefined;
+  isPopoverOpen: boolean;
+  isEditModalOpen: boolean;
+  isResizing: boolean;
+  isRepositioning: boolean;
+  repositionState: { xAxis: number; yAxis: number };
+  eventRef: React.RefObject<HTMLDivElement | null>;
+  floatingRefs: {
+    reference: React.RefObject<ReferenceType | null>;
+    floating: React.RefObject<HTMLElement | null>;
+    setReference: (node: ReferenceType | null) => void;
+    setFloating: (node: HTMLElement | null) => void;
+  } & ExtendedRefs<ReferenceType>;
+  floatingStyles: React.CSSProperties;
+  setEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setPopoverOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleEventClick: (_event: React.MouseEvent<HTMLDivElement>) => void;
+  handleEventDelete: () => void;
+  handleResizeMouseDown: (_event: React.MouseEvent<HTMLDivElement>) => void;
+  handleRepositionMouseDown: (e: React.MouseEvent) => void;
 } => {
   const [isPopoverOpen, setPopoverOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
