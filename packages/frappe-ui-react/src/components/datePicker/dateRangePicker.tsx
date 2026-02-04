@@ -135,8 +135,8 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   formatter,
   placement,
   label,
-  children,
   onChange,
+  children,
 }) => {
   const {
     open,
