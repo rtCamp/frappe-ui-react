@@ -23,6 +23,7 @@ export * from "./listview";
 export * from "./password";
 export * from "./progress";
 export * from "./popover";
+export * from "./radioButton";
 export * from "./rating";
 export * from "./select";
 export * from "./sidebar";
