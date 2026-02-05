@@ -1,32 +1,27 @@
-import { clsx } from "clsx";
-import { Droppable } from "./Droppable";
+import { Slot } from "./slot";
 import type { RowProps } from "./types";
 
 export const Row: React.FC<RowProps> = ({
+  widgets,
   row,
+  rowIndex,
   parentLocked = false,
+  onAddWidget,
+  onRemoveWidget,
 }) => {
-  const isRowLocked = parentLocked || row.locked;
-
   return (
-    <div
-      className={clsx(
-        "flex flex-row flex-wrap rounded min-h-[100px]",
-        !row.gap && "gap-4",
-        row.className
-      )}
-      style={{
-        ...(row.gap && { gap: row.gap }),
-      }}
-    >
-      {row.slots.map((slot, slotIndex) => {
-        const slotId = `${row.id}-slot-${slotIndex}`;
+    <div className="flex flex-row flex-wrap gap-4 min-h-[100px]">
+      {row.map((widgetId, slotIndex) => {
+        const slotId = `row-${rowIndex}-slot-${slotIndex}`;
         return (
-          <Droppable
+          <Slot
             key={slotId}
+            widgets={widgets}
+            widgetId={widgetId}
             slotId={slotId}
-            slot={slot}
-            parentLocked={isRowLocked}
+            parentLocked={parentLocked}
+            onAddWidget={(wId) => onAddWidget(rowIndex, slotIndex, wId)}
+            onRemoveWidget={() => onRemoveWidget(rowIndex, slotIndex)}
           />
         );
       })}

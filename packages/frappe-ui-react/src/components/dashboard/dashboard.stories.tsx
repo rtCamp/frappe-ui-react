@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import { Dashboard } from "./index";
-import type { Layout, SerializedLayout } from "./types";
+import type { Layout, Widget } from "./types";
 import { Button } from "../button";
 import { Progress } from "../progress";
 import { Badge } from "../badge";
@@ -79,43 +79,20 @@ const Activity = () => (
   </div>
 );
 
-const layout: Layout = [
-  {
-    id: "row-1",
-    slots: [
-      {
-        id: "content-1",
-        component: Content,
-        props: {},
-        flex: "1",
-      },
-    ],
-  },
-  {
-    id: "row-2",
-    slots: [
-      {
-        id: "stats-1",
-        component: Stats,
-        props: {},
-        flex: "1",
-      },
-      {
-        id: "activity-1",
-        component: Activity,
-        props: {},
-        flex: "1",
-      },
-    ],
-  },
+const simpleWidgets: Widget[] = [
+  { id: "content", name: "Content", component: Content },
+  { id: "stats", name: "Stats", component: Stats },
+  { id: "activity", name: "Activity", component: Activity },
 ];
+
+const simpleLayout: Layout = [["content"], ["stats", "activity", ""]];
 
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
 
     const handleLayoutChange = useCallback(
-      (newLayout: SerializedLayout) => {
+      (newLayout: Layout) => {
         updateArgs({ savedLayout: newLayout });
       },
       [updateArgs]
@@ -124,6 +101,7 @@ export const Default: Story = {
     return (
       <div className="w-full h-screen p-10 flex justify-center items-center">
         <Dashboard
+          widgets={args.widgets}
           layoutLock={args.layoutLock}
           dragHandle={args.dragHandle}
           dragHandleOnHover={args.dragHandleOnHover}
@@ -135,7 +113,8 @@ export const Default: Story = {
     );
   },
   args: {
-    initialLayout: layout,
+    widgets: simpleWidgets,
+    initialLayout: simpleLayout,
     layoutLock: false,
     dragHandle: false,
     dragHandleOnHover: false,
@@ -145,11 +124,11 @@ export const Default: Story = {
 export const LocalStorage: Story = {
   render: function Render(args) {
     const savedLayoutStr = localStorage.getItem("dashboard-saved-layout");
-    const savedLayout: SerializedLayout | undefined = savedLayoutStr
+    const savedLayout: Layout | undefined = savedLayoutStr
       ? JSON.parse(savedLayoutStr)
       : undefined;
 
-    const handleLayoutChange = (newLayout: SerializedLayout) => {
+    const handleLayoutChange = (newLayout: Layout) => {
       localStorage.setItem("dashboard-saved-layout", JSON.stringify(newLayout));
     };
 
@@ -163,6 +142,7 @@ export const LocalStorage: Story = {
           </Button>
         </div>
         <Dashboard
+          widgets={args.widgets}
           layoutLock={args.layoutLock}
           dragHandle={args.dragHandle}
           dragHandleOnHover={args.dragHandleOnHover}
@@ -174,7 +154,8 @@ export const LocalStorage: Story = {
     );
   },
   args: {
-    initialLayout: layout,
+    widgets: simpleWidgets,
+    initialLayout: simpleLayout,
     layoutLock: false,
     dragHandle: true,
     dragHandleOnHover: true,
@@ -227,7 +208,6 @@ const EmployeeOverviewWidget = ({
             step={progress}
             totalSteps={100}
             size="lg"
-            theme="black"
             showPercentage
           />
         </div>
@@ -545,119 +525,87 @@ const QuickActionsWidget = () => (
   </div>
 );
 
+const hrWidgets: Widget[] = [
+  {
+    id: "total-employees",
+    name: "Total Employees",
+    component: EmployeeOverviewWidget,
+    props: {
+      title: "Total Employees",
+      value: "1,234",
+      subtitle: "Active employees",
+      progress: 85,
+      trend: "up",
+      trendValue: "12%",
+    },
+  },
+  {
+    id: "new-hires",
+    name: "New Hires",
+    component: EmployeeOverviewWidget,
+    props: {
+      title: "New Hires",
+      value: "48",
+      subtitle: "This month",
+      progress: 72,
+      trend: "up",
+      trendValue: "8%",
+    },
+  },
+  {
+    id: "turnover",
+    name: "Turnover Rate",
+    component: EmployeeOverviewWidget,
+    props: {
+      title: "Turnover Rate",
+      value: "4.2%",
+      subtitle: "Last 12 months",
+      progress: 42,
+      trend: "down",
+      trendValue: "2%",
+    },
+  },
+  {
+    id: "open-positions",
+    name: "Open Positions",
+    component: EmployeeOverviewWidget,
+    props: {
+      title: "Open Positions",
+      value: "23",
+      subtitle: "Across all departments",
+      progress: 65,
+    },
+  },
+  {
+    id: "salary-stats",
+    name: "Salary Statistics",
+    component: SalaryStatisticsWidget,
+  },
+  {
+    id: "satisfaction",
+    name: "Employee Satisfaction",
+    component: EmployeeSatisfactionWidget,
+  },
+  {
+    id: "performance",
+    name: "Performance Stats",
+    component: PerformanceStatsWidget,
+  },
+  { id: "new-employees", name: "New Employees", component: NewEmployeesWidget },
+  { id: "events", name: "Upcoming Events", component: UpcomingEventsWidget },
+  {
+    id: "activities",
+    name: "Recent Activities",
+    component: RecentActivitiesWidget,
+  },
+  { id: "quick-actions", name: "Quick Actions", component: QuickActionsWidget },
+];
+
 const hrDashboardLayout: Layout = [
-  {
-    id: "hr-metrics-row",
-    slots: [
-      {
-        id: "metric-total-employees",
-        component: EmployeeOverviewWidget,
-        props: {
-          title: "Total Employees",
-          value: "1,234",
-          subtitle: "Active employees",
-          progress: 85,
-          trend: "up",
-          trendValue: "12%",
-        },
-        flex: "1",
-      },
-      {
-        id: "metric-new-hires",
-        component: EmployeeOverviewWidget,
-        props: {
-          title: "New Hires",
-          value: "48",
-          subtitle: "This month",
-          progress: 72,
-          trend: "up",
-          trendValue: "8%",
-        },
-        flex: "1",
-      },
-      {
-        id: "metric-turnover",
-        component: EmployeeOverviewWidget,
-        props: {
-          title: "Turnover Rate",
-          value: "4.2%",
-          subtitle: "Last 12 months",
-          progress: 42,
-          trend: "down",
-          trendValue: "2%",
-        },
-        flex: "1",
-      },
-      {
-        id: "metric-open-positions",
-        component: EmployeeOverviewWidget,
-        props: {
-          title: "Open Positions",
-          value: "23",
-          subtitle: "Across all departments",
-          progress: 65,
-        },
-        flex: "1",
-      },
-    ],
-  },
-  {
-    id: "hr-charts-row",
-    slots: [
-      {
-        id: "salary-chart",
-        component: SalaryStatisticsWidget,
-        props: {},
-        flex: "2",
-      },
-      {
-        id: "satisfaction-chart",
-        component: EmployeeSatisfactionWidget,
-        props: {},
-        flex: "1",
-      },
-    ],
-  },
-  {
-    id: "hr-details-row",
-    slots: [
-      {
-        id: "performance-stats",
-        component: PerformanceStatsWidget,
-        props: {},
-        flex: "1",
-      },
-      {
-        id: "new-employees-chart",
-        component: NewEmployeesWidget,
-        props: {},
-        flex: "1",
-      },
-      {
-        id: "upcoming-events",
-        component: UpcomingEventsWidget,
-        props: {},
-        flex: "1",
-      },
-    ],
-  },
-  {
-    id: "hr-bottom-row",
-    slots: [
-      {
-        id: "recent-activities",
-        component: RecentActivitiesWidget,
-        props: {},
-        flex: "2",
-      },
-      {
-        id: "quick-actions",
-        component: QuickActionsWidget,
-        props: {},
-        flex: "1",
-      },
-    ],
-  },
+  ["total-employees", "new-hires", "turnover", "open-positions"],
+  ["salary-stats", "satisfaction"],
+  ["performance", "new-employees", "events"],
+  ["activities", "quick-actions", ""],
 ];
 
 export const HRDashboardExample: Story = {
@@ -665,7 +613,7 @@ export const HRDashboardExample: Story = {
     const [, updateArgs] = useArgs();
 
     const handleLayoutChange = useCallback(
-      (newLayout: SerializedLayout) => {
+      (newLayout: Layout) => {
         updateArgs({ savedLayout: newLayout });
       },
       [updateArgs]
@@ -674,6 +622,7 @@ export const HRDashboardExample: Story = {
     return (
       <div className="w-full bg-surface-gray-2 p-6">
         <Dashboard
+          widgets={args.widgets}
           layoutLock={args.layoutLock}
           dragHandle={args.dragHandle}
           dragHandleOnHover={args.dragHandleOnHover}
@@ -685,6 +634,7 @@ export const HRDashboardExample: Story = {
     );
   },
   args: {
+    widgets: hrWidgets,
     initialLayout: hrDashboardLayout,
     layoutLock: false,
     dragHandle: true,

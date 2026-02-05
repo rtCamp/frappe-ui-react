@@ -1,70 +1,49 @@
-export interface Slot {
+export interface Widget {
   id: string;
+  name: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: React.ComponentType<any>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  props: Record<string, any>;
-  flex?: string;
-  locked?: boolean;
+  props?: Record<string, any>;
 }
 
-export interface Row {
-  id: string;
-  slots: Slot[];
-  gap?: string;
-  className?: string;
-  locked?: boolean;
-}
-
-export type Layout = Row[];
-
-export interface SerializedSlot {
-  id: string;
-  flex?: string;
-  locked?: boolean;
-}
-
-export interface SerializedRow {
-  id: string;
-  slots: SerializedSlot[];
-  gap?: string;
-  className?: string;
-  locked?: boolean;
-}
-
-export type SerializedLayout = SerializedRow[];
+export type Layout = string[][];
 
 export interface DashboardProps {
+  widgets: Widget[];
   initialLayout: Layout;
   layoutLock?: boolean;
   dragHandle?: boolean;
   dragHandleOnHover?: boolean;
-  savedLayout?: SerializedLayout;
-  onLayoutChange: (layout: SerializedLayout) => void;
+  savedLayout?: Layout;
+  onLayoutChange?: (layout: Layout) => void;
 }
 
 export interface LayoutContainerProps {
+  widgets: Widget[];
   layout: Layout;
-  setLayout: (layout: Layout | ((prevLayout: Layout) => Layout)) => void;
+  setLayout: (layout: Layout) => void;
   layoutLock?: boolean;
   dragHandle?: boolean;
   dragHandleOnHover?: boolean;
 }
 
 export interface RowProps {
-  row: Row;
+  widgets: Widget[];
+  row: string[];
+  rowIndex: number;
   parentLocked?: boolean;
+  onAddWidget: (rowIndex: number, slotIndex: number, widgetId: string) => void;
+  onRemoveWidget: (rowIndex: number, slotIndex: number) => void;
 }
 
-export interface DroppableProps {
+export interface SlotProps {
+  widgets: Widget[];
+  widgetId: string;
   slotId: string;
-  slot: Slot;
   parentLocked?: boolean;
-}
-
-export interface DraggableProps {
-  slot: Slot;
-  parentLocked?: boolean;
+  onAddWidget: (widgetId: string) => void;
+  onRemoveWidget: () => void;
 }
 
 export interface LayoutContextValue {

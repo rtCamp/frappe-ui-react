@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LayoutContainer } from "./layoutContainer";
-import type { DashboardProps, Layout, SerializedLayout } from "./types";
+import type { DashboardProps, Layout } from "./types";
 import { validateSerializedLayout } from "./dashboardUtil";
 
 export const Dashboard: React.FC<DashboardProps> = ({
+  widgets,
   initialLayout,
   layoutLock = false,
   dragHandle = false,
@@ -11,81 +12,26 @@ export const Dashboard: React.FC<DashboardProps> = ({
   savedLayout,
   onLayoutChange,
 }) => {
-  const handleMakeSerializable = useCallback(
-    (layout: Layout): SerializedLayout => {
-      return layout.map((row) => ({
-        ...row,
-        slots: row.slots.map(({ component, props, ...rest }) => {
-          void component;
-          void props;
-          return rest;
-        }),
-      }));
-    },
-    []
-  );
-
-  const mergeLayouts = useCallback(
-    (saved: SerializedLayout, initial: Layout): Layout => {
-      if (!validateSerializedLayout(saved)) {
-        return initial;
-      }
-
-      const componentMap = new Map();
-
-      initial.forEach((row) => {
-        row.slots.forEach((slot) => {
-          componentMap.set(slot.id, {
-            component: slot.component,
-            props: slot.props,
-          });
-        });
-      });
-
-      return saved.map((savedRow) => {
-        return {
-          ...savedRow,
-          slots: savedRow.slots.map((savedSlot) => {
-            const comp = componentMap.get(savedSlot.id);
-            return {
-              ...savedSlot,
-              component:
-                comp?.component ??
-                (() => (
-                  <span className="text-sm text-ink-gray-5">
-                    Component Not Found
-                  </span>
-                )),
-              props: comp?.props ?? {},
-            };
-          }),
-        };
-      });
-    },
-    []
-  );
-
   const [layout, setLayout] = useState<Layout>(() => {
-    if (savedLayout) {
-      return mergeLayouts(savedLayout, initialLayout);
+    if (savedLayout && validateSerializedLayout(savedLayout)) {
+      return savedLayout;
     }
     return initialLayout;
   });
 
   useEffect(() => {
-    setLayout((currentLayout) => {
-      const currentSerialized = handleMakeSerializable(currentLayout);
-      return mergeLayouts(currentSerialized, initialLayout);
-    });
-  }, [initialLayout, mergeLayouts, handleMakeSerializable]);
+    if (savedLayout && validateSerializedLayout(savedLayout)) {
+      setLayout(savedLayout);
+    }
+  }, [savedLayout]);
 
   useEffect(() => {
-    const serialized = handleMakeSerializable(layout);
-    onLayoutChange(serialized);
-  }, [layout, onLayoutChange, handleMakeSerializable]);
+    onLayoutChange?.(layout);
+  }, [layout, onLayoutChange]);
 
   return (
     <LayoutContainer
+      widgets={widgets}
       layout={layout}
       setLayout={setLayout}
       layoutLock={layoutLock}
