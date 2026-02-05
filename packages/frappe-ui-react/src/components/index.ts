@@ -30,6 +30,7 @@ export * from "./spinner";
 export * from "./switch";
 export { default as TabButtons } from "./tabButtons";
 export * from "./tabs";
+export * from "./tag";
 export { default as TaskStatus } from "./taskStatus";
 export * from "./textInput";
 export * from "./textarea";
