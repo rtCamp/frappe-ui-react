@@ -92,7 +92,7 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
             size: widgetDef.size,
             isResizable: widgetDef.isResizable,
             isDraggable: widgetDef.isDraggable,
-            static: isDropped,
+            static: isDropped ? true : widgetDef.static,
           };
 
           newLayouts[breakpoint] = [...currentLayout, newLayoutItem];
@@ -112,10 +112,14 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
               const breakpoint = bp as Breakpoint;
               const currentLayout = prevLayouts[breakpoint] || [];
 
-              newLayouts[breakpoint] = currentLayout.map((item) => ({
-                ...item,
-                static: undefined,
-              }));
+              newLayouts[breakpoint] = currentLayout.map((item) => {
+                const widgetDef = widgets.find((w) => w.id === item.id);
+
+                return {
+                  ...item,
+                  static: widgetDef?.static ?? undefined,
+                };
+              });
             }
 
             return newLayouts;
@@ -156,7 +160,10 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
                 };
               }
             }
-            return { ...item, static: true };
+            return {
+              ...item,
+              static: true,
+            };
           });
         }
 

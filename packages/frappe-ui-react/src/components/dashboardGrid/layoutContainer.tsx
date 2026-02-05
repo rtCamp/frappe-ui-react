@@ -86,12 +86,16 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
             maxW: size.maxW,
             maxH: size.maxH,
             static: item.static,
-            isDraggable:
-              item.isDraggable !== undefined
-                ? item.isDraggable
-                : widgetDef?.isDraggable ?? !layoutLock,
-            isResizable:
-              size.isResizable !== undefined ? size.isResizable : true,
+            isDraggable: item.static
+              ? false
+              : item.isDraggable !== undefined
+              ? item.isDraggable
+              : widgetDef?.isDraggable ?? !layoutLock,
+            isResizable: item.static
+              ? false
+              : size.isResizable !== undefined
+              ? size.isResizable
+              : true,
           };
         });
       }
@@ -240,7 +244,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
               <WidgetWrapper
                 widgetId={key}
                 onRemove={handleRemoveWidget}
-                layoutLock={layoutLock}
+                layoutLock={layoutLock || layoutItem.static === true}
                 dragHandle={dragHandle}
                 dragHandleOnHover={dragHandleOnHover}
               >
