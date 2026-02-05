@@ -227,7 +227,7 @@ const SalaryStatisticsWidget = () => {
   ];
 
   return (
-    <div className="h-full flex flex-col border border-outline-gray-2 rounded-lg bg-surface-cards p-5">
+    <div className="h-full flex flex-col border border-outline-gray-2 rounded-lg bg-surface-cards p-5 overflow-x-auto">
       <h3 className="text-xl font-semibold">Salary Statistics</h3>
       <p className="mt-1.5 text-base text-gray-600">Monthly overview</p>
       <AxisChart
@@ -333,7 +333,7 @@ const NewEmployeesWidget = () => {
   ];
 
   return (
-    <div className="h-full flex flex-col border border-outline-gray-2 rounded-lg bg-surface-cards p-5">
+    <div className="h-full flex flex-col border border-outline-gray-2 rounded-lg bg-surface-cards p-5 overflow-x-auto">
       <h3 className="text-xl font-semibold">New Employees</h3>
       <p className="mt-1.5 text-base text-gray-600">Last 6 months hiring</p>
       <AxisChart
@@ -601,7 +601,7 @@ const hrWidgets: Widget[] = [
   { id: "quick-actions", name: "Quick Actions", component: QuickActionsWidget },
 ];
 
-const hrDashboardLayout: Layout = [
+const layout_1: Layout = [
   ["total-employees", "new-hires", "turnover", "open-positions"],
   ["salary-stats", "satisfaction"],
   ["performance", "new-employees", "events"],
@@ -622,6 +622,7 @@ export const HRDashboardExample: Story = {
     return (
       <div className="w-full bg-surface-gray-2 p-6">
         <Dashboard
+          layoutFlow="row"
           widgets={args.widgets}
           layoutLock={args.layoutLock}
           dragHandle={args.dragHandle}
@@ -635,7 +636,7 @@ export const HRDashboardExample: Story = {
   },
   args: {
     widgets: hrWidgets,
-    initialLayout: hrDashboardLayout,
+    initialLayout: layout_1,
     layoutLock: false,
     dragHandle: true,
     dragHandleOnHover: true,

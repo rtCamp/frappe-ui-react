@@ -11,6 +11,7 @@ export type Layout = string[][];
 
 export interface DashboardProps {
   widgets: Widget[];
+  layoutFlow?: "row" | "column";
   initialLayout: Layout;
   layoutLock?: boolean;
   dragHandle?: boolean;
@@ -22,6 +23,7 @@ export interface DashboardProps {
 export interface LayoutContainerProps {
   widgets: Widget[];
   layout: Layout;
+  layoutFlow?: "row" | "column";
   setLayout: (layout: Layout) => void;
   layoutLock?: boolean;
   dragHandle?: boolean;
@@ -32,6 +34,7 @@ export interface RowProps {
   widgets: Widget[];
   row: string[];
   rowIndex: number;
+  layoutFlow?: "row" | "column"; 
   parentLocked?: boolean;
   onAddWidget: (rowIndex: number, slotIndex: number, widgetId: string) => void;
   onRemoveWidget: (rowIndex: number, slotIndex: number) => void;

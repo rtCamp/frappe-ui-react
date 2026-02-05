@@ -5,6 +5,7 @@ import { validateSerializedLayout } from "./dashboardUtil";
 
 export const Dashboard: React.FC<DashboardProps> = ({
   widgets,
+  layoutFlow = "row",
   initialLayout,
   layoutLock = false,
   dragHandle = false,
@@ -32,6 +33,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   return (
     <LayoutContainer
       widgets={widgets}
+      layoutFlow={layoutFlow}
       layout={layout}
       setLayout={setLayout}
       layoutLock={layoutLock}

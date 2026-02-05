@@ -13,17 +13,19 @@ import {
 import { Row } from "./row";
 import { LayoutContainerProps } from "./types";
 import { LayoutContext } from "./layoutContext";
+import clsx from "clsx";
 
 export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   widgets,
   layout,
+  layoutFlow = "row",
   setLayout,
   layoutLock = false,
   dragHandle = false,
   dragHandleOnHover = false,
 }) => {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
-
+console.log( "layoutFlow:", layoutFlow );
   const activeSlotId = useMemo(() => {
     if (!activeId) return null;
     return activeId as string;
@@ -110,11 +112,15 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className="flex flex-col gap-4">
+        <div className={clsx(
+          "flex gap-6",
+          layoutFlow === "row" ? "flex-col" : "flex-row"
+        )}>
           {layout.map((row, rowIndex) => (
             <Row
               key={rowIndex}
               widgets={widgets}
+              layoutFlow={layoutFlow}
               row={row}
               rowIndex={rowIndex}
               parentLocked={layoutLock}
