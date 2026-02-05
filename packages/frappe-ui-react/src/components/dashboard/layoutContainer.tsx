@@ -1,4 +1,8 @@
+/**
+ * External dependencies.
+ */
 import { useState, useMemo, useCallback } from "react";
+import clsx from "clsx";
 import {
   DndContext,
   KeyboardSensor,
@@ -10,10 +14,13 @@ import {
   type DragEndEvent,
   UniqueIdentifier,
 } from "@dnd-kit/core";
-import { Row } from "./row";
-import { LayoutContainerProps } from "./types";
+
+/**
+ * Internal dependencies.
+ */
+import { Layout } from "./layout";
 import { LayoutContext } from "./layoutContext";
-import clsx from "clsx";
+import { LayoutContainerProps } from "./types";
 
 export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   widgets,
@@ -25,7 +32,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   dragHandleOnHover = false,
 }) => {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
-console.log( "layoutFlow:", layoutFlow );
+
   const activeSlotId = useMemo(() => {
     if (!activeId) return null;
     return activeId as string;
@@ -57,41 +64,72 @@ console.log( "layoutFlow:", layoutFlow );
     const activeIdStr = String(active.id);
     const overIdStr = String(over.id);
 
-    const activeMatch = activeIdStr.match(/row-(\d+)-slot-(\d+)/);
-    const overMatch = overIdStr.match(/row-(\d+)-slot-(\d+)/);
+    const activeMatch = activeIdStr.match(/layout-(\d+)-slot-(\d+)/);
+    const overMatch = overIdStr.match(/layout-(\d+)-slot-(\d+)/);
 
     if (!activeMatch || !overMatch) return;
 
-    const sourceRowIndex = parseInt(activeMatch[1]);
+    const sourceLayoutIndex = parseInt(activeMatch[1]);
     const sourceSlotIndex = parseInt(activeMatch[2]);
-    const targetRowIndex = parseInt(overMatch[1]);
+    const targetLayoutIndex = parseInt(overMatch[1]);
     const targetSlotIndex = parseInt(overMatch[2]);
 
-    const newLayout = layout.map((row, rowIndex) =>
-      row.map((widgetId, slotIndex) => {
-        if (rowIndex === sourceRowIndex && slotIndex === sourceSlotIndex)
-          return layout[targetRowIndex][targetSlotIndex];
-        if (rowIndex === targetRowIndex && slotIndex === targetSlotIndex)
-          return layout[sourceRowIndex][sourceSlotIndex];
-        return widgetId;
+    // Check size compatibility
+    const sourceItem = layout[sourceLayoutIndex][sourceSlotIndex];
+    const targetItem = layout[targetLayoutIndex][targetSlotIndex];
+
+    const sourceWidget = widgets.find((w) => w.id === sourceItem.widgetId);
+    const targetWidget = widgets.find((w) => w.id === targetItem.widgetId);
+
+    if (!sourceWidget && !targetWidget) return;
+
+    if (
+      (sourceWidget &&
+        !sourceWidget.supportedSizes.includes(targetItem.size)) ||
+      (targetWidget && !targetWidget.supportedSizes.includes(sourceItem.size))
+    ) {
+      return;
+    }
+
+    // Swap the widgets in the layout
+    const newLayout = layout.map((items, layoutIdx) =>
+      items.map((layoutItem, slotIndex) => {
+        if (layoutIdx === sourceLayoutIndex && slotIndex === sourceSlotIndex)
+          return layout[targetLayoutIndex][targetSlotIndex];
+        if (layoutIdx === targetLayoutIndex && slotIndex === targetSlotIndex)
+          return layout[sourceLayoutIndex][sourceSlotIndex];
+        return layoutItem;
       })
     );
     setLayout(newLayout);
   };
 
   const handleAddWidget = useCallback(
-    (rowIndex: number, slotIndex: number, widgetId: string) => {
-      const newLayout = layout.map((row) => [...row]);
-      newLayout[rowIndex][slotIndex] = widgetId;
+    (layoutIndex: number, slotIndex: number, widgetId: string) => {
+      const newLayout = layout.map((items) => [...items]);
+      const slot = newLayout[layoutIndex][slotIndex];
+      const supportedSizes = widgets.find(
+        (w) => w.id === widgetId
+      )?.supportedSizes;
+      if (!supportedSizes) return;
+      if (!supportedSizes.includes(slot.size)) return;
+
+      newLayout[layoutIndex][slotIndex] = {
+        widgetId,
+        size: layout[layoutIndex][slotIndex].size,
+      };
       setLayout(newLayout);
     },
-    [layout, setLayout]
+    [layout, setLayout, widgets]
   );
 
   const handleRemoveWidget = useCallback(
-    (rowIndex: number, slotIndex: number) => {
-      const newLayout = layout.map((row) => [...row]);
-      newLayout[rowIndex][slotIndex] = "";
+    (layoutIndex: number, slotIndex: number) => {
+      const newLayout = layout.map((items) => [...items]);
+      newLayout[layoutIndex][slotIndex] = {
+        widgetId: "",
+        size: newLayout[layoutIndex][slotIndex].size,
+      };
       setLayout(newLayout);
     },
     [layout, setLayout]
@@ -112,17 +150,19 @@ console.log( "layoutFlow:", layoutFlow );
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className={clsx(
-          "flex gap-6",
-          layoutFlow === "row" ? "flex-col" : "flex-row"
-        )}>
-          {layout.map((row, rowIndex) => (
-            <Row
-              key={rowIndex}
+        <div
+          className={clsx(
+            "flex gap-6",
+            layoutFlow === "row" ? "flex-col" : "flex-row"
+          )}
+        >
+          {layout.map((items, layoutIndex) => (
+            <Layout
+              key={layoutIndex}
               widgets={widgets}
               layoutFlow={layoutFlow}
-              row={row}
-              rowIndex={rowIndex}
+              items={items}
+              layoutIndex={layoutIndex}
               parentLocked={layoutLock}
               onAddWidget={handleAddWidget}
               onRemoveWidget={handleRemoveWidget}

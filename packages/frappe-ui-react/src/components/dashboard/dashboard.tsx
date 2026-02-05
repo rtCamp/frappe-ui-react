@@ -1,7 +1,14 @@
+/**
+ * External dependencies.
+ */
 import React, { useEffect, useState } from "react";
+
+/**
+ * Internal dependencies.
+ */
 import { LayoutContainer } from "./layoutContainer";
-import type { DashboardProps, Layout } from "./types";
 import { validateSerializedLayout } from "./dashboardUtil";
+import type { DashboardProps, DashboardLayout } from "./types";
 
 export const Dashboard: React.FC<DashboardProps> = ({
   widgets,
@@ -13,7 +20,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   savedLayout,
   onLayoutChange,
 }) => {
-  const [layout, setLayout] = useState<Layout>(() => {
+  const [layout, setLayout] = useState<DashboardLayout>(() => {
     if (savedLayout && validateSerializedLayout(savedLayout)) {
       return savedLayout;
     }

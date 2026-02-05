@@ -1,3 +1,5 @@
+export type WidgetSize = 'small' | 'medium' | 'large';
+
 export interface Widget {
   id: string;
   name: string;
@@ -5,45 +7,51 @@ export interface Widget {
   component: React.ComponentType<any>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props?: Record<string, any>;
+  supportedSizes: WidgetSize[];
 }
 
-export type Layout = string[][];
+export interface LayoutItem {
+  widgetId: string;
+  size: WidgetSize;
+}
 
+export type DashboardLayout = LayoutItem[][];
 export interface DashboardProps {
   widgets: Widget[];
   layoutFlow?: "row" | "column";
-  initialLayout: Layout;
+  initialLayout: DashboardLayout;
   layoutLock?: boolean;
   dragHandle?: boolean;
   dragHandleOnHover?: boolean;
-  savedLayout?: Layout;
-  onLayoutChange?: (layout: Layout) => void;
+  savedLayout?: DashboardLayout;
+  onLayoutChange?: (layout: DashboardLayout) => void;
 }
 
 export interface LayoutContainerProps {
   widgets: Widget[];
-  layout: Layout;
+  layout: DashboardLayout;
   layoutFlow?: "row" | "column";
-  setLayout: (layout: Layout) => void;
+  setLayout: (layout: DashboardLayout) => void;
   layoutLock?: boolean;
   dragHandle?: boolean;
   dragHandleOnHover?: boolean;
 }
 
-export interface RowProps {
+export interface LayoutProps {
   widgets: Widget[];
-  row: string[];
-  rowIndex: number;
-  layoutFlow?: "row" | "column"; 
+  items: LayoutItem[];
+  layoutIndex: number;
+  layoutFlow?: "row" | "column";
   parentLocked?: boolean;
-  onAddWidget: (rowIndex: number, slotIndex: number, widgetId: string) => void;
-  onRemoveWidget: (rowIndex: number, slotIndex: number) => void;
+  onAddWidget: (layoutIndex: number, slotIndex: number, widgetId: string) => void;
+  onRemoveWidget: (layoutIndex: number, slotIndex: number) => void;
 }
 
 export interface SlotProps {
   widgets: Widget[];
   widgetId: string;
   slotId: string;
+  size: WidgetSize;
   parentLocked?: boolean;
   onAddWidget: (widgetId: string) => void;
   onRemoveWidget: () => void;

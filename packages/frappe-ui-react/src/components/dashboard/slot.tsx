@@ -1,17 +1,25 @@
+/**
+ * External dependencies.
+ */
 import { useDroppable, useDraggable } from "@dnd-kit/core";
 import { clsx } from "clsx";
 import { useContext, useState, useMemo } from "react";
 import { GripVertical, X, Plus } from "lucide-react";
+
+/**
+ * Internal dependencies.
+ */
 import { Autocomplete } from "../autoComplete";
 import { Popover } from "../popover";
-import type { SlotProps } from "./types";
 import { LayoutContext } from "./layoutContext";
 import { Button } from "../button";
+import type { SlotProps } from "./types";
 
 export const Slot: React.FC<SlotProps> = ({
   widgets,
   widgetId,
   slotId,
+  size,
   parentLocked = false,
   onAddWidget,
   onRemoveWidget,
@@ -26,19 +34,25 @@ export const Slot: React.FC<SlotProps> = ({
     };
 
   const [isHovered, setIsHovered] = useState(false);
-  const isEmpty = !widgetId;
+  const isEmpty = widgetId === "";
   const isDisabled = layoutLock || parentLocked;
 
   const widget = useMemo(() => {
     return widgets.find((w) => w.id === widgetId);
   }, [widgets, widgetId]);
 
+  const validSize = useMemo(() => {
+    return widget?.supportedSizes.includes(size);
+  }, [widget, size]);
+
   const availableWidgets = useMemo(() => {
-    return widgets.map((w) => ({
-      label: w.name,
-      value: w.id,
-    }));
-  }, [widgets]);
+    return widgets
+      .filter((w) => w.supportedSizes.includes(size))
+      .map((w) => ({
+        label: w.name,
+        value: w.id,
+      }));
+  }, [widgets, size]);
 
   const { setNodeRef: setDroppableRef, isOver } = useDroppable({
     id: slotId,
@@ -70,7 +84,7 @@ export const Slot: React.FC<SlotProps> = ({
 
   const Component = widget?.component;
 
-  if (isEmpty || !Component) {
+  if (isEmpty || !validSize || !Component) {
     return (
       <div
         ref={setDroppableRef}

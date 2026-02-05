@@ -1,14 +1,6 @@
 import React, { useCallback } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
-import { Dashboard } from "./index";
-import type { Layout, Widget } from "./types";
-import { Button } from "../button";
-import { Progress } from "../progress";
-import { Badge } from "../badge";
-import { Avatar } from "../avatar";
-import { CircularProgressBar } from "../circularProgressBar";
-import { AxisChart, DonutChart } from "../charts";
 import {
   LucideBriefcase,
   LucideClipboard,
@@ -20,6 +12,15 @@ import {
   LucideMoreVertical,
   LucidePlus,
 } from "lucide-react";
+
+import { Dashboard } from "./index";
+import { Button } from "../button";
+import { Progress } from "../progress";
+import { Badge } from "../badge";
+import { Avatar } from "../avatar";
+import { CircularProgressBar } from "../circularProgressBar";
+import { AxisChart, DonutChart } from "../charts";
+import type { DashboardLayout, Widget } from "./types";
 
 const meta: Meta<typeof Dashboard> = {
   title: "Components/Dashboard",
@@ -80,19 +81,36 @@ const Activity = () => (
 );
 
 const simpleWidgets: Widget[] = [
-  { id: "content", name: "Content", component: Content },
-  { id: "stats", name: "Stats", component: Stats },
-  { id: "activity", name: "Activity", component: Activity },
+  {
+    id: "content",
+    name: "Content",
+    component: Content,
+    supportedSizes: ["small"],
+  },
+  { id: "stats", name: "Stats", component: Stats, supportedSizes: ["medium"] },
+  {
+    id: "activity",
+    name: "Activity",
+    component: Activity,
+    supportedSizes: ["medium", "large"],
+  },
 ];
 
-const simpleLayout: Layout = [["content"], ["stats", "activity", ""]];
+const simpleLayout: DashboardLayout = [
+  [{ widgetId: "content", size: "small" }],
+  [
+    { widgetId: "stats", size: "medium" },
+    { widgetId: "activity", size: "medium" },
+    { widgetId: "", size: "large" },
+  ],
+];
 
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
 
     const handleLayoutChange = useCallback(
-      (newLayout: Layout) => {
+      (newLayout: DashboardLayout) => {
         updateArgs({ savedLayout: newLayout });
       },
       [updateArgs]
@@ -124,11 +142,11 @@ export const Default: Story = {
 export const LocalStorage: Story = {
   render: function Render(args) {
     const savedLayoutStr = localStorage.getItem("dashboard-saved-layout");
-    const savedLayout: Layout | undefined = savedLayoutStr
+    const savedLayout: DashboardLayout | undefined = savedLayoutStr
       ? JSON.parse(savedLayoutStr)
       : undefined;
 
-    const handleLayoutChange = (newLayout: Layout) => {
+    const handleLayoutChange = (newLayout: DashboardLayout) => {
       localStorage.setItem("dashboard-saved-layout", JSON.stringify(newLayout));
     };
 
@@ -538,6 +556,7 @@ const hrWidgets: Widget[] = [
       trend: "up",
       trendValue: "12%",
     },
+    supportedSizes: ["small"],
   },
   {
     id: "new-hires",
@@ -551,6 +570,7 @@ const hrWidgets: Widget[] = [
       trend: "up",
       trendValue: "8%",
     },
+    supportedSizes: ["small"],
   },
   {
     id: "turnover",
@@ -564,6 +584,7 @@ const hrWidgets: Widget[] = [
       trend: "down",
       trendValue: "2%",
     },
+    supportedSizes: ["small"],
   },
   {
     id: "open-positions",
@@ -575,37 +596,73 @@ const hrWidgets: Widget[] = [
       subtitle: "Across all departments",
       progress: 65,
     },
+    supportedSizes: ["small"],
   },
   {
     id: "salary-stats",
     name: "Salary Statistics",
     component: SalaryStatisticsWidget,
+    supportedSizes: ["large"],
   },
   {
     id: "satisfaction",
     name: "Employee Satisfaction",
     component: EmployeeSatisfactionWidget,
+    supportedSizes: ["large"],
   },
   {
     id: "performance",
     name: "Performance Stats",
     component: PerformanceStatsWidget,
+    supportedSizes: ["medium"],
   },
-  { id: "new-employees", name: "New Employees", component: NewEmployeesWidget },
-  { id: "events", name: "Upcoming Events", component: UpcomingEventsWidget },
+  {
+    id: "new-employees",
+    name: "New Employees",
+    component: NewEmployeesWidget,
+    supportedSizes: ["medium", "large"],
+  },
+  {
+    id: "events",
+    name: "Upcoming Events",
+    component: UpcomingEventsWidget,
+    supportedSizes: ["medium", "large"],
+  },
   {
     id: "activities",
     name: "Recent Activities",
     component: RecentActivitiesWidget,
+    supportedSizes: ["medium"],
   },
-  { id: "quick-actions", name: "Quick Actions", component: QuickActionsWidget },
+  {
+    id: "quick-actions",
+    name: "Quick Actions",
+    component: QuickActionsWidget,
+    supportedSizes: ["medium"],
+  },
 ];
 
-const layout_1: Layout = [
-  ["total-employees", "new-hires", "turnover", "open-positions"],
-  ["salary-stats", "satisfaction"],
-  ["performance", "new-employees", "events"],
-  ["activities", "quick-actions", ""],
+const layout: DashboardLayout = [
+  [
+    { widgetId: "total-employees", size: "small" },
+    { widgetId: "new-hires", size: "small" },
+    { widgetId: "turnover", size: "small" },
+    { widgetId: "open-positions", size: "small" },
+  ],
+  [
+    { widgetId: "salary-stats", size: "large" },
+    { widgetId: "satisfaction", size: "large" },
+  ],
+  [
+    { widgetId: "performance", size: "medium" },
+    { widgetId: "new-employees", size: "medium" },
+    { widgetId: "events", size: "medium" },
+  ],
+  [
+    { widgetId: "activities", size: "medium" },
+    { widgetId: "quick-actions", size: "medium" },
+    { widgetId: "", size: "medium" },
+  ],
 ];
 
 export const HRDashboardExample: Story = {
@@ -613,7 +670,7 @@ export const HRDashboardExample: Story = {
     const [, updateArgs] = useArgs();
 
     const handleLayoutChange = useCallback(
-      (newLayout: Layout) => {
+      (newLayout: DashboardLayout) => {
         updateArgs({ savedLayout: newLayout });
       },
       [updateArgs]
@@ -636,7 +693,7 @@ export const HRDashboardExample: Story = {
   },
   args: {
     widgets: hrWidgets,
-    initialLayout: layout_1,
+    initialLayout: layout,
     layoutLock: false,
     dragHandle: true,
     dragHandleOnHover: true,
