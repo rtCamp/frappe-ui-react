@@ -17,8 +17,8 @@ export type WidgetSizePresets = Record<string, WidgetSize>;
 export interface WidgetLayout {
 	id: string;
 	key?: string;
-	x: number;
-	y: number;
+	x?: number;
+	y?: number;
 	size?: string;
 	w?: number;
 	h?: number;
@@ -30,6 +30,9 @@ export interface WidgetLayout {
 	isDraggable?: boolean;
 	isResizable?: boolean;
 }
+
+export type WidgetRow = Array<string | WidgetLayout>;
+export type DashboardLayout = WidgetRow[];
 
 export interface WidgetDefinition {
 	id: string;
@@ -47,7 +50,7 @@ export interface WidgetDefinition {
 
 export interface DashboardProps {
 	widgets: WidgetDefinition[];
-	initialLayout: WidgetLayout[];
+	initialLayout?: DashboardLayout;
 	savedLayout?: WidgetLayout[];
 	onLayoutChange?: (layout: WidgetLayout[]) => void;
 	sizes?: WidgetSizePresets;

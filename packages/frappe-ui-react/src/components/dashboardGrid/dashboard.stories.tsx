@@ -29,6 +29,7 @@ import type {
   WidgetLayout,
   WidgetDefinition,
   WidgetSizePresets,
+  DashboardLayout,
 } from "./types";
 import clsx from "clsx";
 
@@ -141,15 +142,14 @@ const simpleWidgets: WidgetDefinition[] = [
 ];
 
 const simpleSizePresets: WidgetSizePresets = {
-  small: { w: 3, h: 2, minW: 2, maxW: 4 },
-  medium: { w: 6, h: 2, minW: 4, maxW: 8 },
-  large: { w: 12, h: 2, minW: 8, maxW: 12 },
+  small: { w: 3, h: 2, minW: 2, maxW: 4, minH: 2, maxH: 4 },
+  medium: { w: 6, h: 2, minW: 4, maxW: 8, minH: 2, maxH: 6 },
+  large: { w: 12, h: 2, minW: 8, maxW: 12, minH: 2, maxH: 8 },
 };
 
-const simpleLayout: WidgetLayout[] = [
-  { id: "content-1", x: 0, y: 0 },
-  { id: "stats-1", x: 0, y: 2 },
-  { id: "activity-1", x: 6, y: 2 },
+const simpleLayout: DashboardLayout = [
+  ["content-1"],
+  ["stats-1", "activity-1"],
 ];
 
 export const Default: Story = {
@@ -761,30 +761,16 @@ const hrWidgets: WidgetDefinition[] = [
 ];
 
 const hrSizePresets: WidgetSizePresets = {
-  small: { w: 3, h: 2, minW: 3, maxW: 3, isResizable: false },
-  medium: { w: 4, h: 4, minW: 3, maxW: 6, isResizable: true },
-  large: { w: 6, h: 4, minW: 4, maxW: 12, isResizable: true },
+  small: { w: 3, h: 2, minW: 3, maxW: 3, minH: 2, maxH: 2, isResizable: false },
+  medium: { w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6, isResizable: true },
+  large: { w: 6, h: 4, minW: 4, maxW: 12, minH: 3, maxH: 8, isResizable: true },
 };
 
-const hrLayout: WidgetLayout[] = [
-  // Row 1: 4 small widgets
-  { id: "total-employees", x: 0, y: 0 },
-  { id: "new-hires", x: 3, y: 0 },
-  { id: "turnover", x: 6, y: 0 },
-  { id: "open-positions", x: 9, y: 0 },
-
-  // Row 2: 2 large widgets
-  { id: "salary-stats", x: 0, y: 2 },
-  { id: "satisfaction", x: 6, y: 2 },
-
-  // Row 3: 3 medium widgets
-  { id: "performance", x: 0, y: 6 },
-  { id: "new-employees", x: 4, y: 6 },
-  { id: "events", x: 8, y: 6 },
-
-  // Row 4: 2 medium widgets
-  { id: "activities", x: 0, y: 10 },
-  { id: "quick-actions", x: 4, y: 10 },
+const hrLayout: DashboardLayout = [
+  ["total-employees", "new-hires", "turnover", "open-positions"],
+  ["salary-stats", "satisfaction"],
+  ["performance", "new-employees", "events"],
+  ["activities", "quick-actions"],
 ];
 
 export const HRDashboardExample: Story = {

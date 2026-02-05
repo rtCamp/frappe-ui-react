@@ -8,28 +8,38 @@ import React, { useCallback, useEffect, useState } from "react";
  */
 import { LayoutContainer } from "./layoutContainer";
 import {
-  validateLayout,
   ensureLayoutKeys,
   serializeLayout,
+  normalizeLayout,
+  deserializeLayout,
 } from "./dashboardUtil";
 import type { DashboardProps, WidgetLayout } from "./types";
 
 export const DashboardGrid: React.FC<DashboardProps> = ({
   widgets,
-  initialLayout,
+  initialLayout = [],
   savedLayout,
   onLayoutChange,
+  sizes,
   ...rest
 }) => {
   const [layout, setLayout] = useState<WidgetLayout[]>(() => {
-    const initialData =
-      savedLayout && validateLayout(savedLayout) ? savedLayout : initialLayout;
-    return ensureLayoutKeys(initialData);
+    if (savedLayout && savedLayout.length > 0) {
+      const deserialized = deserializeLayout(savedLayout);
+      if (deserialized.length > 0) {
+        return deserialized;
+      }
+    }
+    const normalized = normalizeLayout(initialLayout || [], widgets, sizes);
+    return ensureLayoutKeys(normalized);
   });
 
   useEffect(() => {
-    if (savedLayout && validateLayout(savedLayout)) {
-      setLayout(ensureLayoutKeys(savedLayout));
+    if (savedLayout && savedLayout.length > 0) {
+      const deserialized = deserializeLayout(savedLayout);
+      if (deserialized.length > 0) {
+        setLayout(deserialized);
+      }
     }
   }, [savedLayout]);
 
@@ -76,9 +86,9 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
   const handleRemoveWidget = useCallback(
     (widgetKey: string) => {
       setLayout((prev) => {
-        const newLayout = prev.filter((w) => (w.key || w.id) !== widgetKey);
-        onLayoutChange?.(serializeLayout(newLayout));
-        return newLayout;
+        const updated = prev.filter((w) => (w.key || w.id) !== widgetKey);
+        onLayoutChange?.(serializeLayout(updated));
+        return updated;
       });
     },
     [onLayoutChange]
@@ -91,6 +101,7 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
       setLayout={handleLayoutChange}
       onDrop={handleDrop}
       onRemove={handleRemoveWidget}
+      sizes={sizes}
       {...rest}
     />
   );

@@ -1,4 +1,46 @@
-import type { WidgetLayout, WidgetSizePresets, WidgetDefinition } from "./types";
+import type { WidgetLayout, WidgetSizePresets, WidgetDefinition, DashboardLayout } from "./types";
+
+/**
+ * Convert DashboardLayout to flat WidgetLayout array with positions
+ */
+export const normalizeLayout = (
+  layout: DashboardLayout,
+  widgets: WidgetDefinition[],
+  sizePresets?: WidgetSizePresets
+): WidgetLayout[] => {
+  if (!layout || layout.length === 0) return [];
+
+  const result: WidgetLayout[] = [];
+  let currentY = 0;
+
+  for (const row of layout) {
+    if (!Array.isArray(row)) continue;
+    
+    let currentX = 0;
+    let maxRowHeight = 1;
+
+    for (const item of row) {
+      const widgetLayout: WidgetLayout = typeof item === 'string' 
+        ? { id: item }
+        : { ...item };
+
+      const widgetDef = widgets.find(w => w.id === widgetLayout.id);
+      const resolved = resolveWidgetSize(widgetLayout, sizePresets, widgetDef);
+      
+      widgetLayout.x = currentX;
+      widgetLayout.y = currentY;
+      
+      result.push(widgetLayout);
+      
+      currentX += resolved.w;
+      maxRowHeight = Math.max(maxRowHeight, resolved.h);
+    }
+
+    currentY += maxRowHeight;
+  }
+
+  return result;
+};
 
 /**
  * Resolve widget dimensions from size preset or explicit values
@@ -27,17 +69,14 @@ export const resolveWidgetSize = (
  */
 export const validateLayout = (layout: WidgetLayout[]): boolean => {
   if (!Array.isArray(layout)) return false;
+  if (layout.length === 0) return false;
 
   for (const widget of layout) {
     if (!widget || typeof widget.id !== "string") return false;
-    if (typeof widget.x !== "number" || typeof widget.y !== "number") return false;
-    if (widget.x < 0 || widget.y < 0) return false;
-    
-    const hasSize = widget.size || (typeof widget.w === "number" && typeof widget.h === "number");
-    if (!hasSize) return false;
-    
-    if (widget.w !== undefined && (widget.w <= 0)) return false;
-    if (widget.h !== undefined && (widget.h <= 0)) return false;
+    if (typeof widget.x !== "number" || widget.x < 0) return false;
+    if (typeof widget.y !== "number" || widget.y < 0) return false;
+    if (widget.w !== undefined && widget.w <= 0) return false;
+    if (widget.h !== undefined && widget.h <= 0) return false;
   }
 
   return true;
@@ -68,4 +107,14 @@ export const ensureLayoutKeys = (layouts: WidgetLayout[]): WidgetLayout[] => {
 export const serializeLayout = (layout: WidgetLayout[]): WidgetLayout[] => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return layout.map(({ key, ...item }) => item);
+};
+
+/**
+ * Deserialize saved layout and restore with proper keys.
+ */
+export const deserializeLayout = (layout: WidgetLayout[]): WidgetLayout[] => {
+  if (!validateLayout(layout)) {
+    return [];
+  }
+  return ensureLayoutKeys(layout);
 };

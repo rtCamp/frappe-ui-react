@@ -67,8 +67,8 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
         const size = resolveWidgetSize(item, sizes, widgetDef);
         return {
           i: item.key || item.id,
-          x: item.x,
-          y: item.y,
+          x: item.x ?? 0,
+          y: item.y ?? 0,
           w: size.w,
           h: size.h,
           minW: size.minW,
@@ -119,7 +119,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
 
       // Fallback to dataTransfer if no context
       if (!widgetData) {
-        const dataTransfer = (e as any).dataTransfer;
+        const dataTransfer = (e as React.DragEvent).dataTransfer;
         if (!dataTransfer) return;
 
         try {
@@ -154,9 +154,10 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   }, [context?.draggingWidget?.widget, sizes]);
 
   const commonProps = {
-    className: clsx("layout", {
-      "react-grid-layout-no-transition": !isMounted,
-    }),
+    className: clsx(
+      "layout min-h-full",
+      !isMounted && "react-grid-layout-no-transition"
+    ),
     rowHeight,
     margin,
     onDragStop: handleLayoutChange,
@@ -181,7 +182,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   };
 
   return (
-    <div className={clsx("dashboard-grid-container", className)}>
+    <div className={clsx("dashboard-grid-container h-full", className)}>
       <ResponsiveGridLayout
         {...commonProps}
         breakpoints={actualBreakpoints}
