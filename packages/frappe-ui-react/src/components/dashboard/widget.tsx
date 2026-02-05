@@ -4,12 +4,15 @@ import type { WidgetProps } from "./types";
 import { LayoutContext } from "./layoutContext";
 import { GripVertical } from "lucide-react";
 
-export const Widget: React.FC<WidgetProps> = ({ layout }) => {
+export const Widget: React.FC<WidgetProps> = ({ layout, parentLocked = false }) => {
   const context = useContext(LayoutContext);
   const layoutLock = context?.layoutLock ?? false;
   const dragHandle = context?.dragHandle ?? false;
   const dragHandleOnHover = context?.dragHandleOnHover ?? false;
   const [isHovered, setIsHovered] = useState(false);
+
+  const isComponentLocked = layout.locked === false ? false : (layout.locked === true || parentLocked);
+  const isDisabled = layoutLock || isComponentLocked;
 
   const {
     attributes,
@@ -18,7 +21,7 @@ export const Widget: React.FC<WidgetProps> = ({ layout }) => {
     setActivatorNodeRef,
     transform,
     isDragging,
-  } = useDraggable({ id: layout.id, disabled: layoutLock });
+  } = useDraggable({ id: layout.id, disabled: isDisabled });
 
   const style = transform
     ? {
@@ -28,7 +31,7 @@ export const Widget: React.FC<WidgetProps> = ({ layout }) => {
     : undefined;
 
   const showDragHandle =
-    dragHandle && !layoutLock && (!dragHandleOnHover || isHovered);
+    dragHandle && !isDisabled && (!dragHandleOnHover || isHovered);
 
   return (
     <div

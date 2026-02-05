@@ -9,6 +9,7 @@ export const SlotContainer: React.FC<SlotContainerProps> = ({
   slotId,
   slotItem,
   isDragging,
+  parentLocked = false,
 }) => {
   const context = useContext(LayoutContext);
   const { activeSlotId, layoutLock } = context || {
@@ -16,9 +17,11 @@ export const SlotContainer: React.FC<SlotContainerProps> = ({
     layoutLock: false,
   };
 
+  const isSlotLocked = slotItem.locked === false ? false : (slotItem.locked === true || parentLocked);
+
   const { setNodeRef, isOver, active } = useDroppable({
     id: slotId,
-    disabled: slotId === activeSlotId || layoutLock,
+    disabled: slotId === activeSlotId || layoutLock || isSlotLocked,
   });
 
   const isEmpty = slotItem.type === "empty";
@@ -41,7 +44,7 @@ export const SlotContainer: React.FC<SlotContainerProps> = ({
         "flex-shrink-0 transition-colors border-gray-300",
         isEmpty &&
           "border-2 border-dashed border-gray-300 rounded flex items-center justify-center",
-        isEmpty && isDragging && slotId !== activeSlotId && "bg-surface-gray-1",
+        isEmpty && isDragging && slotId !== activeSlotId && !isSlotLocked && "bg-surface-gray-1",
         isEmpty && isOver && "border-gray-400 bg-surface-gray-2"
       )}
     >
@@ -52,7 +55,7 @@ export const SlotContainer: React.FC<SlotContainerProps> = ({
             isDirectlyOver && slotItem.type === "component" && "opacity-50"
           )}
         >
-          <LayoutRenderer layout={slotItem} />
+          <LayoutRenderer layout={slotItem} parentLocked={isSlotLocked} />
         </div>
       ) : (
         <div className="w-full min-w-24 h-full min-h-24 text-gray-400 text-sm"></div>

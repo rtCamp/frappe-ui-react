@@ -6,6 +6,7 @@ interface ComponentElement<P = Record<string, unknown>> {
   width?: string;
   height?: string;
   flex?: string;
+  locked?: boolean;
 }
 
 interface EmptySlot {
@@ -14,6 +15,7 @@ interface EmptySlot {
   width?: string;
   height?: string;
   flex?: string;
+  locked?: boolean;
 }
 
 interface ContainerElement {
@@ -23,6 +25,7 @@ interface ContainerElement {
   width?: string;
   height?: string;
   flex?: string;
+  locked?: boolean;
 }
 
 export type LayoutItem = ComponentElement | ContainerElement | EmptySlot;
@@ -34,7 +37,8 @@ export type SerializedLayoutItem = Omit<ComponentElement, 'component' | 'props'>
   width?: string;
   height?: string;
   flex?: string;
-};
+  locked?: boolean;
+};;
 
 export interface DashboardProps {
   initialLayout: LayoutItem;
@@ -56,20 +60,24 @@ export interface LayoutContainerProps {
 export interface LayoutBoxProps {
   layout: ContainerElement;
   orientation: "horizontal" | "vertical";
+  parentLocked?: boolean;
 }
 
 export interface LayoutRendererProps {
   layout: LayoutItem;
+  parentLocked?: boolean;
 }
 
 export interface SlotContainerProps {
   slotId: string;
   slotItem: LayoutItem;
   isDragging: boolean;
+  parentLocked?: boolean;
 }
 
 export interface WidgetProps {
   layout: ComponentElement;
+  parentLocked?: boolean;
 }
 
 export interface LayoutContextValue {

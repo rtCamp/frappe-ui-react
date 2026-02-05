@@ -104,6 +104,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
         ? {
             id: `${sourceContainer.id}-empty-${sourceIndex}`,
             type: "empty",
+            ...(sourceItem.locked !== undefined && { locked: sourceItem.locked }),
           }
         : targetElement;
 

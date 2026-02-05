@@ -7,9 +7,12 @@ import type { LayoutBoxProps } from "./types";
 export const LayoutBox: React.FC<LayoutBoxProps> = ({
   layout,
   orientation,
+  parentLocked = false,
 }) => {
   const { active } = useDndContext();
   const isDragging = useMemo(() => active !== null, [active]);
+
+  const isContainerLocked = parentLocked || layout.locked === true;
 
   return (
     <div
@@ -26,6 +29,7 @@ export const LayoutBox: React.FC<LayoutBoxProps> = ({
             slotId={slotId}
             slotItem={slotItem}
             isDragging={isDragging}
+            parentLocked={isContainerLocked}
           />
         );
       })}
