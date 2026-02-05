@@ -11,14 +11,10 @@ import { validateSerializedLayout } from "./dashboardUtil";
 import type { DashboardProps, DashboardLayout } from "./types";
 
 export const Dashboard: React.FC<DashboardProps> = ({
-  widgets,
-  layoutFlow = "row",
-  initialLayout,
-  layoutLock = false,
-  dragHandle = false,
-  dragHandleOnHover = false,
   savedLayout,
   onLayoutChange,
+  initialLayout,
+  ...rest
 }) => {
   const [layout, setLayout] = useState<DashboardLayout>(() => {
     if (savedLayout && validateSerializedLayout(savedLayout)) {
@@ -37,17 +33,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     onLayoutChange?.(layout);
   }, [layout, onLayoutChange]);
 
-  return (
-    <LayoutContainer
-      widgets={widgets}
-      layoutFlow={layoutFlow}
-      layout={layout}
-      setLayout={setLayout}
-      layoutLock={layoutLock}
-      dragHandle={dragHandle}
-      dragHandleOnHover={dragHandleOnHover}
-    />
-  );
+  return <LayoutContainer layout={layout} setLayout={setLayout} {...rest} />;
 };
 
 Dashboard.displayName = "Dashboard";

@@ -31,6 +31,9 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   layoutLock = false,
   dragHandle = false,
   dragHandleOnHover = false,
+  widgetSizes,
+  autoAdjustWidth = false,
+  className = "",
 }) => {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
 
@@ -113,11 +116,22 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     // Swap the widgets in the layout
     const newLayout = layout.map((items, layoutIdx) =>
       items.map((layoutItem, slotIndex) => {
-        if (layoutIdx === sourceLayoutIndex && slotIndex === sourceSlotIndex)
-          return layout[targetLayoutIndex][targetSlotIndex];
-        if (layoutIdx === targetLayoutIndex && slotIndex === targetSlotIndex)
-          return layout[sourceLayoutIndex][sourceSlotIndex];
-        return layoutItem;
+        const isSource =
+          layoutIdx === sourceLayoutIndex && slotIndex === sourceSlotIndex;
+        const isTarget =
+          layoutIdx === targetLayoutIndex && slotIndex === targetSlotIndex;
+
+        if (!isSource && !isTarget) return layoutItem;
+
+        const sourceWidgetId =
+          layout[sourceLayoutIndex][sourceSlotIndex].widgetId;
+        const targetWidgetId =
+          layout[targetLayoutIndex][targetSlotIndex].widgetId;
+
+        return {
+          widgetId: isSource ? targetWidgetId : sourceWidgetId,
+          size: layoutItem.size,
+        };
       })
     );
     setLayout(newLayout);
@@ -163,6 +177,8 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
         dragHandleOnHover,
         layout,
         checkSizeCompatibility,
+        widgetSizes,
+        autoAdjustWidth,
       }}
     >
       <DndContext
@@ -173,8 +189,9 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
       >
         <div
           className={clsx(
-            "flex gap-6",
-            layoutFlow === "row" ? "flex-col" : "flex-row"
+            "flex gap-4",
+            layoutFlow === "row" ? "flex-col" : "flex-row",
+            className
           )}
         >
           {layout.map((items, layoutIndex) => (

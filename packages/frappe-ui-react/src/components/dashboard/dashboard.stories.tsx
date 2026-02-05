@@ -20,7 +20,7 @@ import { Badge } from "../badge";
 import { Avatar } from "../avatar";
 import { CircularProgressBar } from "../circularProgressBar";
 import { AxisChart, DonutChart } from "../charts";
-import type { DashboardLayout, Widget } from "./types";
+import type { DashboardLayout, Widget, WidgetSizes } from "./types";
 
 const meta: Meta<typeof Dashboard> = {
   title: "Components/Dashboard",
@@ -55,6 +55,38 @@ const meta: Meta<typeof Dashboard> = {
         defaultValue: { summary: "false" },
       },
     },
+    widgetSizes: {
+      control: "object",
+      description:
+        "An object defining the width and height for predefined widget sizes.",
+    },
+    layoutFlow: {
+      control: "select",
+      options: ["row", "column"],
+      description:
+        "Defines the flow direction of the dashboard layout, either in rows or columns.",
+    },
+    autoAdjustWidth: {
+      control: "boolean",
+      description:
+        "Automatically adjust the width of widgets based on their content.",
+    },
+    widgets: {
+      control: "object",
+      description: "Array of widgets to be displayed in the dashboard.",
+    },
+    initialLayout: {
+      control: "object",
+      description: "The initial layout configuration of the dashboard.",
+    },
+    savedLayout: {
+      control: "object",
+      description: "The saved layout configuration of the dashboard.",
+    },
+    onLayoutChange: {
+      action: "changed",
+      description: "Callback function that is called when the layout changes.",
+    },
   },
   tags: ["autodocs"],
 };
@@ -63,7 +95,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const Content = () => (
-  <div className="w-full h-28 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
+  <div className="w-full h-32 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
     <h3 className="text-lg font-semibold">Content</h3>
   </div>
 );
@@ -85,7 +117,7 @@ const simpleWidgets: Widget[] = [
     id: "content",
     name: "Content",
     component: Content,
-    supportedSizes: ["small"],
+    supportedSizes: ["large"],
   },
   { id: "stats", name: "Stats", component: Stats, supportedSizes: ["medium"] },
   {
@@ -97,13 +129,19 @@ const simpleWidgets: Widget[] = [
 ];
 
 const simpleLayout: DashboardLayout = [
-  [{ widgetId: "content", size: "small" }],
+  [{ widgetId: "content", size: "large" }],
   [
     { widgetId: "stats", size: "medium" },
     { widgetId: "activity", size: "medium" },
-    { widgetId: "", size: "large" },
   ],
+  [{ widgetId: "", size: "large" }],
 ];
+
+const simpleWidgetSizes: WidgetSizes = {
+  small: { w: 100, h: 100 },
+  medium: { w: 242, h: 128 },
+  large: { w: 500, h: 128 },
+};
 
 export const Default: Story = {
   render: function Render(args) {
@@ -118,21 +156,16 @@ export const Default: Story = {
 
     return (
       <div className="w-full h-screen p-10 flex justify-center items-center">
-        <Dashboard
-          widgets={args.widgets}
-          layoutLock={args.layoutLock}
-          dragHandle={args.dragHandle}
-          dragHandleOnHover={args.dragHandleOnHover}
-          initialLayout={args.initialLayout}
-          savedLayout={args.savedLayout}
-          onLayoutChange={handleLayoutChange}
-        />
+        <div className="w-[500px]">
+          <Dashboard onLayoutChange={handleLayoutChange} {...args} />
+        </div>
       </div>
     );
   },
   args: {
     widgets: simpleWidgets,
     initialLayout: simpleLayout,
+    widgetSizes: simpleWidgetSizes,
     layoutLock: false,
     dragHandle: false,
     dragHandleOnHover: false,
@@ -151,23 +184,21 @@ export const LocalStorage: Story = {
     };
 
     return (
-      <div className="w-full h-screen flex flex-col justify-center items-center">
-        <div className="flex gap-3 mb-4">
+      <div className="w-full h-screen flex flex-col justify-center items-center p-10">
+        <div className="w-min flex gap-3 mb-4">
           <Button
             onClick={() => localStorage.removeItem("dashboard-saved-layout")}
           >
             Clear Saved Layout
           </Button>
         </div>
-        <Dashboard
-          widgets={args.widgets}
-          layoutLock={args.layoutLock}
-          dragHandle={args.dragHandle}
-          dragHandleOnHover={args.dragHandleOnHover}
-          initialLayout={args.initialLayout}
-          savedLayout={savedLayout}
-          onLayoutChange={handleLayoutChange}
-        />
+        <div className="w-[500px]">
+          <Dashboard
+            onLayoutChange={handleLayoutChange}
+            savedLayout={savedLayout}
+            {...args}
+          />
+        </div>
       </div>
     );
   },
@@ -177,6 +208,7 @@ export const LocalStorage: Story = {
     layoutLock: false,
     dragHandle: true,
     dragHandleOnHover: true,
+    widgetSizes: simpleWidgetSizes,
   },
 };
 
@@ -245,7 +277,7 @@ const SalaryStatisticsWidget = () => {
   ];
 
   return (
-    <div className="h-full flex flex-col border border-outline-gray-2 rounded-lg bg-surface-cards p-5 overflow-x-auto">
+    <div className="w-full h-full flex flex-col border border-outline-gray-2 rounded-lg bg-surface-cards p-5 overflow-x-auto">
       <h3 className="text-xl font-semibold">Salary Statistics</h3>
       <p className="mt-1.5 text-base text-gray-600">Monthly overview</p>
       <AxisChart
@@ -642,7 +674,7 @@ const hrWidgets: Widget[] = [
   },
 ];
 
-const layout: DashboardLayout = [
+const hrLayout: DashboardLayout = [
   [
     { widgetId: "total-employees", size: "small" },
     { widgetId: "new-hires", size: "small" },
@@ -665,6 +697,12 @@ const layout: DashboardLayout = [
   ],
 ];
 
+const hrWidgetSizes: WidgetSizes = {
+  small: { w: 300, h: 150 },
+  medium: { w: 404, h: 350 },
+  large: { w: 616, h: 350 },
+};
+
 export const HRDashboardExample: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
@@ -678,24 +716,18 @@ export const HRDashboardExample: Story = {
 
     return (
       <div className="w-full bg-surface-gray-2 p-6">
-        <Dashboard
-          layoutFlow="row"
-          widgets={args.widgets}
-          layoutLock={args.layoutLock}
-          dragHandle={args.dragHandle}
-          dragHandleOnHover={args.dragHandleOnHover}
-          initialLayout={args.initialLayout}
-          savedLayout={args.savedLayout}
-          onLayoutChange={handleLayoutChange}
-        />
+        <Dashboard onLayoutChange={handleLayoutChange} {...args} />
       </div>
     );
   },
   args: {
     widgets: hrWidgets,
-    initialLayout: layout,
+    initialLayout: hrLayout,
+    widgetSizes: hrWidgetSizes,
     layoutLock: false,
     dragHandle: true,
     dragHandleOnHover: true,
+    autoAdjustWidth: true,
+    layoutFlow: "row",
   },
 };

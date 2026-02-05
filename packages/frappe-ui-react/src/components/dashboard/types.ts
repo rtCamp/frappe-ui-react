@@ -1,4 +1,5 @@
 export type WidgetSize = 'small' | 'medium' | 'large';
+export type WidgetSizes = Record<WidgetSize, { w: number | "auto"; h: number | "auto" }>;
 
 export interface Widget {
   id: string;
@@ -20,21 +21,27 @@ export interface DashboardProps {
   widgets: Widget[];
   layoutFlow?: "row" | "column";
   initialLayout: DashboardLayout;
+  widgetSizes?: WidgetSizes;
+  autoAdjustWidth?: boolean;
   layoutLock?: boolean;
   dragHandle?: boolean;
   dragHandleOnHover?: boolean;
   savedLayout?: DashboardLayout;
   onLayoutChange?: (layout: DashboardLayout) => void;
+  className?: string;
 }
 
 export interface LayoutContainerProps {
   widgets: Widget[];
   layout: DashboardLayout;
+  widgetSizes?: WidgetSizes;
+  autoAdjustWidth?: boolean;
   layoutFlow?: "row" | "column";
   setLayout: (layout: DashboardLayout) => void;
   layoutLock?: boolean;
   dragHandle?: boolean;
   dragHandleOnHover?: boolean;
+  className?: string;
 }
 
 export interface LayoutProps {
@@ -63,5 +70,7 @@ export interface LayoutContextValue {
   dragHandle: boolean;
   dragHandleOnHover: boolean;
   layout: DashboardLayout;
+  widgetSizes?: WidgetSizes;
+  autoAdjustWidth: boolean;
   checkSizeCompatibility: (activeId: string, overId: string) => boolean;
 }

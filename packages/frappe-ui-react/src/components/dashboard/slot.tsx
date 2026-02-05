@@ -31,11 +31,18 @@ export const Slot: React.FC<SlotProps> = ({
     dragHandle,
     dragHandleOnHover,
     checkSizeCompatibility,
+    widgetSizes = {
+      small: { w: "auto", h: "auto" },
+      medium: { w: "auto", h: "auto" },
+      large: { w: "auto", h: "auto" },
+    },
+    autoAdjustWidth,
   } = context || {
     activeSlotId: null,
     layoutLock: false,
     dragHandle: false,
     dragHandleOnHover: false,
+    autoAdjustWidth: false,
   };
 
   const [isHovered, setIsHovered] = useState(false);
@@ -104,17 +111,27 @@ export const Slot: React.FC<SlotProps> = ({
       <div
         ref={setDroppableRef}
         className={clsx(
-          "flex-1 min-w-[200px] min-h-[100px] rounded-lg border-2 border-dashed flex items-center justify-center",
+          "shrink-1 rounded-lg border-2 border-dashed flex items-center justify-center p-2",
           isOver && overValidSize
             ? "border-outline-blue-1 bg-surface-blue-1"
             : isOver && !overValidSize
             ? "border-outline-red-1 bg-surface-red-1"
-            : "border-outline-gray-2 bg-surface-gray-1"
+            : "border-outline-gray-2 bg-surface-gray-1",
+          autoAdjustWidth && "flex-1"
         )}
+        style={{
+          width: widgetSizes[size]?.w,
+          height: widgetSizes[size]?.h,
+          minWidth: 0,
+          minHeight: widgetSizes[size]?.h,
+          maxWidth: autoAdjustWidth ? "none" : widgetSizes[size]?.w,
+          maxHeight: widgetSizes[size]?.h,
+          flexBasis: widgetSizes[size]?.w,
+        }}
       >
         {!isDisabled && (
           <Popover
-            placement="bottom-start"
+            placement="bottom"
             target={({ togglePopover }) => (
               <Button
                 onClick={togglePopover}
@@ -157,20 +174,31 @@ export const Slot: React.FC<SlotProps> = ({
     <div
       ref={setDroppableRef}
       className={clsx(
-        "flex-1 min-w-[200px] transition-opacity relative",
-        isOver &&
-          "relative after:absolute after:inset-0 after:border-2 after:border-dashed after:rounded-lg after:pointer-events-none after:z-20",
-        isOver && overValidSize
-          ? "after:bg-surface-blue-1/25 after:border-outline-blue-1"
-          : "after:bg-surface-red-1/25 after:border-outline-red-1"
+        "w-full shrink-1 flex transition-opacity relative",
+        autoAdjustWidth && "flex-1"
       )}
+      style={{
+        minWidth: 0,
+        minHeight: widgetSizes[size]?.h,
+        maxWidth: autoAdjustWidth ? "none" : widgetSizes[size]?.w,
+        maxHeight: widgetSizes[size]?.h,
+        flexBasis: widgetSizes[size]?.w,
+      }}
     >
       <div
         ref={setDraggableRef}
         style={dragStyle}
         {...attributes}
         {...(!dragHandle ? listeners : {})}
-        className="w-full h-full relative"
+        className={clsx(
+          "w-full h-full relative shrink-0",
+          isOver &&
+            "relative after:absolute after:w-full after:h-full after:inset-0 after:border-2 after:border-dashed after:rounded-lg after:pointer-events-none after:z-20",
+          isOver && overValidSize
+            ? "after:bg-surface-blue-1/25 after:border-outline-blue-1"
+            : "after:bg-surface-red-1/25 after:border-outline-red-1",
+          autoAdjustWidth && "flex-1"
+        )}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
