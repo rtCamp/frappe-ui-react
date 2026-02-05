@@ -15,3 +15,30 @@ export const validateLayout = (layout: WidgetLayout[]): boolean => {
 
   return true;
 };
+
+/**
+ * Ensure all layout items have unique keys for internal tracking.
+ */
+export const ensureLayoutKeys = (layouts: WidgetLayout[]): WidgetLayout[] => {
+  const keyCount = new Map<string, number>();
+  
+  return layouts.map((item) => {
+    if (item.key) return item;
+    
+    const count = keyCount.get(item.id) || 0;
+    keyCount.set(item.id, count + 1);
+    
+    return {
+      ...item,
+      key: count === 0 ? item.id : `${item.id}-${count}`,
+    };
+  });
+};
+
+/**
+ * Serialize layout for saving by removing internal tracking keys.
+ */
+export const serializeLayout = (layout: WidgetLayout[]): WidgetLayout[] => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return layout.map(({ key, ...item }) => item);
+};

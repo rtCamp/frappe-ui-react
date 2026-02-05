@@ -17,6 +17,7 @@ import "./dashboard.css";
  */
 import { WidgetWrapper } from "./widgetWrapper";
 import type { LayoutContainerProps, WidgetLayout } from "./types";
+import { useDashboardContext } from "./dashboardContext";
 import React from "react";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -38,8 +39,8 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   isBounded = true,
   className = "",
 }) => {
+  const context = useDashboardContext();
   const [isMounted, setIsMounted] = useState(false);
-  const [droppingItem, setDroppingItem] = useState<{ w: number; h: number } | undefined>();
 
   useEffect(() => {
     const timer = setTimeout(() => setIsMounted(true), 100);
@@ -60,7 +61,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   const rglLayout: RGLLayout[] = useMemo(
     () =>
       layout.map((item) => ({
-        i: item.id,
+        i: item.key || item.id,
         x: item.x,
         y: item.y,
         w: item.w,
@@ -82,7 +83,8 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
 
       const layoutMap = new Map(newLayout.map((item) => [item.i, item]));
       const updatedLayout: WidgetLayout[] = layout.map((item) => {
-        const rglItem = layoutMap.get(item.id);
+        const key = item.key || item.id;
+        const rglItem = layoutMap.get(key);
         if (!rglItem) return item;
         return {
           ...item,
@@ -104,24 +106,35 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     (layoutItem: RGLLayout[], item: RGLLayout, e: Event) => {
       if (!onDrop) return;
 
-      const dataTransfer = (e as any).dataTransfer;
-      if (!dataTransfer) return;
+      let widgetData = context?.draggingWidget;
 
-      try {
-        const data = JSON.parse(dataTransfer.getData("text/plain"));
-        if (data.widgetId) {
-          onDrop(data.widgetId, {
-            x: item.x,
-            y: item.y,
-            w: data.w || 4,
-            h: data.h || 3,
-          });
+      // Fallback to dataTransfer if no context
+      if (!widgetData) {
+        const dataTransfer = (e as any).dataTransfer;
+        if (!dataTransfer) return;
+
+        try {
+          widgetData = JSON.parse(dataTransfer.getData("text/plain"));
+        } catch (err) {
+          console.error("Error parsing drop data:", err);
+          return;
         }
-      } finally {
-        setDroppingItem(undefined);
+      }
+
+      if (widgetData?.widgetId) {
+        onDrop(widgetData.widgetId, {
+          x: item.x,
+          y: item.y,
+          w: widgetData.w || 4,
+          h: widgetData.h || 3,
+        });
+      }
+
+      if (context) {
+        context.setDraggingWidget(null);
       }
     },
-    [onDrop]
+    [onDrop, context]
   );
 
   const commonProps = {
@@ -134,7 +147,13 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     onResizeStop: handleLayoutChange,
     onDrop: onDrop ? handleDrop : undefined,
     isDroppable: Boolean(onDrop),
-    droppingItem: droppingItem,
+    droppingItem: onDrop
+      ? {
+          i: "__dropping-elem__",
+          w: context?.draggingWidget?.w || 4,
+          h: context?.draggingWidget?.h || 3,
+        }
+      : undefined,
     isBounded,
     isDraggable: !layoutLock,
     isResizable: !layoutLock,
@@ -146,9 +165,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   };
 
   return (
-    <div 
-      className={clsx("dashboard-grid-container", className)}
-    >
+    <div className={clsx("dashboard-grid-container", className)}>
       <ResponsiveGridLayout
         {...commonProps}
         breakpoints={actualBreakpoints}
@@ -160,10 +177,12 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
           if (!widgetDef) return null;
 
           const Component = widgetDef.component;
+          const key = layoutItem.key || layoutItem.id;
+
           return (
-            <div key={layoutItem.id} className="dashboard-grid-item">
+            <div key={key} className="dashboard-grid-item">
               <WidgetWrapper
-                widgetId={layoutItem.id}
+                widgetId={key}
                 onRemove={onRemove}
                 layoutLock={layoutLock}
                 dragHandle={dragHandle}

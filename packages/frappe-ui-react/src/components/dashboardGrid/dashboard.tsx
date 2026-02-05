@@ -7,7 +7,11 @@ import React, { useCallback, useEffect, useState } from "react";
  * Internal dependencies.
  */
 import { LayoutContainer } from "./layoutContainer";
-import { validateLayout } from "./dashboardUtil";
+import {
+  validateLayout,
+  ensureLayoutKeys,
+  serializeLayout,
+} from "./dashboardUtil";
 import type { DashboardProps, WidgetLayout } from "./types";
 
 export const DashboardGrid: React.FC<DashboardProps> = ({
@@ -17,20 +21,22 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
   onLayoutChange,
   ...rest
 }) => {
-  const [layout, setLayout] = useState<WidgetLayout[]>(
-    savedLayout && validateLayout(savedLayout) ? savedLayout : initialLayout
-  );
+  const [layout, setLayout] = useState<WidgetLayout[]>(() => {
+    const initialData =
+      savedLayout && validateLayout(savedLayout) ? savedLayout : initialLayout;
+    return ensureLayoutKeys(initialData);
+  });
 
   useEffect(() => {
     if (savedLayout && validateLayout(savedLayout)) {
-      setLayout(savedLayout);
+      setLayout(ensureLayoutKeys(savedLayout));
     }
   }, [savedLayout]);
 
   const handleLayoutChange = useCallback(
     (newLayout: WidgetLayout[]) => {
       setLayout(newLayout);
-      onLayoutChange?.(newLayout);
+      onLayoutChange?.(serializeLayout(newLayout));
     },
     [onLayoutChange]
   );
@@ -43,29 +49,41 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
       const widgetDef = widgets.find((w) => w.id === widgetId);
       if (!widgetDef) return;
 
-      const newWidgetId = `${widgetId}-${Date.now()}`;
+      setLayout((prev) => {
+        const existingCount = prev.filter(
+          (item) => item.id === widgetId
+        ).length;
 
-      const newLayoutItem: WidgetLayout = {
-        id: newWidgetId,
-        x: layoutData.x,
-        y: layoutData.y,
-        w: layoutData.w,
-        h: layoutData.h,
-      };
+        const newKey =
+          existingCount === 0 ? widgetId : `${widgetId}-${existingCount}`;
 
-      setLayout((prev) => [...prev, newLayoutItem]);
-      onLayoutChange?.([...layout, newLayoutItem]);
+        const newLayoutItem: WidgetLayout = {
+          id: widgetId,
+          key: newKey,
+          x: layoutData.x,
+          y: layoutData.y,
+          w: layoutData.w,
+          h: layoutData.h,
+        };
+
+        const updated = [...prev, newLayoutItem];
+        onLayoutChange?.(serializeLayout(updated));
+
+        return updated;
+      });
     },
-    [widgets, layout, onLayoutChange]
+    [widgets, onLayoutChange]
   );
 
   const handleRemoveWidget = useCallback(
-    (widgetId: string) => {
-      const newLayout = layout.filter((w) => w.id !== widgetId);
-      setLayout(newLayout);
-      onLayoutChange?.(newLayout);
+    (widgetKey: string) => {
+      setLayout((prev) => {
+        const newLayout = prev.filter((w) => (w.key || w.id) !== widgetKey);
+        onLayoutChange?.(serializeLayout(newLayout));
+        return newLayout;
+      });
     },
-    [layout, onLayoutChange]
+    [onLayoutChange]
   );
 
   return (
