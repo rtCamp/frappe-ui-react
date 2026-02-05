@@ -19,6 +19,10 @@ export interface DraggingWidgetData {
 export interface DashboardContextValue {
   draggingWidget: DraggingWidgetData | null;
   setDraggingWidget: (widget: DraggingWidgetData | null) => void;
+  handleAddWidget?: (widgetId: string) => void;
+  setHandleAddWidget: (
+    handler: ((widgetId: string) => void) | undefined
+  ) => void;
 }
 
 const DashboardContext = createContext<DashboardContextValue | null>(null);
@@ -35,6 +39,9 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
 }) => {
   const [draggingWidget, setDraggingWidget] =
     useState<DraggingWidgetData | null>(null);
+  const [handleAddWidget, setHandleAddWidget] = useState<
+    ((widgetId: string) => void) | undefined
+  >();
 
   const handleSetDraggingWidget = useCallback(
     (widget: DraggingWidgetData | null) => {
@@ -48,6 +55,8 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
       value={{
         draggingWidget,
         setDraggingWidget: handleSetDraggingWidget,
+        handleAddWidget,
+        setHandleAddWidget,
       }}
     >
       {children}

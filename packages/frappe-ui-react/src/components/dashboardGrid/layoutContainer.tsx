@@ -118,13 +118,18 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
       let widgetData = context?.draggingWidget;
 
       // Fallback to dataTransfer if no context
-      if (!widgetData) {
-        const dataTransfer = (e as React.DragEvent).dataTransfer;
+      if (!widgetData && e instanceof DragEvent) {
+        const dataTransfer = e.dataTransfer;
         if (!dataTransfer) return;
 
         try {
-          widgetData = JSON.parse(dataTransfer.getData("text/plain"));
-        } finally {
+          const data = JSON.parse(dataTransfer.getData("text/plain"));
+          widgetData = {
+            widgetId: data.widgetId,
+            w: data.w || 4,
+            h: data.h || 3,
+          };
+        } catch {
           // no-op
         }
       }
@@ -133,6 +138,8 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
         onDrop(widgetData.widgetId, {
           x: item.x,
           y: item.y,
+          w: widgetData.w,
+          h: widgetData.h,
         });
       }
 
@@ -178,6 +185,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     draggableCancel: ".dashboard-drag-cancel",
     compactType,
     preventCollision: false,
+    allowOverlap: false,
     useCSSTransforms: true,
   };
 
