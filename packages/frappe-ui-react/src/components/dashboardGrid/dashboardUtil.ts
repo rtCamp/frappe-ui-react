@@ -1,4 +1,26 @@
-import type { WidgetLayout } from "./types";
+import type { WidgetLayout, WidgetSizePresets, WidgetDefinition } from "./types";
+
+/**
+ * Resolve widget dimensions from size preset or explicit values
+ */
+export const resolveWidgetSize = (
+  layout: WidgetLayout,
+  sizePresets?: WidgetSizePresets,
+  widgetDef?: WidgetDefinition
+): Required<Pick<WidgetLayout, 'w' | 'h'>> & Pick<WidgetLayout, 'minW' | 'maxW' | 'minH' | 'maxH' | 'isResizable'> => {
+  const sizeName = layout.size ?? widgetDef?.size;
+  const preset = sizeName && sizePresets?.[sizeName] ? sizePresets[sizeName] : null;
+
+  return {
+    w: layout.w ?? preset?.w ?? 4,
+    h: layout.h ?? preset?.h ?? 4,
+    minW: layout.minW ?? preset?.minW,
+    maxW: layout.maxW ?? preset?.maxW,
+    minH: layout.minH ?? preset?.minH,
+    maxH: layout.maxH ?? preset?.maxH,
+    isResizable: layout.isResizable ?? preset?.isResizable ?? widgetDef?.isResizable,
+  };
+};
 
 /**
  * Validate dashboard layout array
@@ -9,8 +31,13 @@ export const validateLayout = (layout: WidgetLayout[]): boolean => {
   for (const widget of layout) {
     if (!widget || typeof widget.id !== "string") return false;
     if (typeof widget.x !== "number" || typeof widget.y !== "number") return false;
-    if (typeof widget.w !== "number" || typeof widget.h !== "number") return false;
-    if (widget.x < 0 || widget.y < 0 || widget.w <= 0 || widget.h <= 0) return false;
+    if (widget.x < 0 || widget.y < 0) return false;
+    
+    const hasSize = widget.size || (typeof widget.w === "number" && typeof widget.h === "number");
+    if (!hasSize) return false;
+    
+    if (widget.w !== undefined && (widget.w <= 0)) return false;
+    if (widget.h !== undefined && (widget.h <= 0)) return false;
   }
 
   return true;

@@ -25,7 +25,11 @@ import { Badge } from "../badge";
 import { Avatar } from "../avatar";
 import { CircularProgressBar } from "../circularProgressBar";
 import { AxisChart, DonutChart } from "../charts";
-import type { WidgetLayout, WidgetDefinition } from "./types";
+import type {
+  WidgetLayout,
+  WidgetDefinition,
+  WidgetSizePresets,
+} from "./types";
 import clsx from "clsx";
 
 const meta: Meta<typeof Dashboard> = {
@@ -120,41 +124,32 @@ const simpleWidgets: WidgetDefinition[] = [
     id: "content-1",
     name: "Content",
     component: Content,
+    size: "large",
   },
   {
     id: "stats-1",
     name: "Stats",
     component: Stats,
+    size: "medium",
   },
   {
     id: "activity-1",
     name: "Activity",
     component: Activity,
+    size: "medium",
   },
 ];
 
+const simpleSizePresets: WidgetSizePresets = {
+  small: { w: 3, h: 2, minW: 2, maxW: 4 },
+  medium: { w: 6, h: 2, minW: 4, maxW: 8 },
+  large: { w: 12, h: 2, minW: 8, maxW: 12 },
+};
+
 const simpleLayout: WidgetLayout[] = [
-  {
-    id: "content-1",
-    x: 0,
-    y: 0,
-    w: 12,
-    h: 2,
-  },
-  {
-    id: "stats-1",
-    x: 0,
-    y: 2,
-    w: 6,
-    h: 2,
-  },
-  {
-    id: "activity-1",
-    x: 6,
-    y: 2,
-    w: 6,
-    h: 2,
-  },
+  { id: "content-1", x: 0, y: 0 },
+  { id: "stats-1", x: 0, y: 2 },
+  { id: "activity-1", x: 6, y: 2 },
 ];
 
 export const Default: Story = {
@@ -179,6 +174,7 @@ export const Default: Story = {
   args: {
     widgets: simpleWidgets,
     initialLayout: simpleLayout,
+    sizes: simpleSizePresets,
     rowHeight: 100,
     layoutLock: false,
     dragHandle: false,
@@ -215,6 +211,7 @@ export const LocalStorage: Story = {
             widgets={simpleWidgets}
             initialLayout={simpleLayout}
             savedLayout={savedLayout}
+            sizes={simpleSizePresets}
             onLayoutChange={handleLayoutChange}
           />
         </div>
@@ -597,6 +594,7 @@ const hrWidgets: WidgetDefinition[] = [
     id: "total-employees",
     name: "Total Employees",
     component: EmployeeOverviewWidget,
+    size: "small",
     props: {
       title: "Total Employees",
       value: "1,234",
@@ -614,8 +612,6 @@ const hrWidgets: WidgetDefinition[] = [
         trend: "up",
         trendValue: "12%",
       },
-      defaultW: 3,
-      defaultH: 2,
       description: "Total number of active employees",
     },
   },
@@ -623,6 +619,7 @@ const hrWidgets: WidgetDefinition[] = [
     id: "new-hires",
     name: "New Hires",
     component: EmployeeOverviewWidget,
+    size: "small",
     props: {
       title: "New Hires",
       value: "48",
@@ -640,8 +637,6 @@ const hrWidgets: WidgetDefinition[] = [
         trend: "up",
         trendValue: "8%",
       },
-      defaultW: 3,
-      defaultH: 2,
       description: "New hires this month",
     },
   },
@@ -649,6 +644,8 @@ const hrWidgets: WidgetDefinition[] = [
     id: "turnover",
     name: "Turnover Rate",
     component: EmployeeOverviewWidget,
+    size: "small",
+    isResizable: false,
     props: {
       title: "Turnover Rate",
       value: "4.2%",
@@ -666,8 +663,6 @@ const hrWidgets: WidgetDefinition[] = [
         trend: "down",
         trendValue: "2%",
       },
-      defaultW: 3,
-      defaultH: 2,
       description: "Employee turnover rate",
     },
   },
@@ -675,6 +670,8 @@ const hrWidgets: WidgetDefinition[] = [
     id: "open-positions",
     name: "Open Positions",
     component: EmployeeOverviewWidget,
+    size: "small",
+    isResizable: false,
     props: {
       title: "Open Positions",
       value: "23",
@@ -688,8 +685,6 @@ const hrWidgets: WidgetDefinition[] = [
         subtitle: "Across all departments",
         progress: 65,
       },
-      defaultW: 3,
-      defaultH: 2,
       description: "Current open job positions",
     },
   },
@@ -697,10 +692,9 @@ const hrWidgets: WidgetDefinition[] = [
     id: "salary-stats",
     name: "Salary Statistics",
     component: SalaryStatisticsWidget,
+    size: "large",
     preview: {
       props: {},
-      defaultW: 6,
-      defaultH: 4,
       description: "Monthly salary overview with bonuses",
     },
   },
@@ -708,10 +702,9 @@ const hrWidgets: WidgetDefinition[] = [
     id: "satisfaction",
     name: "Employee Satisfaction",
     component: EmployeeSatisfactionWidget,
+    size: "large",
     preview: {
       props: {},
-      defaultW: 6,
-      defaultH: 4,
       description: "Employee satisfaction survey results",
     },
   },
@@ -719,10 +712,9 @@ const hrWidgets: WidgetDefinition[] = [
     id: "performance",
     name: "Performance Stats",
     component: PerformanceStatsWidget,
+    size: "medium",
     preview: {
       props: {},
-      defaultW: 4,
-      defaultH: 4,
       description: "Department performance overview",
     },
   },
@@ -730,10 +722,9 @@ const hrWidgets: WidgetDefinition[] = [
     id: "new-employees",
     name: "New Employees",
     component: NewEmployeesWidget,
+    size: "medium",
     preview: {
       props: {},
-      defaultW: 4,
-      defaultH: 4,
       description: "Hiring trends over last 6 months",
     },
   },
@@ -741,10 +732,9 @@ const hrWidgets: WidgetDefinition[] = [
     id: "events",
     name: "Upcoming Events",
     component: UpcomingEventsWidget,
+    size: "medium",
     preview: {
       props: {},
-      defaultW: 4,
-      defaultH: 4,
       description: "Calendar of upcoming HR events",
     },
   },
@@ -752,10 +742,9 @@ const hrWidgets: WidgetDefinition[] = [
     id: "activities",
     name: "Recent Activities",
     component: RecentActivitiesWidget,
+    size: "medium",
     preview: {
       props: {},
-      defaultW: 4,
-      defaultH: 4,
       description: "Latest employee activities",
     },
   },
@@ -763,34 +752,39 @@ const hrWidgets: WidgetDefinition[] = [
     id: "quick-actions",
     name: "Quick Actions",
     component: QuickActionsWidget,
+    size: "medium",
     preview: {
       props: {},
-      defaultW: 4,
-      defaultH: 4,
       description: "Common HR tasks and shortcuts",
     },
   },
 ];
 
+const hrSizePresets: WidgetSizePresets = {
+  small: { w: 3, h: 2, minW: 3, maxW: 3, isResizable: false },
+  medium: { w: 4, h: 4, minW: 3, maxW: 6, isResizable: true },
+  large: { w: 6, h: 4, minW: 4, maxW: 12, isResizable: true },
+};
+
 const hrLayout: WidgetLayout[] = [
-  // Row 1: 4 small widgets - each taking 3 columns
-  { id: "total-employees", x: 0, y: 0, w: 3, h: 2 },
-  { id: "new-hires", x: 3, y: 0, w: 3, h: 2 },
-  { id: "turnover", x: 6, y: 0, w: 3, h: 2 },
-  { id: "open-positions", x: 9, y: 0, w: 3, h: 2 },
+  // Row 1: 4 small widgets
+  { id: "total-employees", x: 0, y: 0 },
+  { id: "new-hires", x: 3, y: 0 },
+  { id: "turnover", x: 6, y: 0 },
+  { id: "open-positions", x: 9, y: 0 },
 
-  // Row 2: 2 large widgets - each taking 6 columns
-  { id: "salary-stats", x: 0, y: 2, w: 6, h: 4 },
-  { id: "satisfaction", x: 6, y: 2, w: 6, h: 4 },
+  // Row 2: 2 large widgets
+  { id: "salary-stats", x: 0, y: 2 },
+  { id: "satisfaction", x: 6, y: 2 },
 
-  // Row 3: 3 medium widgets - each taking 4 columns
-  { id: "performance", x: 0, y: 6, w: 4, h: 4 },
-  { id: "new-employees", x: 4, y: 6, w: 4, h: 4 },
-  { id: "events", x: 8, y: 6, w: 4, h: 4 },
+  // Row 3: 3 medium widgets
+  { id: "performance", x: 0, y: 6 },
+  { id: "new-employees", x: 4, y: 6 },
+  { id: "events", x: 8, y: 6 },
 
   // Row 4: 2 medium widgets
-  { id: "activities", x: 0, y: 10, w: 4, h: 4 },
-  { id: "quick-actions", x: 4, y: 10, w: 4, h: 4 },
+  { id: "activities", x: 0, y: 10 },
+  { id: "quick-actions", x: 4, y: 10 },
 ];
 
 export const HRDashboardExample: Story = {
@@ -828,7 +822,6 @@ export const HRDashboardExample: Story = {
             <div className="flex-1 overflow-y-auto p-4">
               <DashboardWidgetGallery
                 widgets={hrWidgets}
-                mode="list"
                 description="Drag widgets to the dashboard."
               />
             </div>
@@ -853,6 +846,7 @@ export const HRDashboardExample: Story = {
   args: {
     widgets: hrWidgets,
     initialLayout: hrLayout,
+    sizes: hrSizePresets,
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
     cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
     rowHeight: 80,

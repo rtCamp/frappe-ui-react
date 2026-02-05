@@ -18,8 +18,6 @@ export const DashboardWidgetGalleryItem: React.FC<
   const handleDragStart = (e: React.DragEvent) => {
     const widgetData = {
       widgetId: widget.id,
-      w: widget.preview?.defaultW || 4,
-      h: widget.preview?.defaultH || 3,
     };
 
     if (context) {
@@ -46,7 +44,7 @@ export const DashboardWidgetGalleryItem: React.FC<
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onClick={() => onClick?.(widget)}
-      title={`Drag to add ${widget.name} or click to insert`}
+      title={`Drag to add ${widget.name}`}
     >
       {widget.preview && (
         <div className="mb-2 w-full pointer-events-none relative">
@@ -65,9 +63,9 @@ export const DashboardWidgetGalleryItem: React.FC<
             {widget.preview.description}
           </div>
         )}
-        <div className="text-xs text-ink-gray-4 mt-1">
-          {widget.preview?.defaultW || 4} x {widget.preview?.defaultH || 3}
-        </div>
+        {widget.size && (
+          <div className="text-xs text-ink-gray-4 mt-1">{widget.size}</div>
+        )}
       </div>
     </div>
   );

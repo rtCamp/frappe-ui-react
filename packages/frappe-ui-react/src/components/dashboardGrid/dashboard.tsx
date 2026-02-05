@@ -42,10 +42,7 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
   );
 
   const handleDrop = useCallback(
-    (
-      widgetId: string,
-      layoutData: { x: number; y: number; w: number; h: number }
-    ) => {
+    (widgetId: string, layoutData: { x: number; y: number }) => {
       const widgetDef = widgets.find((w) => w.id === widgetId);
       if (!widgetDef) return;
 
@@ -62,8 +59,9 @@ export const DashboardGrid: React.FC<DashboardProps> = ({
           key: newKey,
           x: layoutData.x,
           y: layoutData.y,
-          w: layoutData.w,
-          h: layoutData.h,
+          size: widgetDef.size,
+          isResizable: widgetDef.isResizable,
+          isDraggable: widgetDef.isDraggable,
         };
 
         const updated = [...prev, newLayoutItem];

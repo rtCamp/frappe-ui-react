@@ -18,6 +18,7 @@ import "./dashboard.css";
 import { WidgetWrapper } from "./widgetWrapper";
 import type { LayoutContainerProps, WidgetLayout } from "./types";
 import { useDashboardContext } from "./dashboardContext";
+import { resolveWidgetSize } from "./dashboardUtil";
 import React from "react";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -28,6 +29,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   setLayout,
   onDrop,
   onRemove,
+  sizes,
   layoutLock = false,
   dragHandle = false,
   dragHandleOnHover = false,
@@ -60,21 +62,28 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
 
   const rglLayout: RGLLayout[] = useMemo(
     () =>
-      layout.map((item) => ({
-        i: item.key || item.id,
-        x: item.x,
-        y: item.y,
-        w: item.w,
-        h: item.h,
-        minW: item.minW,
-        minH: item.minH,
-        maxW: item.maxW,
-        maxH: item.maxH,
-        static: item.static,
-        isDraggable: item.isDraggable,
-        isResizable: item.isResizable,
-      })),
-    [layout]
+      layout.map((item) => {
+        const widgetDef = widgetMap.get(item.id);
+        const size = resolveWidgetSize(item, sizes, widgetDef);
+        return {
+          i: item.key || item.id,
+          x: item.x,
+          y: item.y,
+          w: size.w,
+          h: size.h,
+          minW: size.minW,
+          minH: size.minH,
+          maxW: size.maxW,
+          maxH: size.maxH,
+          static: item.static,
+          isDraggable:
+            item.isDraggable !== undefined
+              ? item.isDraggable
+              : widgetDef?.isDraggable ?? !layoutLock,
+          isResizable: size.isResizable !== undefined ? size.isResizable : true,
+        };
+      }),
+    [layout, sizes, layoutLock, widgetMap]
   );
 
   const handleLayoutChange = useCallback(
@@ -115,9 +124,8 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
 
         try {
           widgetData = JSON.parse(dataTransfer.getData("text/plain"));
-        } catch (err) {
-          console.error("Error parsing drop data:", err);
-          return;
+        } finally {
+          // no-op
         }
       }
 
@@ -125,8 +133,6 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
         onDrop(widgetData.widgetId, {
           x: item.x,
           y: item.y,
-          w: widgetData.w || 4,
-          h: widgetData.h || 3,
         });
       }
 
@@ -136,6 +142,16 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     },
     [onDrop, context]
   );
+
+  const droppingItemSize = useMemo(() => {
+    if (!context?.draggingWidget?.widget) return { w: 4, h: 3 };
+
+    const widgetDef = context.draggingWidget.widget;
+    const dummyLayout: WidgetLayout = { id: widgetDef.id, x: 0, y: 0 };
+    const resolved = resolveWidgetSize(dummyLayout, sizes, widgetDef);
+
+    return { w: resolved.w, h: resolved.h };
+  }, [context?.draggingWidget?.widget, sizes]);
 
   const commonProps = {
     className: clsx("layout", {
@@ -150,8 +166,8 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     droppingItem: onDrop
       ? {
           i: "__dropping-elem__",
-          w: context?.draggingWidget?.w || 4,
-          h: context?.draggingWidget?.h || 3,
+          w: droppingItemSize.w,
+          h: droppingItemSize.h,
         }
       : undefined,
     isBounded,
