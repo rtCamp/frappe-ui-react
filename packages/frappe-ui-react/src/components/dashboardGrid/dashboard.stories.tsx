@@ -26,10 +26,10 @@ import { Avatar } from "../avatar";
 import { CircularProgressBar } from "../circularProgressBar";
 import { AxisChart, DonutChart } from "../charts";
 import type {
-  WidgetLayout,
   WidgetDefinition,
   WidgetSizePresets,
-  DashboardLayout,
+  DashboardLayouts,
+  WidgetLayouts,
 } from "./types";
 import clsx from "clsx";
 
@@ -83,9 +83,9 @@ const meta: Meta<typeof Dashboard> = {
       control: "object",
       description: "Array of widget definitions",
     },
-    initialLayout: {
+    initialLayouts: {
       control: "object",
-      description: "Initial layout configuration with positions",
+      description: "Initial layout configuration with positions per breakpoint",
     },
     savedLayout: {
       control: "object",
@@ -147,17 +147,16 @@ const simpleSizePresets: WidgetSizePresets = {
   large: { w: 12, h: 2, minW: 8, maxW: 12, minH: 2, maxH: 8 },
 };
 
-const simpleLayout: DashboardLayout = [
-  ["content-1"],
-  ["stats-1", "activity-1"],
-];
+const simpleLayouts: WidgetLayouts = {
+  lg: [["content-1"], ["stats-1", "activity-1"]],
+};
 
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
 
     const handleLayoutChange = useCallback(
-      (newLayout: WidgetLayout[]) => {
+      (newLayout: DashboardLayouts) => {
         updateArgs({ savedLayout: newLayout });
       },
       [updateArgs]
@@ -173,7 +172,7 @@ export const Default: Story = {
   },
   args: {
     widgets: simpleWidgets,
-    initialLayout: simpleLayout,
+    initialLayouts: simpleLayouts,
     sizes: simpleSizePresets,
     rowHeight: 100,
     layoutLock: false,
@@ -185,11 +184,11 @@ export const Default: Story = {
 export const LocalStorage: Story = {
   render: function Render(args) {
     const savedLayoutStr = localStorage.getItem("dashboard-saved-layout");
-    const savedLayout: WidgetLayout[] | undefined = savedLayoutStr
+    const savedLayout: DashboardLayouts | undefined = savedLayoutStr
       ? JSON.parse(savedLayoutStr)
       : undefined;
 
-    const handleLayoutChange = (newLayout: WidgetLayout[]) => {
+    const handleLayoutChange = (newLayout: DashboardLayouts) => {
       localStorage.setItem("dashboard-saved-layout", JSON.stringify(newLayout));
     };
 
@@ -208,10 +207,7 @@ export const LocalStorage: Story = {
         <div className="w-full max-w-4xl">
           <Dashboard
             {...args}
-            widgets={simpleWidgets}
-            initialLayout={simpleLayout}
             savedLayout={savedLayout}
-            sizes={simpleSizePresets}
             onLayoutChange={handleLayoutChange}
           />
         </div>
@@ -219,6 +215,9 @@ export const LocalStorage: Story = {
     );
   },
   args: {
+    widgets: simpleWidgets,
+    initialLayouts: simpleLayouts,
+    sizes: simpleSizePresets,
     rowHeight: 100,
     layoutLock: false,
     dragHandle: true,
@@ -766,19 +765,54 @@ const hrSizePresets: WidgetSizePresets = {
   large: { w: 6, h: 4, minW: 4, maxW: 12, minH: 3, maxH: 8, isResizable: true },
 };
 
-const hrLayout: DashboardLayout = [
-  ["total-employees", "new-hires", "turnover", "open-positions"],
-  ["salary-stats", "satisfaction"],
-  ["performance", "new-employees", "events"],
-  ["activities", "quick-actions"],
-];
+const hrLayouts: WidgetLayouts = {
+  lg: [
+    ["total-employees", "new-hires", "turnover", "open-positions"],
+    ["salary-stats", "satisfaction"],
+    ["performance", "new-employees", "events"],
+    ["activities", "quick-actions"],
+  ],
+  md: [
+    ["total-employees", "new-hires", "turnover"],
+    ["open-positions"],
+    ["salary-stats"],
+    ["satisfaction"],
+    ["performance", "new-employees"],
+    ["events", "activities"],
+    ["quick-actions"],
+  ],
+  sm: [
+    ["total-employees", "new-hires"],
+    ["turnover", "open-positions"],
+    ["salary-stats"],
+    ["satisfaction"],
+    ["performance"],
+    ["new-employees"],
+    ["events"],
+    ["activities"],
+    ["quick-actions"],
+  ],
+  xs: [
+    ["total-employees"],
+    ["new-hires"],
+    ["turnover"],
+    ["open-positions"],
+    ["salary-stats"],
+    ["satisfaction"],
+    ["performance"],
+    ["new-employees"],
+    ["events"],
+    ["activities"],
+    ["quick-actions"],
+  ],
+};
 
 export const HRDashboardExample: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
 
     const handleLayoutChange = useCallback(
-      (newLayout: WidgetLayout[]) => {
+      (newLayout: DashboardLayouts) => {
         updateArgs({ savedLayout: newLayout });
       },
       [updateArgs]
@@ -807,7 +841,6 @@ export const HRDashboardExample: Story = {
             </div>
             <div className="flex-1 overflow-y-auto p-4">
               <DashboardWidgetGallery
-                widgets={hrWidgets}
                 description="Drag widgets to the dashboard."
                 onWidgetAdd={() => updateArgs({ isGalleryOpen: false })}
               />
@@ -832,7 +865,7 @@ export const HRDashboardExample: Story = {
   },
   args: {
     widgets: hrWidgets,
-    initialLayout: hrLayout,
+    initialLayouts: hrLayouts,
     sizes: hrSizePresets,
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
     cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },

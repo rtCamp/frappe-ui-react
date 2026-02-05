@@ -27,8 +27,8 @@ export const WidgetWrapper: React.FC<WidgetWrapperProps> = ({
   return (
     <div
       className="w-full h-full relative"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onPointerEnter={() => setIsHovered(true)}
+      onPointerLeave={() => setIsHovered(false)}
     >
       {(showRemoveButton || showDragHandle) && (
         <div className="absolute top-2 right-2 z-10 flex items-center gap-1">

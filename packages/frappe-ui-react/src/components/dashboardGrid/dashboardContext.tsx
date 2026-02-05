@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useState, useCallback } from "react";
 import React from "react";
 
 /**
@@ -23,6 +23,8 @@ export interface DashboardContextValue {
   setHandleAddWidget: (
     handler: ((widgetId: string) => void) | undefined
   ) => void;
+  widgets: WidgetDefinition[];
+  setWidgets: (widgets: WidgetDefinition[]) => void;
 }
 
 const DashboardContext = createContext<DashboardContextValue | null>(null);
@@ -42,6 +44,7 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
   const [handleAddWidget, setHandleAddWidget] = useState<
     ((widgetId: string) => void) | undefined
   >();
+  const [widgets, setWidgets] = useState<WidgetDefinition[]>([]);
 
   const handleSetDraggingWidget = useCallback(
     (widget: DraggingWidgetData | null) => {
@@ -57,6 +60,8 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
         setDraggingWidget: handleSetDraggingWidget,
         handleAddWidget,
         setHandleAddWidget,
+        widgets,
+        setWidgets,
       }}
     >
       {children}
@@ -64,6 +69,4 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({
   );
 };
 
-export const useDashboardContext = (): DashboardContextValue | null => {
-  return useContext(DashboardContext);
-};
+export { DashboardContext };
