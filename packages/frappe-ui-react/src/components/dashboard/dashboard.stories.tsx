@@ -48,70 +48,68 @@ const Activity = () => (
   </div>
 );
 
-const layout: LayoutItem[] = [
-  {
-    id: "main-row",
-    type: "row",
-    elements: [
-      {
-        id: "sidebar-1",
-        type: "component",
-        component: Sidebar,
-        props: {},
-      },
-      {
-        id: "main-stack",
-        type: "stack",
-        elements: [
-          {
-            id: "header-1",
-            type: "component",
-            component: Header,
-            props: { userId: "123" },
-          },
-          {
-            id: "content-1",
-            type: "component",
-            component: Content,
-            props: {},
-          },
-          {
-            id: "balance-row",
-            type: "row",
-            elements: [
-              {
-                id: "stats-1",
-                type: "component",
-                component: Stats,
-                props: {},
-              },
-              {
-                id: "activity-1",
-                type: "component",
-                component: Activity,
-                props: {},
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-];
+const layout: LayoutItem = {
+  id: "main-row",
+  type: "row",
+  elements: [
+    {
+      id: "sidebar-1",
+      type: "component",
+      component: Sidebar,
+      props: {},
+    },
+    {
+      id: "main-stack",
+      type: "stack",
+      elements: [
+        {
+          id: "header-1",
+          type: "component",
+          component: Header,
+          props: { userId: "123" },
+        },
+        {
+          id: "content-1",
+          type: "component",
+          component: Content,
+          props: {},
+        },
+        {
+          id: "balance-row",
+          type: "row",
+          elements: [
+            {
+              id: "stats-1",
+              type: "component",
+              component: Stats,
+              props: {},
+            },
+            {
+              id: "activity-1",
+              type: "component",
+              component: Activity,
+              props: {},
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
 
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
 
-    const handleLayoutChange = (newLayout: SerializedLayoutItem[]) => {
+    const handleLayoutChange = (newLayout: SerializedLayoutItem) => {
       updateArgs({ savedLayout: newLayout });
     };
 
     return (
       <div className="w-full h-screen flex justify-center items-center">
         <Dashboard
-          initialLayout={args.layout || []}
-          savedLayout={args.savedLayout || []}
+          initialLayout={args.layout}
+          savedLayout={args.savedLayout}
           onLayoutChange={handleLayoutChange}
         />
       </div>
@@ -119,19 +117,17 @@ export const Default: Story = {
   },
   args: {
     layout,
-    savedLayout: [],
   },
 };
 
 export const LocalStorage: Story = {
   render: function Render() {
-    const savedLayout: SerializedLayoutItem[] = localStorage.getItem(
-      "dashboard-saved-layout"
-    )
-      ? JSON.parse(localStorage.getItem("dashboard-saved-layout") || "[]")
-      : [];
+    const savedLayoutStr = localStorage.getItem("dashboard-saved-layout");
+    const savedLayout: SerializedLayoutItem | undefined = savedLayoutStr
+      ? JSON.parse(savedLayoutStr)
+      : undefined;
 
-    const handleLayoutChange = (newLayout: SerializedLayoutItem[]) => {
+    const handleLayoutChange = (newLayout: SerializedLayoutItem) => {
       localStorage.setItem("dashboard-saved-layout", JSON.stringify(newLayout));
     };
 
@@ -144,7 +140,7 @@ export const LocalStorage: Story = {
           Clear Saved Layout
         </Button>
         <Dashboard
-          initialLayout={layout || []}
+          initialLayout={layout}
           savedLayout={savedLayout}
           onLayoutChange={handleLayoutChange}
         />

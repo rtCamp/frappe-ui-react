@@ -20,27 +20,23 @@ export type SerializedLayoutItem = Omit<ComponentElement, 'component'> | {
 };
 
 export interface DashboardProps {
-  initialLayout: LayoutItem[];
-  savedLayout: SerializedLayoutItem[];
-  onLayoutChange: (layout: SerializedLayoutItem[]) => void;
+  initialLayout: LayoutItem;
+  savedLayout?: SerializedLayoutItem;
+  onLayoutChange: (layout: SerializedLayoutItem) => void;
 }
 
 export interface LayoutContainerProps {
-  layout: LayoutItem[];
-  setLayout: (layout: LayoutItem[] | ((prevLayout: LayoutItem[]) => LayoutItem[])) => void;
-}
-
-export interface DashboardRowProps {
-  layout: ContainerElement;
-}
-
-export interface DashboardStackProps {
-  layout: ContainerElement;
+  layout: LayoutItem;
+  setLayout: (layout: LayoutItem | ((prevLayout: LayoutItem) => LayoutItem)) => void;
 }
 
 export interface LayoutBoxProps {
   layout: ContainerElement;
   orientation: "horizontal" | "vertical";
+}
+
+export interface LayoutRendererProps {
+  layout: LayoutItem;
 }
 
 export interface WidgetProps {

@@ -6,10 +6,8 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { clsx } from "clsx";
-import { Widget } from "./widget";
+import { LayoutRenderer } from "./layoutRenderer";
 import type { LayoutBoxProps } from "./types";
-import { DashboardRow } from "./dashboardRow";
-import { DashboardStack } from "./dashboardStack";
 
 export const LayoutBox: React.FC<LayoutBoxProps> = ({
   layout,
@@ -47,15 +45,9 @@ export const LayoutBox: React.FC<LayoutBoxProps> = ({
           isDragging && orientation === "vertical" && "outline-gray-300"
         )}
       >
-        {layout.elements.map((item) => {
-          if (item.type === "row") {
-            return <DashboardRow key={item.id} layout={item} />;
-          } else if (item.type === "stack") {
-            return <DashboardStack key={item.id} layout={item} />;
-          } else if (item.type === "component") {
-            return <Widget key={item.id} layout={item} />;
-          }
-        })}
+        {layout.elements.map((item) => (
+          <LayoutRenderer key={item.id} layout={item} />
+        ))}
       </div>
     </SortableContext>
   );

@@ -13,9 +13,8 @@ import {
   UniqueIdentifier,
 } from "@dnd-kit/core";
 import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable";
-import { DashboardRow } from "./dashboardRow";
-import { DashboardStack } from "./dashboardStack";
 import { Widget } from "./widget";
+import { LayoutRenderer } from "./layoutRenderer";
 import { LayoutContainerProps, LayoutItem } from "./types";
 
 export const LayoutContainer: React.FC<LayoutContainerProps> = ({
@@ -28,25 +27,23 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   const layoutFlatMap = useMemo(() => {
     const flatListMap = new Map();
 
-    const flatten = (items: LayoutItem[], path: number[] = []) => {
-      items.forEach((item, index) => {
-        const currentPath = [...path, index];
-
-        flatListMap.set(item.id, {
-          ...item,
-          path: currentPath,
-          parentPath: path,
-          depth: currentPath.length,
-          index: index,
-        });
-
-        if ("elements" in item && item.elements && item.elements.length > 0) {
-          flatten(item.elements, currentPath);
-        }
+    const flatten = (item: LayoutItem, path: number[] = []) => {
+      flatListMap.set(item.id, {
+        ...item,
+        path: path,
+        parentPath: path.slice(0, -1),
+        depth: path.length,
+        index: path[path.length - 1] ?? 0,
       });
+
+      if ("elements" in item && item.elements && item.elements.length > 0) {
+        item.elements.forEach((child, index) => {
+          flatten(child, [...path, index]);
+        });
+      }
     };
 
-    flatten(layout);
+    flatten(layout, [0]);
     return flatListMap;
   }, [layout]);
 
@@ -62,6 +59,17 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  const handleGetParent = (layout: LayoutItem, path: number[]) => {
+    if (path.length === 1) return layout;
+    let current: LayoutItem = layout;
+    for (let i = 1; i < path.length - 1; i++) {
+      if ("elements" in current) {
+        current = current.elements[path[i]];
+      }
+    }
+    return current;
+  };
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
@@ -98,30 +106,20 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     isDraggingOverRef.current = true;
 
     setLayout((currentLayout) => {
-      const deepClone = (items: LayoutItem[]): LayoutItem[] => {
-        return items.map((item) => {
-          if ("elements" in item && item.elements) {
-            return { ...item, elements: deepClone(item.elements) };
-          }
-          return { ...item };
-        });
+      const deepClone = (item: LayoutItem): LayoutItem => {
+        if ("elements" in item && item.elements) {
+          return { ...item, elements: item.elements.map(deepClone) };
+        }
+        return { ...item };
       };
 
       const newLayout = deepClone(currentLayout);
 
-      let activeParent: { elements: LayoutItem[] } = { elements: newLayout };
-      for (let i = 0; i < activeElement.parentPath.length; i++) {
-        activeParent = activeParent.elements[activeElement.parentPath[i]] as {
-          elements: LayoutItem[];
-        };
-      }
+      const activeParent = handleGetParent(newLayout, activeElement.path);
+      const targetParent = handleGetParent(newLayout, [...targetParentPath, 0]);
 
-      let targetParent: { elements: LayoutItem[] } = { elements: newLayout };
-      for (let i = 0; i < targetParentPath.length; i++) {
-        targetParent = targetParent.elements[targetParentPath[i]] as {
-          elements: LayoutItem[];
-        };
-      }
+      if (!("elements" in activeParent) || !("elements" in targetParent))
+        return currentLayout;
 
       const [movingItem] = activeParent.elements.splice(activeElement.index, 1);
       targetParent.elements.splice(insertIndex, 0, movingItem);
@@ -157,20 +155,23 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
       }
 
       setLayout((currentLayout) => {
-        const newLayout = [...currentLayout];
+        const deepClone = (item: LayoutItem): LayoutItem => {
+          if ("elements" in item && item.elements) {
+            return { ...item, elements: item.elements.map(deepClone) };
+          }
+          return { ...item };
+        };
+
+        const newLayout = deepClone(currentLayout);
+
         if (
           activeElement.parentPath.length === targetParentPath.length &&
           activeElement.parentPath.every(
             (val: number, index: number) => val === targetParentPath[index]
           )
         ) {
-          let parent: { elements: LayoutItem[] } = { elements: newLayout };
-
-          for (let i = 0; i < activeElement.parentPath.length; i++) {
-            parent = parent.elements[activeElement.parentPath[i]] as {
-              elements: LayoutItem[];
-            };
-          }
+          const parent = handleGetParent(newLayout, activeElement.path);
+          if (!("elements" in parent)) return currentLayout;
 
           const oldIndex = activeElement.index;
           const newIndex =
@@ -180,25 +181,11 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
 
           return newLayout;
         } else {
-          let activeParent: { elements: LayoutItem[] } = {
-            elements: newLayout,
-          };
-          for (let i = 0; i < activeElement.parentPath.length; i++) {
-            activeParent = activeParent.elements[
-              activeElement.parentPath[i]
-            ] as {
-              elements: LayoutItem[];
-            };
-          }
+          const activeParent = handleGetParent(newLayout, activeElement.path);
+          const targetParent = handleGetParent(newLayout, [...targetParentPath, 0]);
 
-          let targetParent: { elements: LayoutItem[] } = {
-            elements: newLayout,
-          };
-          for (let i = 0; i < targetParentPath.length; i++) {
-            targetParent = targetParent.elements[targetParentPath[i]] as {
-              elements: LayoutItem[];
-            };
-          }
+          if (!("elements" in activeParent) || !("elements" in targetParent))
+            return currentLayout;
 
           const movingItem = activeParent.elements.splice(
             activeElement.index,
@@ -220,20 +207,10 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      {layout.map((item) => {
-        if (item.type === "row") {
-          return <DashboardRow key={item.id} layout={item} />;
-        } else if (item.type === "stack") {
-          return <DashboardStack key={item.id} layout={item} />;
-        } else if (item.type === "component") {
-          return <Widget key={item.id} layout={item} />;
-        }
-      })}
+      <LayoutRenderer layout={layout} />
       <DragOverlay>
         {activeId ? <Widget layout={layoutFlatMap.get(activeId)} /> : null}
       </DragOverlay>
     </DndContext>
   );
 };
-
-LayoutContainer.displayName = "LayoutContainer";
