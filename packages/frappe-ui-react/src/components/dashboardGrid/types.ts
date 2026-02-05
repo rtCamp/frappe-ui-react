@@ -72,7 +72,7 @@ export interface DashboardProps {
   layoutLock?: boolean;
   dragHandle?: boolean;
   dragHandleOnHover?: boolean;
-  compactType?: "vertical" | "horizontal";
+  compactType?: "vertical" | "horizontal" | null;
   isBounded?: boolean;
   className?: string;
 }
@@ -83,7 +83,8 @@ export interface LayoutContainerProps {
   setLayouts?: (layouts: DashboardLayouts) => void;
   onDrop?: (
     widgetId: string,
-    layout: { x: number; y: number; w: number; h: number }
+    layout: { x: number; y: number; w: number; h: number },
+    currentLayout?: RGLLayout[]
   ) => void;
   onRemove?: (widgetId: string) => void;
   sizes?: WidgetSizePresets;
@@ -94,7 +95,7 @@ export interface LayoutContainerProps {
   layoutLock?: boolean;
   dragHandle?: boolean;
   dragHandleOnHover?: boolean;
-  compactType?: "vertical" | "horizontal";
+  compactType?: "vertical" | "horizontal" | null;
   isBounded?: boolean;
   className?: string;
 }
