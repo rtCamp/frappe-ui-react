@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import {
   DndContext,
   KeyboardSensor,
@@ -23,6 +23,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   setLayout,
 }) => {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
+  const isDraggingOverRef = useRef(false);
 
   const layoutFlatMap = useMemo(() => {
     const flatListMap = new Map();
@@ -39,7 +40,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
           index: index,
         });
 
-        if ('elements' in item && item.elements && item.elements.length > 0) {
+        if ("elements" in item && item.elements && item.elements.length > 0) {
           flatten(item.elements, currentPath);
         }
       });
@@ -53,7 +54,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 8,
-        delay: 0,
+        delay: 10,
         tolerance: 5,
       },
     }),
@@ -67,66 +68,148 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     setActiveId(active.id);
   };
 
-  const handleDragOver = (event: DragOverEvent) => {};
+  const handleDragOver = (event: DragOverEvent) => {
+    const { active, over } = event;
+
+    if (!over || isDraggingOverRef.current) return;
+
+    const activeElement = layoutFlatMap.get(active.id);
+    const overElement = layoutFlatMap.get(over.id);
+
+    if (!activeElement) return;
+
+    let targetParentPath: number[] = overElement ? overElement.path : [];
+    let insertIndex: number = 0;
+
+    if (overElement && overElement?.type === "component") {
+      targetParentPath = overElement.parentPath;
+      insertIndex = overElement.index;
+    }
+
+    if (
+      activeElement.parentPath.length === targetParentPath.length &&
+      activeElement.parentPath.every(
+        (val: number, index: number) => val === targetParentPath[index]
+      )
+    )
+      return;
+
+    // Cross-container drag temporarily update layout for preview
+    isDraggingOverRef.current = true;
+
+    setLayout((currentLayout) => {
+      const deepClone = (items: LayoutItem[]): LayoutItem[] => {
+        return items.map((item) => {
+          if ("elements" in item && item.elements) {
+            return { ...item, elements: deepClone(item.elements) };
+          }
+          return { ...item };
+        });
+      };
+
+      const newLayout = deepClone(currentLayout);
+
+      let activeParent: { elements: LayoutItem[] } = { elements: newLayout };
+      for (let i = 0; i < activeElement.parentPath.length; i++) {
+        activeParent = activeParent.elements[activeElement.parentPath[i]] as {
+          elements: LayoutItem[];
+        };
+      }
+
+      let targetParent: { elements: LayoutItem[] } = { elements: newLayout };
+      for (let i = 0; i < targetParentPath.length; i++) {
+        targetParent = targetParent.elements[targetParentPath[i]] as {
+          elements: LayoutItem[];
+        };
+      }
+
+      const [movingItem] = activeParent.elements.splice(activeElement.index, 1);
+      targetParent.elements.splice(insertIndex, 0, movingItem);
+
+      setTimeout(() => {
+        isDraggingOverRef.current = false;
+      }, 50);
+
+      return newLayout;
+    });
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (active.id !== over?.id) {
-      const activeElement = layoutFlatMap.get(active.id);
-      const overElement = layoutFlatMap.get(over?.id);
 
-      // For same parent reordering
-      if (
-        activeElement.path.length === overElement.path.length &&
-        activeElement.parentPath.every(
-          (val: number, index: number) => val === overElement.parentPath[index]
-        )
-      ) {
-        setLayout((currentLayout) => {
-          const newLayout = [...currentLayout];
+    setActiveId(null);
+    isDraggingOverRef.current = false;
+
+    if (!over) return;
+
+    if (active.id !== over.id) {
+      const activeElement = layoutFlatMap.get(active.id);
+      const overElement = layoutFlatMap.get(over.id);
+
+      if (!activeElement || !overElement) return;
+
+      let targetParentPath: number[] = overElement ? overElement.path : [];
+      let insertIndex: number = 0;
+
+      if (overElement && overElement?.type === "component") {
+        targetParentPath = overElement.parentPath;
+        insertIndex = overElement.index + 1;
+      }
+
+      setLayout((currentLayout) => {
+        const newLayout = [...currentLayout];
+        if (
+          activeElement.parentPath.length === targetParentPath.length &&
+          activeElement.parentPath.every(
+            (val: number, index: number) => val === targetParentPath[index]
+          )
+        ) {
           let parent: { elements: LayoutItem[] } = { elements: newLayout };
 
           for (let i = 0; i < activeElement.parentPath.length; i++) {
-            parent = parent.elements[activeElement.parentPath[i]] as { elements: LayoutItem[] };
+            parent = parent.elements[activeElement.parentPath[i]] as {
+              elements: LayoutItem[];
+            };
           }
 
           const oldIndex = activeElement.index;
-          const newIndex = overElement.index;
+          const newIndex =
+            overElement.type === "component" ? overElement.index : insertIndex;
 
           parent.elements = arrayMove(parent.elements, oldIndex, newIndex);
 
           return newLayout;
-        });
-        return;
-      }
+        } else {
+          let activeParent: { elements: LayoutItem[] } = {
+            elements: newLayout,
+          };
+          for (let i = 0; i < activeElement.parentPath.length; i++) {
+            activeParent = activeParent.elements[
+              activeElement.parentPath[i]
+            ] as {
+              elements: LayoutItem[];
+            };
+          }
 
-      // For different parent move
-      setLayout((currentLayout) => {
-        const newLayout = [...currentLayout];
+          let targetParent: { elements: LayoutItem[] } = {
+            elements: newLayout,
+          };
+          for (let i = 0; i < targetParentPath.length; i++) {
+            targetParent = targetParent.elements[targetParentPath[i]] as {
+              elements: LayoutItem[];
+            };
+          }
 
-        let activeParent: { elements: LayoutItem[] } = { elements: newLayout };
-        for (let i = 0; i < activeElement.parentPath.length; i++) {
-          activeParent = activeParent.elements[activeElement.parentPath[i]] as { elements: LayoutItem[] };
+          const movingItem = activeParent.elements.splice(
+            activeElement.index,
+            1
+          )[0];
+          targetParent.elements.splice(insertIndex, 0, movingItem);
+
+          return newLayout;
         }
-
-        let overParent: { elements: LayoutItem[] } = { elements: newLayout };
-        for (let i = 0; i < overElement.parentPath.length; i++) {
-          overParent = overParent.elements[overElement.parentPath[i]] as { elements: LayoutItem[] };
-        }
-
-        const movingItem = activeParent.elements.splice(
-          activeElement.index,
-          1
-        )[0];
-        overParent.elements.splice(overElement.index, 0, movingItem);
-
-        return newLayout;
       });
-
-      console.log("Reordering", active.id, over?.id);
     }
-
-    setActiveId(null);
   };
 
   return (
