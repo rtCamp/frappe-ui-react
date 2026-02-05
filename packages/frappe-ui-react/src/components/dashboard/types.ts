@@ -22,7 +22,7 @@ export type SerializedLayoutItem = Omit<ComponentElement, 'component'> | {
 export interface DashboardProps {
   initialLayout: LayoutItem[];
   savedLayout: SerializedLayoutItem[];
-  onLayoutChange: (layout: SerializedLayoutItem[] | ((prevLayout: SerializedLayoutItem[]) => SerializedLayoutItem[])) => void;
+  onLayoutChange: (layout: SerializedLayoutItem[]) => void;
 }
 
 export interface LayoutContainerProps {

@@ -2,7 +2,8 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import { Dashboard } from "./index";
-import type { SerializedLayoutItem } from "./types";
+import type { LayoutItem, SerializedLayoutItem } from "./types";
+import { Button } from "../button";
 
 const meta: Meta = {
   title: "Components/Dashboard",
@@ -47,77 +48,107 @@ const Activity = () => (
   </div>
 );
 
-export const Default: Story = {
-  render: function Render(args) {
-    const [, updateArgs] = useArgs();
-
-    const handleLayoutChange = (
-      newLayout: SerializedLayoutItem[] | ((prevLayout: SerializedLayoutItem[]) => SerializedLayoutItem[])
-    ) => {
-      const resolvedLayout =
-        typeof newLayout === "function"
-          ? newLayout(args.layout || [])
-          : newLayout;
-      updateArgs({ savedLayout: resolvedLayout });
-    };
-
-    return (
-      <div className="w-full h-screen flex justify-center items-center">
-        <Dashboard initialLayout={args.layout || []} savedLayout={args.savedLayout || []} onLayoutChange={handleLayoutChange} />
-      </div>
-    );
-  },
-  args: {
-    layout: [
+const layout: LayoutItem[] = [
+  {
+    id: "main-row",
+    type: "row",
+    elements: [
       {
-        id: "main-row",
-        type: "row",
+        id: "sidebar-1",
+        type: "component",
+        component: Sidebar,
+        props: {},
+      },
+      {
+        id: "main-stack",
+        type: "stack",
         elements: [
           {
-            id: "sidebar-1",
+            id: "header-1",
             type: "component",
-            component: Sidebar,
+            component: Header,
+            props: { userId: "123" },
+          },
+          {
+            id: "content-1",
+            type: "component",
+            component: Content,
             props: {},
           },
           {
-            id: "main-stack",
-            type: "stack",
+            id: "balance-row",
+            type: "row",
             elements: [
               {
-                id: "header-1",
+                id: "stats-1",
                 type: "component",
-                component: Header,
-                props: { userId: "123" },
-              },
-              {
-                id: "content-1",
-                type: "component",
-                component: Content,
+                component: Stats,
                 props: {},
               },
               {
-                id: "balance-row",
-                type: "row",
-                elements: [
-                  {
-                    id: "stats-1",
-                    type: "component",
-                    component: Stats,
-                    props: {},
-                  },
-                  {
-                    id: "activity-1",
-                    type: "component",
-                    component: Activity,
-                    props: {},
-                  },
-                ],
+                id: "activity-1",
+                type: "component",
+                component: Activity,
+                props: {},
               },
             ],
           },
         ],
       },
     ],
+  },
+];
+
+export const Default: Story = {
+  render: function Render(args) {
+    const [, updateArgs] = useArgs();
+
+    const handleLayoutChange = (newLayout: SerializedLayoutItem[]) => {
+      updateArgs({ savedLayout: newLayout });
+    };
+
+    return (
+      <div className="w-full h-screen flex justify-center items-center">
+        <Dashboard
+          initialLayout={args.layout || []}
+          savedLayout={args.savedLayout || []}
+          onLayoutChange={handleLayoutChange}
+        />
+      </div>
+    );
+  },
+  args: {
+    layout,
     savedLayout: [],
+  },
+};
+
+export const LocalStorage: Story = {
+  render: function Render() {
+    const savedLayout: SerializedLayoutItem[] = localStorage.getItem(
+      "dashboard-saved-layout"
+    )
+      ? JSON.parse(localStorage.getItem("dashboard-saved-layout") || "[]")
+      : [];
+
+    const handleLayoutChange = (newLayout: SerializedLayoutItem[]) => {
+      localStorage.setItem("dashboard-saved-layout", JSON.stringify(newLayout));
+    };
+
+    return (
+      <div className="w-full h-screen flex flex-col justify-center items-center">
+        <Button
+          className="mb-4"
+          onClick={() => localStorage.removeItem("dashboard-saved-layout")}
+        >
+          Clear Saved Layout
+        </Button>
+        <Dashboard
+          initialLayout={layout || []}
+          savedLayout={savedLayout}
+          onLayoutChange={handleLayoutChange}
+        />
+      </div>
+    );
   },
 };
