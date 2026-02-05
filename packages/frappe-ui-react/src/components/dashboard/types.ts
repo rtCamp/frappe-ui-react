@@ -13,7 +13,7 @@ interface ContainerElement {
 
 export type LayoutItem = ComponentElement | ContainerElement;
 
-export type SerializedLayoutItem = Omit<ComponentElement, 'component'> | {
+export type SerializedLayoutItem = Omit<ComponentElement, 'component' | 'props'> | {
   id: string;
   type: 'row' | 'stack';
   elements: SerializedLayoutItem[];
