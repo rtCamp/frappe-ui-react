@@ -60,6 +60,7 @@ const DEFAULT_COMMANDS: Array<
   "undo",
   "redo",
   "horizontal_rule",
+  "link",
 ];
 
 const Menu = ({ className }: MenuProps) => {

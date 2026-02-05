@@ -25,6 +25,7 @@ import {
   TableIcon,
   TypeIcon,
   Undo2Icon,
+  Link2,
 } from "lucide-react";
 
 /**
@@ -263,6 +264,12 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     action: (editor) => editor.chain().focus().redo().run(),
     isDisabled: (editor) => !editor.can().redo(),
     isActive: () => false,
+  },
+  link: {
+    label: "Link",
+    icon: Link2,
+    action: (editor) => editor.chain().focus().setLink({ href: "" }).run(),
+    isActive: (editor) => editor.isActive("link"),
   },
 };
 
