@@ -10,3 +10,17 @@ export const validateSerializedLayout = (layout: DashboardLayout): boolean => {
   }
   return true;
 };
+
+export const parseSlotIds = (activeId: string, overId: string) => {
+  const activeMatch = activeId.match(/layout-(\d+)-slot-(\d+)/);
+  const overMatch = overId.match(/layout-(\d+)-slot-(\d+)/);
+
+  if (!activeMatch || !overMatch) return false;
+
+  return {
+    sourceLayoutIndex: parseInt(activeMatch[1]),
+    sourceSlotIndex: parseInt(activeMatch[2]),
+    targetLayoutIndex: parseInt(overMatch[1]),
+    targetSlotIndex: parseInt(overMatch[2]),
+  };
+}

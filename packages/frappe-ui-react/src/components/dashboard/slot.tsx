@@ -25,13 +25,18 @@ export const Slot: React.FC<SlotProps> = ({
   onRemoveWidget,
 }) => {
   const context = useContext(LayoutContext);
-  const { activeSlotId, layoutLock, dragHandle, dragHandleOnHover } =
-    context || {
-      activeSlotId: null,
-      layoutLock: false,
-      dragHandle: false,
-      dragHandleOnHover: false,
-    };
+  const {
+    activeSlotId,
+    layoutLock,
+    dragHandle,
+    dragHandleOnHover,
+    checkSizeCompatibility,
+  } = context || {
+    activeSlotId: null,
+    layoutLock: false,
+    dragHandle: false,
+    dragHandleOnHover: false,
+  };
 
   const [isHovered, setIsHovered] = useState(false);
   const isEmpty = widgetId === "";
@@ -54,10 +59,20 @@ export const Slot: React.FC<SlotProps> = ({
       }));
   }, [widgets, size]);
 
-  const { setNodeRef: setDroppableRef, isOver } = useDroppable({
+  const {
+    setNodeRef: setDroppableRef,
+    isOver,
+    over,
+    active,
+  } = useDroppable({
     id: slotId,
     disabled: slotId === activeSlotId || isDisabled,
   });
+
+  const overValidSize = useMemo(() => {
+    if (!over || !active || !checkSizeCompatibility) return false;
+    return checkSizeCompatibility(String(active.id), String(over.id));
+  }, [over, active, checkSizeCompatibility]);
 
   const {
     attributes,
@@ -90,8 +105,10 @@ export const Slot: React.FC<SlotProps> = ({
         ref={setDroppableRef}
         className={clsx(
           "flex-1 min-w-[200px] min-h-[100px] rounded-lg border-2 border-dashed flex items-center justify-center",
-          isOver
-            ? "border-outline-gray-3 bg-surface-gray-2"
+          isOver && overValidSize
+            ? "border-outline-blue-1 bg-surface-blue-1"
+            : isOver && !overValidSize
+            ? "border-outline-red-1 bg-surface-red-1"
             : "border-outline-gray-2 bg-surface-gray-1"
         )}
       >
@@ -140,8 +157,12 @@ export const Slot: React.FC<SlotProps> = ({
     <div
       ref={setDroppableRef}
       className={clsx(
-        "flex-1 min-w-[200px] transition-opacity",
-        isOver && "opacity-50"
+        "flex-1 min-w-[200px] transition-opacity relative",
+        isOver &&
+          "relative after:absolute after:inset-0 after:border-2 after:border-dashed after:rounded-lg after:pointer-events-none after:z-20",
+        isOver && overValidSize
+          ? "after:bg-surface-blue-1/25 after:border-outline-blue-1"
+          : "after:bg-surface-red-1/25 after:border-outline-red-1"
       )}
     >
       <div

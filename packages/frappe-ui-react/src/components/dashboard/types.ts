@@ -62,4 +62,6 @@ export interface LayoutContextValue {
   layoutLock: boolean;
   dragHandle: boolean;
   dragHandleOnHover: boolean;
+  layout: DashboardLayout;
+  checkSizeCompatibility: (activeId: string, overId: string) => boolean;
 }

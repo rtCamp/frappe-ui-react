@@ -21,6 +21,7 @@ import {
 import { Layout } from "./layout";
 import { LayoutContext } from "./layoutContext";
 import { LayoutContainerProps } from "./types";
+import { parseSlotIds } from "./dashboardUtil";
 
 export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   widgets,
@@ -51,6 +52,39 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     useSensor(KeyboardSensor)
   );
 
+  const checkSizeCompatibility = useCallback(
+    (activeId: string, overId: string) => {
+      const parsedSlotIds = parseSlotIds(activeId, overId);
+      if (!parsedSlotIds) return false;
+
+      const {
+        sourceLayoutIndex,
+        sourceSlotIndex,
+        targetLayoutIndex,
+        targetSlotIndex,
+      } = parsedSlotIds;
+
+      const sourceItem = layout[sourceLayoutIndex][sourceSlotIndex];
+      const targetItem = layout[targetLayoutIndex][targetSlotIndex];
+
+      const sourceWidget = widgets.find((w) => w.id === sourceItem.widgetId);
+      const targetWidget = widgets.find((w) => w.id === targetItem.widgetId);
+
+      if (!sourceWidget && !targetWidget) return true;
+
+      if (
+        (sourceWidget &&
+          !sourceWidget.supportedSizes.includes(targetItem.size)) ||
+        (targetWidget && !targetWidget.supportedSizes.includes(sourceItem.size))
+      ) {
+        return false;
+      }
+
+      return true;
+    },
+    [layout, widgets]
+  );
+
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id);
   };
@@ -64,32 +98,17 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     const activeIdStr = String(active.id);
     const overIdStr = String(over.id);
 
-    const activeMatch = activeIdStr.match(/layout-(\d+)-slot-(\d+)/);
-    const overMatch = overIdStr.match(/layout-(\d+)-slot-(\d+)/);
+    const parsedSlotIds = parseSlotIds(activeIdStr, overIdStr);
+    if (!parsedSlotIds) return false;
 
-    if (!activeMatch || !overMatch) return;
+    const {
+      sourceLayoutIndex,
+      sourceSlotIndex,
+      targetLayoutIndex,
+      targetSlotIndex,
+    } = parsedSlotIds;
 
-    const sourceLayoutIndex = parseInt(activeMatch[1]);
-    const sourceSlotIndex = parseInt(activeMatch[2]);
-    const targetLayoutIndex = parseInt(overMatch[1]);
-    const targetSlotIndex = parseInt(overMatch[2]);
-
-    // Check size compatibility
-    const sourceItem = layout[sourceLayoutIndex][sourceSlotIndex];
-    const targetItem = layout[targetLayoutIndex][targetSlotIndex];
-
-    const sourceWidget = widgets.find((w) => w.id === sourceItem.widgetId);
-    const targetWidget = widgets.find((w) => w.id === targetItem.widgetId);
-
-    if (!sourceWidget && !targetWidget) return;
-
-    if (
-      (sourceWidget &&
-        !sourceWidget.supportedSizes.includes(targetItem.size)) ||
-      (targetWidget && !targetWidget.supportedSizes.includes(sourceItem.size))
-    ) {
-      return;
-    }
+    if (!checkSizeCompatibility(activeIdStr, overIdStr)) return;
 
     // Swap the widgets in the layout
     const newLayout = layout.map((items, layoutIdx) =>
@@ -142,6 +161,8 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
         layoutLock,
         dragHandle,
         dragHandleOnHover,
+        layout,
+        checkSizeCompatibility,
       }}
     >
       <DndContext
