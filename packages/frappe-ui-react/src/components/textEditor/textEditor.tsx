@@ -124,7 +124,11 @@ const TextEditor = ({
     <EditorContext.Provider value={{ editor }}>
       {Top && <Top />}
       {fixedMenu && <FixedMenu />}
-      {Editor ? <Editor editor={editor} /> : <EditorContent editor={editor} />}
+      {Editor ? (
+        <Editor editor={editor} />
+      ) : (
+        <EditorContent editor={editor} role="textbox" />
+      )}
       {Bottom && <Bottom />}
     </EditorContext.Provider>
   );

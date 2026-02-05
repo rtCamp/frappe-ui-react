@@ -255,3 +255,46 @@ export const EditorFontColor: Story = {
     expect(newText).toHaveStyle("background-color: #ffe7e7");
   },
 };
+
+export const EditorEmoji: Story = {
+  args: {
+    content: CONTENT,
+    editorClass: "prose-sm min-h-[4rem] border rounded-b-lg border-t-0 p-2",
+    fixedMenu: true,
+  },
+  render: function BasicRender(args) {
+    return (
+      <div className="m-2 w-[550px]">
+        <TextEditor {...args} />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    const text = canvas.getByText((content, element) => {
+      return (
+        content.includes("This is a paragraph") && element?.tagName === "P"
+      );
+    });
+    console.log(text);
+
+    await userEvent.click(text);
+
+    await userEvent.type(text, "{Control>}{ArrowRight}");
+
+    // Type ":smiley" to trigger emoji suggestions
+    await userEvent.type(text, " :smiley");
+
+    // Wait for the emoji suggestion list to appear
+    const emojiSuggestion = await screen.findByText("😃");
+    expect(emojiSuggestion).toBeInTheDocument();
+
+    // Select the emoji from the suggestion list
+    await userEvent.click(emojiSuggestion);
+
+    // Verify the emoji is added to the editor content
+    const updatedContent = canvas.getByText("😃");
+    expect(updatedContent).toBeInTheDocument();
+  },
+};
