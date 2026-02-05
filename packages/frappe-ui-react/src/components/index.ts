@@ -10,6 +10,7 @@ export * from "./checkbox";
 export * from "./circularProgressBar";
 export * from "./combobox";
 export * from "./commandPalette";
+export * from "./dashboard";
 export * from "./datePicker";
 export * from "./dialog";
 export * from "./divider";

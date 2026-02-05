@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import {
@@ -11,16 +11,23 @@ import {
   LucideTrendingDown,
   LucideMoreVertical,
   LucidePlus,
+  LucideX,
 } from "lucide-react";
 
-import { Dashboard } from "./index";
+import { Dashboard, DashboardWidgetGallery, DashboardProvider } from "./index";
 import { Button } from "../button";
 import { Progress } from "../progress";
 import { Badge } from "../badge";
 import { Avatar } from "../avatar";
 import { CircularProgressBar } from "../circularProgressBar";
 import { AxisChart, DonutChart } from "../charts";
-import type { DashboardLayout, Widget, WidgetSizes } from "./types";
+import type {
+  WidgetDefinition,
+  WidgetSizePresets,
+  DashboardLayouts,
+  WidgetLayouts,
+} from "./types";
+import clsx from "clsx";
 
 const meta: Meta<typeof Dashboard> = {
   title: "Components/Dashboard",
@@ -33,55 +40,52 @@ const meta: Meta<typeof Dashboard> = {
     layoutLock: {
       control: "boolean",
       description: "Lock the layout to prevent dragging",
-      table: {
-        type: { summary: "boolean" },
-        defaultValue: { summary: "false" },
-      },
     },
     dragHandle: {
       control: "boolean",
-      description: "Show drag handle on components (when false, drag anywhere)",
-      table: {
-        type: { summary: "boolean" },
-        defaultValue: { summary: "false" },
-      },
+      description: "Show drag handle on components",
     },
     dragHandleOnHover: {
       control: "boolean",
-      description:
-        "Show drag handle only on hover (requires dragHandle to be true)",
-      table: {
-        type: { summary: "boolean" },
-        defaultValue: { summary: "false" },
-      },
+      description: "Show drag handle only on hover",
     },
-    widgetSizes: {
-      control: "object",
-      description:
-        "An object defining the width and height for predefined widget sizes.",
-    },
-    layoutFlow: {
+    compactType: {
       control: "select",
-      options: ["row", "column"],
+      options: ["vertical", "horizontal"],
       description:
-        "Defines the flow direction of the dashboard layout, either in rows or columns.",
+        "How to compact the layout: 'vertical' (default) moves widgets up to fill gaps, 'horizontal' moves widgets left",
     },
-    autoAdjustWidth: {
+    isBounded: {
       control: "boolean",
-      description:
-        "Automatically adjust the width of widgets based on their content.",
+      description: "Prevent widgets from being dragged outside the grid bounds",
+    },
+    cols: {
+      control: "object",
+      description: "Column counts for each breakpoint",
+    },
+    breakpoints: {
+      control: "object",
+      description: "Breakpoints for responsive layout",
+    },
+    rowHeight: {
+      control: "number",
+      description: "Height of each row in pixels",
+    },
+    margin: {
+      control: "object",
+      description: "Margin between widgets in pixels",
     },
     widgets: {
       control: "object",
-      description: "Array of widgets to be displayed in the dashboard.",
+      description: "Array of widget definitions",
     },
-    initialLayout: {
+    initialLayouts: {
       control: "object",
-      description: "The initial layout configuration of the dashboard.",
+      description: "Initial layout configuration with positions per breakpoint",
     },
     savedLayout: {
       control: "object",
-      description: "The saved layout configuration of the dashboard.",
+      description: "Saved layout from database/localStorage",
     },
     onLayoutChange: {
       action: "changed",
@@ -95,52 +99,52 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const Content = () => (
-  <div className="w-full h-32 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
+  <div className="w-full h-full rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
     <h3 className="text-lg font-semibold">Content</h3>
   </div>
 );
 
 const Stats = () => (
-  <div className="w-full h-32 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
+  <div className="w-full h-full rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
     <h3 className="text-lg font-semibold">Stats</h3>
   </div>
 );
 
 const Activity = () => (
-  <div className="w-full h-32 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
+  <div className="w-full h-full rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
     <h3 className="text-lg font-semibold">Activity</h3>
   </div>
 );
 
-const simpleWidgets: Widget[] = [
+const simpleWidgets: WidgetDefinition[] = [
   {
-    id: "content",
+    id: "content-1",
     name: "Content",
     component: Content,
-    supportedSizes: ["large"],
+    size: "large",
   },
-  { id: "stats", name: "Stats", component: Stats, supportedSizes: ["medium"] },
   {
-    id: "activity",
+    id: "stats-1",
+    name: "Stats",
+    component: Stats,
+    size: "medium",
+  },
+  {
+    id: "activity-1",
     name: "Activity",
     component: Activity,
-    supportedSizes: ["medium", "large"],
+    size: "medium",
   },
 ];
 
-const simpleLayout: DashboardLayout = [
-  [{ widgetId: "content", size: "large" }],
-  [
-    { widgetId: "stats", size: "medium" },
-    { widgetId: "activity", size: "medium" },
-  ],
-  [{ widgetId: "", size: "large" }],
-];
+const simpleSizePresets: WidgetSizePresets = {
+  small: { w: 3, h: 2, minW: 2, maxW: 4, minH: 2, maxH: 4 },
+  medium: { w: 6, h: 2, minW: 4, maxW: 8, minH: 2, maxH: 6 },
+  large: { w: 12, h: 2, minW: 8, maxW: 12, minH: 2, maxH: 8 },
+};
 
-const simpleWidgetSizes: WidgetSizes = {
-  small: { w: 100, h: 100 },
-  medium: { w: 242, h: 128 },
-  large: { w: 500, h: 128 },
+const simpleLayouts: WidgetLayouts = {
+  lg: [["content-1"], ["stats-1", "activity-1"]],
 };
 
 export const Default: Story = {
@@ -148,7 +152,7 @@ export const Default: Story = {
     const [, updateArgs] = useArgs();
 
     const handleLayoutChange = useCallback(
-      (newLayout: DashboardLayout) => {
+      (newLayout: DashboardLayouts) => {
         updateArgs({ savedLayout: newLayout });
       },
       [updateArgs]
@@ -156,7 +160,7 @@ export const Default: Story = {
 
     return (
       <div className="w-full h-screen p-10 flex justify-center items-center">
-        <div className="w-[500px]">
+        <div className="w-full max-w-4xl">
           <Dashboard onLayoutChange={handleLayoutChange} {...args} />
         </div>
       </div>
@@ -164,8 +168,9 @@ export const Default: Story = {
   },
   args: {
     widgets: simpleWidgets,
-    initialLayout: simpleLayout,
-    widgetSizes: simpleWidgetSizes,
+    initialLayouts: simpleLayouts,
+    sizes: simpleSizePresets,
+    rowHeight: 100,
     layoutLock: false,
     dragHandle: false,
     dragHandleOnHover: false,
@@ -175,11 +180,11 @@ export const Default: Story = {
 export const LocalStorage: Story = {
   render: function Render(args) {
     const savedLayoutStr = localStorage.getItem("dashboard-saved-layout");
-    const savedLayout: DashboardLayout | undefined = savedLayoutStr
+    const savedLayout: DashboardLayouts | undefined = savedLayoutStr
       ? JSON.parse(savedLayoutStr)
       : undefined;
 
-    const handleLayoutChange = (newLayout: DashboardLayout) => {
+    const handleLayoutChange = (newLayout: DashboardLayouts) => {
       localStorage.setItem("dashboard-saved-layout", JSON.stringify(newLayout));
     };
 
@@ -187,16 +192,19 @@ export const LocalStorage: Story = {
       <div className="w-full h-screen flex flex-col justify-center items-center p-10">
         <div className="w-min flex gap-3 mb-4">
           <Button
-            onClick={() => localStorage.removeItem("dashboard-saved-layout")}
+            onClick={() => {
+              localStorage.removeItem("dashboard-saved-layout");
+              window.location.reload();
+            }}
           >
             Clear Saved Layout
           </Button>
         </div>
-        <div className="w-[500px]">
+        <div className="w-full max-w-4xl">
           <Dashboard
-            onLayoutChange={handleLayoutChange}
-            savedLayout={savedLayout}
             {...args}
+            savedLayout={savedLayout}
+            onLayoutChange={handleLayoutChange}
           />
         </div>
       </div>
@@ -204,11 +212,12 @@ export const LocalStorage: Story = {
   },
   args: {
     widgets: simpleWidgets,
-    initialLayout: simpleLayout,
+    initialLayouts: simpleLayouts,
+    sizes: simpleSizePresets,
+    rowHeight: 100,
     layoutLock: false,
     dragHandle: true,
     dragHandleOnHover: true,
-    widgetSizes: simpleWidgetSizes,
   },
 };
 
@@ -575,11 +584,12 @@ const QuickActionsWidget = () => (
   </div>
 );
 
-const hrWidgets: Widget[] = [
+const hrWidgets: WidgetDefinition[] = [
   {
     id: "total-employees",
     name: "Total Employees",
     component: EmployeeOverviewWidget,
+    size: "small",
     props: {
       title: "Total Employees",
       value: "1,234",
@@ -588,12 +598,23 @@ const hrWidgets: Widget[] = [
       trend: "up",
       trendValue: "12%",
     },
-    supportedSizes: ["small"],
+    preview: {
+      props: {
+        title: "Total Employees",
+        value: "1,234",
+        subtitle: "Active employees",
+        progress: 85,
+        trend: "up",
+        trendValue: "12%",
+      },
+      description: "Total number of active employees",
+    },
   },
   {
     id: "new-hires",
     name: "New Hires",
     component: EmployeeOverviewWidget,
+    size: "small",
     props: {
       title: "New Hires",
       value: "48",
@@ -602,12 +623,24 @@ const hrWidgets: Widget[] = [
       trend: "up",
       trendValue: "8%",
     },
-    supportedSizes: ["small"],
+    preview: {
+      props: {
+        title: "New Hires",
+        value: "48",
+        subtitle: "This month",
+        progress: 72,
+        trend: "up",
+        trendValue: "8%",
+      },
+      description: "New hires this month",
+    },
   },
   {
     id: "turnover",
     name: "Turnover Rate",
     component: EmployeeOverviewWidget,
+    size: "small",
+    isResizable: false,
     props: {
       title: "Turnover Rate",
       value: "4.2%",
@@ -616,91 +649,158 @@ const hrWidgets: Widget[] = [
       trend: "down",
       trendValue: "2%",
     },
-    supportedSizes: ["small"],
+    preview: {
+      props: {
+        title: "Turnover Rate",
+        value: "4.2%",
+        subtitle: "Last 12 months",
+        progress: 42,
+        trend: "down",
+        trendValue: "2%",
+      },
+      description: "Employee turnover rate",
+    },
   },
   {
     id: "open-positions",
     name: "Open Positions",
     component: EmployeeOverviewWidget,
+    size: "small",
+    isResizable: false,
     props: {
       title: "Open Positions",
       value: "23",
       subtitle: "Across all departments",
       progress: 65,
     },
-    supportedSizes: ["small"],
+    preview: {
+      props: {
+        title: "Open Positions",
+        value: "23",
+        subtitle: "Across all departments",
+        progress: 65,
+      },
+      description: "Current open job positions",
+    },
   },
   {
     id: "salary-stats",
     name: "Salary Statistics",
     component: SalaryStatisticsWidget,
-    supportedSizes: ["large"],
+    size: "large",
+    preview: {
+      props: {},
+      description: "Monthly salary overview with bonuses",
+    },
   },
   {
     id: "satisfaction",
     name: "Employee Satisfaction",
     component: EmployeeSatisfactionWidget,
-    supportedSizes: ["large"],
+    size: "large",
+    preview: {
+      props: {},
+      description: "Employee satisfaction survey results",
+    },
   },
   {
     id: "performance",
     name: "Performance Stats",
     component: PerformanceStatsWidget,
-    supportedSizes: ["medium"],
+    size: "medium",
+    preview: {
+      props: {},
+      description: "Department performance overview",
+    },
   },
   {
     id: "new-employees",
     name: "New Employees",
     component: NewEmployeesWidget,
-    supportedSizes: ["medium", "large"],
+    size: "medium",
+    preview: {
+      props: {},
+      description: "Hiring trends over last 6 months",
+    },
   },
   {
     id: "events",
     name: "Upcoming Events",
     component: UpcomingEventsWidget,
-    supportedSizes: ["medium", "large"],
+    size: "medium",
+    preview: {
+      props: {},
+      description: "Calendar of upcoming HR events",
+    },
   },
   {
     id: "activities",
     name: "Recent Activities",
     component: RecentActivitiesWidget,
-    supportedSizes: ["medium"],
+    size: "medium",
+    preview: {
+      props: {},
+      description: "Latest employee activities",
+    },
   },
   {
     id: "quick-actions",
     name: "Quick Actions",
     component: QuickActionsWidget,
-    supportedSizes: ["medium"],
+    size: "medium",
+    preview: {
+      props: {},
+      description: "Common HR tasks and shortcuts",
+    },
   },
 ];
 
-const hrLayout: DashboardLayout = [
-  [
-    { widgetId: "total-employees", size: "small" },
-    { widgetId: "new-hires", size: "small" },
-    { widgetId: "turnover", size: "small" },
-    { widgetId: "open-positions", size: "small" },
-  ],
-  [
-    { widgetId: "salary-stats", size: "large" },
-    { widgetId: "satisfaction", size: "large" },
-  ],
-  [
-    { widgetId: "performance", size: "medium" },
-    { widgetId: "new-employees", size: "medium" },
-    { widgetId: "events", size: "medium" },
-  ],
-  [
-    { widgetId: "activities", size: "medium" },
-    { widgetId: "quick-actions", size: "medium" },
-    { widgetId: "", size: "medium" },
-  ],
-];
+const hrSizePresets: WidgetSizePresets = {
+  small: { w: 3, h: 2, minW: 3, maxW: 3, minH: 2, maxH: 2, isResizable: false },
+  medium: { w: 4, h: 4, minW: 3, maxW: 6, minH: 3, maxH: 6, isResizable: true },
+  large: { w: 6, h: 4, minW: 4, maxW: 12, minH: 3, maxH: 8, isResizable: true },
+};
 
-const hrWidgetSizes: WidgetSizes = {
-  small: { w: 300, h: 150 },
-  medium: { w: 404, h: 350 },
-  large: { w: 616, h: 350 },
+const hrLayouts: WidgetLayouts = {
+  lg: [
+    ["total-employees", "new-hires", "turnover", "open-positions"],
+    ["salary-stats", "satisfaction"],
+    ["performance", "new-employees", "events"],
+    ["activities", "quick-actions"],
+  ],
+  md: [
+    ["total-employees", "new-hires", "turnover"],
+    ["open-positions"],
+    ["salary-stats"],
+    ["satisfaction"],
+    ["performance", "new-employees"],
+    ["events", "activities"],
+    ["quick-actions"],
+  ],
+  sm: [
+    ["total-employees", "new-hires"],
+    ["turnover", "open-positions"],
+    ["salary-stats"],
+    ["satisfaction"],
+    ["performance"],
+    ["new-employees"],
+    ["events"],
+    ["activities"],
+    ["quick-actions"],
+  ],
+  xs: [
+    ["total-employees"],
+    ["new-hires"],
+    ["turnover"],
+    ["open-positions"],
+    ["salary-stats"],
+    ["satisfaction"],
+    ["performance"],
+    ["new-employees"],
+    ["events"],
+    ["activities"],
+    ["quick-actions"],
+  ],
 };
 
 export const HRDashboardExample: Story = {
@@ -708,26 +808,69 @@ export const HRDashboardExample: Story = {
     const [, updateArgs] = useArgs();
 
     const handleLayoutChange = useCallback(
-      (newLayout: DashboardLayout) => {
+      (newLayout: DashboardLayouts) => {
         updateArgs({ savedLayout: newLayout });
       },
       [updateArgs]
     );
 
+    // @ts-expect-error - isGalleryOpen is only this story specific
+    const isGalleryOpen = args.isGalleryOpen || false;
+
     return (
-      <div className="w-full bg-surface-gray-2 p-6">
-        <Dashboard onLayoutChange={handleLayoutChange} {...args} />
-      </div>
+      <DashboardProvider>
+        <div className="w-full h-screen bg-surface-gray-2 relative">
+          <div
+            className={clsx(
+              "absolute top-0 left-0 h-full w-80 bg-surface-cards border-r border-outline-gray-2 flex flex-col z-10 shadow-lg transition-transform duration-300",
+              isGalleryOpen ? "translate-x-0" : "-translate-x-full"
+            )}
+          >
+            <div className="p-4 border-b border-outline-gray-2 flex items-center justify-between">
+              <h3 className="font-semibold text-ink-gray-9">Widget Gallery</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => updateArgs({ isGalleryOpen: false })}
+                icon={() => <LucideX size={16} />}
+              />
+            </div>
+            <div className="flex-1 overflow-y-auto p-4">
+              <DashboardWidgetGallery
+                description="Drag widgets to the dashboard."
+                onWidgetAdd={() => updateArgs({ isGalleryOpen: false })}
+              />
+            </div>
+          </div>
+
+          <div className="relative w-full h-full overflow-auto">
+            <Button
+              variant="solid"
+              iconLeft={() => <LucidePlus size={16} />}
+              onClick={() => updateArgs({ isGalleryOpen: !isGalleryOpen })}
+              className="fixed bottom-2 right-2 z-1"
+            >
+              {isGalleryOpen ? "Close Gallery" : "Add Widget"}
+            </Button>
+
+            <Dashboard onLayoutChange={handleLayoutChange} {...args} />
+          </div>
+        </div>
+      </DashboardProvider>
     );
   },
   args: {
     widgets: hrWidgets,
-    initialLayout: hrLayout,
-    widgetSizes: hrWidgetSizes,
+    initialLayouts: hrLayouts,
+    sizes: hrSizePresets,
+    breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
+    cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
+    rowHeight: 80,
     layoutLock: false,
     dragHandle: true,
     dragHandleOnHover: true,
-    autoAdjustWidth: true,
-    layoutFlow: "row",
+    isBounded: true,
+    // @ts-expect-error - isGalleryOpen is only this story specific
+    isGalleryOpen: false,
   },
 };

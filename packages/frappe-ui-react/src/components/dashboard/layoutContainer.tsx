@@ -1,213 +1,259 @@
 /**
  * External dependencies.
  */
-import { useState, useMemo, useCallback } from "react";
+import { useCallback, useMemo, useEffect, useState, useContext } from "react";
 import clsx from "clsx";
 import {
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  pointerWithin,
-  type DragStartEvent,
-  type DragEndEvent,
-  UniqueIdentifier,
-} from "@dnd-kit/core";
+  WidthProvider,
+  Responsive,
+  type Layout as RGLLayout,
+} from "react-grid-layout/legacy";
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
+import "./dashboard.css";
 
 /**
  * Internal dependencies.
  */
-import { Layout } from "./layout";
-import { LayoutContext } from "./layoutContext";
-import { LayoutContainerProps } from "./types";
-import { parseSlotIds } from "./dashboardUtil";
+import { WidgetWrapper } from "./widgetWrapper";
+import type {
+  LayoutContainerProps,
+  WidgetLayout,
+  Breakpoint,
+  DashboardLayouts,
+} from "./types";
+import { DashboardContext } from "./dashboardContext";
+import { resolveWidgetSize } from "./dashboardUtil";
+import React from "react";
+
+const ResponsiveGridLayout = WidthProvider(Responsive);
 
 export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   widgets,
-  layout,
-  layoutFlow = "row",
-  setLayout,
+  layouts,
+  setLayouts,
+  onDrop,
+  onRemove,
+  sizes,
   layoutLock = false,
   dragHandle = false,
   dragHandleOnHover = false,
-  widgetSizes,
-  autoAdjustWidth = false,
+  breakpoints,
+  cols,
+  rowHeight = 100,
+  margin = [16, 16],
+  compactType = "vertical",
+  isBounded = true,
   className = "",
 }) => {
-  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
+  const context = useContext(DashboardContext);
+  const [isMounted, setIsMounted] = useState(false);
+  const [activeBreakpoint, setActiveBreakpoint] = useState<Breakpoint>("lg");
 
-  const activeSlotId = useMemo(() => {
-    if (!activeId) return null;
-    return activeId as string;
-  }, [activeId]);
+  useEffect(() => {
+    const timer = setTimeout(() => setIsMounted(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: dragHandle
-        ? { distance: 0 }
-        : {
-            distance: 10,
-            delay: 100,
-            tolerance: 5,
-          },
-    }),
-    useSensor(KeyboardSensor)
+  const defaultBreakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
+  const defaultCols = { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 };
+
+  const actualBreakpoints = breakpoints || defaultBreakpoints;
+  const actualCols = cols || defaultCols;
+
+  const widgetMap = useMemo(
+    () => new Map(widgets.map((w) => [w.id, w])),
+    [widgets]
   );
 
-  const checkSizeCompatibility = useCallback(
-    (activeId: string, overId: string) => {
-      const parsedSlotIds = parseSlotIds(activeId, overId);
-      if (!parsedSlotIds) return false;
+  const rglLayouts = useMemo(() => {
+    const result: { [key: string]: RGLLayout[] } = {};
 
-      const {
-        sourceLayoutIndex,
-        sourceSlotIndex,
-        targetLayoutIndex,
-        targetSlotIndex,
-      } = parsedSlotIds;
+    for (const breakpoint in layouts) {
+      const layout = layouts[breakpoint as Breakpoint];
+      if (layout) {
+        result[breakpoint] = layout.map((item: WidgetLayout) => {
+          const widgetDef = widgetMap.get(item.id);
+          const size = resolveWidgetSize(item, sizes, widgetDef);
+          return {
+            i: item.key || item.id,
+            x: item.x ?? 0,
+            y: item.y ?? 0,
+            w: size.w,
+            h: size.h,
+            minW: size.minW,
+            minH: size.minH,
+            maxW: size.maxW,
+            maxH: size.maxH,
+            static: item.static,
+            isDraggable: item.static
+              ? false
+              : item.isDraggable !== undefined
+                ? item.isDraggable
+                : (widgetDef?.isDraggable ?? !layoutLock),
+            isResizable: item.static
+              ? false
+              : size.isResizable !== undefined
+                ? size.isResizable
+                : true,
+          };
+        });
+      }
+    }
 
-      const sourceItem = layout[sourceLayoutIndex][sourceSlotIndex];
-      const targetItem = layout[targetLayoutIndex][targetSlotIndex];
+    return result;
+  }, [layouts, sizes, layoutLock, widgetMap]);
 
-      const sourceWidget = widgets.find((w) => w.id === sourceItem.widgetId);
-      const targetWidget = widgets.find((w) => w.id === targetItem.widgetId);
+  const handleLayoutChange = useCallback(
+    (
+      _currentLayout: RGLLayout[],
+      allLayouts: { [key: string]: RGLLayout[] }
+    ) => {
+      if (layoutLock || !setLayouts) return;
 
-      if (!sourceWidget && !targetWidget) return true;
+      const newLayouts: DashboardLayouts = {};
 
-      if (
-        (sourceWidget &&
-          !sourceWidget.supportedSizes.includes(targetItem.size)) ||
-        (targetWidget && !targetWidget.supportedSizes.includes(sourceItem.size))
-      ) {
-        return false;
+      for (const breakpoint in allLayouts) {
+        const rglLayout = allLayouts[breakpoint];
+        const originalLayout = layouts[breakpoint as Breakpoint] || [];
+
+        const layoutMap = new Map(
+          rglLayout.map((item: RGLLayout) => [item.i, item])
+        );
+        const updatedLayout: WidgetLayout[] = originalLayout.map(
+          (item: WidgetLayout) => {
+            const key = item.key || item.id;
+            const rglItem = layoutMap.get(key);
+            if (!rglItem) return item;
+            return {
+              ...item,
+              x: rglItem.x,
+              y: rglItem.y,
+              w: rglItem.w,
+              h: rglItem.h,
+              static: rglItem.static,
+              isDraggable: rglItem.isDraggable,
+              isResizable: rglItem.isResizable,
+            };
+          }
+        );
+
+        newLayouts[breakpoint as Breakpoint] = updatedLayout;
       }
 
-      return true;
+      setLayouts(newLayouts);
     },
-    [layout, widgets]
+    [layouts, setLayouts, layoutLock]
   );
 
-  const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id);
-  };
+  const handleBreakpointChange = useCallback((breakpoint: Breakpoint) => {
+    setActiveBreakpoint(breakpoint);
+  }, []);
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    setActiveId(null);
+  const handleDrop = useCallback(
+    (layoutItem: RGLLayout[], item: RGLLayout) => {
+      if (!onDrop) return;
 
-    if (!over || active.id === over.id) return;
+      const widgetData = context?.draggingWidget;
 
-    const activeIdStr = String(active.id);
-    const overIdStr = String(over.id);
+      if (widgetData?.widgetId) {
+        onDrop(
+          widgetData.widgetId,
+          {
+            x: item.x,
+            y: item.y,
+            w: widgetData.w,
+            h: widgetData.h,
+          },
+          layoutItem
+        );
+      }
 
-    const parsedSlotIds = parseSlotIds(activeIdStr, overIdStr);
-    if (!parsedSlotIds) return false;
-
-    const {
-      sourceLayoutIndex,
-      sourceSlotIndex,
-      targetLayoutIndex,
-      targetSlotIndex,
-    } = parsedSlotIds;
-
-    if (!checkSizeCompatibility(activeIdStr, overIdStr)) return;
-
-    // Swap the widgets in the layout
-    const newLayout = layout.map((items, layoutIdx) =>
-      items.map((layoutItem, slotIndex) => {
-        const isSource =
-          layoutIdx === sourceLayoutIndex && slotIndex === sourceSlotIndex;
-        const isTarget =
-          layoutIdx === targetLayoutIndex && slotIndex === targetSlotIndex;
-
-        if (!isSource && !isTarget) return layoutItem;
-
-        const sourceWidgetId =
-          layout[sourceLayoutIndex][sourceSlotIndex].widgetId;
-        const targetWidgetId =
-          layout[targetLayoutIndex][targetSlotIndex].widgetId;
-
-        return {
-          widgetId: isSource ? targetWidgetId : sourceWidgetId,
-          size: layoutItem.size,
-        };
-      })
-    );
-    setLayout(newLayout);
-  };
-
-  const handleAddWidget = useCallback(
-    (layoutIndex: number, slotIndex: number, widgetId: string) => {
-      const newLayout = layout.map((items) => [...items]);
-      const slot = newLayout[layoutIndex][slotIndex];
-      const supportedSizes = widgets.find(
-        (w) => w.id === widgetId
-      )?.supportedSizes;
-      if (!supportedSizes) return;
-      if (!supportedSizes.includes(slot.size)) return;
-
-      newLayout[layoutIndex][slotIndex] = {
-        widgetId,
-        size: layout[layoutIndex][slotIndex].size,
-      };
-      setLayout(newLayout);
+      if (context) {
+        context.setDraggingWidget(null);
+      }
     },
-    [layout, setLayout, widgets]
+    [onDrop, context]
   );
+
+  const droppingItemSize = useMemo(() => {
+    if (!context?.draggingWidget?.widget) return { w: 4, h: 3 };
+
+    const widgetDef = context.draggingWidget.widget;
+    const dummyLayout: WidgetLayout = { id: widgetDef.id, x: 0, y: 0 };
+    const resolved = resolveWidgetSize(dummyLayout, sizes, widgetDef);
+
+    return { w: resolved.w, h: resolved.h };
+  }, [context, sizes]);
+
+  const commonProps = {
+    className: clsx(
+      "layout min-h-full",
+      !isMounted && "react-grid-layout-no-transition"
+    ),
+    rowHeight,
+    margin,
+    onLayoutChange: handleLayoutChange,
+    onBreakpointChange: handleBreakpointChange,
+    onDrop: onDrop ? handleDrop : undefined,
+    isDroppable: Boolean(onDrop),
+    droppingItem: onDrop
+      ? {
+          i: "__dropping-elem__",
+          w: droppingItemSize.w,
+          h: droppingItemSize.h,
+        }
+      : undefined,
+    isBounded,
+    isDraggable: !layoutLock,
+    isResizable: !layoutLock,
+    draggableHandle: dragHandle ? ".dashboard-drag-handle" : undefined,
+    draggableCancel: ".dashboard-drag-cancel",
+    compactType,
+    preventCollision: false,
+    allowOverlap: false,
+    useCSSTransforms: true,
+  };
 
   const handleRemoveWidget = useCallback(
-    (layoutIndex: number, slotIndex: number) => {
-      const newLayout = layout.map((items) => [...items]);
-      newLayout[layoutIndex][slotIndex] = {
-        widgetId: "",
-        size: newLayout[layoutIndex][slotIndex].size,
-      };
-      setLayout(newLayout);
+    (widgetKey: string) => {
+      onRemove?.(widgetKey);
     },
-    [layout, setLayout]
+    [onRemove]
   );
 
+  const currentLayout = layouts[activeBreakpoint] || [];
+
   return (
-    <LayoutContext.Provider
-      value={{
-        activeSlotId,
-        layoutLock,
-        dragHandle,
-        dragHandleOnHover,
-        layout,
-        checkSizeCompatibility,
-        widgetSizes,
-        autoAdjustWidth,
-      }}
-    >
-      <DndContext
-        sensors={sensors}
-        collisionDetection={pointerWithin}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
+    <div className={clsx("dashboard-grid-container h-full", className)}>
+      <ResponsiveGridLayout
+        {...commonProps}
+        breakpoints={actualBreakpoints}
+        cols={actualCols}
+        layouts={rglLayouts}
       >
-        <div
-          className={clsx(
-            "flex gap-4",
-            layoutFlow === "row" ? "flex-col" : "flex-row",
-            className
-          )}
-        >
-          {layout.map((items, layoutIndex) => (
-            <Layout
-              key={layoutIndex}
-              widgets={widgets}
-              layoutFlow={layoutFlow}
-              items={items}
-              layoutIndex={layoutIndex}
-              parentLocked={layoutLock}
-              onAddWidget={handleAddWidget}
-              onRemoveWidget={handleRemoveWidget}
-            />
-          ))}
-        </div>
-      </DndContext>
-    </LayoutContext.Provider>
+        {currentLayout.map((layoutItem: WidgetLayout) => {
+          const widgetDef = widgetMap.get(layoutItem.id);
+          if (!widgetDef) return null;
+
+          const Component = widgetDef.component;
+          const key = layoutItem.key || layoutItem.id;
+
+          return (
+            <div key={key} className="dashboard-grid-item">
+              <WidgetWrapper
+                widgetId={key}
+                onRemove={handleRemoveWidget}
+                layoutLock={layoutLock || layoutItem.static === true}
+                dragHandle={dragHandle}
+                dragHandleOnHover={dragHandleOnHover}
+              >
+                <Component {...(widgetDef.props || {})} />
+              </WidgetWrapper>
+            </div>
+          );
+        })}
+      </ResponsiveGridLayout>
+    </div>
   );
 };

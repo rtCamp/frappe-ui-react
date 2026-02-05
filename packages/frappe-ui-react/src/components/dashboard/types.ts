@@ -1,76 +1,132 @@
-export type WidgetSize = 'small' | 'medium' | 'large';
-export type WidgetSizes = Record<WidgetSize, { w: number | "auto"; h: number | "auto" }>;
+import type { Layout as RGLLayout } from "react-grid-layout";
 
-export interface Widget {
+export type Breakpoint = "lg" | "md" | "sm" | "xs" | "xxs";
+
+export interface WidgetSize {
+  w: number;
+  h: number;
+  minW?: number;
+  maxW?: number;
+  minH?: number;
+  maxH?: number;
+  isResizable?: boolean;
+}
+
+export type WidgetSizePresets = Record<string, WidgetSize>;
+
+export interface WidgetLayout {
+  id: string;
+  key?: string;
+  x?: number;
+  y?: number;
+  size?: string;
+  w?: number;
+  h?: number;
+  minW?: number;
+  maxW?: number;
+  minH?: number;
+  maxH?: number;
+  static?: boolean;
+  isDraggable?: boolean;
+  isResizable?: boolean;
+}
+
+export type WidgetRow = Array<string | WidgetLayout>;
+export type DashboardLayout = WidgetRow[];
+
+export type DashboardLayouts = {
+  [key in Breakpoint]?: WidgetLayout[];
+};
+
+export type WidgetLayouts = {
+  [key in Breakpoint]?: DashboardLayout;
+};
+
+export interface WidgetDefinition {
   id: string;
   name: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: React.ComponentType<any>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props?: Record<string, any>;
-  supportedSizes: WidgetSize[];
+  size?: string;
+  isResizable?: boolean;
+  isDraggable?: boolean;
+  static?: boolean;
+  preview?: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    props?: Record<string, any>;
+    description?: string;
+  };
 }
 
-export interface LayoutItem {
-  widgetId: string;
-  size: WidgetSize;
-}
-
-export type DashboardLayout = LayoutItem[][];
 export interface DashboardProps {
-  widgets: Widget[];
-  layoutFlow?: "row" | "column";
-  initialLayout: DashboardLayout;
-  widgetSizes?: WidgetSizes;
-  autoAdjustWidth?: boolean;
+  widgets: WidgetDefinition[];
+  initialLayouts?: WidgetLayouts;
+  savedLayout?: DashboardLayouts;
+  onLayoutChange?: (layout: DashboardLayouts) => void;
+  sizes?: WidgetSizePresets;
+  breakpoints?: { [key in Breakpoint]?: number };
+  cols?: { [key in Breakpoint]?: number };
+  rowHeight?: number;
+  margin?: [number, number];
   layoutLock?: boolean;
   dragHandle?: boolean;
   dragHandleOnHover?: boolean;
-  savedLayout?: DashboardLayout;
-  onLayoutChange?: (layout: DashboardLayout) => void;
+  compactType?: "vertical" | "horizontal" | null;
+  isBounded?: boolean;
   className?: string;
 }
 
 export interface LayoutContainerProps {
-  widgets: Widget[];
-  layout: DashboardLayout;
-  widgetSizes?: WidgetSizes;
-  autoAdjustWidth?: boolean;
-  layoutFlow?: "row" | "column";
-  setLayout: (layout: DashboardLayout) => void;
+  widgets: WidgetDefinition[];
+  layouts: DashboardLayouts;
+  setLayouts?: (layouts: DashboardLayouts) => void;
+  onDrop?: (
+    widgetId: string,
+    layout: { x: number; y: number; w: number; h: number },
+    currentLayout?: RGLLayout[]
+  ) => void;
+  onRemove?: (widgetId: string) => void;
+  sizes?: WidgetSizePresets;
+  breakpoints?: { [key in Breakpoint]?: number };
+  cols?: { [key in Breakpoint]?: number };
+  rowHeight?: number;
+  margin?: [number, number];
   layoutLock?: boolean;
   dragHandle?: boolean;
   dragHandleOnHover?: boolean;
+  compactType?: "vertical" | "horizontal" | null;
+  isBounded?: boolean;
   className?: string;
 }
 
-export interface LayoutProps {
-  widgets: Widget[];
-  items: LayoutItem[];
-  layoutIndex: number;
-  layoutFlow?: "row" | "column";
-  parentLocked?: boolean;
-  onAddWidget: (layoutIndex: number, slotIndex: number, widgetId: string) => void;
-  onRemoveWidget: (layoutIndex: number, slotIndex: number) => void;
-}
-
-export interface SlotProps {
-  widgets: Widget[];
+export interface WidgetWrapperProps {
   widgetId: string;
-  slotId: string;
-  size: WidgetSize;
-  parentLocked?: boolean;
-  onAddWidget: (widgetId: string) => void;
-  onRemoveWidget: () => void;
+  onRemove?: (widgetId: string) => void;
+  layoutLock?: boolean;
+  dragHandle?: boolean;
+  dragHandleOnHover?: boolean;
+  children: React.ReactNode;
 }
 
-export interface LayoutContextValue {
-  activeSlotId: string | null;
-  layoutLock: boolean;
-  dragHandle: boolean;
-  dragHandleOnHover: boolean;
-  layout: DashboardLayout;
-  widgetSizes?: WidgetSizes;
-  autoAdjustWidth: boolean;
-  checkSizeCompatibility: (activeId: string, overId: string) => boolean;
+export interface DashboardWidgetGalleryProps {
+  title?: string;
+  description?: string;
+  className?: string;
+  view?: "list" | "grid";
+  mode?: "drag" | "click" | "both";
+  filterWidgets?: (widgets: WidgetDefinition[]) => WidgetDefinition[];
+  onWidgetAdd?: (widgetId: string) => void;
+  onWidgetDrop?: (widgetId: string) => void;
 }
+
+export interface DashboardWidgetGalleryItemProps {
+  widget: WidgetDefinition;
+  view?: "list" | "grid";
+  mode?: "drag" | "click" | "both";
+  onWidgetAdd?: (widgetId: string) => void;
+  onWidgetDrop?: (widgetId: string) => void;
+}
+
+export type GridLayoutItem = RGLLayout;
