@@ -10,4 +10,5 @@ export interface TooltipProps {
   hoverDelay?: number; // In seconds
   arrowClass?: string;
   disabled?: boolean;
+  open?: boolean;
 }
