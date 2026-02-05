@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import { Dashboard } from "./index";
-import type { LayoutItem, SerializedLayoutItem } from "./types";
+import type { Layout, SerializedLayout } from "./types";
 import { Button } from "../button";
 import { Progress } from "../progress";
 import { Badge } from "../badge";
@@ -61,18 +61,6 @@ const meta: Meta<typeof Dashboard> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const Sidebar = () => (
-  <div className="w-full h-96 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
-    <h3 className="text-lg font-semibold">Sidebar</h3>
-  </div>
-);
-
-const Header = () => (
-  <div className="w-full h-20 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
-    <h3 className="text-lg font-semibold">Header</h3>
-  </div>
-);
-
 const Content = () => (
   <div className="w-full h-28 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
     <h3 className="text-lg font-semibold">Content</h3>
@@ -91,79 +79,43 @@ const Activity = () => (
   </div>
 );
 
-const layout: LayoutItem = {
-  id: "main-row",
-  type: "row",
-  slots: [
-    {
-      id: "sidebar-1",
-      type: "component",
-      component: Sidebar,
-      props: {},
-      width: "250px",
-      height: "100%",
-    },
-    {
-      id: "main-stack",
-      type: "stack",
-      flex: "1",
-      slots: [
-        {
-          id: "header-1",
-          type: "component",
-          component: Header,
-          props: {},
-          flex: "1",
-        },
-        {
-          id: "content-1",
-          type: "component",
-          component: Content,
-          props: {},
-          flex: "1",
-        },
-        {
-          id: "balance-row",
-          type: "row",
-          flex: "1",
-          slots: [
-            {
-              id: "stats-1",
-              type: "component",
-              component: Stats,
-              props: {},
-              flex: "1",
-            },
-            {
-              id: "activity-1",
-              type: "component",
-              component: Activity,
-              props: {},
-              flex: "1",
-            },
-            {
-              id: "balance-row-empty-2",
-              type: "empty",
-              flex: "1",
-            },
-          ],
-        },
-        {
-          id: "main-stack-empty-3",
-          type: "empty",
-          flex: "1",
-        },
-      ],
-    },
-  ],
-};
+const layout: Layout = [
+  {
+    id: "row-1",
+    slots: [
+      {
+        id: "content-1",
+        component: Content,
+        props: {},
+        flex: "1",
+      },
+    ],
+  },
+  {
+    id: "row-2",
+    slots: [
+      {
+        id: "stats-1",
+        component: Stats,
+        props: {},
+        flex: "1",
+      },
+      {
+        id: "activity-1",
+        component: Activity,
+        props: {},
+        flex: "1",
+      },
+    ],
+  },
+];
 
 export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
 
     const handleLayoutChange = useCallback(
-      (newLayout: SerializedLayoutItem) => {
+      (newLayout: SerializedLayout) => {
         updateArgs({ savedLayout: newLayout });
       },
       [updateArgs]
@@ -193,11 +145,11 @@ export const Default: Story = {
 export const LocalStorage: Story = {
   render: function Render(args) {
     const savedLayoutStr = localStorage.getItem("dashboard-saved-layout");
-    const savedLayout: SerializedLayoutItem | undefined = savedLayoutStr
+    const savedLayout: SerializedLayout | undefined = savedLayoutStr
       ? JSON.parse(savedLayoutStr)
       : undefined;
 
-    const handleLayoutChange = (newLayout: SerializedLayoutItem) => {
+    const handleLayoutChange = (newLayout: SerializedLayout) => {
       localStorage.setItem("dashboard-saved-layout", JSON.stringify(newLayout));
     };
 
@@ -593,159 +545,134 @@ const QuickActionsWidget = () => (
   </div>
 );
 
-const hrDashboardLayout: LayoutItem = {
-  id: "hr-main",
-  type: "stack",
-  flex: "1",
-  className: "p-3 md:p-6",
-  slots: [
-    {
-      id: "hr-metrics-row",
-      type: "row",
-      flex: "0 0 auto",
-      slots: [
-        {
-          id: "metric-total-employees",
-          type: "component",
-          component: EmployeeOverviewWidget,
-          props: {
-            title: "Total Employees",
-            value: "1,234",
-            subtitle: "Active employees",
-            progress: 85,
-            trend: "up",
-            trendValue: "12%",
-          },
-          flex: "1",
+const hrDashboardLayout: Layout = [
+  {
+    id: "hr-metrics-row",
+    slots: [
+      {
+        id: "metric-total-employees",
+        component: EmployeeOverviewWidget,
+        props: {
+          title: "Total Employees",
+          value: "1,234",
+          subtitle: "Active employees",
+          progress: 85,
+          trend: "up",
+          trendValue: "12%",
         },
-        {
-          id: "metric-new-hires",
-          type: "component",
-          component: EmployeeOverviewWidget,
-          props: {
-            title: "New Hires",
-            value: "48",
-            subtitle: "This month",
-            progress: 72,
-            trend: "up",
-            trendValue: "8%",
-          },
-          flex: "1",
+        flex: "1",
+      },
+      {
+        id: "metric-new-hires",
+        component: EmployeeOverviewWidget,
+        props: {
+          title: "New Hires",
+          value: "48",
+          subtitle: "This month",
+          progress: 72,
+          trend: "up",
+          trendValue: "8%",
         },
-        {
-          id: "metric-turnover",
-          type: "component",
-          component: EmployeeOverviewWidget,
-          props: {
-            title: "Turnover Rate",
-            value: "4.2%",
-            subtitle: "Last 12 months",
-            progress: 42,
-            trend: "down",
-            trendValue: "2%",
-          },
-          flex: "1",
+        flex: "1",
+      },
+      {
+        id: "metric-turnover",
+        component: EmployeeOverviewWidget,
+        props: {
+          title: "Turnover Rate",
+          value: "4.2%",
+          subtitle: "Last 12 months",
+          progress: 42,
+          trend: "down",
+          trendValue: "2%",
         },
-        {
-          id: "metric-open-positions",
-          type: "component",
-          component: EmployeeOverviewWidget,
-          props: {
-            title: "Open Positions",
-            value: "23",
-            subtitle: "Across all departments",
-            progress: 65,
-          },
-          flex: "1",
+        flex: "1",
+      },
+      {
+        id: "metric-open-positions",
+        component: EmployeeOverviewWidget,
+        props: {
+          title: "Open Positions",
+          value: "23",
+          subtitle: "Across all departments",
+          progress: 65,
         },
-      ],
-    },
-    {
-      id: "hr-charts-row",
-      type: "row",
-      flex: "1",
-      slots: [
-        {
-          id: "salary-chart",
-          type: "component",
-          component: SalaryStatisticsWidget,
-          props: {},
-          flex: "2",
-        },
-        {
-          id: "satisfaction-chart",
-          type: "component",
-          component: EmployeeSatisfactionWidget,
-          props: {},
-          flex: "1",
-        },
-      ],
-    },
-    {
-      id: "hr-details-row",
-      type: "row",
-      flex: "1",
-      slots: [
-        {
-          id: "performance-stats",
-          type: "component",
-          component: PerformanceStatsWidget,
-          props: {},
-          flex: "1",
-        },
-        {
-          id: "new-employees-chart",
-          type: "component",
-          component: NewEmployeesWidget,
-          props: {},
-          flex: "1",
-        },
-        {
-          id: "upcoming-events",
-          type: "component",
-          component: UpcomingEventsWidget,
-          props: {},
-          flex: "1",
-        },
-      ],
-    },
-    {
-      id: "hr-bottom-row",
-      type: "row",
-      flex: "1",
-      slots: [
-        {
-          id: "recent-activities",
-          type: "component",
-          component: RecentActivitiesWidget,
-          props: {},
-          flex: "2",
-        },
-        {
-          id: "quick-actions",
-          type: "component",
-          component: QuickActionsWidget,
-          props: {},
-          flex: "1",
-        },
-      ],
-    },
-  ],
-};
+        flex: "1",
+      },
+    ],
+  },
+  {
+    id: "hr-charts-row",
+    slots: [
+      {
+        id: "salary-chart",
+        component: SalaryStatisticsWidget,
+        props: {},
+        flex: "2",
+      },
+      {
+        id: "satisfaction-chart",
+        component: EmployeeSatisfactionWidget,
+        props: {},
+        flex: "1",
+      },
+    ],
+  },
+  {
+    id: "hr-details-row",
+    slots: [
+      {
+        id: "performance-stats",
+        component: PerformanceStatsWidget,
+        props: {},
+        flex: "1",
+      },
+      {
+        id: "new-employees-chart",
+        component: NewEmployeesWidget,
+        props: {},
+        flex: "1",
+      },
+      {
+        id: "upcoming-events",
+        component: UpcomingEventsWidget,
+        props: {},
+        flex: "1",
+      },
+    ],
+  },
+  {
+    id: "hr-bottom-row",
+    slots: [
+      {
+        id: "recent-activities",
+        component: RecentActivitiesWidget,
+        props: {},
+        flex: "2",
+      },
+      {
+        id: "quick-actions",
+        component: QuickActionsWidget,
+        props: {},
+        flex: "1",
+      },
+    ],
+  },
+];
 
 export const HRDashboardExample: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs();
 
     const handleLayoutChange = useCallback(
-      (newLayout: SerializedLayoutItem) => {
+      (newLayout: SerializedLayout) => {
         updateArgs({ savedLayout: newLayout });
       },
       [updateArgs]
     );
 
     return (
-      <div className="w-full bg-surface-gray-2">
+      <div className="w-full bg-surface-gray-2 p-6">
         <Dashboard
           layoutLock={args.layoutLock}
           dragHandle={args.dragHandle}

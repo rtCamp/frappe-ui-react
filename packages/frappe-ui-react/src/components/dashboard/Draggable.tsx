@@ -1,11 +1,11 @@
 import { useDraggable } from "@dnd-kit/core";
 import { useContext, useState } from "react";
-import type { WidgetProps } from "./types";
+import type { DraggableProps } from "./types";
 import { LayoutContext } from "./layoutContext";
 import { GripVertical } from "lucide-react";
 
-export const Widget: React.FC<WidgetProps> = ({
-  layout,
+export const Draggable: React.FC<DraggableProps> = ({
+  slot,
   parentLocked = false,
 }) => {
   const context = useContext(LayoutContext);
@@ -13,10 +13,7 @@ export const Widget: React.FC<WidgetProps> = ({
   const dragHandle = context?.dragHandle ?? false;
   const dragHandleOnHover = context?.dragHandleOnHover ?? false;
   const [isHovered, setIsHovered] = useState(false);
-
-  const isComponentLocked =
-    layout.locked === false ? false : layout.locked === true || parentLocked;
-  const isDisabled = layoutLock || isComponentLocked;
+  const isDisabled = layoutLock ||  slot.locked || parentLocked;
 
   const {
     attributes,
@@ -25,17 +22,19 @@ export const Widget: React.FC<WidgetProps> = ({
     setActivatorNodeRef,
     transform,
     isDragging,
-  } = useDraggable({ id: layout.id, disabled: isDisabled });
+  } = useDraggable({ id: slot.id, disabled: isDisabled });
 
   const style = transform
     ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-        opacity: isDragging ? 0.5 : 1,
+        zIndex: isDragging ? 99 : "auto",
       }
-    : undefined;
+    : {};
 
   const showDragHandle =
     dragHandle && !isDisabled && (!dragHandleOnHover || isHovered);
+
+  const Component = slot.component;
 
   return (
     <div
@@ -57,7 +56,7 @@ export const Widget: React.FC<WidgetProps> = ({
           <GripVertical className="w-4 h-4 text-ink-gray-5" strokeWidth={2} />
         </button>
       )}
-      <layout.component {...layout.props}/>
+      <Component {...slot.props} />
     </div>
   );
 };

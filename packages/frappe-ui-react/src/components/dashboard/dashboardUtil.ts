@@ -1,52 +1,42 @@
-import { LayoutItem } from "./types";
+import { Layout, SerializedLayout } from "./types";
 
-export const flattenLayout = (layout: LayoutItem) => {
-  const flatListMap = new Map();
+export const flattenLayout = (layout: Layout)  => {
+  const flatMap = new Map();
 
-  const flatten = (
-    item: LayoutItem,
-    path: number[] = [],
-    parentId: string | null = null
-  ) => {
-    flatListMap.set(item.id, {
-  	...item,
-  	path: path,
-  	parentId: parentId,
-  	index: path[path.length - 1] ?? 0,
+  layout.forEach((row, rowIndex) => {
+    row.slots.forEach((slot, slotIndex) => {
+      flatMap.set(slot.id, {
+        ...slot,
+        rowIndex,
+        slotIndex,
+        rowId: row.id,
+      });
     });
+  });
 
-    if ("slots" in item && item.slots && item.slots.length > 0) {
-  	item.slots.forEach((slotItem, index) => {
-  	  if (slotItem.type !== "empty") {
-  		flatten(slotItem, [...path, index], item.id);
-  	  }
-  	});
-    }
-  };  
-  flatten(layout, [0], null);
-  return flatListMap;
-}
-
-export const deepClone = (item: LayoutItem): LayoutItem => {
-  if (item.type === "empty" || item.type === "component") {
-    return { ...item };
-  }
-  return {
-    ...item,
-    slots: item.slots.map((slotItem) => deepClone(slotItem)),
-  };
+  return flatMap;
 };
 
-export const findContainerById = (
-  item: LayoutItem,
-  id: string
-): LayoutItem | null => {
-  if (item.id === id) return item;
-  if (item.type !== "empty" && "slots" in item) {
-    for (const slotItem of item.slots) {
-      const found = findContainerById(slotItem, id);
-      if (found) return found;
+export const validateSerializedLayout = (layout: SerializedLayout) => {
+  if (!Array.isArray(layout)) return false;
+
+  for (const row of layout) {
+    if ( !row || typeof row.id !== "string" || !Array.isArray(row.slots)) {
+      return false;
+    }
+    for (const slot of row.slots) {
+      if (typeof slot?.id !== "string") {
+        return false;
+      }
     }
   }
-  return null;
+
+  return true;
+};
+
+export const deepClone = (layout: Layout): Layout => {
+  return layout.map((row) => ({
+    ...row,
+    slots: row.slots.map((slot) => ({ ...slot })),
+  }));
 };
