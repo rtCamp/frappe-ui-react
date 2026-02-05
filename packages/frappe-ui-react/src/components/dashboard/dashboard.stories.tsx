@@ -98,7 +98,8 @@ const layout: LayoutItem = {
     {
       id: "sidebar-1",
       type: "component",
-      component: <Sidebar />,
+      component: Sidebar,
+      props: {},
       width: "250px",
       height: "100%",
     },
@@ -110,13 +111,15 @@ const layout: LayoutItem = {
         {
           id: "header-1",
           type: "component",
-          component: <Header />,
+          component: Header,
+          props: {},
           flex: "1",
         },
         {
           id: "content-1",
           type: "component",
-          component: <Content />,
+          component: Content,
+          props: {},
           flex: "1",
         },
         {
@@ -127,13 +130,15 @@ const layout: LayoutItem = {
             {
               id: "stats-1",
               type: "component",
-              component: <Stats />,
+              component: Stats,
+              props: {},
               flex: "1",
             },
             {
               id: "activity-1",
               type: "component",
-              component: <Activity />,
+              component: Activity,
+              props: {},
               flex: "1",
             },
             {
@@ -602,59 +607,55 @@ const hrDashboardLayout: LayoutItem = {
         {
           id: "metric-total-employees",
           type: "component",
-          component: (
-            <EmployeeOverviewWidget
-              title="Total Employees"
-              value="1,234"
-              subtitle="Active employees"
-              progress={85}
-              trend="up"
-              trendValue="12%"
-            />
-          ),
+          component: EmployeeOverviewWidget,
+          props: {
+            title: "Total Employees",
+            value: "1,234",
+            subtitle: "Active employees",
+            progress: 85,
+            trend: "up",
+            trendValue: "12%",
+          },
           flex: "1",
         },
         {
           id: "metric-new-hires",
           type: "component",
-          component: (
-            <EmployeeOverviewWidget
-              title="New Hires"
-              value="48"
-              subtitle="This month"
-              progress={72}
-              trend="up"
-              trendValue="8%"
-            />
-          ),
+          component: EmployeeOverviewWidget,
+          props: {
+            title: "New Hires",
+            value: "48",
+            subtitle: "This month",
+            progress: 72,
+            trend: "up",
+            trendValue: "8%",
+          },
           flex: "1",
         },
         {
           id: "metric-turnover",
           type: "component",
-          component: (
-            <EmployeeOverviewWidget
-              title="Turnover Rate"
-              value="4.2%"
-              subtitle="Last 12 months"
-              progress={42}
-              trend="down"
-              trendValue="2%"
-            />
-          ),
+          component: EmployeeOverviewWidget,
+          props: {
+            title: "Turnover Rate",
+            value: "4.2%",
+            subtitle: "Last 12 months",
+            progress: 42,
+            trend: "down",
+            trendValue: "2%",
+          },
           flex: "1",
         },
         {
           id: "metric-open-positions",
           type: "component",
-          component: (
-            <EmployeeOverviewWidget
-              title="Open Positions"
-              value="23"
-              subtitle="Across all departments"
-              progress={65}
-            />
-          ),
+          component: EmployeeOverviewWidget,
+          props: {
+            title: "Open Positions",
+            value: "23",
+            subtitle: "Across all departments",
+            progress: 65,
+          },
           flex: "1",
         },
       ],
@@ -667,13 +668,15 @@ const hrDashboardLayout: LayoutItem = {
         {
           id: "salary-chart",
           type: "component",
-          component: <SalaryStatisticsWidget />,
+          component: SalaryStatisticsWidget,
+          props: {},
           flex: "2",
         },
         {
           id: "satisfaction-chart",
           type: "component",
-          component: <EmployeeSatisfactionWidget />,
+          component: EmployeeSatisfactionWidget,
+          props: {},
           flex: "1",
         },
       ],
@@ -686,19 +689,22 @@ const hrDashboardLayout: LayoutItem = {
         {
           id: "performance-stats",
           type: "component",
-          component: <PerformanceStatsWidget />,
+          component: PerformanceStatsWidget,
+          props: {},
           flex: "1",
         },
         {
           id: "new-employees-chart",
           type: "component",
-          component: <NewEmployeesWidget />,
+          component: NewEmployeesWidget,
+          props: {},
           flex: "1",
         },
         {
           id: "upcoming-events",
           type: "component",
-          component: <UpcomingEventsWidget />,
+          component: UpcomingEventsWidget,
+          props: {},
           flex: "1",
         },
       ],
@@ -711,13 +717,15 @@ const hrDashboardLayout: LayoutItem = {
         {
           id: "recent-activities",
           type: "component",
-          component: <RecentActivitiesWidget />,
+          component: RecentActivitiesWidget,
+          props: {},
           flex: "2",
         },
         {
           id: "quick-actions",
           type: "component",
-          component: <QuickActionsWidget />,
+          component: QuickActionsWidget,
+          props: {},
           flex: "1",
         },
       ],

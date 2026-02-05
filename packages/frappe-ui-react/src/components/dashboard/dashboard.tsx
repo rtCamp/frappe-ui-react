@@ -15,8 +15,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
       if (item.type === "empty") {
         return item;
       } else if (item.type === "component") {
-        const { component, ...rest } = item;
+        const { component, props, ...rest } = item;
         void component;
+        void props;
         return rest;
       } else if (item.type === "row" || item.type === "stack") {
         return {
@@ -35,11 +36,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   const mergeLayouts = useCallback(
     (saved: SerializedLayoutItem, initial: LayoutItem): LayoutItem => {
-      const componentMap = new Map<string, React.ReactNode>();
+      const componentMap = new Map();
 
       const extractComponents = (item: LayoutItem) => {
         if (item.type === "component") {
-          componentMap.set(item.id, item.component);
+          componentMap.set(item.id, { 'component': item.component, 'props': item.props  });
         } else if (item.type !== "empty" && "slots" in item) {
           item.slots.forEach((slotItem) => extractComponents(slotItem));
         }
@@ -50,13 +51,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
         if (item.type === "empty") {
           return item;
         } else if (item.type === "component") {
+          const component = componentMap.get(item.id);
           return {
             ...item,
-            component: componentMap.get(item.id) ?? (
+            component: component?.component ?? (() => (
               <span className="text-sm text-ink-gray-5">
                 Component Not Found
               </span>
-            ),
+            )),
+            props: component?.props ?? {},
           };
         } else {
           return {

@@ -1,7 +1,10 @@
 interface ComponentElement {
   id: string;
   type: 'component';
-  component: React.ReactNode;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  component: React.ComponentType<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  props: Record<string, any>;
   width?: string;
   height?: string;
   flex?: string;
@@ -31,7 +34,7 @@ interface ContainerElement {
 
 export type LayoutItem = ComponentElement | ContainerElement | EmptySlot;
 
-export type SerializedLayoutItem = Omit<ComponentElement, 'component'> | EmptySlot | {
+export type SerializedLayoutItem = Omit<ComponentElement, 'component' | 'props'> | EmptySlot | {
   id: string;
   type: 'row' | 'stack';
   slots: SerializedLayoutItem[];
