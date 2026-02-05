@@ -25,6 +25,7 @@ interface ContainerElement {
   width?: string;
   height?: string;
   flex?: string;
+  gap?: string;
   locked?: boolean;
 }
 
@@ -38,6 +39,7 @@ export type SerializedLayoutItem = Omit<ComponentElement, 'component' | 'props'>
   height?: string;
   flex?: string;
   locked?: boolean;
+  gap?: string;
 };;
 
 export interface DashboardProps {
