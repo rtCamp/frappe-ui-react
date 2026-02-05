@@ -53,78 +53,62 @@ const layout: LayoutItem = {
   type: "row",
   slots: [
     {
-      width: "250px",
-      height: "100%",
-    },
-    {
-      flex: "1",
-    },
-  ],
-  elements: [
-    {
       id: "sidebar-1",
       type: "component",
       component: Sidebar,
       props: {},
+      width: "250px",
+      height: "100%",
     },
     {
       id: "main-stack",
       type: "stack",
+      flex: "1",
       slots: [
-        {
-          flex: "1",
-        },
-        {
-          flex: "1",
-        },
-        {
-          flex: "1",
-        },
-        {
-          flex: "1",
-        }
-      ],
-      elements: [
         {
           id: "header-1",
           type: "component",
           component: Header,
           props: { userId: "123" },
+          flex: "1",
         },
         {
           id: "content-1",
           type: "component",
           component: Content,
           props: {},
+          flex: "1",
         },
         {
           id: "balance-row",
           type: "row",
+          flex: "1",
           slots: [
-            {
-              flex: "1",
-            },
-            {
-              flex: "1",
-            },
-            {
-              flex: "1",
-            },
-          ],
-          elements: [
             {
               id: "stats-1",
               type: "component",
               component: Stats,
               props: {},
+              flex: "1",
             },
             {
               id: "activity-1",
               type: "component",
               component: Activity,
               props: {},
+              flex: "1",
+            },
+            {
+              id: "balance-row-empty-2",
+              type: "empty",
+              flex: "1",
             },
           ],
+        },
+        {
+          id: "main-stack-empty-3",
+          type: "empty",
+          flex: "1",
         },
       ],
     },

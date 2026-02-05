@@ -9,7 +9,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
 }) => {
   const handleMakeSerializable = useCallback(
     (item: LayoutItem): SerializedLayoutItem => {
-      if (item.type === "component") {
+      if (item.type === "empty") {
+        return item;
+      } else if (item.type === "component") {
         const { component, props, ...rest } = item;
         void component;
         void props;
@@ -17,7 +19,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
       } else if (item.type === "row" || item.type === "stack") {
         return {
           ...item,
-          elements: item.elements.map(handleMakeSerializable),
+          slots: item.slots.map((slotItem) =>
+            slotItem.type === "empty"
+              ? slotItem
+              : handleMakeSerializable(slotItem)
+          ),
         };
       }
       return item;
@@ -34,26 +40,30 @@ export const Dashboard: React.FC<DashboardProps> = ({
         if (item.type === "component") {
           componentMap.set(item.id, item.component);
           propsMap.set(item.id, item.props);
-        } else if ("elements" in item) {
-          item.elements.forEach(extractComponents);
+        } else if (item.type !== "empty" && "slots" in item) {
+          item.slots.forEach((slotItem) => extractComponents(slotItem));
         }
       };
 
       extractComponents(initial);
 
       const reconstruct = (item: SerializedLayoutItem): LayoutItem => {
-        if (item.type === "component") {
+        if (item.type === "empty") {
+          return item;
+        } else if (item.type === "component") {
           return {
             ...item,
             component:
               componentMap.get(item.id) ??
-              (() => <div>Component Not Found</div>),
+              (() => <span className="text-sm text-gray-600">Component Not Found</span>),
             props: propsMap.get(item.id) ?? {},
           };
         } else {
           return {
             ...item,
-            elements: item.elements.map(reconstruct),
+            slots: item.slots.map((slotItem) =>
+              slotItem.type === "empty" ? slotItem : reconstruct(slotItem)
+            ),
           };
         }
       };

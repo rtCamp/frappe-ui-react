@@ -3,9 +3,14 @@ interface ComponentElement<P = Record<string, unknown>> {
   type: 'component';
   component: React.ComponentType<P>;
   props: P;
+  width?: string;
+  height?: string;
+  flex?: string;
 }
 
-export interface SlotDefinition {
+interface EmptySlot {
+  id: string;
+  type: 'empty';
   width?: string;
   height?: string;
   flex?: string;
@@ -14,16 +19,21 @@ export interface SlotDefinition {
 interface ContainerElement {
   id: string;
   type: 'row' | 'stack';
-  elements: LayoutItem[];
-  slots?: SlotDefinition[];
+  slots: LayoutItem[];
+  width?: string;
+  height?: string;
+  flex?: string;
 }
 
-export type LayoutItem = ComponentElement | ContainerElement;
+export type LayoutItem = ComponentElement | ContainerElement | EmptySlot;
 
-export type SerializedLayoutItem = Omit<ComponentElement, 'component' | 'props'> | {
+export type SerializedLayoutItem = Omit<ComponentElement, 'component' | 'props'> | EmptySlot | {
   id: string;
   type: 'row' | 'stack';
-  elements: SerializedLayoutItem[];
+  slots: SerializedLayoutItem[];
+  width?: string;
+  height?: string;
+  flex?: string;
 };
 
 export interface DashboardProps {
@@ -41,19 +51,20 @@ export interface LayoutBoxProps {
   layout: ContainerElement;
   orientation: "horizontal" | "vertical";
   activeParentId?: string | null;
+  activeSlotId?: string | null;
 }
 
 export interface LayoutRendererProps {
   layout: LayoutItem;
   activeParentId?: string | null;
+  activeSlotId?: string | null;
 }
 
 export interface SlotContainerProps {
   slotId: string;
-  slot: SlotDefinition;
-  element: LayoutItem | undefined;
+  slotItem: LayoutItem;
   isDragging: boolean;
-  isActiveParent: boolean;
+  activeSlotId?: string | null;
   activeParentId?: string | null;
 }
 

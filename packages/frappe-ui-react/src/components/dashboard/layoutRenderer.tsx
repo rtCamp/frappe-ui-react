@@ -5,25 +5,19 @@ import type { LayoutRendererProps } from "./types";
 export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
   layout,
   activeParentId,
+  activeSlotId,
 }) => {
-  if (layout.type === "row") {
-    return (
-      <LayoutBox
-        layout={layout}
-        orientation="horizontal"
-        activeParentId={activeParentId}
-      />
-    );
-  } else if (layout.type === "stack") {
-    return (
-      <LayoutBox
-        layout={layout}
-        orientation="vertical"
-        activeParentId={activeParentId}
-      />
-    );
-  } else if (layout.type === "component") {
+  if (layout.type === "component") {
     return <Widget layout={layout} />;
+  } else if (layout.type !== "empty") {
+    return (
+      <LayoutBox
+        layout={layout}
+        orientation={layout.type === "row" ? "horizontal" : "vertical"}
+        activeParentId={activeParentId}
+        activeSlotId={activeSlotId}
+      />
+    );
   }
   return null;
 };

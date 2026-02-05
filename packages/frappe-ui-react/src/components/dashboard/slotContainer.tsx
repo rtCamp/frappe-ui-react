@@ -5,39 +5,53 @@ import type { SlotContainerProps } from "./types";
 
 export const SlotContainer: React.FC<SlotContainerProps> = ({
   slotId,
-  slot,
-  element,
+  slotItem,
   isDragging,
-  isActiveParent,
+  activeSlotId,
   activeParentId,
 }) => {
-  const { setNodeRef, isOver } = useDroppable({
+  const { setNodeRef, isOver, active } = useDroppable({
     id: slotId,
-    disabled: !!element || isActiveParent,
+    disabled: slotId === activeSlotId,
   });
+
+  const isEmpty = slotItem.type === "empty";
+  const isDirectlyOver = isOver && active && String(active.id) !== slotItem.id;
 
   return (
     <div
       ref={setNodeRef}
       style={
-        slot.flex
-          ? { flex: slot.flex }
+        slotItem.flex
+          ? { flex: slotItem.flex }
           : {
-              width: slot.width,
-              height: slot.height,
-              minWidth: slot.width,
-              minHeight: slot.height,
+              width: slotItem.width,
+              height: slotItem.height,
+              minWidth: slotItem.width,
+              minHeight: slotItem.height,
             }
       }
       className={clsx(
-        "flex-shrink-0 transition-colors",
-        !element &&
+        "flex-shrink-0 transition-colors border-gray-300",
+        isEmpty &&
           "border-2 border-dashed border-gray-300 rounded flex items-center justify-center",
-        !element && isDragging && !isActiveParent && "bg-surface-gray-1",
-        !element && isOver && "border-gray-400 bg-surface-gray-2"
+        isEmpty && isDragging && slotId !== activeSlotId && "bg-surface-gray-1",
+        isEmpty && isOver && "border-gray-400 bg-surface-gray-2"
       )}
-    >      {element ? (
-        <LayoutRenderer layout={element} activeParentId={activeParentId} />
+    >
+      {!isEmpty ? (
+        <div
+          className={clsx(
+            "w-full h-full transition-opacity",
+            isDirectlyOver && slotItem.type === "component" && "opacity-50"
+          )}
+        >
+          <LayoutRenderer
+            layout={slotItem}
+            activeParentId={activeParentId}
+            activeSlotId={activeSlotId}
+          />
+        </div>
       ) : (
         <div className="w-full min-w-24 h-full min-h-24 text-gray-400 text-sm"></div>
       )}

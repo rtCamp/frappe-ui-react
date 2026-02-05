@@ -1,24 +1,25 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { useDraggable } from "@dnd-kit/core";
 import type { WidgetProps } from "./types";
 
 export const Widget: React.FC<WidgetProps> = ({ layout }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: layout.id });
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({ id: layout.id });
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+        opacity: isDragging ? 0.5 : 1,
+      }
+    : undefined;
+
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="w-full h-full">
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="w-full h-full"
+    >
       <layout.component {...layout.props} />
     </div>
   );
