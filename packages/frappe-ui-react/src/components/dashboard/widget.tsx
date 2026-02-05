@@ -4,14 +4,18 @@ import type { WidgetProps } from "./types";
 import { LayoutContext } from "./layoutContext";
 import { GripVertical } from "lucide-react";
 
-export const Widget: React.FC<WidgetProps> = ({ layout, parentLocked = false }) => {
+export const Widget: React.FC<WidgetProps> = ({
+  layout,
+  parentLocked = false,
+}) => {
   const context = useContext(LayoutContext);
   const layoutLock = context?.layoutLock ?? false;
   const dragHandle = context?.dragHandle ?? false;
   const dragHandleOnHover = context?.dragHandleOnHover ?? false;
   const [isHovered, setIsHovered] = useState(false);
 
-  const isComponentLocked = layout.locked === false ? false : (layout.locked === true || parentLocked);
+  const isComponentLocked =
+    layout.locked === false ? false : layout.locked === true || parentLocked;
   const isDisabled = layoutLock || isComponentLocked;
 
   const {
@@ -53,7 +57,7 @@ export const Widget: React.FC<WidgetProps> = ({ layout, parentLocked = false }) 
           <GripVertical className="w-4 h-4 text-ink-gray-5" strokeWidth={2} />
         </button>
       )}
-      <layout.component {...layout.props} />
+      {layout.component}
     </div>
   );
 };

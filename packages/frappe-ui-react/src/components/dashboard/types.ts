@@ -1,8 +1,7 @@
-interface ComponentElement<P = Record<string, unknown>> {
+interface ComponentElement {
   id: string;
   type: 'component';
-  component: React.ComponentType<P>;
-  props: P;
+  component: React.ReactNode;
   width?: string;
   height?: string;
   flex?: string;
@@ -27,11 +26,12 @@ interface ContainerElement {
   flex?: string;
   gap?: string;
   locked?: boolean;
+  className?: string;
 }
 
 export type LayoutItem = ComponentElement | ContainerElement | EmptySlot;
 
-export type SerializedLayoutItem = Omit<ComponentElement, 'component' | 'props'> | EmptySlot | {
+export type SerializedLayoutItem = Omit<ComponentElement, 'component'> | EmptySlot | {
   id: string;
   type: 'row' | 'stack';
   slots: SerializedLayoutItem[];
@@ -40,6 +40,7 @@ export type SerializedLayoutItem = Omit<ComponentElement, 'component' | 'props'>
   flex?: string;
   locked?: boolean;
   gap?: string;
+  className?: string;
 };;
 
 export interface DashboardProps {
