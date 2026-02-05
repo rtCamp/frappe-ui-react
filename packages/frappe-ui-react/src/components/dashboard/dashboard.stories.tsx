@@ -5,12 +5,39 @@ import { Dashboard } from "./index";
 import type { LayoutItem, SerializedLayoutItem } from "./types";
 import { Button } from "../button";
 
-const meta: Meta = {
+const meta: Meta<typeof Dashboard> = {
   title: "Components/Dashboard",
   component: Dashboard,
   parameters: {
     docs: { source: { type: "dynamic" } },
     layout: "fullscreen",
+  },
+  argTypes: {
+    layoutLock: {
+      control: "boolean",
+      description: "Lock the layout to prevent dragging",
+      table: {
+        type: { summary: "boolean" },
+        defaultValue: { summary: "false" },
+      },
+    },
+    dragHandle: {
+      control: "boolean",
+      description: "Show drag handle on components (when false, drag anywhere)",
+      table: {
+        type: { summary: "boolean" },
+        defaultValue: { summary: "false" },
+      },
+    },
+    dragHandleOnHover: {
+      control: "boolean",
+      description:
+        "Show drag handle only on hover (requires dragHandle to be true)",
+      table: {
+        type: { summary: "boolean" },
+        defaultValue: { summary: "false" },
+      },
+    },
   },
   tags: ["autodocs"],
 };
@@ -37,13 +64,13 @@ const Content = () => (
 );
 
 const Stats = () => (
-  <div className="w-48 h-32 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
+  <div className="w-full h-32 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
     <h3 className="text-lg font-semibold">Stats</h3>
   </div>
 );
 
 const Activity = () => (
-  <div className="w-48 h-32 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
+  <div className="w-full h-32 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
     <h3 className="text-lg font-semibold">Activity</h3>
   </div>
 );
@@ -126,7 +153,10 @@ export const Default: Story = {
     return (
       <div className="w-full h-screen p-10 flex justify-center items-center">
         <Dashboard
-          initialLayout={args.layout}
+          layoutLock={args.layoutLock}
+          dragHandle={args.dragHandle}
+          dragHandleOnHover={args.dragHandleOnHover}
+          initialLayout={args.initialLayout}
           savedLayout={args.savedLayout}
           onLayoutChange={handleLayoutChange}
         />
@@ -134,12 +164,15 @@ export const Default: Story = {
     );
   },
   args: {
-    layout,
+    initialLayout: layout,
+    layoutLock: false,
+    dragHandle: false,
+    dragHandleOnHover: false,
   },
 };
 
 export const LocalStorage: Story = {
-  render: function Render() {
+  render: function Render(args) {
     const savedLayoutStr = localStorage.getItem("dashboard-saved-layout");
     const savedLayout: SerializedLayoutItem | undefined = savedLayoutStr
       ? JSON.parse(savedLayoutStr)
@@ -151,18 +184,28 @@ export const LocalStorage: Story = {
 
     return (
       <div className="w-full h-screen flex flex-col justify-center items-center">
-        <Button
-          className="mb-4"
-          onClick={() => localStorage.removeItem("dashboard-saved-layout")}
-        >
-          Clear Saved Layout
-        </Button>
+        <div className="flex gap-3 mb-4">
+          <Button
+            onClick={() => localStorage.removeItem("dashboard-saved-layout")}
+          >
+            Clear Saved Layout
+          </Button>
+        </div>
         <Dashboard
-          initialLayout={layout}
+          layoutLock={args.layoutLock}
+          dragHandle={args.dragHandle}
+          dragHandleOnHover={args.dragHandleOnHover}
+          initialLayout={args.initialLayout}
           savedLayout={savedLayout}
           onLayoutChange={handleLayoutChange}
         />
       </div>
     );
+  },
+  args: {
+    initialLayout: layout,
+    layoutLock: false,
+    dragHandle: true,
+    dragHandleOnHover: true,
   },
 };

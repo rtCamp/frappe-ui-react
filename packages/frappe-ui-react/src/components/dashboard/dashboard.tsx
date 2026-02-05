@@ -4,6 +4,9 @@ import type { DashboardProps, LayoutItem, SerializedLayoutItem } from "./types";
 
 export const Dashboard: React.FC<DashboardProps> = ({
   initialLayout,
+  layoutLock = false,
+  dragHandle = false,
+  dragHandleOnHover = false,
   savedLayout,
   onLayoutChange,
 }) => {
@@ -55,7 +58,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
             ...item,
             component:
               componentMap.get(item.id) ??
-              (() => <span className="text-sm text-gray-600">Component Not Found</span>),
+              (() => (
+                <span className="text-sm text-gray-600">
+                  Component Not Found
+                </span>
+              )),
             props: propsMap.get(item.id) ?? {},
           };
         } else {
@@ -92,7 +99,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
     onLayoutChange(strippedLayout);
   }, [layout, onLayoutChange, handleMakeSerializable]);
 
-  return <LayoutContainer layout={layout} setLayout={setLayout} />;
+  return (
+    <LayoutContainer
+      layout={layout}
+      setLayout={setLayout}
+      layoutLock={layoutLock}
+      dragHandle={dragHandle}
+      dragHandleOnHover={dragHandleOnHover}
+    />
+  );
 };
 
 Dashboard.displayName = "Dashboard";
