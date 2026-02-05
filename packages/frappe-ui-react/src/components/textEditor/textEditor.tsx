@@ -12,6 +12,7 @@ import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Strike from "@tiptap/extension-strike";
 import Placeholder from "@tiptap/extension-placeholder";
 import { TableKit } from "@tiptap/extension-table";
+import Emoji, { gitHubEmojis } from "@tiptap/extension-emoji";
 import clsx from "clsx";
 
 /**
@@ -22,6 +23,7 @@ import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
 import { ExtendedCodeBlock } from "./extension/codeBlock";
+import EmojiSuggestions from "./emoji/suggestions";
 
 const TextEditor = ({
   content,
@@ -85,6 +87,10 @@ const TextEditor = ({
           },
         }),
         ExtendedCodeBlock,
+        Emoji.configure({
+          emojis: gitHubEmojis,
+          suggestion: EmojiSuggestions,
+        }),
         ...extensions,
       ],
       onUpdate: ({ editor }) => {
