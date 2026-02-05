@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo } from "react";
 import {
   DndContext,
   KeyboardSensor,
@@ -6,9 +6,8 @@ import {
   useSensor,
   useSensors,
   DragOverlay,
-  rectIntersection,
+  pointerWithin,
   type DragStartEvent,
-  type DragOverEvent,
   type DragEndEvent,
   UniqueIdentifier,
 } from "@dnd-kit/core";
@@ -22,30 +21,39 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   setLayout,
 }) => {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
-  const isDraggingOverRef = useRef(false);
 
   const layoutFlatMap = useMemo(() => {
     const flatListMap = new Map();
 
-    const flatten = (item: LayoutItem, path: number[] = []) => {
+    const flatten = (
+      item: LayoutItem,
+      path: number[] = [],
+      parentId: string | null = null
+    ) => {
       flatListMap.set(item.id, {
         ...item,
         path: path,
         parentPath: path.slice(0, -1),
+        parentId: parentId,
         depth: path.length,
         index: path[path.length - 1] ?? 0,
       });
 
       if ("elements" in item && item.elements && item.elements.length > 0) {
         item.elements.forEach((child, index) => {
-          flatten(child, [...path, index]);
+          flatten(child, [...path, index], item.id);
         });
       }
     };
 
-    flatten(layout, [0]);
+    flatten(layout, [0], null);
     return flatListMap;
   }, [layout]);
+
+  const activeParentId = useMemo(() => {
+    if (!activeId) return null;
+    return layoutFlatMap.get(activeId)?.parentId ?? null;
+  }, [activeId, layoutFlatMap]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -76,125 +84,89 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     setActiveId(active.id);
   };
 
-  const handleDragOver = (event: DragOverEvent) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (!over || isDraggingOverRef.current) return;
+    setActiveId(null);
+
+    if (!over || active.id === over.id) return;
 
     const activeElement = layoutFlatMap.get(active.id);
     const overElement = layoutFlatMap.get(over.id);
 
     if (!activeElement) return;
 
-    let targetParentPath: number[] = overElement ? overElement.path : [];
-    let insertIndex: number = 0;
+    const overIdStr = String(over.id);
 
-    if (overElement && overElement?.type === "component") {
-      targetParentPath = overElement.parentPath;
-      insertIndex = overElement.index;
+    const deepClone = (item: LayoutItem): LayoutItem => {
+      if ("elements" in item && item.elements) {
+        return { ...item, elements: item.elements.map(deepClone) };
+      }
+      return { ...item };
+    };
+
+    if (overElement && overElement.type === "component") {
+      const isSameParent =
+        activeElement.parentPath.length === overElement.parentPath.length &&
+        activeElement.parentPath.every(
+          (val: number, index: number) => val === overElement.parentPath[index]
+        );
+
+      if (!isSameParent) return;
+
+      // Reorder within the same container
+      setLayout((currentLayout) => {
+        const newLayout = deepClone(currentLayout);
+        const parent = handleGetParent(newLayout, activeElement.path);
+
+        if (!("elements" in parent)) return currentLayout;
+
+        parent.elements = arrayMove(
+          parent.elements,
+          activeElement.index,
+          overElement.index
+        );
+
+        return newLayout;
+      });
+      return;
     }
 
-    if (
-      activeElement.parentPath.length === targetParentPath.length &&
-      activeElement.parentPath.every(
-        (val: number, index: number) => val === targetParentPath[index]
-      )
-    )
-      return;
-
-    // Cross-container drag temporarily update layout for preview
-    isDraggingOverRef.current = true;
-
-    setLayout((currentLayout) => {
-      const deepClone = (item: LayoutItem): LayoutItem => {
-        if ("elements" in item && item.elements) {
-          return { ...item, elements: item.elements.map(deepClone) };
-        }
-        return { ...item };
-      };
-
-      const newLayout = deepClone(currentLayout);
-
-      const activeParent = handleGetParent(newLayout, activeElement.path);
-      const targetParent = handleGetParent(newLayout, [...targetParentPath, 0]);
-
-      if (!("elements" in activeParent) || !("elements" in targetParent))
-        return currentLayout;
-
-      const [movingItem] = activeParent.elements.splice(activeElement.index, 1);
-      targetParent.elements.splice(insertIndex, 0, movingItem);
-
-      setTimeout(() => {
-        isDraggingOverRef.current = false;
-      }, 50);
-
-      return newLayout;
-    });
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    setActiveId(null);
-    isDraggingOverRef.current = false;
-
-    if (!over) return;
-
-    if (active.id !== over.id) {
-      const activeElement = layoutFlatMap.get(active.id);
-      const overElement = layoutFlatMap.get(over.id);
-
-      if (!activeElement || !overElement) return;
-
-      let targetParentPath: number[] = overElement ? overElement.path : [];
-      let insertIndex: number = 0;
-
-      if (overElement && overElement?.type === "component") {
-        targetParentPath = overElement.parentPath;
-        insertIndex = overElement.index + 1;
-      }
-
+    // Check if dropping on a slot
+    if (overIdStr.includes("-slot-")) {
       setLayout((currentLayout) => {
-        const deepClone = (item: LayoutItem): LayoutItem => {
-          if ("elements" in item && item.elements) {
-            return { ...item, elements: item.elements.map(deepClone) };
-          }
-          return { ...item };
-        };
-
         const newLayout = deepClone(currentLayout);
 
-        if (
-          activeElement.parentPath.length === targetParentPath.length &&
-          activeElement.parentPath.every(
-            (val: number, index: number) => val === targetParentPath[index]
-          )
-        ) {
-          const parent = handleGetParent(newLayout, activeElement.path);
-          if (!("elements" in parent)) return currentLayout;
+        const parts = overIdStr.split("-slot-");
+        const containerId = parts[0];
+        const slotIndex = parseInt(parts[parts.length - 1]);
 
-          const oldIndex = activeElement.index;
-          const newIndex =
-            overElement.type === "component" ? overElement.index : insertIndex;
+        const findContainer = (item: LayoutItem): LayoutItem | null => {
+          if (item.id === containerId) return item;
+          if ("elements" in item) {
+            for (const child of item.elements) {
+              const found = findContainer(child);
+              if (found) return found;
+            }
+          }
+          return null;
+        };
 
-          parent.elements = arrayMove(parent.elements, oldIndex, newIndex);
+        const targetContainer = findContainer(newLayout);
+        if (!targetContainer || !("elements" in targetContainer))
+          return currentLayout;
 
-          return newLayout;
-        } else {
-          const activeParent = handleGetParent(newLayout, activeElement.path);
-          const targetParent = handleGetParent(newLayout, [...targetParentPath, 0]);
+        const activeParent = handleGetParent(newLayout, activeElement.path);
+        if (!("elements" in activeParent)) return currentLayout;
 
-          if (!("elements" in activeParent) || !("elements" in targetParent))
-            return currentLayout;
+        const [movingItem] = activeParent.elements.splice(
+          activeElement.index,
+          1
+        );
 
-          const movingItem = activeParent.elements.splice(
-            activeElement.index,
-            1
-          )[0];
-          targetParent.elements.splice(insertIndex, 0, movingItem);
+        targetContainer.elements.splice(slotIndex, 0, movingItem);
 
-          return newLayout;
-        }
+        return newLayout;
       });
     }
   };
@@ -202,12 +174,11 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={rectIntersection}
+      collisionDetection={pointerWithin}
       onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <LayoutRenderer layout={layout} />
+      <LayoutRenderer layout={layout} activeParentId={activeParentId} />
       <DragOverlay>
         {activeId ? <Widget layout={layoutFlatMap.get(activeId)} /> : null}
       </DragOverlay>

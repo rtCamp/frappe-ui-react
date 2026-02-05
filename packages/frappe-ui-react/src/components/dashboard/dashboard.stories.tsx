@@ -19,19 +19,19 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const Sidebar = () => (
-  <div className="w-64 h-96 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
+  <div className="w-full h-96 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
     <h3 className="text-lg font-semibold">Sidebar</h3>
   </div>
 );
 
 const Header = () => (
-  <div className="h-20 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
+  <div className="w-full h-20 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
     <h3 className="text-lg font-semibold">Header</h3>
   </div>
 );
 
 const Content = () => (
-  <div className="min-h-48 flex-1 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
+  <div className="w-full h-28 rounded-lg border border-outline-gray-2 bg-surface-cards p-4 shadow">
     <h3 className="text-lg font-semibold">Content</h3>
   </div>
 );
@@ -51,6 +51,15 @@ const Activity = () => (
 const layout: LayoutItem = {
   id: "main-row",
   type: "row",
+  slots: [
+    {
+      width: "250px",
+      height: "100%",
+    },
+    {
+      flex: "1",
+    },
+  ],
   elements: [
     {
       id: "sidebar-1",
@@ -61,6 +70,20 @@ const layout: LayoutItem = {
     {
       id: "main-stack",
       type: "stack",
+      slots: [
+        {
+          flex: "1",
+        },
+        {
+          flex: "1",
+        },
+        {
+          flex: "1",
+        },
+        {
+          flex: "1",
+        }
+      ],
       elements: [
         {
           id: "header-1",
@@ -77,6 +100,17 @@ const layout: LayoutItem = {
         {
           id: "balance-row",
           type: "row",
+          slots: [
+            {
+              flex: "1",
+            },
+            {
+              flex: "1",
+            },
+            {
+              flex: "1",
+            },
+          ],
           elements: [
             {
               id: "stats-1",
@@ -106,7 +140,7 @@ export const Default: Story = {
     };
 
     return (
-      <div className="w-full h-screen flex justify-center items-center">
+      <div className="w-full h-screen p-10 flex justify-center items-center">
         <Dashboard
           initialLayout={args.layout}
           savedLayout={args.savedLayout}

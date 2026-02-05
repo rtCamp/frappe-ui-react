@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useDndContext, useDroppable } from "@dnd-kit/core";
+import { useDndContext } from "@dnd-kit/core";
 import {
   SortableContext,
   horizontalListSortingStrategy,
@@ -7,19 +7,18 @@ import {
 } from "@dnd-kit/sortable";
 import { clsx } from "clsx";
 import { LayoutRenderer } from "./layoutRenderer";
+import { SlotContainer } from "./slotContainer";
 import type { LayoutBoxProps } from "./types";
 
 export const LayoutBox: React.FC<LayoutBoxProps> = ({
   layout,
   orientation,
+  activeParentId,
 }) => {
   const { active } = useDndContext();
-  
-  const isDragging = useMemo(() => active !== null, [active]);
 
-  const { setNodeRef } = useDroppable({
-    id: layout.id,
-  });
+  const isDragging = useMemo(() => active !== null, [active]);
+  const isActiveParent = activeParentId === layout.id;
 
   const itemIds = useMemo(() => {
     const baseIds = layout.elements.map((item) => item.id);
@@ -34,20 +33,34 @@ export const LayoutBox: React.FC<LayoutBoxProps> = ({
   return (
     <SortableContext items={itemIds} strategy={strategy}>
       <div
-        ref={(node) => {
-          setNodeRef(node);
-        }}
         className={clsx(
-          "flex gap-4 rounded min-h-[100px]",
-          orientation === "horizontal" ? "flex-row" : "flex-col",
-          isDragging && "outline-dashed outline-2 outline-offset-2",
-          isDragging && orientation === "horizontal" && "outline-gray-400",
-          isDragging && orientation === "vertical" && "outline-gray-300"
+          "flex flex-wrap gap-4 rounded min-h-[100px]",
+          orientation === "horizontal" ? "flex-row" : "flex-col"
         )}
       >
-        {layout.elements.map((item) => (
-          <LayoutRenderer key={item.id} layout={item} />
-        ))}
+        {layout.slots
+          ? layout.slots.map((slot, slotIndex) => {
+              const element = layout.elements[slotIndex];
+              const slotId = `${layout.id}-slot-${slotIndex}`;
+              return (
+                <SlotContainer
+                  key={slotId}
+                  slotId={slotId}
+                  slot={slot}
+                  element={element}
+                  isDragging={isDragging}
+                  isActiveParent={isActiveParent}
+                  activeParentId={activeParentId}
+                />
+              );
+            })
+          : layout.elements.map((item) => (
+              <LayoutRenderer
+                key={item.id}
+                layout={item}
+                activeParentId={activeParentId}
+              />
+            ))}
       </div>
     </SortableContext>
   );

@@ -18,8 +18,8 @@ export const Widget: React.FC<WidgetProps> = ({ layout }) => {
     opacity: isDragging ? 0.5 : 1,
   };
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="w-full h-full">
       <layout.component {...layout.props} />
     </div>
   );
-}
+};
