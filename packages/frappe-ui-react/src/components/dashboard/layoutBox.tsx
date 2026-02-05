@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useDroppable } from "@dnd-kit/core";
+import { useDndContext, useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
   horizontalListSortingStrategy,
@@ -15,6 +15,10 @@ export const LayoutBox: React.FC<LayoutBoxProps> = ({
   layout,
   orientation,
 }) => {
+  const { active } = useDndContext();
+  
+  const isDragging = useMemo(() => active !== null, [active]);
+
   const { setNodeRef } = useDroppable({
     id: layout.id,
   });
@@ -38,9 +42,9 @@ export const LayoutBox: React.FC<LayoutBoxProps> = ({
         className={clsx(
           "flex gap-4 rounded min-h-[100px]",
           orientation === "horizontal" ? "flex-row" : "flex-col",
-          "outline-dashed outline-2 outline-offset-2",
-          orientation === "horizontal" && "outline-gray-400",
-          orientation === "vertical" && "outline-gray-300"
+          isDragging && "outline-dashed outline-2 outline-offset-2",
+          isDragging && orientation === "horizontal" && "outline-gray-400",
+          isDragging && orientation === "vertical" && "outline-gray-300"
         )}
       >
         {layout.elements.map((item) => {

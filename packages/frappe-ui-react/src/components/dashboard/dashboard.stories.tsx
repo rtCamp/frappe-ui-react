@@ -2,7 +2,7 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import { Dashboard } from "./index";
-import type { LayoutItem } from "./types";
+import type { SerializedLayoutItem } from "./types";
 
 const meta: Meta = {
   title: "Components/Dashboard",
@@ -52,18 +52,18 @@ export const Default: Story = {
     const [, updateArgs] = useArgs();
 
     const handleLayoutChange = (
-      newLayout: LayoutItem[] | ((prevLayout: LayoutItem[]) => LayoutItem[])
+      newLayout: SerializedLayoutItem[] | ((prevLayout: SerializedLayoutItem[]) => SerializedLayoutItem[])
     ) => {
       const resolvedLayout =
         typeof newLayout === "function"
           ? newLayout(args.layout || [])
           : newLayout;
-      updateArgs({ layout: resolvedLayout });
+      updateArgs({ savedLayout: resolvedLayout });
     };
 
     return (
       <div className="w-full h-screen flex justify-center items-center">
-        <Dashboard layout={args.layout || []} setLayout={handleLayoutChange} />
+        <Dashboard initialLayout={args.layout || []} savedLayout={args.savedLayout || []} onLayoutChange={handleLayoutChange} />
       </div>
     );
   },
@@ -118,5 +118,6 @@ export const Default: Story = {
         ],
       },
     ],
+    savedLayout: [],
   },
 };

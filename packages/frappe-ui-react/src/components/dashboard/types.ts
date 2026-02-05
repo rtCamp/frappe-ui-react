@@ -13,9 +13,16 @@ interface ContainerElement {
 
 export type LayoutItem = ComponentElement | ContainerElement;
 
+export type SerializedLayoutItem = Omit<ComponentElement, 'component'> | {
+  id: string;
+  type: 'row' | 'stack';
+  elements: SerializedLayoutItem[];
+};
+
 export interface DashboardProps {
-  layout: LayoutItem[];
-  setLayout: (layout: LayoutItem[] | ((prevLayout: LayoutItem[]) => LayoutItem[])) => void;
+  initialLayout: LayoutItem[];
+  savedLayout: SerializedLayoutItem[];
+  onLayoutChange: (layout: SerializedLayoutItem[] | ((prevLayout: SerializedLayoutItem[]) => SerializedLayoutItem[])) => void;
 }
 
 export interface LayoutContainerProps {
