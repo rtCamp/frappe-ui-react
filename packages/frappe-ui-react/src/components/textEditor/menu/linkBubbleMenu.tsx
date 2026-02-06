@@ -4,17 +4,16 @@
 import { useCurrentEditor, useEditorState } from "@tiptap/react";
 import { BubbleMenu, type BubbleMenuProps } from "@tiptap/react/menus";
 import { Check, X } from "lucide-react";
+import { useState } from "react";
 
 /**
  * Internal dependencies.
  */
 import { TextInput } from "../../textInput";
 import { Button } from "../../button";
-import { useRef, useState } from "react";
 
 const LinkBubbleMenu = () => {
   const { editor } = useCurrentEditor();
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const state = useEditorState({
     editor,
@@ -53,7 +52,6 @@ const LinkBubbleMenu = () => {
       <div className="p-2 w-72 flex items-center gap-2 bg-surface-white shadow-xl rounded">
         <div className="w-full">
           <TextInput
-            ref={inputRef}
             type="text"
             placeholder="https://example.com"
             variant="subtle"
