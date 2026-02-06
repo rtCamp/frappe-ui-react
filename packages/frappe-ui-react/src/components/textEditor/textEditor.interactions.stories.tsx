@@ -255,3 +255,40 @@ export const EditorFontColor: Story = {
     expect(newText).toHaveStyle("background-color: #ffe7e7");
   },
 };
+
+export const EditorLink: Story = {
+  args: {
+    content: CONTENT,
+    editorClass: "prose-sm min-h-[4rem] border rounded-b-lg border-t-0 p-2",
+    fixedMenu: true,
+  },
+  render: function BasicRender(args) {
+    return (
+      <div className="m-2 w-[550px]">
+        <TextEditor {...args} />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const text = canvas.getByText((content) => {
+      return content.includes("paragraph");
+    });
+
+    await userEvent.tripleClick(text);
+
+    const linkButton = await screen.findByTitle("Link");
+    await userEvent.click(linkButton);
+
+    const linkInput = await screen.findByPlaceholderText(/example.com/i);
+    await userEvent.type(linkInput, "https://test-link.com");
+
+    const confirmButton = await screen.findByRole("button", {
+      name: /confirm link/i,
+    });
+    await userEvent.click(confirmButton);
+
+    const linkElement = canvas.getByRole("link");
+    expect(linkElement).toHaveAttribute("href", "https://test-link.com");
+  },
+};

@@ -60,21 +60,21 @@ const LinkBubbleMenu = () => {
           />
         </div>
         <div className="shrink-0 flex items-center gap-1.5 ml-auto">
-          <>
-            <Button
-              icon={() => <Check className="w-4 h-4" />}
-              variant="subtle"
-              onClick={close}
-            />
-            <Button
-              icon={() => <X className="w-4 h-4" />}
-              variant="subtle"
-              onClick={() => {
-                unsetLink();
-                close();
-              }}
-            />
-          </>
+          <Button
+            aria-label="Confirm Link"
+            icon={() => <Check className="w-4 h-4" />}
+            variant="subtle"
+            onClick={close}
+          />
+          <Button
+            aria-label="Reset Link"
+            icon={() => <X className="w-4 h-4" />}
+            variant="subtle"
+            onClick={() => {
+              unsetLink();
+              close();
+            }}
+          />
         </div>
       </div>
     </BubbleMenu>
