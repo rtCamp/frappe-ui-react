@@ -67,13 +67,13 @@ const CONTENT: string = `
     <p>
         This is a paragraph with <strong>bold</strong> and <em>italic</em> text.
     </p>
+    <img src="https://placehold.co/600x400" />
     <ul>
         <li>Item 1</li>
         <li>Item 2</li>
     </ul>
         <pre><code class="language-javascript">import { Button } from '@rtcamp/frappe-ui-react'
 const value = ref(true);</code></pre>
-    </ul>
 </div>
 `;
 

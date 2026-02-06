@@ -25,6 +25,7 @@ import {
   TableIcon,
   TypeIcon,
   Undo2Icon,
+  Image,
 } from "lucide-react";
 
 /**
@@ -262,6 +263,17 @@ export const COMMANDS: Record<TYPE_COMMANDS_KEYS, EditorCommand> = {
     icon: Redo2Icon,
     action: (editor) => editor.chain().focus().redo().run(),
     isDisabled: (editor) => !editor.can().redo(),
+    isActive: () => false,
+  },
+  select_image: {
+    label: "Image",
+    icon: Image,
+    action: () => {
+      const inpEle = document.getElementById("fileInput");
+      if (inpEle) {
+        inpEle.click();
+      }
+    },
     isActive: () => false,
   },
 };
