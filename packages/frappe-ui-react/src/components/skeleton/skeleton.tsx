@@ -9,10 +9,7 @@ export const Skeleton = ({
 }: React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
-      className={clsx(
-        "animate-pulse rounded-md bg-slate-200 dark:bg-accent",
-        className
-      )}
+      className={clsx("animate-pulse rounded-md bg-surface-gray-4", className)}
       {...props}
     />
   );
