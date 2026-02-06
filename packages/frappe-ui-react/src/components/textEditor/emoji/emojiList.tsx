@@ -29,15 +29,11 @@ export const EmojiList = forwardRef<EmojiListRef, SuggestionProps>(
 
     useImperativeHandle(ref, () => {
       const upHandler = () => {
-        if (selectedIndex > 0) {
-          setSelectedIndex((selectedIndex + items.length - 1) % items.length);
-        }
+        setSelectedIndex((selectedIndex + items.length - 1) % items.length);
       };
 
       const downHandler = () => {
-        if (selectedIndex < items.length - 1) {
-          setSelectedIndex((selectedIndex + 1) % items.length);
-        }
+        setSelectedIndex((selectedIndex + 1) % items.length);
       };
 
       const enterHandler = () => {
