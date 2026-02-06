@@ -1,3 +1,6 @@
+/**
+ * External dependencies.
+ */
 import type {
   SuggestionKeyDownProps,
   SuggestionProps,
@@ -10,29 +13,27 @@ export type EmojiListRef = {
 };
 
 export const EmojiList = forwardRef<EmojiListRef, SuggestionProps>(
-  (props, ref) => {
+  ({ items, command }, ref) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     const selectItem = useCallback(
       (index: number) => {
-        const item = props.items[index];
+        const item = items[index];
 
         if (item) {
-          props.command({ name: item.name });
+          command({ name: item.name });
         }
       },
-      [props]
+      [items, command]
     );
 
     useImperativeHandle(ref, () => {
       const upHandler = () => {
-        setSelectedIndex(
-          (selectedIndex + props.items.length - 1) % props.items.length
-        );
+        setSelectedIndex((selectedIndex + items.length - 1) % items.length);
       };
 
       const downHandler = () => {
-        setSelectedIndex((selectedIndex + 1) % props.items.length);
+        setSelectedIndex((selectedIndex + 1) % items.length);
       };
 
       const enterHandler = () => {
@@ -59,12 +60,16 @@ export const EmojiList = forwardRef<EmojiListRef, SuggestionProps>(
           return false;
         },
       };
-    }, [props, selectedIndex, selectItem]);
+    }, [items, selectedIndex, selectItem]);
 
     return (
-      <div className="relative max-h-[300px] min-w-40 overflow-y-auto rounded-lg bg-surface-white p-1 text-base shadow-lg">
-        {props.items.map((item, index) => (
+      <div
+        role="listbox"
+        className="relative max-h-[300px] min-w-40 overflow-y-auto rounded-lg bg-surface-white p-1 text-base shadow-lg"
+      >
+        {items.map((item, index) => (
           <button
+            type="button"
             key={index}
             className={clsx(
               "flex w-full items-center whitespace-nowrap rounded-md px-2 py-1.5 text-sm text-ink-gray-9 gap-1",
