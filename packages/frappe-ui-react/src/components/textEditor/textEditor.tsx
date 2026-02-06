@@ -23,7 +23,7 @@ import "./textEditor.css";
 import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
-import { ExtendedCodeBlock } from "./extension/codeBlock";
+import { ExtendedCodeBlock } from "./extension/codeBlock/codeBlock";
 import { getBase64File } from "./utils/getBase64File";
 
 const TextEditor = ({
@@ -91,6 +91,10 @@ const TextEditor = ({
           allowBase64: true,
           resize: {
             enabled: true,
+            directions: ["bottom-right"], // can be any direction or diagonal combination
+            minWidth: 50,
+            minHeight: 50,
+            alwaysPreserveAspectRatio: true,
           },
         }),
         ...extensions,
