@@ -10,7 +10,7 @@ import { Check, X } from "lucide-react";
  */
 import { TextInput } from "../../textInput";
 import { Button } from "../../button";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const LinkBubbleMenu = () => {
   const { editor } = useCurrentEditor();
@@ -23,6 +23,8 @@ const LinkBubbleMenu = () => {
       from: editor?.state.selection.from,
     }),
   });
+
+  const [value, setValue] = useState(state?.currentLink);
 
   if (!editor) {
     return null;
@@ -55,8 +57,8 @@ const LinkBubbleMenu = () => {
             type="text"
             placeholder="https://example.com"
             variant="subtle"
-            value={state?.currentLink}
-            onChange={(e) => setLink(e.target.value)}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
           />
         </div>
         <div className="shrink-0 flex items-center gap-1.5 ml-auto">
@@ -64,7 +66,10 @@ const LinkBubbleMenu = () => {
             aria-label="Confirm Link"
             icon={() => <Check className="w-4 h-4" />}
             variant="subtle"
-            onClick={close}
+            onClick={() => {
+              setLink(value ?? "");
+              close();
+            }}
           />
           <Button
             aria-label="Reset Link"
