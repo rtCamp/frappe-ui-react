@@ -58,11 +58,9 @@ const TextEditor = ({
       extensions: [
         StarterKit.configure({
           codeBlock: false,
-          horizontalRule: {
-            HTMLAttributes: {
-              class: "not-prose border-outline-gray-1 m-0",
-            },
-          },
+          strike: false,
+          blockquote: false,
+          horizontalRule: false,
           ...starterkitOptions,
         }),
         Placeholder.configure({

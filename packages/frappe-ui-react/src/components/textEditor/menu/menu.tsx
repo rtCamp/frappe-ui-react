@@ -164,7 +164,7 @@ const Menu = ({ className }: MenuProps) => {
 
         if (command.component) {
           return (
-            <command.component>
+            <command.component key={index}>
               {({ isActive, onClick }) => (
                 <button
                   role="button"
