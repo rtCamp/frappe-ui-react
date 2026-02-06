@@ -12,7 +12,7 @@ import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Strike from "@tiptap/extension-strike";
 import Placeholder from "@tiptap/extension-placeholder";
 import { TableKit } from "@tiptap/extension-table";
-import Emoji, { gitHubEmojis } from "@tiptap/extension-emoji";
+import Emoji from "@tiptap/extension-emoji";
 import clsx from "clsx";
 
 /**
@@ -86,7 +86,6 @@ const TextEditor = ({
         }),
         ExtendedCodeBlock,
         Emoji.configure({
-          emojis: gitHubEmojis,
           suggestion: EmojiSuggestions,
         }),
         ...extensions,
