@@ -69,6 +69,7 @@ export const EmojiList = forwardRef<EmojiListRef, SuggestionProps>(
       >
         {items.map((item, index) => (
           <button
+            role="option"
             type="button"
             key={index}
             className={clsx(
