@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
+import { BadgeInfo } from "lucide-react";
 
 import Alert from "./alert";
 import { Button } from "../button";
-import { BadgeInfo } from "lucide-react";
 
 export default {
   title: "Components/Alert",
@@ -16,7 +16,7 @@ export default {
     theme: {
       control: {
         type: "select",
-        options: ["yellow", "blue", "red", "green"],
+        options: ["yellow", "blue", "red", "green", "default"],
       },
       description: "Color theme of the alert",
     },
@@ -47,6 +47,10 @@ export default {
       control: false,
       description: "Custom footer content for the alert",
     },
+    className: {
+      control: "text",
+      description: "Additional CSS classes to apply to the alert container",
+    },
   },
   parameters: {
     docs: {
@@ -63,7 +67,7 @@ type Story = StoryObj<typeof Alert>;
 
 const AlertTemplate: Story = {
   render: (args) => (
-    <div className="w-[500px]">
+    <div className="min-w-125 min-h-34 w-125">
       <Alert {...args} />
     </div>
   ),
@@ -82,9 +86,9 @@ export const Success: Story = {
 export const Warning: Story = {
   ...AlertTemplate,
   args: {
-    title: "Source successfully added",
+    title: "Scheduled maintenance coming",
     description:
-      "Discover the new feature to enhance your experience. See how it can help you.",
+      "We will be performing scheduled maintenance soon. Services may be unavailable during this time.",
     theme: "yellow",
   },
 };
@@ -92,9 +96,9 @@ export const Warning: Story = {
 export const Error: Story = {
   ...AlertTemplate,
   args: {
-    title: "Source successfully added",
+    title: "Connection failed",
     description:
-      "Discover the new feature to enhance your experience. See how it can help you.",
+      "Unable to connect to the server. Please check your internet connection and try again.",
     theme: "red",
   },
 };
@@ -102,7 +106,7 @@ export const Error: Story = {
 export const Info: Story = {
   ...AlertTemplate,
   args: {
-    title: "Source successfully added",
+    title: "New feature available",
     description:
       "Discover the new feature to enhance your experience. See how it can help you.",
     theme: "blue",
@@ -114,7 +118,7 @@ export const ControlledState: Story = {
     const [visible, setVisible] = useState(true);
 
     return (
-      <div className="min-w-[500px] min-h-34 w-[500px]">
+      <div className="min-w-125 min-h-34 w-125">
         <Button
           variant="solid"
           label="Toggle Alert"
@@ -122,33 +126,28 @@ export const ControlledState: Story = {
           className="mb-3"
         />
 
-        <Alert
-          {...args}
-          visible={visible}
-          onVisibleChange={setVisible}
-          title="Source successfully added"
-          description="Discover the new feature to enhance your experience. See how it can help you."
-        />
+        <Alert {...args} visible={visible} onVisibleChange={setVisible} />
       </div>
     );
   },
-  args: {},
+  args: {
+    title: "Source successfully added",
+    description:
+      "Discover the new feature to enhance your experience. See how it can help you.",
+    icon: false,
+  },
 };
 
 export const CustomSlots: Story = {
-  render: (args) => (
-    <div className="w-[500px]">
-      <Alert
-        {...args}
-        title="Your trial ends soon!"
-        variant="outline"
-        description="Upgrade to keep enjoying features and future technical support."
-        icon={() => <BadgeInfo className="w-4 h-4" />}
-        footer={() => (
-          <Button className="w-full" variant="solid" label="Update now" />
-        )}
-      />
-    </div>
-  ),
-  args: {},
+  ...AlertTemplate,
+  args: {
+    title: "Your trial ends soon!",
+    variant: "outline",
+    description:
+      "Upgrade to keep enjoying features and future technical support.",
+    icon: () => <BadgeInfo className="w-4 h-4" />,
+    footer: () => (
+      <Button className="w-full" variant="solid" label="Update now" />
+    ),
+  },
 };

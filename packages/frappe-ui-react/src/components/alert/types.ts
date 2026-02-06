@@ -2,15 +2,13 @@ import type { ReactNode } from "react";
 
 export interface AlertProps {
   title: string;
-  theme?: "yellow" | "blue" | "red" | "green";
+  theme?: "yellow" | "blue" | "red" | "green" | "default";
   variant?: "subtle" | "outline";
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  description?: string | ((args?: any) => ReactNode);
+  description?: string | ((args?: unknown) => ReactNode);
   dismissable?: boolean;
   visible?: boolean;
   onVisibleChange?: (visible: boolean) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  icon?: (args?: any) => ReactNode;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  footer?: (args?: any) => ReactNode;
+  icon?: false | ((args?: unknown) => ReactNode);
+  footer?: (args?: unknown) => ReactNode;
+  className?: string;
 }
