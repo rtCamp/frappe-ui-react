@@ -3,12 +3,12 @@
  */
 import { Field } from "@base-ui/react/field";
 import { cva } from "class-variance-authority";
-import clsx from "clsx";
 
 /**
  * Internal dependencies.
  */
 import type { LabelProps } from "./types";
+import { cn } from "../../utils";
 
 const labelVariants = cva(
   "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -20,7 +20,7 @@ export const Label: React.FC<LabelProps> = ({
   ...props
 }) => {
   return (
-    <Field.Label className={clsx(labelVariants(), className)} {...props}>
+    <Field.Label className={cn(labelVariants(), className)} {...props}>
       {children}
     </Field.Label>
   );
