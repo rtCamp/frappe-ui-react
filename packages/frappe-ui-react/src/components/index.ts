@@ -26,6 +26,7 @@ export * from "./popover";
 export * from "./rating";
 export * from "./select";
 export * from "./sidebar";
+export * from "./skeleton";
 export * from "./spinner";
 export * from "./switch";
 export { default as TabButtons } from "./tabButtons";
