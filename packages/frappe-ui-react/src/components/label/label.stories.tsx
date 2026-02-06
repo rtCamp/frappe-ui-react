@@ -9,6 +9,11 @@ const meta: Meta<typeof Label> = {
     layout: "centered",
   },
   tags: ["autodocs"],
+  argTypes: {
+    children: {
+      description: "The label text component",
+    },
+  },
 };
 
 export default meta;
