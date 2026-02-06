@@ -277,7 +277,6 @@ export const EditorEmoji: Story = {
         content.includes("This is a paragraph") && element?.tagName === "P"
       );
     });
-    console.log(text);
 
     await userEvent.click(text);
 
