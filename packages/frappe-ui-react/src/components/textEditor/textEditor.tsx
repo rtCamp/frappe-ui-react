@@ -12,7 +12,9 @@ import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Strike from "@tiptap/extension-strike";
 import Placeholder from "@tiptap/extension-placeholder";
 import { TableKit } from "@tiptap/extension-table";
+import Image from "@tiptap/extension-image";
 import clsx from "clsx";
+import type { ChangeEventHandler } from "react";
 
 /**
  * Internal dependencies.
@@ -22,6 +24,7 @@ import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
 import { ExtendedCodeBlock } from "./extension/codeBlock";
+import { getBase64File } from "./utils/getBase64File";
 
 const TextEditor = ({
   content,
@@ -39,6 +42,7 @@ const TextEditor = ({
   Top,
   Editor,
   Bottom,
+  uploadFunction = getBase64File,
 }: TextEditorProps) => {
   const editor = useEditor(
     {
@@ -83,6 +87,12 @@ const TextEditor = ({
           },
         }),
         ExtendedCodeBlock,
+        Image.configure({
+          allowBase64: true,
+          resize: {
+            enabled: true,
+          },
+        }),
         ...extensions,
       ],
       onUpdate: ({ editor }) => {
@@ -112,8 +122,34 @@ const TextEditor = ({
     ]
   );
 
+  const handleUpload: ChangeEventHandler<HTMLInputElement> = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !editor) return;
+    if (!file.type.startsWith("image/")) {
+      return;
+    }
+
+    const res = await uploadFunction(file);
+    const url = res.file_url;
+
+    if (url) {
+      editor.chain().focus().setImage({ src: url }).run();
+    }
+
+    e.target.value = "";
+  };
+
   return (
     <EditorContext.Provider value={{ editor }}>
+      {/* Invisible field to provide upload functionality */}
+      <input
+        id="fileInput"
+        type="file"
+        style={{
+          visibility: "hidden",
+        }}
+        onChange={handleUpload}
+      />
       {Top && <Top />}
       {fixedMenu && <FixedMenu />}
       {Editor ? <Editor editor={editor} /> : <EditorContent editor={editor} />}
