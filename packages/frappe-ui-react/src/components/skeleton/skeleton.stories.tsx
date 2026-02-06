@@ -19,7 +19,10 @@ export default meta;
 type Story = StoryObj<typeof Skeleton>;
 
 export const Default: Story = {
-  render: () => {
-    return <Skeleton className="w-[100px] h-[100px]" />;
+  args: {
+    className: "w-[100px] h-[100px]",
+  },
+  render: (args) => {
+    return <Skeleton className={args.className} />;
   },
 };
