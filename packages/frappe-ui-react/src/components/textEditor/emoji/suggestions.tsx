@@ -3,7 +3,7 @@
  */
 import type { EmojiItem } from "@tiptap/extension-emoji";
 import type { SuggestionOptions, SuggestionProps } from "@tiptap/suggestion";
-import { computePosition } from "@floating-ui/dom";
+import { computePosition } from "@floating-ui/react";
 import { ReactRenderer } from "@tiptap/react";
 
 /**

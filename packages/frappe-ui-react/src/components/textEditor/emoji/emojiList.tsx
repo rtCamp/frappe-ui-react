@@ -66,6 +66,10 @@ export const EmojiList = forwardRef<EmojiListRef, SuggestionProps>(
       };
     }, [items, selectedIndex, selectItem]);
 
+    if (items.length === 0) {
+      return null;
+    }
+
     return (
       <div
         role="listbox"
