@@ -32,6 +32,7 @@ const DEFAULT_COMMANDS: Array<
   "bold",
   "italic",
   "strike",
+  "link",
   "font_color",
   "separator",
   "bullet_list",

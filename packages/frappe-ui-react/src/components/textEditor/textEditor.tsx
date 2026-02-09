@@ -22,6 +22,7 @@ import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
 import { ExtendedCodeBlock } from "./extension/codeBlock";
+import LinkBubbleMenu from "./menu/linkBubbleMenu";
 
 const TextEditor = ({
   content,
@@ -59,6 +60,9 @@ const TextEditor = ({
           strike: false,
           blockquote: false,
           horizontalRule: false,
+          link: {
+            openOnClick: false,
+          },
           ...starterkitOptions,
         }),
         Placeholder.configure({
@@ -114,6 +118,7 @@ const TextEditor = ({
 
   return (
     <EditorContext.Provider value={{ editor }}>
+      <LinkBubbleMenu />
       {Top && <Top />}
       {fixedMenu && <FixedMenu />}
       {Editor ? <Editor editor={editor} /> : <EditorContent editor={editor} />}
