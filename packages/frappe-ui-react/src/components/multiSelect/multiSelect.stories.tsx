@@ -106,7 +106,7 @@ export const OptionSlot: Story = {
           onChange={setValue}
           renderOption={(item) => (
             <div className="flex items-center">
-              <span className="mr-2">
+              <span className="flex items-center mr-2">
                 <Avatar image={(item as (typeof options)[0]).img} size="sm" />
               </span>
               {item.label}
@@ -134,7 +134,7 @@ export const FooterSlot: Story = {
           value={value}
           onChange={setValue}
           renderFooter={({ clearAll, selectAll }) => (
-            <div className="flex justify-between my-2">
+            <div className="flex justify-between my-2 gap-2">
               <Button
                 theme="red"
                 onClick={clearAll}
