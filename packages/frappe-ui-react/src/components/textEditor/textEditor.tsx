@@ -60,6 +60,9 @@ const TextEditor = ({
           strike: false,
           blockquote: false,
           horizontalRule: false,
+          link: {
+            openOnClick: false,
+          },
           ...starterkitOptions,
         }),
         Placeholder.configure({
