@@ -4,7 +4,7 @@
 import { useCurrentEditor, useEditorState } from "@tiptap/react";
 import { BubbleMenu, type BubbleMenuProps } from "@tiptap/react/menus";
 import { Check, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * Internal dependencies.
@@ -25,6 +25,11 @@ const LinkBubbleMenu = () => {
 
   const [value, setValue] = useState(state?.currentLink);
 
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setValue(state?.currentLink ?? "");
+  }, [state?.currentLink]);
+
   if (!editor) {
     return null;
   }
@@ -39,6 +44,7 @@ const LinkBubbleMenu = () => {
 
   const setLink = (href: string) => {
     editor.chain().setLink({ href }).run();
+    setValue("");
   };
 
   const close = () => {
