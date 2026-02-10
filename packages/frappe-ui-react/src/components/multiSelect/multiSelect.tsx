@@ -113,7 +113,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
             <Combobox.List className="max-h-60 overflow-auto pb-1.5 focus:outline-none">
               {(item) => (
                 <Combobox.Item
-                  key={item.value}
+                  key={item.id ?? item.value}
                   value={item}
                   disabled={item.disabled}
                   className="text-base leading-none text-ink-gray-7 rounded flex items-center h-7 p-1.5 pr-8 relative select-none data-disabled:opacity-50 data-disabled:pointer-events-none data-highlighted:outline-none data-highlighted:bg-surface-gray-3 cursor-pointer"

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 export interface MultiSelectOption {
+  id?: string | number;
   label: string;
   value: string;
   disabled?: boolean;

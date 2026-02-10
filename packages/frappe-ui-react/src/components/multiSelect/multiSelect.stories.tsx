@@ -81,7 +81,7 @@ export const Default: Story = {
   render: (args) => {
     const [value, setValue] = useState<string[]>([]);
     return (
-      <div className="w-[450px]">
+      <div className="w-112.5">
         <MultiSelect {...args} value={value} onChange={setValue} />
       </div>
     );
@@ -97,9 +97,9 @@ export const OptionSlot: Story = {
     onChange: () => {},
   },
   render: (args) => {
-    const [value, setValue] = useState<string[]>([]);
+    const [value, setValue] = useState<string[]>(["red-apple", "kiwi-slice"]);
     return (
-      <div className="w-[450px]">
+      <div className="w-112.5">
         <MultiSelect
           {...args}
           value={value}
@@ -128,7 +128,7 @@ export const FooterSlot: Story = {
   render: (args) => {
     const [value, setValue] = useState<string[]>([]);
     return (
-      <div className="w-[450px]">
+      <div className="w-112.5">
         <MultiSelect
           {...args}
           value={value}
