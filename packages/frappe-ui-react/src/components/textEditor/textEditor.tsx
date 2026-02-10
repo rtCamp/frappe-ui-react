@@ -12,6 +12,7 @@ import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Strike from "@tiptap/extension-strike";
 import Placeholder from "@tiptap/extension-placeholder";
 import { TableKit } from "@tiptap/extension-table";
+import Emoji from "@tiptap/extension-emoji";
 import clsx from "clsx";
 
 /**
@@ -22,6 +23,7 @@ import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
 import { ExtendedCodeBlock } from "./extension/codeBlock";
+import EmojiSuggestions from "./emoji/suggestions";
 
 const TextEditor = ({
   content,
@@ -83,6 +85,9 @@ const TextEditor = ({
           },
         }),
         ExtendedCodeBlock,
+        Emoji.configure({
+          suggestion: EmojiSuggestions,
+        }),
         ...extensions,
       ],
       onUpdate: ({ editor }) => {
@@ -116,7 +121,11 @@ const TextEditor = ({
     <EditorContext.Provider value={{ editor }}>
       {Top && <Top />}
       {fixedMenu && <FixedMenu />}
-      {Editor ? <Editor editor={editor} /> : <EditorContent editor={editor} />}
+      {Editor ? (
+        <Editor editor={editor} />
+      ) : (
+        <EditorContent editor={editor} role="textbox" />
+      )}
       {Bottom && <Bottom />}
     </EditorContext.Provider>
   );
