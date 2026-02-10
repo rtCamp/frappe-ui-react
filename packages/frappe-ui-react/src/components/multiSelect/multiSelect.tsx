@@ -76,6 +76,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
               value.length === 0 && "text-ink-gray-4!"
             )}
             iconRight={() => <ChevronDown className="w-4 h-4 shrink-0" />}
+            aria-label="Select options"
           >
             <span className="truncate block text-left">{selectedOptions}</span>
           </Button>
@@ -84,7 +85,10 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
 
       <Combobox.Portal>
         <Combobox.Positioner className="group" sideOffset={8} align="start">
-          <Combobox.Popup className="shadow-xl rounded-lg border border-outline-gray-1 bg-surface-modal p-2 w-(--anchor-width)">
+          <Combobox.Popup
+            className="shadow-xl rounded-lg border border-outline-gray-1 bg-surface-modal p-2 w-(--anchor-width)"
+            aria-label="Options"
+          >
             {!hideSearch && (
               <div className="flex w-full items-center justify-between gap-2 rounded bg-surface-gray-2 px-2 py-1 ring-2 ring-outline-gray-2 transition-colors hover:bg-surface-gray-3 border border-transparent mb-2">
                 <Combobox.Input
@@ -99,6 +103,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                   <Combobox.Clear
                     keepMounted={query !== ""}
                     onClick={() => setQuery("")}
+                    aria-label="Clear search"
                   >
                     <X className="size-4 text-ink-gray-9" />
                   </Combobox.Clear>
