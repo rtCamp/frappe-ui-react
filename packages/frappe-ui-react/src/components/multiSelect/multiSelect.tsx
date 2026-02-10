@@ -8,15 +8,15 @@ import { Check, ChevronDown, X } from "lucide-react";
 /**
  * Internal dependencies.
  */
-import Button from "../button/button";
+import { Button } from "../button";
 import LoadingIndicator from "../loadingIndicator";
 import type { MultiSelectOption, MultiSelectProps } from "./types";
 import clsx from "clsx";
 
 const defaultCompareFn = (
-  a: NoInfer<MultiSelectOption | null> | object,
-  b: NoInfer<MultiSelectOption | null> | object
-) => (a as MultiSelectOption).value === (b as MultiSelectOption).value;
+  a: NoInfer<MultiSelectOption | null>,
+  b: NoInfer<MultiSelectOption | null>
+) => a?.value === b?.value;
 
 export const MultiSelect: React.FC<MultiSelectProps> = ({
   value = [],
@@ -31,11 +31,16 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
 }) => {
   const [query, setQuery] = useState("");
 
+  const optionsMap = useMemo(
+    () => new Map(options.map((opt) => [opt.value, opt] as const)),
+    [options]
+  );
+
   const selectedOptionObjects = useMemo<MultiSelectOption[]>(() => {
     return value
-      .map((val) => options.find((opt) => opt.value === val))
+      .map((val) => optionsMap.get(val))
       .filter((opt): opt is MultiSelectOption => opt !== undefined);
-  }, [value, options]);
+  }, [value, optionsMap]);
 
   const selectedOptions = useMemo(() => {
     if (selectedOptionObjects.length === 0) return placeholder;

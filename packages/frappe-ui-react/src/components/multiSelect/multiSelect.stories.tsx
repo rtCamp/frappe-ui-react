@@ -107,7 +107,7 @@ export const OptionSlot: Story = {
           renderOption={(item) => (
             <div className="flex items-center">
               <span className="flex items-center mr-2">
-                <Avatar image={(item as (typeof options)[0]).img} size="sm" />
+                <Avatar image={item.img?.toString()} size="sm" />
               </span>
               {item.label}
             </div>
