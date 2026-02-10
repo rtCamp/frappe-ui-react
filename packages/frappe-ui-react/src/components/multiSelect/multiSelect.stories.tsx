@@ -3,8 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CheckCheck, Trash2 } from "lucide-react";
 
 import { MultiSelect } from "./multiSelect";
-import Button from "../button/button";
-import Avatar from "../avatar/avatar";
+import { Button } from "../button";
+import { Avatar } from "../avatar";
 
 const meta: Meta<typeof MultiSelect> = {
   title: "Components/MultiSelect",

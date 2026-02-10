@@ -82,7 +82,6 @@ export const Options: Story = {
     const [value, setValue] = useState<string[]>(args.value as string[]);
     const handleChange = (newValue: string[]) => {
       setValue(newValue);
-      console.log("Selected values:", newValue);
       args.onChange?.(newValue);
     };
     return (
@@ -220,11 +219,10 @@ export const SearchOptions: Story = {
     const noResultsMessage = await screen.findByText("No results found");
     expect(noResultsMessage).toBeInTheDocument();
 
-    // Find and click the clear button (X icon)
-    const clearButtons = await screen.findAllByRole("button");
-    const clearButton = clearButtons.find((btn) =>
-      btn.querySelector("svg.lucide-x")
-    );
+    // Find and click the clear button
+    const clearButton = await screen.findByRole("button", {
+      name: /clear search/i,
+    });
     expect(clearButton).toBeInTheDocument();
 
     await userEvent.click(clearButton as HTMLElement);
