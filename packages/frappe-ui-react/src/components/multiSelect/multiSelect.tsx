@@ -11,7 +11,7 @@ import { Check, ChevronDown, X } from "lucide-react";
 import { Button } from "../button";
 import LoadingIndicator from "../loadingIndicator";
 import type { MultiSelectOption, MultiSelectProps } from "./types";
-import clsx from "clsx";
+import { cn } from "../../utils";
 
 const defaultCompareFn = (
   a: NoInfer<MultiSelectOption | null>,
@@ -76,7 +76,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       <Combobox.Trigger
         render={
           <Button
-            className={clsx(
+            className={cn(
               "w-full justify-between!",
               value.length === 0 && "text-ink-gray-4!"
             )}
