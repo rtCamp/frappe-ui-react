@@ -1,9 +1,8 @@
 /**
  * External dependencies.
  */
-import { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
-import clsx from "clsx";
 
 /**
  * Internal dependencies.
@@ -12,6 +11,7 @@ import { dayjs } from "../../utils/dayjs";
 import { Popover } from "../popover";
 import { Button } from "../button";
 import type { MonthPickerProps } from "./types";
+import { cn } from "../../utils";
 
 const MONTHS = [
   "January",
@@ -44,65 +44,66 @@ const MonthPicker = ({
   placement,
   onChange,
 }: MonthPickerProps) => {
-  const [open, setOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"month" | "year">("month");
   const [currentYear, setCurrentYear] = useState<number>(
     parseValue(value)?.year ?? new Date().getFullYear()
   );
 
-  const yearRangeStart = useMemo(
-    () => currentYear - (currentYear % 12),
-    [currentYear]
-  );
+  const yearRangeStart = currentYear - (currentYear % 12);
 
   const yearRange = useMemo(
     () => Array.from({ length: 12 }, (_, i) => yearRangeStart + i),
     [yearRangeStart]
   );
 
-  const pickerList = useMemo(
-    () => (viewMode === "year" ? yearRange : MONTHS),
-    [viewMode, yearRange]
-  );
+  const pickerList = viewMode === "year" ? yearRange : MONTHS;
 
   const toggleViewMode = useCallback(() => {
     setViewMode((prevMode) => (prevMode === "month" ? "year" : "month"));
   }, []);
 
-  const prev = useCallback(() => {
+  const handlePrev = useCallback(() => {
     setCurrentYear((y) => (viewMode === "year" ? y - 12 : y - 1));
   }, [viewMode]);
 
-  const next = useCallback(() => {
+  const handleNext = useCallback(() => {
     setCurrentYear((y) => (viewMode === "year" ? y + 12 : y + 1));
   }, [viewMode]);
 
-  const handleOpenChange = useCallback((isOpen: boolean) => {
-    setOpen(isOpen);
-    if (!isOpen) setViewMode("month");
-  }, []);
-
   const handleOnClick = useCallback(
-    (v: string | number) => {
-      const parts = (value || "").split(" ");
-      const indexToModify = viewMode === "year" ? 1 : 0;
-      parts[indexToModify] = String(v);
-      const newValue = parts.join(" ");
-      onChange?.(newValue);
+    (e: React.MouseEvent<HTMLButtonElement>, v: string | number) => {
+      e.stopPropagation();
+      const parsed = parseValue(value);
+      let month = parsed?.month ?? "January";
+      let year = parsed?.year ?? currentYear;
+
+      if (viewMode === "month") {
+        month = String(v);
+        year = currentYear;
+      } else {
+        year = Number(v);
+      }
+      if (viewMode === "year") {
+        toggleViewMode();
+      }
+      onChange?.(`${month} ${year}`);
     },
-    [value, viewMode, onChange]
+    [value, viewMode, onChange, toggleViewMode, currentYear]
   );
 
   return (
     <Popover
       trigger="click"
       placement={placement || "bottom-start"}
-      show={open}
-      onUpdateShow={handleOpenChange}
+      onOpen={() => setViewMode("month")}
       target={({ togglePopover }) => (
         <Button
           onClick={togglePopover}
-          className={clsx("w-full justify-between!", className)}
+          className={cn(
+            "w-full justify-between!",
+            !value && "text-ink-gray-5!",
+            className
+          )}
           iconRight={() => <Calendar className="w-4 h-4" />}
         >
           {value || placeholder}
@@ -110,19 +111,37 @@ const MonthPicker = ({
       )}
       popoverClass="w-min!"
       body={() => (
-        <div className="mt-2 w-max content shadow-xl rounded-lg border border-outline-gray-1 bg-surface-modal p-2">
+        <div
+          className={cn(
+            "mt-2 w-max content shadow-xl rounded-lg border border-outline-gray-1 bg-surface-modal p-2",
+            viewMode === "year" && "min-w-52"
+          )}
+        >
           <div className="flex gap-2 justify-between">
-            <Button variant="ghost" onClick={prev}>
+            <Button
+              variant="ghost"
+              onClick={handlePrev}
+              aria-label={
+                viewMode === "month" ? "Previous month" : "Previous years"
+              }
+            >
               <ChevronLeft className="w-4 h-4 text-ink-gray-5" />
             </Button>
 
-            <Button onClick={toggleViewMode}>
+            <Button
+              onClick={toggleViewMode}
+              aria-label="Toggle between month and year selection"
+            >
               {viewMode === "month"
-                ? (value || "").split(" ")[1] || currentYear
+                ? currentYear
                 : `${yearRangeStart} - ${yearRangeStart + 11}`}
             </Button>
 
-            <Button variant="ghost" onClick={next}>
+            <Button
+              variant="ghost"
+              onClick={handleNext}
+              aria-label={viewMode === "month" ? "Next month" : "Next years"}
+            >
               <ChevronRight className="w-4 h-4 text-ink-gray-5" />
             </Button>
           </div>
@@ -130,16 +149,16 @@ const MonthPicker = ({
           <hr className="my-2 border-outline-gray-1" />
 
           <div className="grid grid-cols-3 gap-3">
-            {pickerList.map((month, index) => (
+            {pickerList.map((item) => (
               <Button
-                key={index}
-                onClick={() => handleOnClick(month)}
+                key={item}
+                onClick={(e) => handleOnClick(e, item)}
                 variant={
-                  (value || "").includes(String(month)) ? "solid" : "ghost"
+                  parseValue(value)?.[viewMode] === item ? "solid" : "ghost"
                 }
                 className="text-sm text-ink-gray-9"
               >
-                {viewMode === "month" ? (month as string).slice(0, 3) : month}
+                {viewMode === "month" ? (item as string).slice(0, 3) : item}
               </Button>
             ))}
           </div>
