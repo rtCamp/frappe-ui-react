@@ -32,23 +32,29 @@ const meta: Meta<typeof Alert> = {
       },
       description: "Visual variant of the alert",
     },
-    description: {
+    renderDescription: {
       control: "text",
-      description: "Description text displayed below the title",
+      description:
+        "Description text displayed below the title, can be a string or a render function for dynamic content",
     },
     dismissable: {
       control: "boolean",
-      description: "Whether the alert can be dismissed",
+      description: "Whether the alert can be dismissed by the user",
     },
     visible: {
       control: "boolean",
       description: "Controls the visibility of the alert (controlled mode)",
     },
-    icon: {
+    onVisibleChange: {
+      action: "changed",
+      description:
+        "Callback when the visibility of the alert changes (for controlled mode)",
+    },
+    renderIcon: {
       control: false,
       description: "Custom icon to display in the alert",
     },
-    footer: {
+    renderFooter: {
       control: false,
       description: "Custom footer content for the alert",
     },
@@ -65,7 +71,7 @@ type Story = StoryObj<typeof Alert>;
 export const DismissAlert: Story = {
   args: {
     title: "This alert can be dismissed",
-    description: "Click the X button to dismiss this alert",
+    renderDescription: "Click the X button to dismiss this alert",
     theme: "blue",
     dismissable: true,
   },
@@ -99,7 +105,7 @@ export const Description: Story = {
         <div className="min-w-125 w-125">
           <Alert
             title="String Description"
-            description="This is a simple string description"
+            renderDescription="This is a simple string description"
             theme="blue"
             dismissable={false}
           />
@@ -107,7 +113,7 @@ export const Description: Story = {
         <div className="min-w-125 w-125">
           <Alert
             title="Function Description"
-            description={() => (
+            renderDescription={() => (
               <div>
                 <p>This is a dynamic description rendered from a function.</p>
                 <p className="text-sm mt-2">It can contain rich content!</p>
@@ -145,9 +151,9 @@ export const Description: Story = {
 export const CustomIcon: Story = {
   args: {
     title: "Custom Icon Alert",
-    description:
+    renderDescription:
       "This alert has a custom icon instead of the default theme icon",
-    icon: () => <AlertCircle className="w-5 h-5 text-purple-600" />,
+    renderIcon: () => <AlertCircle className="w-5 h-5 text-purple-600" />,
     dismissable: false,
   },
   render: (args) => (
@@ -171,11 +177,11 @@ export const CustomIcon: Story = {
 export const AlertWithFooter: Story = {
   args: {
     title: "Trial Version",
-    description:
+    renderDescription:
       "Your trial period is ending soon. Upgrade to continue using this feature.",
     theme: "yellow",
     variant: "outline",
-    footer: () => (
+    renderFooter: () => (
       <Button variant="solid" label="Upgrade Now" className="w-full" />
     ),
     dismissable: true,
@@ -210,7 +216,7 @@ export const ThemeVariants: Story = {
           <div key={theme} className="min-w-125 w-125">
             <Alert
               title={`${theme.charAt(0).toUpperCase() + theme.slice(1)} Alert`}
-              description={`This is a ${theme} themed alert`}
+              renderDescription={`This is a ${theme} themed alert`}
               theme={theme}
               dismissable={false}
             />
@@ -282,7 +288,7 @@ export const ControlledVisibility: Story = {
         </div>
         <Alert
           title="Controlled Alert"
-          description="Use the button above to control this alert's visibility"
+          renderDescription="Use the button above to control this alert's visibility"
           visible={visible}
           onVisibleChange={setVisible}
           dismissable={true}
@@ -320,7 +326,7 @@ export const VariantStyling: Story = {
         <div className="min-w-125 w-125">
           <Alert
             title="Subtle Variant"
-            description="This alert uses the subtle styling variant"
+            renderDescription="This alert uses the subtle styling variant"
             variant="subtle"
             theme="green"
             dismissable={false}
@@ -329,7 +335,7 @@ export const VariantStyling: Story = {
         <div className="min-w-125 w-125">
           <Alert
             title="Outline Variant"
-            description="This alert uses the outline styling variant"
+            renderDescription="This alert uses the outline styling variant"
             variant="outline"
             theme="red"
             dismissable={false}

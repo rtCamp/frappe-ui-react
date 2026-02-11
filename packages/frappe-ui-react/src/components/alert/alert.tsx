@@ -82,12 +82,12 @@ const Alert: React.FC<AlertProps> = ({
   title,
   theme,
   variant = "subtle",
-  description,
+  renderDescription,
   dismissable = true,
   visible: controlledVisible,
   onVisibleChange,
-  icon,
-  footer,
+  renderIcon,
+  renderFooter,
   className,
 }) => {
   const [internalVisible, setInternalVisible] = useState(true);
@@ -111,26 +111,26 @@ const Alert: React.FC<AlertProps> = ({
       role="alert"
       className={cn(alertVariants({ variant, theme }), className)}
     >
-      {icon ? (
-        icon()
-      ) : icon !== false && iconConfig ? (
+      {renderIcon ? (
+        renderIcon()
+      ) : renderIcon !== false && iconConfig ? (
         <iconConfig.component className={cn("h-4 w-4", iconConfig.css)} />
       ) : null}
 
       <div
         className={cn(
           "grid gap-2",
-          (icon === false || !iconConfig) && "col-span-2"
+          (renderIcon === false || !iconConfig) && "col-span-2"
         )}
       >
         <h3 className="text-ink-gray-9">{title}</h3>
-        {description ? (
-          typeof description === "string" ? (
+        {renderDescription ? (
+          typeof renderDescription === "string" ? (
             <p className="text-ink-gray-6 text-base/normal font-[420]">
-              {description}
+              {renderDescription}
             </p>
           ) : (
-            description()
+            renderDescription()
           )
         ) : null}
       </div>
@@ -145,7 +145,9 @@ const Alert: React.FC<AlertProps> = ({
         />
       )}
 
-      {footer ? <div className="col-span-full">{footer()}</div> : null}
+      {renderFooter ? (
+        <div className="col-span-full">{renderFooter()}</div>
+      ) : null}
     </div>
   );
 };

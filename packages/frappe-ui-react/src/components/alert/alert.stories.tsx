@@ -8,6 +8,15 @@ import { Button } from "../button";
 export default {
   title: "Components/Alert",
   component: Alert,
+  parameters: {
+    docs: {
+      source: {
+        type: "dynamic",
+      },
+    },
+    layout: "centered",
+  },
+  tags: ["autodocs"],
   argTypes: {
     title: {
       control: "text",
@@ -27,23 +36,29 @@ export default {
       },
       description: "Visual variant of the alert",
     },
-    description: {
+    renderDescription: {
       control: "text",
-      description: "Description text displayed below the title",
+      description:
+        "Description text displayed below the title, can be a string or a render function for dynamic content",
     },
     dismissable: {
       control: "boolean",
-      description: "Whether the alert can be dismissed",
+      description: "Whether the alert can be dismissed by the user",
     },
     visible: {
       control: "boolean",
       description: "Controls the visibility of the alert (controlled mode)",
     },
-    icon: {
+    onVisibleChange: {
+      action: "changed",
+      description:
+        "Callback when the visibility of the alert changes (for controlled mode)",
+    },
+    renderIcon: {
       control: false,
       description: "Custom icon to display in the alert",
     },
-    footer: {
+    renderFooter: {
       control: false,
       description: "Custom footer content for the alert",
     },
@@ -52,15 +67,6 @@ export default {
       description: "Additional CSS classes to apply to the alert container",
     },
   },
-  parameters: {
-    docs: {
-      source: {
-        type: "dynamic",
-      },
-    },
-    layout: "centered",
-  },
-  tags: ["autodocs"],
 } as Meta<typeof Alert>;
 
 type Story = StoryObj<typeof Alert>;
@@ -77,7 +83,7 @@ export const Success: Story = {
   ...AlertTemplate,
   args: {
     title: "Source successfully added",
-    description:
+    renderDescription:
       "Discover the new feature to enhance your experience. See how it can help you.",
     theme: "green",
   },
@@ -87,7 +93,7 @@ export const Warning: Story = {
   ...AlertTemplate,
   args: {
     title: "Scheduled maintenance coming",
-    description:
+    renderDescription:
       "We will be performing scheduled maintenance soon. Services may be unavailable during this time.",
     theme: "yellow",
   },
@@ -97,7 +103,7 @@ export const Error: Story = {
   ...AlertTemplate,
   args: {
     title: "Connection failed",
-    description:
+    renderDescription:
       "Unable to connect to the server. Please check your internet connection and try again.",
     theme: "red",
   },
@@ -107,7 +113,7 @@ export const Info: Story = {
   ...AlertTemplate,
   args: {
     title: "New feature available",
-    description:
+    renderDescription:
       "Discover the new feature to enhance your experience. See how it can help you.",
     theme: "blue",
   },
@@ -132,9 +138,9 @@ export const ControlledState: Story = {
   },
   args: {
     title: "Source successfully added",
-    description:
+    renderDescription:
       "Discover the new feature to enhance your experience. See how it can help you.",
-    icon: false,
+    renderIcon: false,
   },
 };
 
@@ -143,10 +149,10 @@ export const CustomSlots: Story = {
   args: {
     title: "Your trial ends soon!",
     variant: "outline",
-    description:
+    renderDescription:
       "Upgrade to keep enjoying features and future technical support.",
-    icon: () => <BadgeInfo className="w-4 h-4" />,
-    footer: () => (
+    renderIcon: () => <BadgeInfo className="w-4 h-4" />,
+    renderFooter: () => (
       <Button className="w-full" variant="solid" label="Update now" />
     ),
   },
