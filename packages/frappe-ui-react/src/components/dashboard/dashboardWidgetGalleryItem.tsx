@@ -13,7 +13,14 @@ import { resolveWidgetSize } from "./dashboardUtil";
 
 export const DashboardWidgetGalleryItem: React.FC<
   DashboardWidgetGalleryItemProps
-> = ({ widget, view = "list", mode = "both", onWidgetAdd, onWidgetDrop }) => {
+> = ({
+  widget,
+  view = "list",
+  mode = "both",
+  onWidgetAdd,
+  onWidgetDrag,
+  onWidgetDrop,
+}) => {
   const context = useContext(DashboardContext);
 
   const handleDragStart = () => {
@@ -28,6 +35,7 @@ export const DashboardWidgetGalleryItem: React.FC<
     if (context) {
       context.setDraggingWidget({ ...widgetData, widget });
     }
+    onWidgetDrag?.(widget.id);
   };
 
   const handleDragEnd = () => {
@@ -65,7 +73,7 @@ export const DashboardWidgetGalleryItem: React.FC<
               <widget.component {...(widget.preview.props || {})} />
             </div>
           </div>
-          <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-surface-cards to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-8 bg-linear-to-t from-surface-cards to-transparent pointer-events-none" />
         </div>
       )}
       <div className="p-3 pt-0">

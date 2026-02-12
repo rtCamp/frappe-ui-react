@@ -146,13 +146,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
     },
     [widgets, sizes, onLayoutChange]
   );
+
   const handleDrop = useCallback(
     (
       widgetId: string,
       layoutData: { x: number; y: number },
       currentLayout?: RGLLayoutItem[]
     ) => {
-      // Disable compaction and freeze all widgets at their current preview positions to ensure the widget is placed exactly where it was dropped
+      // Disable compaction and freeze all widgets at their current preview positions
+      // to ensure the widget is placed exactly where it was dropped.
       setDisableCompaction(true);
       setLayouts((prevLayouts) => {
         const newLayouts: DashboardLayouts = { ...prevLayouts };
@@ -249,7 +251,5 @@ export const Dashboard: React.FC<DashboardProps> = ({
     />
   );
 };
-
-Dashboard.displayName = "Dashboard";
 
 export default Dashboard;

@@ -34,14 +34,16 @@ export const WidgetWrapper: React.FC<WidgetWrapperProps> = ({
         <div className="absolute top-2 right-2 z-10 flex items-center gap-1">
           {showRemoveButton && (
             <Button
-              onClick={() => onRemove(widgetId)}
+              onClick={() => onRemove?.(widgetId)}
               icon={() => <X className="w-4 h-4" />}
+              label="Remove widget"
             />
           )}
           {showDragHandle && (
             <Button
               className="dashboard-drag-handle cursor-grab! active:cursor-grabbing!"
               icon={() => <GripVertical className="w-4 h-4" />}
+              label="Reorder widget"
             />
           )}
         </div>

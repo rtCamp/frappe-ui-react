@@ -118,6 +118,7 @@ export interface DashboardWidgetGalleryProps {
   mode?: "drag" | "click" | "both";
   filterWidgets?: (widgets: WidgetDefinition[]) => WidgetDefinition[];
   onWidgetAdd?: (widgetId: string) => void;
+  onWidgetDrag?: (widgetId: string) => void;
   onWidgetDrop?: (widgetId: string) => void;
 }
 
@@ -126,6 +127,7 @@ export interface DashboardWidgetGalleryItemProps {
   view?: "list" | "grid";
   mode?: "drag" | "click" | "both";
   onWidgetAdd?: (widgetId: string) => void;
+  onWidgetDrag?: (widgetId: string) => void;
   onWidgetDrop?: (widgetId: string) => void;
 }
 

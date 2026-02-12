@@ -20,8 +20,15 @@ export const DashboardWidgetGallery: React.FC<DashboardWidgetGalleryProps> = ({
   filterWidgets,
   onWidgetAdd,
   onWidgetDrop,
+  onWidgetDrag,
 }) => {
-  const context = useContext(DashboardContext)!;
+  const context = useContext(DashboardContext);
+  if (!context) {
+    throw new Error(
+      "DashboardWidgetGallery must be used within DashboardProvider"
+    );
+  }
+
   const widgets = filterWidgets
     ? filterWidgets(context.widgets)
     : context.widgets;
@@ -50,6 +57,7 @@ export const DashboardWidgetGallery: React.FC<DashboardWidgetGalleryProps> = ({
             mode={mode}
             onWidgetAdd={onWidgetAdd}
             onWidgetDrop={onWidgetDrop}
+            onWidgetDrag={onWidgetDrag}
           />
         ))}
       </div>

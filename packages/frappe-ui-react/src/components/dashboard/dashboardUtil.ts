@@ -80,7 +80,7 @@ export const resolveWidgetSize = (
  */
 export const validateLayout = (layout: WidgetLayout[]): boolean => {
   if (!Array.isArray(layout)) return false;
-  if (layout.length === 0) return false;
+  if (layout.length === 0) return true;
 
   for (const widget of layout) {
     if (!widget || typeof widget.id !== "string") return false;
