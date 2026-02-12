@@ -79,9 +79,9 @@ const MonthPicker = ({
 
       if (viewMode === "month") {
         month = String(v);
-        year = currentYear;
       } else {
         year = Number(v);
+        setCurrentYear(year);
       }
       if (viewMode === "year") {
         toggleViewMode();
@@ -91,11 +91,19 @@ const MonthPicker = ({
     [value, viewMode, onChange, toggleViewMode, currentYear]
   );
 
+  const handleOnOpen = useCallback(() => {
+    setViewMode("month");
+    const parsed = parseValue(value);
+    if (parsed?.year) {
+      setCurrentYear(parsed.year);
+    }
+  }, [value]);
+
   return (
     <Popover
       trigger="click"
       placement={placement || "bottom-start"}
-      onOpen={() => setViewMode("month")}
+      onOpen={handleOnOpen}
       target={({ togglePopover }) => (
         <Button
           onClick={togglePopover}
@@ -149,18 +157,19 @@ const MonthPicker = ({
           <hr className="my-2 border-outline-gray-1" />
 
           <div className="grid grid-cols-3 gap-3">
-            {pickerList.map((item) => (
-              <Button
-                key={item}
-                onClick={(e) => handleOnClick(e, item)}
-                variant={
-                  parseValue(value)?.[viewMode] === item ? "solid" : "ghost"
-                }
-                className="text-sm text-ink-gray-9"
-              >
-                {viewMode === "month" ? (item as string).slice(0, 3) : item}
-              </Button>
-            ))}
+            {pickerList.map((item) => {
+              const isSelected = parseValue(value)?.[viewMode] === item;
+              return (
+                <Button
+                  key={item}
+                  onClick={(e) => handleOnClick(e, item)}
+                  variant={isSelected ? "solid" : "ghost"}
+                  className="text-sm text-ink-gray-9"
+                >
+                  {viewMode === "month" ? (item as string).slice(0, 3) : item}
+                </Button>
+              );
+            })}
           </div>
         </div>
       )}
