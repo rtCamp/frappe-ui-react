@@ -69,14 +69,13 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               suffix={() => (
                 <FeatherIcon name="chevron-down" className="w-4 h-4" />
               )}
-              variant={variant}
+              variant={variant === "ghost" ? "subtle" : variant}
             />
           </div>
         )
       }
       body={({ togglePopover }) => (
         <div className="absolute min-w-60 z-10 mt-2 w-fit select-none text-base text-ink-gray-9 rounded-lg bg-surface-modal shadow-2xl border border-gray-200">
-          {/* Month Switcher */}
           <div className="flex items-center justify-between px-2 pt-2 gap-1">
             <Button
               size="sm"
@@ -117,7 +116,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               />
             </div>
           </div>
-          {/* Calendar / Month Grid / Year Grid */}
+
           <div className="p-2">
             {view === "date" && (
               <div role="grid" aria-label="Calendar dates">
@@ -226,7 +225,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               </div>
             )}
           </div>
-          {/* Actions */}
+
           {clearable && (
             <div className="flex justify-between p-2 gap-1 border-t border-gray-200">
               <div className="flex gap-1">
@@ -256,7 +255,6 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               </div>
               <Button
                 onClick={() => {
-                  // Clear the value
                   onChange?.("");
                   setOpen(false);
                 }}
