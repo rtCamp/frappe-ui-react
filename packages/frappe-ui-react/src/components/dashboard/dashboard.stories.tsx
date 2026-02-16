@@ -531,19 +531,26 @@ export const HRDashboardExample: Story = {
     const [isGalleryOpen, setIsGalleryOpen] = useState(false);
     const [selectedLayout, setSelectedLayout] =
       useState<keyof typeof hrLayouts>("layout1");
-    const [savedLayout, setSavedLayout] = useState<
-      DashboardLayouts | undefined
+    const [savedLayouts, setSavedLayouts] = useState<
+      Record<string, DashboardLayouts> | undefined
     >(() => {
-      const savedLayoutStr = localStorage.getItem("hr-dashboard-saved-layout");
-      return savedLayoutStr ? JSON.parse(savedLayoutStr) : undefined;
+      const savedLayoutsStr = localStorage.getItem(
+        "hr-dashboard-saved-layouts"
+      );
+      return savedLayoutsStr ? JSON.parse(savedLayoutsStr) : undefined;
     });
 
     const debouncedSave = debounce((newLayout: DashboardLayouts) => {
+      const newSavedLayouts = {
+        ...(savedLayouts || {}),
+        [selectedLayout]: newLayout,
+      };
       localStorage.setItem(
-        "hr-dashboard-saved-layout",
-        JSON.stringify(newLayout)
+        "hr-dashboard-saved-layouts",
+        JSON.stringify(newSavedLayouts)
       );
-      setSavedLayout(newLayout);
+
+      setSavedLayouts(newSavedLayouts);
     }, 300);
 
     const handleLayoutChange = useCallback(
@@ -556,9 +563,18 @@ export const HRDashboardExample: Story = {
     const handleLayoutPresetChange = useCallback(
       (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newLayout = e.target.value as keyof typeof hrLayouts;
+        const localSavedLayouts = localStorage.getItem(
+          "hr-dashboard-saved-layouts"
+        );
+        const parsedSavedLayouts = localSavedLayouts
+          ? JSON.parse(localSavedLayouts)
+          : undefined;
+        if (parsedSavedLayouts) {
+          setSavedLayouts(parsedSavedLayouts);
+        } else {
+          setSavedLayouts(undefined);
+        }
         setSelectedLayout(newLayout);
-        localStorage.removeItem("hr-dashboard-saved-layout");
-        setSavedLayout(undefined);
       },
       []
     );
@@ -615,8 +631,8 @@ export const HRDashboardExample: Story = {
               <Button
                 variant="solid"
                 onClick={() => {
-                  localStorage.removeItem("hr-dashboard-saved-layout");
-                  setSavedLayout(undefined);
+                  localStorage.removeItem("hr-dashboard-saved-layouts");
+                  setSavedLayouts(undefined);
                 }}
               >
                 Clear saved layout
@@ -629,7 +645,9 @@ export const HRDashboardExample: Story = {
                 hrLayouts[selectedLayout]?.layout || hrLayouts.layout1.layout
               }
               compactType={hrLayouts[selectedLayout]?.compactType || "vertical"}
-              savedLayout={savedLayout}
+              savedLayout={
+                savedLayouts ? savedLayouts[selectedLayout] : undefined
+              }
               onLayoutChange={handleLayoutChange}
             />
           </div>

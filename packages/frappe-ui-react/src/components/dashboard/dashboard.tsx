@@ -8,7 +8,7 @@ import React, {
   useContext,
   useRef,
 } from "react";
-import type { Layout as RGLLayoutItem } from "react-grid-layout";
+import { type Layout as RGLLayout } from "react-grid-layout/legacy";
 
 /**
  * Internal dependencies.
@@ -20,6 +20,7 @@ import {
   normalizeLayouts,
   deserializeLayouts,
   deepCompareObjects,
+  findBottomY,
 } from "./dashboardUtil";
 import type {
   DashboardProps,
@@ -39,7 +40,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
   ...rest
 }) => {
   const context = useContext(DashboardContext);
-  const [disableCompaction, setDisableCompaction] = useState(false);
   const [layouts, setLayouts] = useState<DashboardLayouts>(() => {
     if (savedLayout) {
       return deserializeLayouts(savedLayout);
@@ -54,21 +54,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
   );
   const prevSavedLayoutRef = useRef<DashboardLayouts | undefined>(savedLayout);
 
-  const handleLayoutChange = useCallback(
-    (newLayouts: DashboardLayouts, draggingWidget: boolean) => {
-      if (!draggingWidget) {
-        console.log("Layout changed:", newLayouts);
-        onLayoutChange?.(serializeLayouts(newLayouts));
-      }
-    },
-    [onLayoutChange]
-  );
-
   const addWidgetToLayout = useCallback(
     (
       widgetId: string,
-      position: { x: number; y: number },
-      isDropped = false
+      position: { x: number; y: number; w?: number; h?: number },
+      isDropped = false,
+      currentLayout?: RGLLayout[]
     ) => {
       const widgetDef = widgets.find((w) => w.id === widgetId);
       if (!widgetDef) return;
@@ -78,9 +69,31 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
         for (const bp in prevLayouts) {
           const breakpoint = bp as Breakpoint;
-          const currentLayout = prevLayouts[breakpoint] || [];
+          const layout = prevLayouts[breakpoint] || [];
 
-          const existingCount = currentLayout.filter(
+          // Disable compaction and freeze all widgets at their current preview positions
+          // to ensure the widget is placed exactly where it was dropped.
+          const baseLayout =
+            isDropped && currentLayout
+              ? layout.map((item) => {
+                  const rglItem = currentLayout
+                    .flat()
+                    .find(
+                      (rgl) =>
+                        (rgl as { i: string }).i === (item.key || item.id)
+                    );
+                  return rglItem
+                    ? {
+                        ...item,
+                        x: (rglItem as { x: number }).x,
+                        y: (rglItem as { y: number }).y,
+                        static: true,
+                      }
+                    : { ...item, static: true };
+                })
+              : layout;
+
+          const existingCount = layout.filter(
             (item) => item.id === widgetId
           ).length;
 
@@ -99,96 +112,66 @@ export const Dashboard: React.FC<DashboardProps> = ({
             size: widgetDef.size,
             isResizable: widgetDef.isResizable,
             isDraggable: widgetDef.isDraggable,
-            static: isDropped ? true : widgetDef.static,
+            static: widgetDef.static,
           };
 
-          newLayouts[breakpoint] = [...currentLayout, newLayoutItem];
+          newLayouts[breakpoint] = [...baseLayout, newLayoutItem];
         }
 
-        if (!isDropped) {
-          handleLayoutChange(newLayouts, false);
-        }
+        onLayoutChange?.(serializeLayouts(newLayouts));
         return newLayouts;
       });
 
       if (isDropped) {
-        // Execute after current task completes to resolve maximum call stack issue
+        // Use queueMicrotask to ensure state update does not get batched, allowing the new widget
+        // to be placed correctly without any visual glitches
         queueMicrotask(() => {
           setLayouts((prevLayouts) => {
             const newLayouts: DashboardLayouts = { ...prevLayouts };
 
             for (const bp in prevLayouts) {
               const breakpoint = bp as Breakpoint;
-              const currentLayout = prevLayouts[breakpoint] || [];
-
-              newLayouts[breakpoint] = currentLayout.map((item) => {
-                const widgetDef = widgets.find((w) => w.id === item.id);
-
-                return {
-                  ...item,
-                  static: widgetDef?.static,
-                  isResizable: widgetDef?.isResizable,
-                  isDraggable: widgetDef?.isDraggable,
-                };
-              });
+              newLayouts[breakpoint] = prevLayouts[breakpoint]?.map((item) => ({
+                ...item,
+                static: widgets.find((w) => w.id === item.id)?.static,
+              }));
             }
 
-            handleLayoutChange(newLayouts, false);
+            onLayoutChange?.(serializeLayouts(newLayouts));
             return newLayouts;
           });
-
-          setDisableCompaction(false);
         });
       }
     },
-    [widgets, sizes, handleLayoutChange]
+    [widgets, sizes, onLayoutChange]
   );
 
-  const handleDrop = useCallback(
-    (
-      widgetId: string,
-      layoutData: { x: number; y: number },
-      currentLayout?: RGLLayoutItem[]
-    ) => {
-      // Disable compaction and freeze all widgets at their current preview positions
-      // to ensure the widget is placed exactly where it was dropped.
-      setDisableCompaction(true);
-      setLayouts((prevLayouts) => {
-        const newLayouts: DashboardLayouts = { ...prevLayouts };
+  const handleDropWidget = useCallback(
+    (currentLayout: RGLLayout[], item: RGLLayout) => {
+      const widgetData = context?.draggingWidget;
+      const widgetId = widgetData?.widgetId;
+      if (!widgetId || !item) return;
 
-        for (const bp in prevLayouts) {
-          const breakpoint = bp as Breakpoint;
-          const layout = prevLayouts[breakpoint] || [];
-
-          newLayouts[breakpoint] = layout.map((item) => {
-            if (currentLayout) {
-              const rglItem = currentLayout
-                .flat()
-                .find(
-                  (rgl) => (rgl as { i: string }).i === (item.key || item.id)
-                );
-              if (rglItem) {
-                return {
-                  ...item,
-                  x: (rglItem as { x: number }).x,
-                  y: (rglItem as { y: number }).y,
-                  static: true,
-                };
-              }
-            }
-            return {
-              ...item,
-              static: true,
-            };
-          });
-        }
-
-        return newLayouts;
-      });
-
-      addWidgetToLayout(widgetId, layoutData, true);
+      addWidgetToLayout(
+        widgetId,
+        {
+          x: item.x,
+          y: item.y,
+          w: widgetData.w,
+          h: widgetData.h,
+        },
+        true,
+        currentLayout
+      );
     },
-    [addWidgetToLayout]
+    [addWidgetToLayout, context?.draggingWidget]
+  );
+
+  const handleAddWidget = useCallback(
+    (widgetId: string) => {
+      addWidgetToLayout(widgetId, { x: 0, y: findBottomY(layouts) });
+    },
+    [addWidgetToLayout, layouts]
   );
 
   const handleRemoveWidget = useCallback(
@@ -210,24 +193,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
     [onLayoutChange]
   );
 
-  const handleAddWidget = useCallback(
-    (widgetId: string) => {
-      // Find the bottom-most Y positions
-      let maxY = 0;
-      for (const bp in layouts) {
-        const currentLayout = layouts[bp as Breakpoint] || [];
-        const bottomY = currentLayout.reduce((max, item) => {
-          const itemBottom = (item.y || 0) + (item.h || 0);
-          return itemBottom > max ? itemBottom : max;
-        }, 0);
-        maxY = Math.max(maxY, bottomY);
-      }
-
-      addWidgetToLayout(widgetId, { x: 0, y: maxY });
-    },
-    [addWidgetToLayout, layouts]
-  );
-
   useEffect(() => {
     if (context) {
       context.setHandleAddWidget(() => handleAddWidget);
@@ -244,6 +209,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         // eslint-disable-next-line react-hooks/set-state-in-effect -- We want to reset layout if initialLayouts changes
         setLayouts(normalizeLayouts(initialLayouts, widgets, sizes));
       }
+      prevInitialLayoutsRef.current = initialLayouts;
     } else if (savedLayout) {
       if (!deepCompareObjects(savedLayout, prevSavedLayoutRef.current || {})) {
         setLayouts(deserializeLayouts(savedLayout));
@@ -256,11 +222,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
     <LayoutContainer
       widgets={widgets}
       layouts={layouts}
-      setLayouts={handleLayoutChange}
-      onDrop={handleDrop}
-      onRemove={handleRemoveWidget}
+      handleDropWidget={handleDropWidget}
+      handleRemoveWidget={handleRemoveWidget}
       sizes={sizes}
-      compactType={disableCompaction ? null : rest.compactType}
+      onLayoutChange={onLayoutChange}
       {...rest}
     />
   );

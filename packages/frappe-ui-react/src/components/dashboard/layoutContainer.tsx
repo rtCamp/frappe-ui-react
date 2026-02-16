@@ -34,9 +34,9 @@ const defaultCols = { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 };
 export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   widgets,
   layouts,
-  setLayouts,
-  onDrop,
-  onRemove,
+  onLayoutChange,
+  handleDropWidget,
+  handleRemoveWidget,
   sizes,
   layoutLock = false,
   dragHandle = false,
@@ -109,7 +109,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
       _currentLayout: RGLLayout[],
       allLayouts: { [key: string]: RGLLayout[] }
     ) => {
-      if (layoutLock || !setLayouts) return;
+      if (layoutLock || !onLayoutChange) return;
 
       const newLayouts: DashboardLayouts = {};
       for (const breakpoint in allLayouts) {
@@ -140,36 +140,16 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
         newLayouts[breakpoint as Breakpoint] = updatedLayout;
       }
 
-      setLayouts(newLayouts, context?.draggingWidget ? true : false);
+      if (!context?.draggingWidget) {
+        onLayoutChange(newLayouts);
+      }
     },
-    [layouts, setLayouts, layoutLock, context?.draggingWidget]
+    [layouts, onLayoutChange, layoutLock, context?.draggingWidget]
   );
 
   const handleBreakpointChange = useCallback((breakpoint: Breakpoint) => {
     setActiveBreakpoint(breakpoint);
   }, []);
-
-  const handleDrop = useCallback(
-    (layoutItem: RGLLayout[], item: RGLLayout) => {
-      if (!onDrop) return;
-
-      const widgetData = context?.draggingWidget;
-
-      if (widgetData?.widgetId) {
-        onDrop(
-          widgetData.widgetId,
-          {
-            x: item.x,
-            y: item.y,
-            w: widgetData.w,
-            h: widgetData.h,
-          },
-          layoutItem
-        );
-      }
-    },
-    [onDrop, context]
-  );
 
   const droppingItemSize = useMemo(() => {
     if (!context?.draggingWidget?.widget) return { w: 4, h: 3 };
@@ -190,15 +170,13 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     margin,
     onLayoutChange: handleLayoutChange,
     onBreakpointChange: handleBreakpointChange,
-    onDrop: onDrop ? handleDrop : undefined,
-    isDroppable: Boolean(onDrop),
-    droppingItem: onDrop
-      ? {
-          i: "__dropping-elem__",
-          w: droppingItemSize.w,
-          h: droppingItemSize.h,
-        }
-      : undefined,
+    onDrop: handleDropWidget,
+    isDroppable: true,
+    droppingItem: {
+      i: "__dropping-elem__",
+      w: droppingItemSize.w,
+      h: droppingItemSize.h,
+    },
     isBounded,
     isDraggable: !layoutLock,
     isResizable: !layoutLock,
@@ -209,13 +187,6 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     allowOverlap: false,
     useCSSTransforms: true,
   };
-
-  const handleRemoveWidget = useCallback(
-    (widgetKey: string) => {
-      onRemove?.(widgetKey);
-    },
-    [onRemove]
-  );
 
   const currentLayout = layouts[activeBreakpoint] || [];
 

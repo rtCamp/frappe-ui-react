@@ -200,3 +200,19 @@ export const deserializeLayouts = (
 export const deepCompareObjects = (obj1: object, obj2: object): boolean => {
   return JSON.stringify(obj1) === JSON.stringify(obj2);
 };
+
+/**
+ * Find the maximum Y position across all breakpoints
+ */
+export const findBottomY = (layouts: DashboardLayouts): number => {
+  let maxY = 0;
+  for (const bp in layouts) {
+    const currentLayout = layouts[bp as Breakpoint] || [];
+    const bottomY = currentLayout.reduce((max, item) => {
+      const itemBottom = (item.y || 0) + (item.h || 0);
+      return itemBottom > max ? itemBottom : max;
+    }, 0);
+    maxY = Math.max(maxY, bottomY);
+  }
+  return maxY;
+};

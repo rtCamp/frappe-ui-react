@@ -81,13 +81,9 @@ export interface DashboardProps {
 export interface LayoutContainerProps {
   widgets: WidgetDefinition[];
   layouts: DashboardLayouts;
-  setLayouts?: (layouts: DashboardLayouts, draggingWidget: boolean) => void;
-  onDrop?: (
-    widgetId: string,
-    layout: { x: number; y: number; w: number; h: number },
-    currentLayout?: RGLLayout[]
-  ) => void;
-  onRemove?: (widgetId: string) => void;
+  onLayoutChange?: (layouts: DashboardLayouts) => void;
+  handleDropWidget?: (currentLayout: RGLLayout[], item: RGLLayout) => void;
+  handleRemoveWidget?: (widgetId: string) => void;
   sizes?: WidgetSizePresets;
   breakpoints?: { [key in Breakpoint]?: number };
   cols?: { [key in Breakpoint]?: number };
