@@ -3,7 +3,7 @@ import { Select as BaseSelect } from "@base-ui/react/select";
 import { Check, ChevronDown, Loader2 } from "lucide-react";
 import { cva } from "class-variance-authority";
 import { cn } from "../../utils";
-import type { SelectProps } from "./types";
+import type { SelectProps, SelectSize } from "./types";
 
 const selectVariants = cva(
   "relative w-full rounded-md flex items-center justify-between transition-colors focus:outline-none",
@@ -56,17 +56,7 @@ const selectVariants = cva(
 );
 
 const optionVariants = cva(
-  "flex items-center justify-between rounded px-2.5 py-1.5 text-base cursor-pointer",
-  {
-    variants: {
-      highlighted: {
-        true: "bg-surface-gray-3",
-      },
-      disabled: {
-        true: "opacity-50 cursor-not-allowed",
-      },
-    },
-  }
+  "flex items-center justify-between rounded px-2.5 py-1.5 text-base cursor-pointer data-[highlighted]:bg-surface-gray-3 data-[disabled]:opacity-50 data-[disabled]:cursor-not-allowed data-[selected]:font-semibold"
 );
 
 const Select: React.FC<SelectProps> = ({
@@ -112,7 +102,7 @@ const Select: React.FC<SelectProps> = ({
           aria-busy={loading}
           className={cn(
             selectVariants({
-              size,
+              size: size as SelectSize,
               variant,
               state: stateKey,
               disabled: isDisabled,
@@ -153,38 +143,32 @@ const Select: React.FC<SelectProps> = ({
         </BaseSelect.Trigger>
 
         <BaseSelect.Portal>
-          <BaseSelect.Positioner side="bottom" align="start" sideOffset={4}>
-            <BaseSelect.Popup className="mt-1 max-h-[15rem] overflow-y-auto rounded-lg bg-surface-modal p-1.5 shadow-2xl border border-outline-gray-1">
+          <BaseSelect.Positioner
+            side="bottom"
+            align="start"
+            sideOffset={4}
+            className="z-100"
+          >
+            <BaseSelect.Popup className="min-w-[var(--anchor-width)] max-h-[15rem] overflow-y-auto rounded-lg bg-surface-modal p-1.5 shadow-2xl border border-outline-gray-1">
               {options.map((option) => (
                 <BaseSelect.Item
                   key={option.value}
                   value={option.value}
                   disabled={option.disabled}
-                  render={(props, state) => (
-                    <div
-                      {...props}
-                      className={cn(
-                        optionVariants({
-                          highlighted: state.highlighted,
-                          disabled: option.disabled,
-                        }),
-                        state.selected && "font-semibold",
-                        props.className
-                      )}
-                      data-testid="select-option"
-                    >
-                      <span className="flex items-center gap-2 truncate text-ink-gray-7">
-                        {option.icon && (
-                          <span className="flex-none">{option.icon}</span>
-                        )}
-                        {option.label}
-                      </span>
-                      {state.selected && (
-                        <Check className="h-4 w-4 text-ink-gray-7" />
-                      )}
-                    </div>
-                  )}
-                />
+                  className={optionVariants()}
+                  data-testid="select-option"
+                >
+                  <span className="flex items-center gap-2 truncate text-ink-gray-7">
+                    {option.icon && (
+                      <span className="flex-none">{option.icon}</span>
+                    )}
+                    {option.label}
+                  </span>
+
+                  <BaseSelect.ItemIndicator>
+                    <Check className="h-4 w-4 text-ink-gray-7" />
+                  </BaseSelect.ItemIndicator>
+                </BaseSelect.Item>
               ))}
             </BaseSelect.Popup>
           </BaseSelect.Positioner>
