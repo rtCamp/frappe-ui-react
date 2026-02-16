@@ -35,19 +35,37 @@ const FormControl: React.FC<FormControlProps> = ({
 
   const renderControl = () => {
     switch (type) {
-      case "select":
+      case "select": {
+        const rawOptions = controlAttrs.options ?? [];
+
+        const normalizedOptions: SelectOption[] = (rawOptions as unknown[]).map(
+          (option) => {
+            if (typeof option === "string") {
+              return { label: option, value: option };
+            }
+            return option as SelectOption;
+          }
+        );
+
         return (
           <Select
             htmlId={htmlId}
-            {...controlAttrs}
             size={size}
             variant={variant}
-            options={controlAttrs.options as (string | SelectOption)[]}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-              controlAttrs.onChange?.(e.target.value);
+            options={normalizedOptions}
+            value={controlAttrs.value as SelectOption | undefined}
+            placeholder={controlAttrs.placeholder}
+            disabled={controlAttrs.disabled}
+            loading={controlAttrs.loading}
+            prefix={controlAttrs.prefix as React.ReactNode}
+            suffix={controlAttrs.suffix as React.ReactNode}
+            onChange={(selected: SelectOption) => {
+              controlAttrs.onChange?.(selected.value);
             }}
           />
         );
+      }
+
       case "autocomplete":
         return (
           <Autocomplete
@@ -56,6 +74,7 @@ const FormControl: React.FC<FormControlProps> = ({
             {...controlAttrs}
           />
         );
+
       case "textarea":
         return (
           <Textarea
@@ -65,6 +84,7 @@ const FormControl: React.FC<FormControlProps> = ({
             variant={variant}
           />
         );
+
       case "checkbox":
         return (
           <Checkbox
@@ -74,6 +94,7 @@ const FormControl: React.FC<FormControlProps> = ({
             size={size}
           />
         );
+
       default:
         return (
           <TextInput
