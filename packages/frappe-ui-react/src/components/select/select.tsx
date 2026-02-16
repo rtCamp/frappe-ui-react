@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import { Listbox, ListboxButton, ListboxOption } from "@headlessui/react";
+import React, { useMemo } from "react";
+import { Select as BaseSelect } from "@base-ui/react/select";
 import { Check, ChevronDown, Loader2 } from "lucide-react";
 import { cva } from "class-variance-authority";
 import { cn } from "../../utils";
-import { Popover } from "../popover";
-import type { SelectProps, SelectSize } from "./types";
+import type { SelectProps } from "./types";
 
 const selectVariants = cva(
   "relative w-full rounded-md flex items-center justify-between transition-colors focus:outline-none",
@@ -32,7 +31,6 @@ const selectVariants = cva(
       },
     },
     compoundVariants: [
-      // Subtle
       {
         variant: "subtle",
         state: "default",
@@ -41,81 +39,11 @@ const selectVariants = cva(
           "bg-surface-gray-2 border border-surface-gray-2 hover:bg-surface-gray-3 focus:bg-surface-white focus:ring-2 focus:ring-outline-gray-3",
       },
       {
-        variant: "subtle",
-        state: "error",
-        disabled: false,
-        class:
-          "bg-surface-red-2 border border-surface-red-2 hover:bg-surface-red-3 focus:ring-2 focus:ring-outline-red-2",
-      },
-      {
-        variant: "subtle",
-        state: "success",
-        disabled: false,
-        class:
-          "bg-surface-green-2 border border-surface-green-2 hover:bg-surface-green-1 focus:ring-2 focus:ring-outline-green-2",
-      },
-      {
-        variant: "subtle",
-        state: "warning",
-        disabled: false,
-        class:
-          "bg-surface-amber-1 border border-surface-amber-1 hover:bg-surface-amber-2 focus:ring-2 focus:ring-outline-amber-2",
-      },
-      // Outline
-      {
         variant: "outline",
         state: "default",
         disabled: false,
         class:
           "bg-surface-white border border-outline-gray-2 hover:border-outline-gray-3 focus:ring-2 focus:ring-outline-gray-3",
-      },
-      {
-        variant: "outline",
-        state: "error",
-        disabled: false,
-        class:
-          "bg-surface-white border border-outline-red-2 hover:border-outline-red-3 focus:ring-2 focus:ring-outline-red-2",
-      },
-      {
-        variant: "outline",
-        state: "success",
-        disabled: false,
-        class:
-          "bg-surface-white border border-outline-green-2 hover:border-outline-green-3 focus:ring-2 focus:ring-outline-green-2",
-      },
-      {
-        variant: "outline",
-        state: "warning",
-        disabled: false,
-        class:
-          "bg-surface-white border border-outline-amber-2 hover:border-outline-amber-3 focus:ring-2 focus:ring-outline-amber-2",
-      },
-      // Ghost
-      {
-        variant: "ghost",
-        state: "default",
-        disabled: false,
-        class: "hover:bg-surface-gray-3 focus:ring-2 focus:ring-outline-gray-3",
-      },
-      {
-        variant: "ghost",
-        state: "error",
-        disabled: false,
-        class: "hover:bg-surface-red-3 focus:ring-2 focus:ring-outline-red-2",
-      },
-      {
-        variant: "ghost",
-        state: "success",
-        disabled: false,
-        class:
-          "hover:bg-surface-green-2 focus:ring-2 focus:ring-outline-green-2",
-      },
-      {
-        variant: "ghost",
-        state: "warning",
-        disabled: false,
-        class:
-          "hover:bg-surface-amber-2 focus:ring-2 focus:ring-outline-amber-2",
       },
     ],
     defaultVariants: {
@@ -128,20 +56,15 @@ const selectVariants = cva(
 );
 
 const optionVariants = cva(
-  "flex items-center justify-between rounded px-2.5 py-1.5 text-base",
+  "flex items-center justify-between rounded px-2.5 py-1.5 text-base cursor-pointer",
   {
     variants: {
-      focused: {
+      highlighted: {
         true: "bg-surface-gray-3",
       },
       disabled: {
         true: "opacity-50 cursor-not-allowed",
-        false: "cursor-pointer",
       },
-    },
-    defaultVariants: {
-      focused: false,
-      disabled: false,
     },
   }
 );
@@ -163,98 +86,110 @@ const Select: React.FC<SelectProps> = ({
 }) => {
   const isDisabled = disabled || loading;
   const stateKey = state ?? "default";
-  const [open, setOpen] = useState(false);
+
+  const selectedValue = value?.value;
+
+  const selectedOption = useMemo(
+    () => options.find((opt) => opt.value === selectedValue),
+    [options, selectedValue]
+  );
 
   return (
     <div className={cn("w-full", className)}>
-      <Listbox value={value} onChange={onChange} disabled={isDisabled}>
-        <Popover
-          show={open}
-          onUpdateShow={setOpen}
-          placement="bottom-start"
-          target={({ togglePopover }) => (
-            <ListboxButton
-              id={htmlId}
-              onClick={togglePopover}
-              aria-invalid={state === "error"}
-              aria-busy={loading}
+      <BaseSelect.Root
+        value={selectedValue}
+        onValueChange={(val) => {
+          const selected = options.find((opt) => opt.value === val);
+          if (selected) {
+            onChange?.(selected);
+          }
+        }}
+        disabled={isDisabled}
+      >
+        <BaseSelect.Trigger
+          id={htmlId}
+          aria-invalid={state === "error"}
+          aria-busy={loading}
+          className={cn(
+            selectVariants({
+              size,
+              variant,
+              state: stateKey,
+              disabled: isDisabled,
+            })
+          )}
+        >
+          <div className="flex items-center gap-2 w-full overflow-hidden">
+            {prefix && (
+              <span className="flex-none text-ink-gray-6">{prefix}</span>
+            )}
+
+            {selectedOption?.icon && (
+              <span className="flex-none text-ink-gray-6">
+                {selectedOption.icon}
+              </span>
+            )}
+
+            <span
               className={cn(
-                selectVariants({
-                  size: size as SelectSize,
-                  variant,
-                  state: stateKey,
-                  disabled: isDisabled,
-                })
+                "truncate flex-1 text-left",
+                !selectedOption && "text-ink-gray-5"
               )}
             >
-              <div className="flex items-center gap-2 w-full overflow-hidden">
-                {prefix && (
-                  <span className="flex-none text-ink-gray-6">{prefix}</span>
-                )}
+              {selectedOption ? selectedOption.label : placeholder}
+            </span>
+          </div>
 
-                {value?.icon && (
-                  <span className="flex-none text-ink-gray-6">
-                    {value.icon}
-                  </span>
-                )}
-
-                <span
-                  className={cn(
-                    "truncate flex-1 text-left",
-                    !value && "text-ink-gray-5"
-                  )}
-                >
-                  {value ? value.label : placeholder}
-                </span>
-              </div>
-
-              {loading ? (
-                <Loader2
-                  aria-label="loading"
-                  className="ml-2 h-4 w-4 animate-spin text-ink-gray-6"
-                />
-              ) : (
-                <span className="ml-2 flex-none text-ink-gray-6">
-                  {suffix ?? <ChevronDown className="h-4 w-4" />}
-                </span>
-              )}
-            </ListboxButton>
+          {loading ? (
+            <Loader2
+              aria-label="loading"
+              className="ml-2 h-4 w-4 animate-spin text-ink-gray-6"
+            />
+          ) : (
+            <span className="ml-2 flex-none text-ink-gray-6">
+              {suffix ?? <ChevronDown className="h-4 w-4" />}
+            </span>
           )}
-          body={() => (
-            <div className="mt-1 max-h-[15rem] overflow-y-auto rounded-lg bg-surface-modal p-1.5 shadow-2xl">
+        </BaseSelect.Trigger>
+
+        <BaseSelect.Portal>
+          <BaseSelect.Positioner side="bottom" align="start" sideOffset={4}>
+            <BaseSelect.Popup className="mt-1 max-h-[15rem] overflow-y-auto rounded-lg bg-surface-modal p-1.5 shadow-2xl border border-outline-gray-1">
               {options.map((option) => (
-                <ListboxOption
+                <BaseSelect.Item
                   key={option.value}
-                  value={option}
+                  value={option.value}
                   disabled={option.disabled}
-                  className={({ focus }) =>
-                    cn(
-                      optionVariants({
-                        focused: focus,
-                        disabled: option.disabled,
-                      })
-                    )
-                  }
-                >
-                  {({ selected }) => (
-                    <>
+                  render={(props, state) => (
+                    <div
+                      {...props}
+                      className={cn(
+                        optionVariants({
+                          highlighted: state.highlighted,
+                          disabled: option.disabled,
+                        }),
+                        state.selected && "font-semibold",
+                        props.className
+                      )}
+                      data-testid="select-option"
+                    >
                       <span className="flex items-center gap-2 truncate text-ink-gray-7">
                         {option.icon && (
                           <span className="flex-none">{option.icon}</span>
                         )}
                         {option.label}
                       </span>
-                      {selected && (
+                      {state.selected && (
                         <Check className="h-4 w-4 text-ink-gray-7" />
                       )}
-                    </>
+                    </div>
                   )}
-                </ListboxOption>
+                />
               ))}
-            </div>
-          )}
-        />
-      </Listbox>
+            </BaseSelect.Popup>
+          </BaseSelect.Positioner>
+        </BaseSelect.Portal>
+      </BaseSelect.Root>
     </div>
   );
 };
