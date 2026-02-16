@@ -1,0 +1,18 @@
+/**
+ * Dashboard Grid Layout Styles
+ * 
+ * Disable transitions on initial mount to prevent jarring animations
+ * when the grid compacts widgets into their final positions.
+ */
+
+.react-grid-layout-no-transition .react-grid-item {
+  transition: none !important;
+}
+
+.react-grid-layout-no-transition .react-grid-item.resizing {
+  transition: none !important;
+}
+
+.react-grid-layout-no-transition .react-resizable-handle {
+  transition: none !important;
+}
