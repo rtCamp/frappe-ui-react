@@ -2,7 +2,6 @@
  * External dependencies.
  */
 import React, { useContext } from "react";
-import clsx from "clsx";
 
 /**
  * Internal dependencies.
@@ -10,6 +9,7 @@ import clsx from "clsx";
 import type { DashboardWidgetGalleryProps } from "./types";
 import { DashboardWidgetGalleryItem } from "./dashboardWidgetGalleryItem";
 import { DashboardContext } from "./dashboardContext";
+import { cn } from "../../utils";
 
 export const DashboardWidgetGallery: React.FC<DashboardWidgetGalleryProps> = ({
   title,
@@ -45,7 +45,7 @@ export const DashboardWidgetGallery: React.FC<DashboardWidgetGalleryProps> = ({
         </div>
       )}
       <div
-        className={clsx(
+        className={cn(
           view === "grid" ? "grid grid-cols-2 gap-3" : "flex flex-col gap-2"
         )}
       >

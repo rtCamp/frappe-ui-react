@@ -81,7 +81,7 @@ export interface DashboardProps {
 export interface LayoutContainerProps {
   widgets: WidgetDefinition[];
   layouts: DashboardLayouts;
-  setLayouts?: (layouts: DashboardLayouts) => void;
+  setLayouts?: (layouts: DashboardLayouts, draggingWidget: boolean) => void;
   onDrop?: (
     widgetId: string,
     layout: { x: number; y: number; w: number; h: number },

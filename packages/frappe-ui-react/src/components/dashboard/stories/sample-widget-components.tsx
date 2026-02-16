@@ -82,7 +82,7 @@ export const SalaryStatisticsWidget = () => {
   ];
 
   return (
-    <div className="w-full h-full flex flex-col border border-outline-gray-2 rounded-lg bg-surface-cards p-5 overflow-x-auto">
+    <div className="w-full h-full flex flex-col border border-outline-gray-2 rounded-lg bg-surface-cards p-5">
       <h3 className="text-xl font-semibold">Salary Statistics</h3>
       <p className="mt-1.5 text-base text-gray-600">Monthly overview</p>
       <AxisChart
@@ -188,7 +188,7 @@ export const NewEmployeesWidget = () => {
   ];
 
   return (
-    <div className="h-full flex flex-col border border-outline-gray-2 rounded-lg bg-surface-cards p-5 overflow-x-auto">
+    <div className="h-full flex flex-col border border-outline-gray-2 rounded-lg bg-surface-cards p-5">
       <h3 className="text-xl font-semibold">New Employees</h3>
       <p className="mt-1.5 text-base text-gray-600">Last 6 months hiring</p>
       <AxisChart

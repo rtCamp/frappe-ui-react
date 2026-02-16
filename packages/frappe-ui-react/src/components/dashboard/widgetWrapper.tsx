@@ -48,7 +48,7 @@ export const WidgetWrapper: React.FC<WidgetWrapperProps> = ({
           )}
         </div>
       )}
-      <div className="w-full h-full overflow-auto">{children}</div>
+      <div className="w-full h-full">{children}</div>
     </div>
   );
 };

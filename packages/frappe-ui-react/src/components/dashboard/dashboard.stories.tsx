@@ -11,7 +11,7 @@ import type {
   DashboardLayouts,
   WidgetLayouts,
 } from "./types";
-import clsx from "clsx";
+import { cn, debounce } from "../../utils";
 import {
   EmployeeOverviewWidget,
   SalaryStatisticsWidget,
@@ -392,69 +392,182 @@ const hrSizePresets: WidgetSizePresets = {
   large: { w: 6, h: 4, minW: 4, maxW: 12, minH: 3, maxH: 8, isResizable: true },
 };
 
-const hrLayouts: WidgetLayouts = {
-  lg: [
-    ["total-employees", "new-hires", "turnover", "open-positions"],
-    ["salary-stats", "satisfaction"],
-    ["performance", "new-employees", "events"],
-    ["activities", "quick-actions"],
-  ],
-  md: [
-    ["total-employees", "new-hires", "turnover"],
-    ["open-positions"],
-    ["salary-stats"],
-    ["satisfaction"],
-    ["performance", "new-employees"],
-    ["events", "activities"],
-    ["quick-actions"],
-  ],
-  sm: [
-    ["total-employees", "new-hires"],
-    ["turnover", "open-positions"],
-    ["salary-stats"],
-    ["satisfaction"],
-    ["performance"],
-    ["new-employees"],
-    ["events"],
-    ["activities"],
-    ["quick-actions"],
-  ],
-  xs: [
-    ["total-employees"],
-    ["new-hires"],
-    ["turnover"],
-    ["open-positions"],
-    ["salary-stats"],
-    ["satisfaction"],
-    ["performance"],
-    ["new-employees"],
-    ["events"],
-    ["activities"],
-    ["quick-actions"],
-  ],
-};
+const hrLayouts = {
+  layout1: {
+    value: "layout1",
+    label: "Layout 1",
+    compactType: "vertical",
+    layout: {
+      lg: [
+        ["total-employees", "new-hires", "turnover", "open-positions"],
+        ["salary-stats", "satisfaction"],
+        ["performance", "new-employees", "events"],
+        ["activities", "quick-actions"],
+      ],
+      md: [
+        ["total-employees", "new-hires", "turnover"],
+        ["open-positions"],
+        ["salary-stats"],
+        ["satisfaction"],
+        ["performance", "new-employees"],
+        ["events", "activities"],
+        ["quick-actions"],
+      ],
+      sm: [
+        ["total-employees", "new-hires"],
+        ["turnover", "open-positions"],
+        ["salary-stats"],
+        ["satisfaction"],
+        ["performance"],
+        ["new-employees"],
+        ["events"],
+        ["activities"],
+        ["quick-actions"],
+      ],
+      xs: [
+        ["total-employees"],
+        ["new-hires"],
+        ["turnover"],
+        ["open-positions"],
+        ["salary-stats"],
+        ["satisfaction"],
+        ["performance"],
+        ["new-employees"],
+        ["events"],
+        ["activities"],
+        ["quick-actions"],
+      ],
+    },
+  },
+  layout2: {
+    value: "layout2",
+    label: "Layout 2",
+    compactType: "vertical",
+    layout: {
+      lg: [
+        ["new-employees", "performance", "quick-actions"],
+        ["total-employees", "new-hires", "salary-stats"],
+        ["satisfaction", "open-positions", "turnover"],
+      ],
+      md: [
+        ["new-employees", "performance"],
+        ["total-employees", "new-hires", "quick-actions"],
+        ["open-positions", "turnover"],
+        ["salary-stats"],
+        ["satisfaction"],
+      ],
+      sm: [
+        ["new-employees"],
+        ["performance"],
+        ["total-employees", "new-hires"],
+        ["quick-actions"],
+        ["open-positions", "turnover"],
+        ["salary-stats"],
+        ["satisfaction"],
+      ],
+      xs: [
+        ["new-employees"],
+        ["performance"],
+        ["total-employees"],
+        ["new-hires"],
+        ["quick-actions"],
+        ["open-positions"],
+        ["turnover"],
+        ["salary-stats"],
+        ["satisfaction"],
+      ],
+    },
+  },
+  layout3: {
+    value: "layout3",
+    label: "Layout 3",
+    compactType: "vertical",
+    layout: {
+      lg: [
+        ["salary-stats", "turnover", "new-hires"],
+        ["total-employees", "open-positions", "satisfaction"],
+        ["new-employees", "events", "performance"],
+      ],
+      md: [
+        ["salary-stats", "turnover"],
+        ["total-employees", "open-positions", "new-hires"],
+        ["satisfaction", "new-employees"],
+        ["events", "performance"],
+      ],
+      sm: [
+        ["salary-stats"],
+        ["turnover", "total-employees"],
+        ["open-positions", "new-hires"],
+        ["satisfaction"],
+        ["new-employees"],
+        ["events"],
+        ["performance"],
+      ],
+      xs: [
+        ["salary-stats"],
+        ["turnover"],
+        ["new-hires"],
+        ["total-employees"],
+        ["open-positions"],
+        ["satisfaction"],
+        ["new-employees"],
+        ["events"],
+        ["performance"],
+      ],
+    },
+  },
+} as Record<
+  string,
+  {
+    value: string;
+    label: string;
+    compactType: "vertical" | "horizontal";
+    layout: WidgetLayouts;
+  }
+>;
 
 export const HRDashboardExample: Story = {
   render: function Render(args) {
     const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+    const [selectedLayout, setSelectedLayout] =
+      useState<keyof typeof hrLayouts>("layout1");
+    const [savedLayout, setSavedLayout] = useState<
+      DashboardLayouts | undefined
+    >(() => {
+      const savedLayoutStr = localStorage.getItem("hr-dashboard-saved-layout");
+      return savedLayoutStr ? JSON.parse(savedLayoutStr) : undefined;
+    });
 
-    const savedLayoutStr = localStorage.getItem("hr-dashboard-saved-layout");
-    const savedLayout: DashboardLayouts | undefined = savedLayoutStr
-      ? JSON.parse(savedLayoutStr)
-      : undefined;
-
-    const handleLayoutChange = (newLayout: DashboardLayouts) => {
+    const debouncedSave = debounce((newLayout: DashboardLayouts) => {
       localStorage.setItem(
         "hr-dashboard-saved-layout",
         JSON.stringify(newLayout)
       );
-    };
+      setSavedLayout(newLayout);
+    }, 300);
+
+    const handleLayoutChange = useCallback(
+      (newLayout: DashboardLayouts) => {
+        debouncedSave(newLayout);
+      },
+      [debouncedSave]
+    );
+
+    const handleLayoutPresetChange = useCallback(
+      (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newLayout = e.target.value as keyof typeof hrLayouts;
+        setSelectedLayout(newLayout);
+        localStorage.removeItem("hr-dashboard-saved-layout");
+        setSavedLayout(undefined);
+      },
+      []
+    );
 
     return (
       <DashboardProvider>
         <div className="w-full h-screen bg-surface-gray-2 relative">
           <div
-            className={clsx(
+            className={cn(
               "absolute top-0 left-0 h-full w-80 bg-surface-cards border-r border-outline-gray-2 flex flex-col z-10 shadow-lg transition-transform duration-300",
               isGalleryOpen ? "translate-x-0" : "-translate-x-full"
             )}
@@ -480,6 +593,17 @@ export const HRDashboardExample: Story = {
 
           <div className="relative w-full h-full overflow-auto">
             <div className="fixed bottom-2 right-2 z-1 flex gap-2">
+              <select
+                value={selectedLayout}
+                onChange={handleLayoutPresetChange}
+                className="border border-outline-gray-2 bg-surface-white text-ink-gray-9 rounded px-2 py-1 text-sm"
+              >
+                {Object.values(hrLayouts).map((preset) => (
+                  <option key={preset.value} value={preset.value}>
+                    {preset.label}
+                  </option>
+                ))}
+              </select>
               <Button
                 variant="solid"
                 iconLeft={() => <LucidePlus size={16} />}
@@ -492,7 +616,7 @@ export const HRDashboardExample: Story = {
                 variant="solid"
                 onClick={() => {
                   localStorage.removeItem("hr-dashboard-saved-layout");
-                  window.location.reload();
+                  setSavedLayout(undefined);
                 }}
               >
                 Clear saved layout
@@ -501,6 +625,10 @@ export const HRDashboardExample: Story = {
 
             <Dashboard
               {...args}
+              initialLayouts={
+                hrLayouts[selectedLayout]?.layout || hrLayouts.layout1.layout
+              }
+              compactType={hrLayouts[selectedLayout]?.compactType || "vertical"}
               savedLayout={savedLayout}
               onLayoutChange={handleLayoutChange}
             />
@@ -511,7 +639,6 @@ export const HRDashboardExample: Story = {
   },
   args: {
     widgets: hrWidgets,
-    initialLayouts: hrLayouts,
     sizes: hrSizePresets,
     breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 },
     cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },

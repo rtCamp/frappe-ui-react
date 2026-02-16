@@ -2,7 +2,6 @@
  * External dependencies.
  */
 import { useCallback, useMemo, useEffect, useState, useContext } from "react";
-import clsx from "clsx";
 import {
   WidthProvider,
   Responsive,
@@ -25,8 +24,12 @@ import type {
 import { DashboardContext } from "./dashboardContext";
 import { resolveWidgetSize } from "./dashboardUtil";
 import React from "react";
+import { cn } from "../../utils";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
+
+const defaultBreakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
+const defaultCols = { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 };
 
 export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   widgets,
@@ -51,12 +54,9 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   const [activeBreakpoint, setActiveBreakpoint] = useState<Breakpoint>("lg");
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsMounted(true), 100);
+    const timer = setTimeout(() => setIsMounted(true), 300);
     return () => clearTimeout(timer);
   }, []);
-
-  const defaultBreakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 };
-  const defaultCols = { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 };
 
   const actualBreakpoints = breakpoints || defaultBreakpoints;
   const actualCols = cols || defaultCols;
@@ -112,7 +112,6 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
       if (layoutLock || !setLayouts) return;
 
       const newLayouts: DashboardLayouts = {};
-
       for (const breakpoint in allLayouts) {
         const rglLayout = allLayouts[breakpoint];
         const originalLayout = layouts[breakpoint as Breakpoint] || [];
@@ -141,9 +140,9 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
         newLayouts[breakpoint as Breakpoint] = updatedLayout;
       }
 
-      setLayouts(newLayouts);
+      setLayouts(newLayouts, context?.draggingWidget ? true : false);
     },
-    [layouts, setLayouts, layoutLock]
+    [layouts, setLayouts, layoutLock, context?.draggingWidget]
   );
 
   const handleBreakpointChange = useCallback((breakpoint: Breakpoint) => {
@@ -168,10 +167,6 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
           layoutItem
         );
       }
-
-      if (context) {
-        context.setDraggingWidget(null);
-      }
     },
     [onDrop, context]
   );
@@ -187,7 +182,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   }, [context, sizes]);
 
   const commonProps = {
-    className: clsx(
+    className: cn(
       "layout min-h-full",
       !isMounted && "react-grid-layout-no-transition"
     ),
@@ -225,7 +220,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
   const currentLayout = layouts[activeBreakpoint] || [];
 
   return (
-    <div className={clsx("dashboard-grid-container h-full", className)}>
+    <div className={cn("dashboard-grid-container h-full", className)}>
       <ResponsiveGridLayout
         {...commonProps}
         breakpoints={actualBreakpoints}

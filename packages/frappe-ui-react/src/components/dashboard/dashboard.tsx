@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
   useContext,
-  useMemo,
+  useRef,
 } from "react";
 import type { Layout as RGLLayoutItem } from "react-grid-layout";
 
@@ -19,12 +19,14 @@ import {
   serializeLayouts,
   normalizeLayouts,
   deserializeLayouts,
+  deepCompareObjects,
 } from "./dashboardUtil";
 import type {
   DashboardProps,
   WidgetLayout,
   DashboardLayouts,
   Breakpoint,
+  WidgetLayouts,
 } from "./types";
 import { DashboardContext } from "./dashboardContext";
 
@@ -38,34 +40,26 @@ export const Dashboard: React.FC<DashboardProps> = ({
 }) => {
   const context = useContext(DashboardContext);
   const [disableCompaction, setDisableCompaction] = useState(false);
-  const deserializedSavedLayout = useMemo(() => {
-    return savedLayout ? deserializeLayouts(savedLayout) : {};
-  }, [savedLayout]);
-  const [prevDeserializedLayout, setPrevDeserializedLayout] = useState(
-    deserializedSavedLayout
-  );
-
   const [layouts, setLayouts] = useState<DashboardLayouts>(() => {
     if (savedLayout) {
-      return deserializedSavedLayout;
+      return deserializeLayouts(savedLayout);
     }
     if (initialLayouts) {
       return normalizeLayouts(initialLayouts, widgets, sizes);
     }
     return {};
   });
-
-  if (deserializedSavedLayout !== prevDeserializedLayout) {
-    setPrevDeserializedLayout(deserializedSavedLayout);
-    if (deserializedSavedLayout) {
-      setLayouts(deserializedSavedLayout);
-    }
-  }
+  const prevInitialLayoutsRef = useRef<WidgetLayouts | undefined>(
+    initialLayouts
+  );
+  const prevSavedLayoutRef = useRef<DashboardLayouts | undefined>(savedLayout);
 
   const handleLayoutChange = useCallback(
-    (newLayouts: DashboardLayouts) => {
-      setLayouts(newLayouts);
-      onLayoutChange?.(serializeLayouts(newLayouts));
+    (newLayouts: DashboardLayouts, draggingWidget: boolean) => {
+      if (!draggingWidget) {
+        console.log("Layout changed:", newLayouts);
+        onLayoutChange?.(serializeLayouts(newLayouts));
+      }
     },
     [onLayoutChange]
   );
@@ -111,7 +105,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
           newLayouts[breakpoint] = [...currentLayout, newLayoutItem];
         }
 
-        onLayoutChange?.(serializeLayouts(newLayouts));
+        if (!isDropped) {
+          handleLayoutChange(newLayouts, false);
+        }
         return newLayouts;
       });
 
@@ -137,6 +133,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               });
             }
 
+            handleLayoutChange(newLayouts, false);
             return newLayouts;
           });
 
@@ -144,7 +141,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         });
       }
     },
-    [widgets, sizes, onLayoutChange]
+    [widgets, sizes, handleLayoutChange]
   );
 
   const handleDrop = useCallback(
@@ -237,6 +234,23 @@ export const Dashboard: React.FC<DashboardProps> = ({
       context.setWidgets(widgets);
     }
   }, [context, handleAddWidget, widgets]);
+
+  // Sync with external layout changes
+  useEffect(() => {
+    if (initialLayouts && !savedLayout) {
+      if (
+        !deepCompareObjects(initialLayouts, prevInitialLayoutsRef.current || {})
+      ) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- We want to reset layout if initialLayouts changes
+        setLayouts(normalizeLayouts(initialLayouts, widgets, sizes));
+      }
+    } else if (savedLayout) {
+      if (!deepCompareObjects(savedLayout, prevSavedLayoutRef.current || {})) {
+        setLayouts(deserializeLayouts(savedLayout));
+      }
+      prevSavedLayoutRef.current = savedLayout;
+    }
+  }, [savedLayout, initialLayouts, widgets, sizes]);
 
   return (
     <LayoutContainer

@@ -116,11 +116,15 @@ export const ensureLayoutKeys = (layouts: WidgetLayout[]): WidgetLayout[] => {
  * Normalize DashboardLayouts to WidgetLayout per breakpoint
  */
 export const normalizeLayouts = (
-  layouts: WidgetLayouts,
+  layouts: WidgetLayouts | undefined,
   widgets: WidgetDefinition[],
   sizes?: WidgetSizePresets
 ): DashboardLayouts => {
   const normalized: DashboardLayouts = {};
+
+  if (!layouts) {
+    return normalized;
+  }
 
   for (const breakpoint in layouts) {
     const layout = layouts[breakpoint as Breakpoint];
@@ -188,4 +192,11 @@ export const deserializeLayouts = (
   }
 
   return deserialized;
+};
+
+/**
+ * Deep compare two objects for equality
+ */
+export const deepCompareObjects = (obj1: object, obj2: object): boolean => {
+  return JSON.stringify(obj1) === JSON.stringify(obj2);
 };

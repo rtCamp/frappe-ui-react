@@ -2,7 +2,6 @@
  * External dependencies.
  */
 import React, { useContext } from "react";
-import clsx from "clsx";
 
 /**
  * Internal dependencies.
@@ -10,6 +9,7 @@ import clsx from "clsx";
 import type { DashboardWidgetGalleryItemProps } from "./types";
 import { DashboardContext } from "./dashboardContext";
 import { resolveWidgetSize } from "./dashboardUtil";
+import { cn } from "../../utils";
 
 export const DashboardWidgetGalleryItem: React.FC<
   DashboardWidgetGalleryItemProps
@@ -39,9 +39,6 @@ export const DashboardWidgetGalleryItem: React.FC<
   };
 
   const handleDragEnd = () => {
-    if (context) {
-      context.setDraggingWidget(null);
-    }
     onWidgetDrop?.(widget.id);
   };
 
@@ -56,7 +53,7 @@ export const DashboardWidgetGalleryItem: React.FC<
 
   return (
     <div
-      className={clsx(
+      className={cn(
         "cursor-pointer rounded-lg border border-outline-gray-2 bg-surface-cards overflow-hidden hover:border-outline-gray-3",
         view === "grid" && "text-center"
       )}
