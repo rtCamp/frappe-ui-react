@@ -30,6 +30,7 @@ export * from "./select";
 export * from "./sidebar";
 export * from "./skeleton";
 export * from "./spinner";
+export * from "./spacer";
 export * from "./switch";
 export { default as TabButtons } from "./tabButtons";
 export * from "./tabs";
