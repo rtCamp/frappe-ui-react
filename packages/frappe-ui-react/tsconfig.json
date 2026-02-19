@@ -21,6 +21,7 @@
     "dist-types",
     "src/utils/tailwind.config.cjs",
     "**/*.test.ts",
+    "**/*.mdx",
     "**/tests/**/*.ts",
     "**/tests/**/*.tsx"
   ]
