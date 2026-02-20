@@ -90,5 +90,12 @@
   "dependencies": {
     "react-docgen-typescript": "^2.4.0"
   },
-  "packageManager": "pnpm@10.13.1"
+  "packageManager": "pnpm@10.13.1",
+  "pnpm": {
+    "overrides": {
+      "minimatch": ">=10.2.1",
+      "markdown-it": ">=14.1.1",
+      "ajv": ">=8.18.0"
+    }
+  }
 }
