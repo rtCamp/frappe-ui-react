@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { LucidePanelRightOpen } from "lucide-react";
 
 import SidebarHeader from "./sidebarHeader";
 import SidebarSection from "./sidebarSection";
 import SidebarItem from "./sidebarItem";
 import { useMediaQuery } from "./useMediaQuery";
 import { Divider } from "../divider";
+import { MenuCollapse } from "../../icons";
 
 export type SidebarHeaderProps = {
   title: string;
@@ -120,7 +120,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 shouldCollapse ? "rotate-180" : ""
               }`}
             >
-              <LucidePanelRightOpen size={16} className="text-ink-gray-6" />
+              <MenuCollapse className="size-4 text-ink-gray-6" />
             </span>
           }
         />
