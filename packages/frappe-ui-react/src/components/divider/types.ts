@@ -10,4 +10,5 @@ export interface DividerProps {
   position?: "start" | "center" | "end";
   flexItem?: boolean;
   action?: DividerAction;
+  className?: string
 }
