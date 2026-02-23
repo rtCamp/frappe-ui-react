@@ -5,6 +5,7 @@ import SidebarHeader from "./sidebarHeader";
 import SidebarSection from "./sidebarSection";
 import SidebarItem from "./sidebarItem";
 import { useMediaQuery } from "./useMediaQuery";
+import { Divider } from "../divider";
 
 export type SidebarHeaderProps = {
   title: string;
@@ -90,12 +91,14 @@ const Sidebar: React.FC<SidebarProps> = ({
             })}
         </SidebarHeader>
       )}
-      {sections.map((section) => (
-        <SidebarSection
-          key={section.label}
-          sidebarCollapsed={shouldCollapse}
-          {...section}
-        />
+      {sections.map((section, index) => (
+        <React.Fragment key={`section-${index}`}>
+          <SidebarSection
+            sidebarCollapsed={shouldCollapse}
+            {...section}
+          />
+          {index !== sections.length - 1 && <Divider className="h-1 mt-2" />}
+        </React.Fragment>
       ))}
       <div className="mt-auto flex flex-col gap-2">
         {/* footer-items slot */}

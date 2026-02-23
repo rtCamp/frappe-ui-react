@@ -1,6 +1,12 @@
-import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
+    ChartBarBig,
+    CircleCheck,
+    CircleCheckBig,
+    Cross,
+    Folder,
+    Home,
+  Layers,
   LucideBell,
   LucideBriefcase,
   LucideBuilding,
@@ -13,6 +19,7 @@ import {
   LucideUser,
   LucideUserCheck,
   LucideUsers,
+  Search,
 } from "lucide-react";
 
 import Sidebar from "./sidebar";
@@ -83,75 +90,54 @@ const crmSidebar = {
           icon: <LucideBell size={16} className="text-ink-gray-6" />,
           to: "",
         },
+        {
+          label: "Search",
+          icon: <Search size={16} className="text-ink-gray-6" />,
+          to: "",
+        },
       ],
     },
     {
       label: "",
       items: [
         {
-          label: "Leads",
-          icon: <LucideUsers size={16} className="text-ink-gray-6" />,
-          to: "",
-        },
-        {
-          label: "Deals",
-          icon: <LucideBriefcase size={16} className="text-ink-gray-6" />,
-          to: "",
-        },
-        {
-          label: "Contacts",
-          icon: <LucideUserCheck size={16} className="text-ink-gray-6" />,
-          to: "",
-        },
-        {
-          label: "Organizations",
-          icon: <LucideBuilding size={16} className="text-ink-gray-6" />,
-          to: "",
-        },
-        {
-          label: "Notes",
-          icon: <LucideClipboard size={16} className="text-ink-gray-6" />,
+          label: "Home",
+          icon: <Home size={16} className="text-ink-gray-6" />,
           to: "",
         },
         {
           label: "Tasks",
-          icon: <LucideCheckSquare size={16} className="text-ink-gray-6" />,
+          icon: <CircleCheckBig size={16} className="text-ink-gray-6" />,
           to: "",
         },
         {
-          label: "Call Logs",
-          icon: <LucidePhone size={16} className="text-ink-gray-6" />,
+          label: "Projects",
+          icon: <Folder size={16} className="text-ink-gray-6" />,
           to: "",
         },
         {
-          label: "Email Templates",
-          icon: <LucideMail size={16} className="text-ink-gray-6" />,
+          label: "Timesheet",
+          icon: <LucideBuilding size={16} className="text-ink-gray-6" />,
           to: "",
         },
       ],
     },
     {
-      label: "Views",
-      collapsible: true,
+      label: "",
       items: [
         {
-          label: "My Open Deals",
-          icon: <LucideLink size={16} className="text-ink-gray-6" />,
+          label: "Allocation",
+          icon: <Cross size={16} className="text-ink-gray-6" />,
           to: "",
         },
         {
-          label: "Partnership Deals",
-          icon: <LucideLink size={16} className="text-ink-gray-6" />,
+          label: "Roadmap",
+          icon: <Layers size={16} className="text-ink-gray-6" />,
           to: "",
         },
         {
-          label: "Unassigned Deals",
-          icon: <LucideLink size={16} className="text-ink-gray-6" />,
-          to: "",
-        },
-        {
-          label: "Enterprise Pipeline",
-          icon: <LucideLink size={16} className="text-ink-gray-6" />,
+          label: "Reports",
+          icon: <ChartBarBig size={16} className="text-ink-gray-6" />,
           to: "",
         },
       ],
