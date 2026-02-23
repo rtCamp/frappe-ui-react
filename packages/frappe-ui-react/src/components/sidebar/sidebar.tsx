@@ -97,7 +97,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             sidebarCollapsed={shouldCollapse}
             {...section}
           />
-          {index !== sections.length - 1 && !section.collapsible && <Divider className="h-1 mt-2" />}
+          {index !== sections.length - 1 && <Divider className="h-1 mt-2" />}
         </React.Fragment>
       ))}
       <div className="mt-auto flex flex-col gap-2">

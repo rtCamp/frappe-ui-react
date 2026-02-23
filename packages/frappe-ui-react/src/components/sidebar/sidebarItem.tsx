@@ -30,7 +30,6 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
       window.location.href = to;
     }
   }
-
   return (
     <Button
       label={label}

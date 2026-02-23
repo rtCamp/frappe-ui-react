@@ -485,7 +485,7 @@ input {
     --color-surface-cyan-2: var(--color-cyan-200);
     --color-surface-pink-1: var(--color-pink-50);
     --color-surface-pink-2: var(--color-pink-200);
-    --color-surface-menu-bar: var(--color-white);
+    --color-surface-menu-bar: var(--color-gray-50);
     --color-surface-cards: var(--color-gray-100);
     --color-surface-modal: var(--color-gray-200);
     --color-surface-selected: var(--color-gray-300);

@@ -77,12 +77,12 @@ const crmSidebar = {
       items: [
         {
           label: "Notifications",
-          icon: <Notifications className="size-4 text-ink-gray-6" />,
+          icon: Notifications,
           to: "",
         },
         {
           label: "Search",
-          icon: <Search className="size-4 text-ink-gray-6" />,
+          icon: Search,
           to: "",
         },
       ],
@@ -92,17 +92,17 @@ const crmSidebar = {
       items: [
         {
           label: "Home",
-          icon: <Home size={16} className="text-ink-gray-6" />,
+          icon: Home,
           to: "",
         },
         {
           label: "Tasks",
-          icon: <Tasks className="size-4 text-ink-gray-6" />,
+          icon: Tasks,
           to: "",
         },
         {
           label: "Projects",
-          icon: <Folder className="size-4 text-ink-gray-6" />,
+          icon: Folder,
           to: "",
         },
       ],
@@ -113,17 +113,17 @@ const crmSidebar = {
       items: [
         {
           label: "Personal",
-          icon: <Time className="size-4 text-ink-gray-6" />,
+          icon: Time,
           to: "",
         },
         {
           label: "Team",
-          icon: <People className="size-4 text-ink-gray-6" />,
+          icon: People,
           to: "",
         },
         {
           label: "Projects",
-          icon: <Folder className="size-4 text-ink-gray-6" />,
+          icon: Folder,
           to: "",
         },
       ],
@@ -133,17 +133,17 @@ const crmSidebar = {
       items: [
         {
           label: "Allocation",
-          icon: <Batches className="size-4 text-ink-gray-6" />,
+          icon: Batches,
           to: "",
         },
         {
           label: "Roadmap",
-          icon: <Layers className="size-4 text-ink-gray-6" />,
+          icon: Layers,
           to: "",
         },
         {
           label: "Reports",
-          icon: <Reports className="size-4 text-ink-gray-6" />,
+          icon: Reports,
           to: "",
         },
       ],
