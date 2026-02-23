@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 
 import SidebarHeader from "./sidebarHeader";
 import SidebarSection from "./sidebarSection";
@@ -36,8 +36,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   children,
   className = "",
 }) => {
+  // Responsive behavior - auto-collapse on small screens
+  const isMobile = useMediaQuery("(max-width: 640px)");
+
   // Internal collapse state
-  const [internalCollapsed, setInternalCollapsed] = useState(false);
+  const [internalCollapsed, setInternalCollapsed] = useState(isMobile);
   const isControlled = typeof collapsedProp === "boolean";
   const isCollapsed = isControlled ? collapsedProp : internalCollapsed;
 
@@ -52,16 +55,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     },
     [isControlled, onCollapseChange]
   );
-
-  // Responsive behavior - auto-collapse on small screens
-  const isMobile = useMediaQuery("(max-width: 640px)");
-
-  // Auto collapse sidebar on mobile
-  useEffect(() => {
-    if (isMobile && !isCollapsed) {
-      setCollapsed(true);
-    }
-  }, [isMobile, isCollapsed, setCollapsed]);
 
   // Compute whether sidebar should be collapsed (either manually or due to mobile)
   const shouldCollapse = isCollapsed || isMobile;
@@ -93,10 +86,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       )}
       {sections.map((section, index) => (
         <React.Fragment key={`section-${index}`}>
-          <SidebarSection
-            sidebarCollapsed={shouldCollapse}
-            {...section}
-          />
+          <SidebarSection sidebarCollapsed={shouldCollapse} {...section} />
           {index !== sections.length - 1 && <Divider className="h-1 mt-2" />}
         </React.Fragment>
       ))}
