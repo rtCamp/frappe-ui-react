@@ -41,7 +41,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
                 !collapsed ? "" : "-rotate-90"
               }`}
             >
-              <LucideChevronDown size={16} className="text-ink-gray-6" />
+              <LucideChevronDown size={16} color="currentColor" />
             </span>
           )}
           {sidebarCollapsed && (

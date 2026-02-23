@@ -1,28 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-    ChartBarBig,
-    CircleCheck,
-    CircleCheckBig,
-    Cross,
-    Folder,
     Home,
-  Layers,
-  LucideBell,
-  LucideBriefcase,
-  LucideBuilding,
-  LucideCheckSquare,
-  LucideClipboard,
-  LucideLink,
-  LucideMail,
-  LucidePhone,
   LucideSettings,
   LucideUser,
-  LucideUserCheck,
-  LucideUsers,
-  Search,
 } from "lucide-react";
 
 import Sidebar from "./sidebar";
+import { Batches, Notifications, Search, Tasks,Layers, Reports, Folder } from "../../icons";
 
 const meta: Meta<typeof Sidebar> = {
   title: "Components/Sidebar",
@@ -87,12 +71,12 @@ const crmSidebar = {
       items: [
         {
           label: "Notifications",
-          icon: <LucideBell size={16} className="text-ink-gray-6" />,
+          icon: <Notifications className="size-4 text-ink-gray-6" />,
           to: "",
         },
         {
           label: "Search",
-          icon: <Search size={16} className="text-ink-gray-6" />,
+          icon: <Search className="size-4 text-ink-gray-6" />,
           to: "",
         },
       ],
@@ -107,17 +91,17 @@ const crmSidebar = {
         },
         {
           label: "Tasks",
-          icon: <CircleCheckBig size={16} className="text-ink-gray-6" />,
+          icon: <Tasks className="size-4 text-ink-gray-6" />,
           to: "",
         },
         {
           label: "Projects",
-          icon: <Folder size={16} className="text-ink-gray-6" />,
+          icon: <Folder className="size-4 text-ink-gray-6" />,
           to: "",
         },
         {
           label: "Timesheet",
-          icon: <LucideBuilding size={16} className="text-ink-gray-6" />,
+          icon: <Folder className="size-4 text-ink-gray-6" />,
           to: "",
         },
       ],
@@ -127,17 +111,17 @@ const crmSidebar = {
       items: [
         {
           label: "Allocation",
-          icon: <Cross size={16} className="text-ink-gray-6" />,
+          icon: <Batches className="size-4 text-ink-gray-6" />,
           to: "",
         },
         {
           label: "Roadmap",
-          icon: <Layers size={16} className="text-ink-gray-6" />,
+          icon: <Layers className="size-4 text-ink-gray-6" />,
           to: "",
         },
         {
           label: "Reports",
-          icon: <ChartBarBig size={16} className="text-ink-gray-6" />,
+          icon: <Reports className="size-4 text-ink-gray-6" />,
           to: "",
         },
       ],
