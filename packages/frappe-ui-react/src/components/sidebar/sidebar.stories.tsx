@@ -1,12 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-    Home,
-  LucideSettings,
-  LucideUser,
-} from "lucide-react";
+import { Home, LucideSettings, LucideUser } from "lucide-react";
 
 import Sidebar from "./sidebar";
-import { Batches, Notifications, Search, Tasks,Layers, Reports, Folder } from "../../icons";
+import {
+  Batches,
+  Notifications,
+  Search,
+  Tasks,
+  Layers,
+  Reports,
+  Folder,
+  Time,
+  People
+} from "../../icons";
 
 const meta: Meta<typeof Sidebar> = {
   title: "Components/Sidebar",
@@ -99,8 +105,24 @@ const crmSidebar = {
           icon: <Folder className="size-4 text-ink-gray-6" />,
           to: "",
         },
+      ],
+    },
+    {
+      label: "Timesheet",
+      collapsible: true,
+      items: [
         {
-          label: "Timesheet",
+          label: "Personal",
+          icon: <Time className="size-4 text-ink-gray-6" />,
+          to: "",
+        },
+        {
+          label: "Team",
+          icon: <People className="size-4 text-ink-gray-6" />,
+          to: "",
+        },
+        {
+          label: "Projects",
           icon: <Folder className="size-4 text-ink-gray-6" />,
           to: "",
         },

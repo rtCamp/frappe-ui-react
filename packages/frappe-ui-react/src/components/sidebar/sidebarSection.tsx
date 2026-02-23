@@ -26,15 +26,6 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
           }`}
           onClick={() => (collapsible ? setCollapsed(!collapsed) : undefined)}
         >
-          <h3
-            className={`h-4 text-sm text-ink-gray-5 transition-all duration-300 ease-in-out ${
-              sidebarCollapsed
-                ? "w-0 overflow-hidden opacity-0"
-                : "w-auto opacity-100"
-            }`}
-          >
-            {label}
-          </h3>
           {collapsible && !sidebarCollapsed && (
             <span
               className={`w-4 h-4 text-ink-gray-5 transition-all duration-300 ease-in-out ${
@@ -53,6 +44,15 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
               <hr className="w-full border-t border-gray-200" />
             </div>
           )}
+          <h3
+            className={`h-4 text-sm text-ink-gray-5 transition-all duration-300 ease-in-out ${
+              sidebarCollapsed
+                ? "w-0 overflow-hidden opacity-0"
+                : "w-auto opacity-100"
+            }`}
+          >
+            {label}
+          </h3>
         </div>
       )}
       {/* Collapsible nav */}
