@@ -68,16 +68,17 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
       onOpenChange={() => setCollapsed(!collapsed)}
     >
       <Collapsible.Trigger
-        className={cn("relative flex items-center gap-1 px-2 py-1.5 cursor-pointer",
-            {
-                "hidden": sidebarCollapsed
-            }
+        className={cn(
+          "relative flex items-center gap-1 px-2 py-1.5 cursor-pointer",
+          {
+            hidden: sidebarCollapsed,
+          }
         )}
       >
         {!sidebarCollapsed && (
           <span
             className={`w-4 h-4 text-ink-gray-5 transition-all duration-300 ease-in-out ${
-              !collapsed ? "" : "-rotate-90"
+              collapsed ? "" : "-rotate-90"
             }`}
           >
             <LucideChevronDown size={16} color="currentColor" />
@@ -103,7 +104,9 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
         </h3>
       </Collapsible.Trigger>
       <Collapsible.Panel
-        className={cn("space-y-0.5 flex flex-col align-start justify-between transition-all duration-150")}
+        className={cn(
+          "space-y-0.5 flex flex-col align-start justify-between transition-all duration-150"
+        )}
       >
         {items.map((item: any) => (
           <Button
