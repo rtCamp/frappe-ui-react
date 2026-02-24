@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { TextInputProps } from "./types";
 import TextInput from "./textInput";
-import { Avatar } from "../avatar";
+import { Avatar, type AvatarProps } from "../avatar";
 import FeatherIcon from "../featherIcon";
 
 export default {
@@ -192,7 +192,7 @@ export const PrefixSlotIcon = {
   args: {
     type: "url",
     placeholder: "Placeholder",
-    prefix: (size) => (
+    prefix: (size: string) => (
       <FeatherIcon className={size === "sm" ? "w-4" : "w-5"} name="search" />
     ),
     value: "",
@@ -214,7 +214,7 @@ export const PrefixSlotAvatar = {
   args: {
     type: "url",
     placeholder: "Placeholder",
-    prefix: (size) => (
+    prefix: (size: AvatarProps["size"]) => (
       <Avatar
         shape="circle"
         image="https://avatars.githubusercontent.com/u/499550?s=60&v=4"

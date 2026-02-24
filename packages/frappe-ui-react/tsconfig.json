@@ -14,7 +14,7 @@
       "@rtcamp/*": ["packages/frappe-ui-react/src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "src/utils/tailwindExtend.json"],
   "exclude": [
     "**/node_modules",
     "dist",
