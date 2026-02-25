@@ -178,7 +178,7 @@ export const WeekRow: React.FC<WeekRowProps> = ({
           return (
             <div
               key={date}
-              className="shrink-0 align-middle w-16 text-sm text-center text-ink-gray-5 whitespace-nowrap p-0"
+              className="shrink-0 align-middle w-16 text-sm text-center text-ink-gray-5 whitespace-nowrap px-2 py-1.5"
             >
               <span>
                 {monthAndDay[0]}{" "}
@@ -203,7 +203,7 @@ export const WeekRow: React.FC<WeekRowProps> = ({
         </div>
       )}
 
-      <div className="shrink-0 align-middle w-12 flex justify-end items-center whitespace-nowrap p-0">
+      <div className="shrink-0 align-middle w-12 flex justify-end items-center whitespace-nowrap">
         <Button
           className={cn(
             buttonVariants({ status, thisWeek, collapsed }),
