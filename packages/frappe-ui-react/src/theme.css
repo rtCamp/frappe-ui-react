@@ -44,6 +44,8 @@ input {
     --color-gray-800: #383838;
     --color-gray-900: #171717;
 
+    /* Functional UI */
+
     /* Blue Scale */
     --color-blue-50: #f2f9ff;
     --color-blue-100: #e6f4ff;
@@ -61,7 +63,7 @@ input {
     --color-green-100: #e4faeb;
     --color-green-200: #c3f9d3;
     --color-green-300: #a6efc0;
-    --color-green-400: #86e0a8;
+    --color-green-400: #78e09f;
     --color-green-500: #46b37e;
     --color-green-600: #278f5e;
     --color-green-700: #137949;
@@ -79,6 +81,22 @@ input {
     --color-red-700: #b52a2a;
     --color-red-800: #941f1f;
     --color-red-900: #6b1515;
+
+    /* Amber Scale */
+    --color-amber-50: #fdfaed;
+    --color-amber-100: #fff7d3;
+    --color-amber-200: #feeda9;
+    --color-amber-300: #fbdb73;
+    --color-amber-400: #fbc53f;
+    --color-amber-500: #e79913;
+    --color-amber-600: #db7706;
+    --color-amber-700: #b35309;
+    --color-amber-800: #91400d;
+    --color-amber-900: #763813;
+
+    /* End of Functional UI */
+
+    /* Brand Colors */
 
     /* Orange Scale */
     --color-orange-50: #fff9f5;
@@ -116,19 +134,7 @@ input {
     --color-teal-800: #115c57;
     --color-teal-900: #114541;
 
-    /* Violet Scale */
-    --color-violet-50: #fbfaff;
-    --color-violet-100: #f0ebff;
-    --color-violet-200: #dbd5ff;
-    --color-violet-300: #c9bafb;
-    --color-violet-400: #b3a1f5;
-    --color-violet-500: #6846e3;
-    --color-violet-600: #5f46c7;
-    --color-violet-700: #4f3da1;
-    --color-violet-800: #392980;
-    --color-violet-900: #251959;
-
-    /* Cyan Scale */
+     /* Cyan Scale */
     --color-cyan-50: #f5fbfc;
     --color-cyan-100: #ddf7ff;
     --color-cyan-200: #b3e8f7;
@@ -140,41 +146,45 @@ input {
     --color-cyan-800: #125c73;
     --color-cyan-900: #164759;
 
-    /* Amber Scale */
-    --color-amber-50: #fdfaed;
-    --color-amber-100: #fff7d3;
-    --color-amber-200: #feeda9;
-    --color-amber-300: #fbdb73;
-    --color-amber-400: #fbcc55;
-    --color-amber-500: #e79913;
-    --color-amber-600: #db7706;
-    --color-amber-700: #b35309;
-    --color-amber-800: #91400d;
-    --color-amber-900: #763813;
+    /* Purple Scale */
+    --color-purple-50: #fdfaff;
+    --color-purple-100: #f6e9ff;
+    --color-purple-200: #ecd3ff;
+    --color-purple-300: #e2b9fc;
+    --color-purple-400: #bf78fa;
+    --color-purple-500: #9c45e3;
+    --color-purple-600: #8642c2;
+    --color-purple-700: #6e399d;
+    --color-purple-800: #5c2f83;
+    --color-purple-900: #401863;
 
     /* Pink Scale */
     --color-pink-50: #fff7fc;
     --color-pink-100: #fde8f5;
     --color-pink-200: #ffd5f0;
     --color-pink-300: #f9b9e0;
-    --color-pink-400: #f6a7d6;
+    --color-pink-400: #f77cc6;
     --color-pink-500: #e34aa6;
     --color-pink-600: #cf3a96;
     --color-pink-700: #9c2671;
     --color-pink-800: #801458;
     --color-pink-900: #570f3e;
 
-    /* Purple Scale */
-    --color-purple-50: #fdfaff;
-    --color-purple-100: #f6e9ff;
-    --color-purple-200: #ecd3ff;
-    --color-purple-300: #e2b9fc;
-    --color-purple-400: #cfa1f2;
-    --color-purple-500: #9c45e3;
-    --color-purple-600: #8642c2;
-    --color-purple-700: #6e399d;
-    --color-purple-800: #5c2f83;
-    --color-purple-900: #401863;
+    /* Violet Scale */
+    --color-violet-50: #fbfaff;
+    --color-violet-100: #eee8ff;
+    --color-violet-200: #dbd5ff;
+    --color-violet-300: #c9bafb;
+    --color-violet-400: #a68efe;
+    --color-violet-500: #7757ee;
+    --color-violet-600: #664ecc;
+    --color-violet-700: #4f3da1;
+    --color-violet-800: #392980;
+    --color-violet-900: #251959;
+
+    /* End of brand colors */
+
+    /* Overlay Colors */
 
     /* White Overlay Scale */
     --color-white-overlay-50: #ffffff1a;
@@ -186,7 +196,7 @@ input {
     --color-white-overlay-600: #ffffffa1;
     --color-white-overlay-700: #ffffffb8;
     --color-white-overlay-800: #ffffffcf;
-    --color-white-overlay-900: #ffffffe6;
+    --color-white-overlay-900: #ffffffe5;
 
     /* Black Overlay Scale */
     --color-black-overlay-50: #00000017;
@@ -198,7 +208,9 @@ input {
     --color-black-overlay-600: #000000a1;
     --color-black-overlay-700: #000000b8;
     --color-black-overlay-800: #000000cf;
-    --color-black-overlay-900: #000000e6;
+    --color-black-overlay-900: #000000e5;
+
+    /* End of Overlay Colors */
 
     /* Dark Gray Scale */
     --color-dark-gray-50: #f8f8f8;
