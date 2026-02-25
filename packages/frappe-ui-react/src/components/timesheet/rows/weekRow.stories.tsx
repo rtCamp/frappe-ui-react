@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { useArgs } from "storybook/internal/preview-api";
+import { useArgs } from "storybook/preview-api";
 
 import { WeekRow, type WeekRowProps } from "./weekRow";
 
