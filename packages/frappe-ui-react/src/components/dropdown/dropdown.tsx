@@ -24,13 +24,14 @@ const cssClasses = {
     "group flex h-7 w-full items-center rounded px-2 text-base focus:outline-none",
   submenuTrigger:
     "group flex h-7 w-full items-center rounded px-2 text-base text-ink-gray-6 focus:outline-none",
-  dropdownPositioner: "z-100",
+  dropdownPositioner: "z-100 py-2",
 };
 
 const Dropdown: React.FC<DropdownProps> = ({
   options = [],
   placement = "left",
   button,
+  renderItems,
   children,
   ...attrs
 }) => {
@@ -313,27 +314,32 @@ const Dropdown: React.FC<DropdownProps> = ({
               "origin-top": placement === "center",
             })}
           >
-            {groups.map((group) => (
-              <Menu.Group key={group.key} className={cssClasses.groupContainer}>
-                {group.group && !group.hideLabel && (
-                  <Menu.GroupLabel className={cssClasses.groupLabel}>
-                    {group.group}
-                  </Menu.GroupLabel>
-                )}
-                {group.items.map((item) => (
-                  <div data-testid="dropdown-item" key={item.label}>
-                    <Menu.Item
-                      closeOnClick={!item.switch}
-                      onClick={() => !item.switch && item.onClick?.()}
-                      render={renderDropdownItem(item)}
-                      nativeButton={
-                        !item.switch && !item.submenu && !item.component
-                      }
-                    />
-                  </div>
+            {renderItems
+              ? renderItems(options)
+              : groups.map((group) => (
+                  <Menu.Group
+                    key={group.key}
+                    className={cssClasses.groupContainer}
+                  >
+                    {group.group && !group.hideLabel && (
+                      <Menu.GroupLabel className={cssClasses.groupLabel}>
+                        {group.group}
+                      </Menu.GroupLabel>
+                    )}
+                    {group.items.map((item) => (
+                      <div data-testid="dropdown-item" key={item.label}>
+                        <Menu.Item
+                          closeOnClick={!item.switch}
+                          onClick={() => !item.switch && item.onClick?.()}
+                          render={renderDropdownItem(item)}
+                          nativeButton={
+                            !item.switch && !item.submenu && !item.component
+                          }
+                        />
+                      </div>
+                    ))}
+                  </Menu.Group>
                 ))}
-              </Menu.Group>
-            ))}
           </Menu.Popup>
         </Menu.Positioner>
       </Menu.Portal>

@@ -1,5 +1,5 @@
 import type { ReactNode, ComponentType } from "react";
-import type { ButtonProps } from "@headlessui/react";
+import type { ButtonProps } from "../button";
 import type { ButtonTheme } from "../button";
 
 export interface DropdownOption {
@@ -33,4 +33,5 @@ export interface DropdownProps {
     label?: string;
   };
   children?: ReactNode;
+  renderItems?: (options: DropdownOptions) => ReactNode;
 }
