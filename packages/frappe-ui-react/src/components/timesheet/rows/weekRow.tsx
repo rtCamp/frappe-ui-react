@@ -86,18 +86,18 @@ const totalHoursVariants = cva("", {
     {
       collapsed: true,
       status: "Not Submitted",
-      class: "text-(--color-ink-green-4)",
+      class: "text-ink-green-4",
     },
     {
       collapsed: true,
       status: "Approved",
-      class: "text-(--color-ink-green-4)",
+      class: "text-ink-green-4",
     },
     { collapsed: true, status: "Rejected", class: "text-ink-red-4" },
     {
       collapsed: true,
       status: "Approval Pending",
-      class: "text-(--color-ink-green-4)",
+      class: "text-ink-amber-4",
     },
     { collapsed: true, status: "None", class: "text-ink-gray-6" },
     {
@@ -114,9 +114,9 @@ const buttonVariants = cva("", {
   variants: {
     status: {
       "Not Submitted": "text-ink-white",
-      Approved: "text-(--color-ink-green-4)",
+      Approved: "text-ink-green-4",
       Rejected: "text-ink-red-4",
-      "Approval Pending": "text-(--color-ink-amber-4)",
+      "Approval Pending": "text-ink-amber-4",
       None: "",
     },
     thisWeek: { true: "", false: "" },
