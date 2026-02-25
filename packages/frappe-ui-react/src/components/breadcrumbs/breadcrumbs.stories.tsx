@@ -12,6 +12,14 @@ export default {
       description:
         "An array of breadcrumb items, each with a label, and optional onClick.",
     },
+    size: {
+      control: { type: "select", options: ["sm", "md"] },
+      description: "Size of the breadcrumb items.",
+    },
+    highlightLastItem: {
+      control: "boolean",
+      description: "Whether to highlight the last breadcrumb item.",
+    },
     renderPrefix: {
       description:
         "Function to render a prefix element for each breadcrumb item.",
