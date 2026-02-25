@@ -29,6 +29,8 @@ export type DropdownOptions = (DropdownOption | DropdownGroupOption)[];
 export interface DropdownProps {
   options: DropdownOptions;
   placement?: "left" | "right" | "center";
+  dropdownClassName?: string;
+  groupClassName?: string;
   button?: Omit<ButtonProps, "children" | "onClick" | "active"> & {
     label?: string;
   };
