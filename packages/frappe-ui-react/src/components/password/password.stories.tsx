@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import Password from "./password"; // Assuming your component is in Password.tsx
 import type { PasswordProps } from "./types"; // Assuming your types are in types/password.ts
