@@ -93,6 +93,7 @@ export const Variants: Story = {
       "Dec 8 - Dec 14, 2025": false,
       "Dec 1 - Dec 7, 2025": false,
     });
+
     return (
       <div className="w-295 p-4">
         <div className="w-full text-sm">
