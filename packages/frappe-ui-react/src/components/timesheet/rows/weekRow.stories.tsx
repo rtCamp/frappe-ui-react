@@ -2,11 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { useArgs } from "storybook/internal/preview-api";
 
-import { RowWeek, type RowWeekProps } from "./rowWeek";
+import { WeekRow, type WeekRowProps } from "./weekRow";
 
-const meta: Meta<RowWeekProps> = {
-  title: "Components/Timesheet/RowWeek",
-  component: RowWeek,
+const meta: Meta<WeekRowProps> = {
+  title: "Components/Timesheet/WeekRow",
+  component: WeekRow,
   parameters: { docs: { source: { type: "dynamic" } } },
   argTypes: {
     label: {
@@ -74,7 +74,7 @@ export const Default: Story = {
     const [_args, setUseArgs] = useArgs();
     return (
       <div className="w-295 p-4">
-        <RowWeek
+        <WeekRow
           {...args}
           onToggle={() => setUseArgs({ collapsed: !_args.collapsed })}
         />
@@ -97,7 +97,7 @@ export const Variants: Story = {
       <div className="w-295 p-4">
         <div className="w-full text-sm">
           <h2 className="py-4">This Week = True</h2>
-          <RowWeek
+          <WeekRow
             label="This Week"
             collapsed={collapseds["This Week"]}
             totalHours="40:00"
@@ -120,7 +120,7 @@ export const Variants: Story = {
             today="Jan 4"
             status="Not Submitted"
           />
-          <RowWeek
+          <WeekRow
             label="Last Week"
             collapsed={collapseds["Last Week"]}
             totalHours="35:00"
@@ -143,7 +143,7 @@ export const Variants: Story = {
             thisWeek={true}
             status="Approval Pending"
           />
-          <RowWeek
+          <WeekRow
             label="Dec 15 - Dec 21, 2025"
             collapsed={collapseds["Dec 15 - Dec 21, 2025"]}
             totalHours="35:00"
@@ -166,7 +166,7 @@ export const Variants: Story = {
             thisWeek={true}
             status="Rejected"
           />
-          <RowWeek
+          <WeekRow
             label="Dec 8 - Dec 14, 2025"
             collapsed={collapseds["Dec 8 - Dec 14, 2025"]}
             totalHours="35:00"
@@ -189,7 +189,7 @@ export const Variants: Story = {
             thisWeek={false}
             status="Approved"
           />
-          <RowWeek
+          <WeekRow
             label="Dec 1 - Dec 7, 2025"
             collapsed={collapseds["Dec 1 - Dec 7, 2025"]}
             totalHours="35:00"
@@ -213,7 +213,7 @@ export const Variants: Story = {
             status="None"
           />
           <h2 className="py-4">This Week = False</h2>
-          <RowWeek
+          <WeekRow
             label="This Week"
             collapsed={collapseds["This Week"]}
             totalHours="40:00"
@@ -236,7 +236,7 @@ export const Variants: Story = {
             today="Jan 4"
             status="Not Submitted"
           />
-          <RowWeek
+          <WeekRow
             label="Last Week"
             collapsed={collapseds["Last Week"]}
             totalHours="35:00"
@@ -259,7 +259,7 @@ export const Variants: Story = {
             thisWeek={false}
             status="Approval Pending"
           />
-          <RowWeek
+          <WeekRow
             label="Dec 15 - Dec 21, 2025"
             collapsed={collapseds["Dec 15 - Dec 21, 2025"]}
             totalHours="35:00"
@@ -282,7 +282,7 @@ export const Variants: Story = {
             thisWeek={false}
             status="Rejected"
           />
-          <RowWeek
+          <WeekRow
             label="Dec 8 - Dec 14, 2025"
             collapsed={collapseds["Dec 8 - Dec 14, 2025"]}
             totalHours="35:00"
@@ -305,7 +305,7 @@ export const Variants: Story = {
             thisWeek={false}
             status="Approved"
           />
-          <RowWeek
+          <WeekRow
             label="Dec 1 - Dec 7, 2025"
             collapsed={collapseds["Dec 1 - Dec 7, 2025"]}
             totalHours="35:00"

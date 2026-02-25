@@ -17,18 +17,18 @@ import { Badge, type BadgeProps } from "../../badge";
 import { Button, type ButtonVariant } from "../../button";
 import { cn } from "../../../utils";
 
-type RowWeekStatus =
+type WeekRowStatus =
   | "Not Submitted"
   | "Approved"
   | "Rejected"
   | "Approval Pending"
   | "None";
 
-export interface RowWeekProps {
+export interface WeekRowProps {
   label?: string;
   nesting?: number;
   collapsed?: boolean;
-  status?: RowWeekStatus;
+  status?: WeekRowStatus;
   thisWeek?: boolean;
   onToggle?: () => void;
   dates: string[];
@@ -36,7 +36,7 @@ export interface RowWeekProps {
   totalHours?: string;
 }
 
-const statusTheme: Record<RowWeekStatus, BadgeProps["theme"]> = {
+const statusTheme: Record<WeekRowStatus, BadgeProps["theme"]> = {
   "Not Submitted": "gray",
   Approved: "green",
   Rejected: "red",
@@ -45,7 +45,7 @@ const statusTheme: Record<RowWeekStatus, BadgeProps["theme"]> = {
 };
 
 const statusIcon: Record<
-  RowWeekStatus,
+  WeekRowStatus,
   { variant: ButtonVariant; icon: React.ReactNode }
 > = {
   "Not Submitted": {
@@ -136,7 +136,7 @@ const buttonVariants = cva("", {
   },
 });
 
-export const RowWeek: React.FC<RowWeekProps> = ({
+export const WeekRow: React.FC<WeekRowProps> = ({
   label = "This Week",
   nesting = 0,
   collapsed = false,
