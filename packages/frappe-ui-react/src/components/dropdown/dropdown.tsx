@@ -1,6 +1,12 @@
+/**
+ * External dependencies.
+ */
 import React, { useMemo, useCallback } from "react";
 import { Menu } from "@base-ui/react/menu";
 
+/**
+ * Internal dependencies.
+ */
 import { Button, type ButtonProps } from "../button";
 import { Switch } from "../switch";
 import type {
@@ -10,7 +16,7 @@ import type {
   DropdownOptions,
 } from "./types";
 import FeatherIcon, { type FeatherIconProps } from "../featherIcon";
-import clsx from "clsx";
+import { cn } from "../../utils";
 
 const cssClasses = {
   dropdownContent:
@@ -24,12 +30,14 @@ const cssClasses = {
     "group flex h-7 w-full items-center rounded px-2 text-base focus:outline-none",
   submenuTrigger:
     "group flex h-7 w-full items-center rounded px-2 text-base text-ink-gray-6 focus:outline-none",
-  dropdownPositioner: "z-100 py-2",
+  dropdownPositioner: "z-100 py-1",
 };
 
 const Dropdown: React.FC<DropdownProps> = ({
   options = [],
   placement = "left",
+  dropdownClassName = "",
+  groupClassName = "",
   button,
   renderItems,
   children,
@@ -55,7 +63,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       : "focus:bg-surface-gray-3 data-[highlighted]:bg-surface-gray-3 data-[state=open]:bg-surface-gray-3";
 
   const getSubmenuBackgroundColor = (item: DropdownOption) =>
-    clsx(
+    cn(
       getBackgroundColor(item),
       item.theme === "red"
         ? " data-[state=open]:bg-surface-red-3"
@@ -196,7 +204,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                   (typeof item.icon === "string" ? (
                     <FeatherIcon
                       name={item.icon as FeatherIconProps["name"]}
-                      className={clsx(cssClasses.itemIcon, getIconColor(item))}
+                      className={cn(cssClasses.itemIcon, getIconColor(item))}
                     />
                   ) : React.isValidElement(item.icon) ? (
                     item.icon
@@ -209,7 +217,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                     aria-hidden="true"
                   />
                 )}
-                className={clsx(
+                className={cn(
                   cssClasses.submenuTrigger,
                   getSubmenuBackgroundColor(item)
                 )}
@@ -308,18 +316,22 @@ const Dropdown: React.FC<DropdownProps> = ({
           className={cssClasses.dropdownPositioner}
         >
           <Menu.Popup
-            className={clsx(cssClasses.dropdownContent, {
-              "origin-top-left": placement === "left",
-              "origin-top-right": placement === "right",
-              "origin-top": placement === "center",
-            })}
+            className={cn(
+              cssClasses.dropdownContent,
+              {
+                "origin-top-left": placement === "left",
+                "origin-top-right": placement === "right",
+                "origin-top": placement === "center",
+              },
+              dropdownClassName
+            )}
           >
             {renderItems
               ? renderItems(options)
               : groups.map((group) => (
                   <Menu.Group
                     key={group.key}
-                    className={cssClasses.groupContainer}
+                    className={cn(cssClasses.groupContainer, groupClassName)}
                   >
                     {group.group && !group.hideLabel && (
                       <Menu.GroupLabel className={cssClasses.groupLabel}>
