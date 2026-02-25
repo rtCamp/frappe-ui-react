@@ -8,6 +8,7 @@ import {
   CircleX,
   Hourglass,
 } from "lucide-react";
+import { cva } from "class-variance-authority";
 
 /**
  * Internal dependencies.
@@ -69,6 +70,72 @@ const statusIcon: Record<
   },
 };
 
+const totalHoursVariants = cva("", {
+  variants: {
+    status: {
+      "Not Submitted": "",
+      Approved: "",
+      Rejected: "",
+      "Approval Pending": "",
+      None: "",
+    },
+    collapsed: { true: "", false: "" },
+    thisWeek: { true: "", false: "" },
+  },
+  compoundVariants: [
+    {
+      collapsed: true,
+      status: "Not Submitted",
+      class: "text-(--color-ink-green-4)",
+    },
+    {
+      collapsed: true,
+      status: "Approved",
+      class: "text-(--color-ink-green-4)",
+    },
+    { collapsed: true, status: "Rejected", class: "text-ink-red-4" },
+    {
+      collapsed: true,
+      status: "Approval Pending",
+      class: "text-(--color-ink-green-4)",
+    },
+    { collapsed: true, status: "None", class: "text-ink-gray-6" },
+    {
+      collapsed: true,
+      status: "Approval Pending",
+      thisWeek: false,
+      class: "text-ink-red-4",
+    },
+  ],
+  defaultVariants: { collapsed: false, thisWeek: true },
+});
+
+const buttonVariants = cva("", {
+  variants: {
+    status: {
+      "Not Submitted": "text-ink-white",
+      Approved: "text-(--color-ink-green-4)",
+      Rejected: "text-ink-red-4",
+      "Approval Pending": "text-(--color-ink-amber-4)",
+      None: "",
+    },
+    thisWeek: { true: "", false: "" },
+    collapsed: { true: "", false: "" },
+  },
+  compoundVariants: [
+    {
+      status: "Rejected",
+      thisWeek: false,
+      collapsed: false,
+      class: "text-ink-gray-5",
+    },
+  ],
+  defaultVariants: {
+    thisWeek: true,
+    collapsed: false,
+  },
+});
+
 export const RowWeek: React.FC<RowWeekProps> = ({
   label = "This Week",
   nesting = 0,
@@ -81,9 +148,10 @@ export const RowWeek: React.FC<RowWeekProps> = ({
   totalHours = "",
 }) => {
   const isStatusNone = status === "None";
+
   return (
     <div
-      className="flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between py-3.5"
+      className="flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between py-2"
       style={{ paddingLeft: `${nesting * 16}px` }}
     >
       <div className="shrink-0 align-middle flex flex-1 items-center gap-2">
@@ -129,22 +197,7 @@ export const RowWeek: React.FC<RowWeekProps> = ({
 
       {!(isStatusNone && collapsed) && (
         <div className="shrink-0 align-middle w-16 text-sm text-end text-ink-gray-5 whitespace-nowrap px-2 py-1.5">
-          <span
-            className={cn(
-              collapsed &&
-                {
-                  "Not Submitted": "text-(--color-ink-green-4)",
-                  Approved: "text-(--color-ink-green-4)",
-                  Rejected: "text-ink-red-4",
-                  "Approval Pending": "text-(--color-ink-green-4)",
-                  None: "text-ink-gray-6",
-                }[status],
-              status === "Approval Pending" &&
-                !thisWeek &&
-                collapsed &&
-                "text-ink-red-4"
-            )}
-          >
+          <span className={totalHoursVariants({ status, collapsed, thisWeek })}>
             {collapsed ? totalHours : "Total"}
           </span>
         </div>
@@ -153,17 +206,10 @@ export const RowWeek: React.FC<RowWeekProps> = ({
       <div className="shrink-0 align-middle w-12 flex justify-end items-center whitespace-nowrap p-0">
         <Button
           className={cn(
-            statusIcon[status].variant !== "solid" &&
+            buttonVariants({ status, thisWeek, collapsed }),
+            statusIcon[status].variant === "ghost" &&
               "border-none outline-none focus:ring-0 focus-visible:ring-0 bg-transparent hover:bg-transparent active:bg-transparent",
-            isStatusNone && "cursor-default!",
-            status === "Not Submitted" && "text-ink-white",
-            status === "Approved" && "text-(--color-ink-green-4)",
-            status === "Rejected" && "text-ink-red-4",
-            status === "Approval Pending" && "text-(--color-ink-amber-4)",
-            status === "Rejected" &&
-              !thisWeek &&
-              !collapsed &&
-              "text-ink-gray-5"
+            isStatusNone && "cursor-default!"
           )}
           variant={statusIcon[status].variant}
           size="sm"
