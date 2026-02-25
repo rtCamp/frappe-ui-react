@@ -368,9 +368,11 @@ input {
   --color-ink-green-1: var(--color-green-50);
   --color-ink-green-2: var(--color-green-500);
   --color-ink-green-3: var(--color-green-600);
+  --color-ink-green-4: var(--color-green-700);
   --color-ink-amber-1: var(--color-amber-50);
   --color-ink-amber-2: var(--color-amber-500);
   --color-ink-amber-3: var(--color-amber-600);
+  --color-ink-amber-4: var(--color-amber-700);
   --color-ink-blue-1: var(--color-blue-50);
   --color-ink-blue-2: var(--color-blue-500);
   --color-ink-blue-3: var(--color-blue-600);
@@ -651,9 +653,11 @@ input {
     --color-ink-green-1: var(--color-dark-green-50);
     --color-ink-green-2: var(--color-dark-green-100);
     --color-ink-green-3: var(--color-dark-green-200);
+    --color-ink-green-4: var(--color-dark-green-300);
     --color-ink-amber-1: var(--color-dark-amber-50);
     --color-ink-amber-2: var(--color-dark-amber-100);
     --color-ink-amber-3: var(--color-dark-amber-200);
+    --color-ink-amber-4: var(--color-dark-amber-300);
     --color-ink-blue-1: var(--color-dark-blue-50);
     --color-ink-blue-2: var(--color-dark-blue-100);
     --color-ink-blue-3: var(--color-dark-blue-200);
