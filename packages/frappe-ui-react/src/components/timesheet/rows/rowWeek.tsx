@@ -20,7 +20,8 @@ type RowWeekStatus =
   | "Not Submitted"
   | "Approved"
   | "Rejected"
-  | "Approval Pending";
+  | "Approval Pending"
+  | "None";
 
 export interface RowWeekProps {
   label?: string;
@@ -39,16 +40,10 @@ const statusTheme: Record<RowWeekStatus, BadgeProps["theme"]> = {
   Approved: "green",
   Rejected: "red",
   "Approval Pending": "orange",
+  None: "gray",
 };
 
-const statusLabel: Record<RowWeekStatus, string> = {
-  "Not Submitted": "Not Submitted",
-  Approved: "Approved",
-  Rejected: "Rejected",
-  "Approval Pending": "Approval Pending",
-};
-
-const StatusIcon: Record<
+const statusIcon: Record<
   RowWeekStatus,
   { variant: ButtonVariant; icon: React.ReactNode }
 > = {
@@ -58,15 +53,19 @@ const StatusIcon: Record<
   },
   Approved: {
     variant: "ghost",
-    icon: <CircleCheck size={18} className="text-(--color-ink-green-4)" />,
+    icon: <CircleCheck size={16} />,
   },
   Rejected: {
     variant: "ghost",
-    icon: <CircleX size={18} className="text-ink-red-4" />,
+    icon: <CircleX size={16} />,
   },
   "Approval Pending": {
     variant: "ghost",
-    icon: <Hourglass size={18} className="text-(--color-ink-amber-4)" />,
+    icon: <Hourglass size={16} />,
+  },
+  None: {
+    variant: "ghost",
+    icon: null,
   },
 };
 
@@ -75,14 +74,16 @@ export const RowWeek: React.FC<RowWeekProps> = ({
   nesting = 0,
   collapsed = false,
   status = "Not Submitted",
+  thisWeek = false,
   dates,
   today = "",
   onToggle,
   totalHours = "",
 }) => {
+  const isStatusNone = status === "None";
   return (
     <div
-      className="flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-3 py-3.5"
+      className="flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between py-3.5"
       style={{ paddingLeft: `${nesting * 16}px` }}
     >
       <div className="shrink-0 align-middle flex flex-1 items-center gap-2">
@@ -91,21 +92,21 @@ export const RowWeek: React.FC<RowWeekProps> = ({
           disabled={!onToggle}
           variant="ghost"
           className={cn(
-            "transition-transform bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent",
+            "border-none outline-none focus:ring-0 focus-visible:ring-0 transition-transform bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent",
             collapsed ? "-rotate-90" : "rotate-0"
           )}
           icon={() => <ChevronDown strokeWidth={1.5} size={18} />}
           aria-label="Toggle week"
         />
         <span className="text-sm font-semibold text-gray-900">{label}</span>
-        {status && (
-          <Badge theme={statusTheme[status]}>{statusLabel[status]}</Badge>
+        {status && status !== "None" && (
+          <Badge theme={statusTheme[status]}>{status}</Badge>
         )}
       </div>
       {!collapsed &&
         dates.map((date) => {
           const monthAndDay = date.split(" ");
-          const isToday = date === today;
+          const isToday = thisWeek && date === today;
           return (
             <div
               key={date}
@@ -126,30 +127,50 @@ export const RowWeek: React.FC<RowWeekProps> = ({
           );
         })}
 
-      <div className="shrink-0 align-middle w-16 text-sm text-end text-ink-gray-5 whitespace-nowrap px-2 py-1.5">
-        <span
-          className={cn(
-            "whitespace-nowrap",
-            collapsed &&
-              {
-                "Not Submitted": "text-ink-gray-6",
-                Approved: "text-(--color-ink-green-4)",
-                Rejected: "text-ink-red-4",
-                "Approval Pending": "text-(--color-ink-amber-4)",
-              }[status]
-          )}
-        >
-          {collapsed ? totalHours : "Total"}
-        </span>
-      </div>
+      {!(isStatusNone && collapsed) && (
+        <div className="shrink-0 align-middle w-16 text-sm text-end text-ink-gray-5 whitespace-nowrap px-2 py-1.5">
+          <span
+            className={cn(
+              collapsed &&
+                {
+                  "Not Submitted": "text-(--color-ink-green-4)",
+                  Approved: "text-(--color-ink-green-4)",
+                  Rejected: "text-ink-red-4",
+                  "Approval Pending": "text-(--color-ink-green-4)",
+                  None: "text-ink-gray-6",
+                }[status],
+              status === "Approval Pending" &&
+                !thisWeek &&
+                collapsed &&
+                "text-ink-red-4"
+            )}
+          >
+            {collapsed ? totalHours : "Total"}
+          </span>
+        </div>
+      )}
 
       <div className="shrink-0 align-middle w-12 flex justify-end items-center whitespace-nowrap p-0">
         <Button
-          className="border-none outline-none focus:ring-0 focus-visible:ring-0"
-          variant={StatusIcon[status].variant}
+          className={cn(
+            statusIcon[status].variant !== "solid" &&
+              "border-none outline-none focus:ring-0 focus-visible:ring-0 bg-transparent hover:bg-transparent active:bg-transparent",
+            isStatusNone && "cursor-default!",
+            status === "Not Submitted" && "text-ink-white",
+            status === "Approved" && "text-(--color-ink-green-4)",
+            status === "Rejected" && "text-ink-red-4",
+            status === "Approval Pending" && "text-(--color-ink-amber-4)",
+            status === "Rejected" &&
+              !thisWeek &&
+              !collapsed &&
+              "text-ink-gray-5"
+          )}
+          variant={statusIcon[status].variant}
           size="sm"
-          icon={() => StatusIcon[status].icon}
+          icon={() => statusIcon[status].icon}
+          disabled={isStatusNone}
           aria-label="Submit week"
+          title={status}
         />
       </div>
     </div>
