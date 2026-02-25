@@ -207,13 +207,13 @@ export const RowWeek: React.FC<RowWeekProps> = ({
         <Button
           className={cn(
             buttonVariants({ status, thisWeek, collapsed }),
-            statusIcon[status].variant === "ghost" &&
+            statusIcon[status]?.variant === "ghost" &&
               "border-none outline-none focus:ring-0 focus-visible:ring-0 bg-transparent hover:bg-transparent active:bg-transparent",
             isStatusNone && "cursor-default!"
           )}
-          variant={statusIcon[status].variant}
+          variant={statusIcon[status]?.variant}
           size="sm"
-          icon={() => statusIcon[status].icon}
+          icon={() => statusIcon[status]?.icon}
           disabled={isStatusNone}
           aria-label="Submit week"
           title={status}
