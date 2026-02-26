@@ -286,6 +286,7 @@ const Dropdown: React.FC<DropdownProps> = ({
             itemClassName,
             item?.key &&
               selectedKey &&
+              item.key === selectedKey &&
               (!selectedGroupKey || item.groupKey === selectedGroupKey) &&
               (item.theme === "red" ? "bg-surface-red-3" : "bg-surface-gray-3")
           )}
