@@ -31,6 +31,7 @@ export interface DropdownProps {
   placement?: "left" | "right" | "center";
   dropdownClassName?: string;
   groupClassName?: string;
+  itemClassName?: string;
   button?: Omit<ButtonProps, "children" | "onClick" | "active"> & {
     label?: string;
   };
