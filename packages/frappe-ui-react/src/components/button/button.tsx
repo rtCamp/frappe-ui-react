@@ -1,8 +1,15 @@
+/**
+ * External dependencies.
+ */
 import React from "react";
 
+/**
+ * Internal dependencies.
+ */
 import FeatherIcon, { type FeatherIconProps } from "../featherIcon";
 import LoadingIndicator from "../loadingIndicator";
 import type { ButtonProps, ButtonThemeVariant } from "./types";
+import { cn } from "../../utils";
 
 const Button = ({
   theme = "gray",
@@ -132,15 +139,13 @@ const Button = ({
     "2xl": "h-4.5 w-4.5",
   }[size];
 
-  const buttonClasses = [
+  const buttonClasses = cn(
     "inline-flex items-center justify-center gap-2 transition-colors focus:outline-none",
     isDisabled ? disabledClasses : variantClasses,
     focusClasses,
     sizeClasses,
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+    className
+  );
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (link) {
