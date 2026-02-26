@@ -695,9 +695,11 @@ input {
     --color-surface-green-1: var(--color-dark-green-900);
     --color-surface-green-2: var(--color-dark-green-800);
     --color-surface-green-3: var(--color-dark-green-700);
+    --color-surface-green-4: var(--color-dark-green-600);
     --color-surface-amber-1: var(--color-dark-amber-900);
     --color-surface-amber-2: var(--color-dark-amber-800);
     --color-surface-amber-3: var(--color-dark-amber-700);
+    --color-surface-amber-4: var(--color-dark-amber-600);
     --color-surface-yellow-1: var(--color-dark-yellow-100);
     --color-surface-teal-1: var(--color-dark-teal-100);
     --color-surface-teal-2: var(--color-dark-teal-600);
@@ -707,7 +709,7 @@ input {
     --color-surface-orange-1: var(--color-dark-orange-900);
     --color-surface-orange-2: var(--color-dark-orange-600);
     --color-surface-violet-1: var(--color-dark-violet-900);
-    --color-surface-violet-1: var(--color-dark-violet-600);
+    --color-surface-violet-2: var(--color-dark-violet-600);
     --color-surface-purple-1: var(--color-dark-purple-100);
     --color-surface-purple-2: var(--color-dark-purple-600);
     --color-surface-cyan-1: var(--color-dark-cyan-900);

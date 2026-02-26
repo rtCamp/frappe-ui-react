@@ -709,7 +709,7 @@ input {
     --color-surface-orange-1: var(--color-dark-orange-900);
     --color-surface-orange-2: var(--color-dark-orange-600);
     --color-surface-violet-1: var(--color-dark-violet-900);
-    --color-surface-violet-1: var(--color-dark-violet-600);
+    --color-surface-violet-2: var(--color-dark-violet-600);
     --color-surface-purple-1: var(--color-dark-purple-100);
     --color-surface-purple-2: var(--color-dark-purple-600);
     --color-surface-cyan-1: var(--color-dark-cyan-900);
