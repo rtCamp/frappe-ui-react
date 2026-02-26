@@ -35,11 +35,11 @@ export default {
       description:
         "Array of options to display in the dropdown, each with a label and value",
     },
-    prefix: {
+    Prefix: {
       control: false,
       description: "Element to display before the selected value",
     },
-    htmlId: {
+    id: {
       control: "text",
       description: "HTML id attribute for the select input",
     },
@@ -61,18 +61,17 @@ const Template: StoryObj<SelectProps> = {
       { label: "John Wayne", value: "john-wayne" },
       { label: "Jane Wayne", value: "jane-wayne" },
     ],
+    placeholder: "Select option",
   },
   render: (args) => {
     const [value, setValue] = useState(args.value || "");
 
     return (
-      <div className="p-4 w-[300px]">
-        <Select
-          {...args}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
-      </div>
+      <Select
+        {...args}
+        value={value}
+        onChange={(value) => setValue(value ?? "")}
+      />
     );
   },
 };
@@ -85,6 +84,6 @@ export const WithPrefix = {
   ...Template,
   args: {
     ...Template.args,
-    prefix: () => <User size={16} className="text-ink-gray-9" />,
+    Prefix: () => <User size={16} className="text-ink-gray-9" />,
   },
 };

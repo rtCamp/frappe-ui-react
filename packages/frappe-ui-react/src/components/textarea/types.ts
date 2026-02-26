@@ -13,4 +13,5 @@ export interface TextareaProps {
   rows?: number;
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   htmlId?: string;
+  className?: string;
 }

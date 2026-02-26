@@ -1,143 +1,93 @@
 import React, { useMemo, useCallback } from "react";
+import { Select as BaseSelect } from "@base-ui/react/select";
+import { ChevronDown, Check } from "lucide-react";
 
-import type { SelectProps, SelectOption } from "./types";
+import type { SelectProps } from "./types";
+import { selectTriggerVariants } from "./variants";
+import { cn } from "../../utils";
 
 const Select: React.FC<SelectProps> = ({
   size = "sm",
   variant = "subtle",
-  disabled = false,
-  value,
   placeholder,
+  disabled = false,
+  id,
+  value,
   options,
+  Prefix,
+  Suffix,
+  Option,
   onChange,
-  htmlId,
-  prefix,
+  className,
 }) => {
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      if (onChange) {
-        onChange(e);
-      }
+  const selectOptions = useMemo(() => {
+    return options?.filter(Boolean) || [];
+  }, [options]);
+
+  const handleValueChange = useCallback(
+    (nextValue: string | null) => {
+      if (!onChange) return;
+      onChange(nextValue ?? undefined);
     },
     [onChange]
   );
 
-  const selectOptions = useMemo(() => {
-    return (
-      options
-        ?.map((option) => {
-          if (typeof option === "string") {
-            return {
-              label: option,
-              value: option,
-            } as SelectOption;
-          }
-          return option as SelectOption;
-        })
-        .filter(Boolean) || []
-    );
-  }, [options]);
-
-  const textColor = useMemo(() => {
-    return disabled ? "text-ink-gray-4" : "text-ink-gray-8";
-  }, [disabled]);
-
-  const fontSizeClasses = useMemo(() => {
-    return {
-      sm: "text-base",
-      md: "text-base",
-      lg: "text-lg",
-      xl: "text-xl",
-    }[size];
-  }, [size]);
-
-  const paddingClasses = useMemo(() => {
-    return {
-      sm: prefix ? "pl-8 pr-5" : "pl-2 pr-5",
-      md: prefix ? "pl-9 pr-5.5" : "pl-2.5 pr-5.5",
-      lg: prefix ? "pl-10 pr-6" : "pl-3 pr-6",
-      xl: prefix ? "pl-10 pr-6" : "pl-3 pr-6",
-    }[size];
-  }, [prefix, size]);
-
-  const selectClasses = useMemo(() => {
-    const sizeClasses = {
-      sm: "rounded h-7",
-      md: "rounded h-8",
-      lg: "rounded-md h-10",
-      xl: "rounded-md h-10",
-    }[size];
-
-    const currentVariant = disabled ? "disabled" : variant;
-    const variantClasses = {
-      subtle:
-        "border border-surface-gray-2 bg-surface-gray-2 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-      outline:
-        "border border-outline-gray-2 bg-surface-white hover:border-outline-gray-3 focus:border-outline-gray-4 focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-      ghost:
-        "bg-transparent border-transparent hover:bg-surface-gray-3 focus:bg-surface-gray-3 focus:border-outline-gray-4 focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-      disabled: `border ${variant !== "ghost" ? "bg-surface-gray-1" : ""} ${
-        variant === "outline" ? "border-outline-gray-2" : "border-transparent"
-      }`,
-    }[currentVariant];
-
-    return `
-      ${sizeClasses}
-      ${fontSizeClasses}
-      ${paddingClasses}
-      ${variantClasses}
-      ${textColor}
-      transition-colors w-full py-0 truncate appearance-none cursor-pointer
-      focus:outline-none
-    `;
-  }, [size, fontSizeClasses, paddingClasses, disabled, variant, textColor]);
-
-  const prefixClasses = useMemo(() => {
-    return {
-      sm: "pl-2",
-      md: "pl-2.5",
-      lg: "pl-3",
-      xl: "pl-3",
-    }[size];
-  }, [size]);
-
   return (
-    <div className="relative flex items-center">
-      {prefix && (
-        <div
-          className={`absolute inset-y-0 left-0 flex items-center ${textColor} ${prefixClasses} pointer-events-none`}
-        >
-          {prefix?.(size)}
-        </div>
-      )}
-      {placeholder && !value && (
-        <div
-          className={`pointer-events-none absolute text-ink-gray-4 truncate w-full ${fontSizeClasses} ${paddingClasses}`}
-        >
-          {placeholder}
-        </div>
-      )}
-      <select
-        className={selectClasses}
-        disabled={disabled}
-        id={htmlId}
-        value={value}
-        onChange={handleChange}
-        data-testid="select"
+    <BaseSelect.Root
+      id={id}
+      items={selectOptions}
+      value={value}
+      onValueChange={handleValueChange}
+      disabled={disabled}
+    >
+      <BaseSelect.Trigger
+        className={cn(
+          selectTriggerVariants({
+            size,
+            variant,
+            disabled,
+          }),
+          className
+        )}
       >
-        {placeholder && !value && <option />}
-        {selectOptions.map((option) => (
-          <option
-            selected={option.value === value}
-            key={option.value}
-            value={option.value}
-            disabled={option.disabled}
-          >
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </div>
+        <span className="inline-flex items-center gap-2 min-w-0 flex-1">
+          {Prefix && <span className="shrink-0">{Prefix()}</span>}
+          <BaseSelect.Value
+            placeholder={placeholder}
+            className="truncate text-left"
+          />
+        </span>
+
+        <BaseSelect.Icon className="shrink-0">
+          {Suffix ? Suffix() : <ChevronDown className="h-4 w-4" />}
+        </BaseSelect.Icon>
+      </BaseSelect.Trigger>
+      <BaseSelect.Portal>
+        <BaseSelect.Positioner className="z-60">
+          <BaseSelect.Popup className="bg-surface-modal ring-1 ring-outline-gray-1 ring-opacity-5 rounded-lg shadow-2xl will-change-[opacity,transform] overflow-hidden origin-center data-[state=open]:animate-[fadeInScale_100ms] data-[state=closed]:animate-[fadeOutScale_100ms]">
+            <BaseSelect.ScrollUpArrow className="rounded min-h-7 px-2 text-base text-ink-gray-9 flex items-center data-[highlighted]:bg-surface-gray-2 border-0 data-[state=checked]:bg-surface-gray-2 data-[disabled]:text-ink-gray-4 select-none" />
+            <BaseSelect.List className="max-h-60 overflow-auto">
+              {selectOptions.map((option) => (
+                <BaseSelect.Item
+                  key={option.value}
+                  value={option.value}
+                  disabled={option.disabled}
+                  className="rounded min-h-7 px-2 text-base text-ink-gray-9 flex items-center data-[highlighted]:bg-surface-gray-2 border-0 data-[state=checked]:bg-surface-gray-2 data-[disabled]:text-ink-gray-4 select-none"
+                >
+                  <BaseSelect.ItemText className="truncate">
+                    {Option ? Option({ option }) : option.label}
+                  </BaseSelect.ItemText>
+                  <BaseSelect.ItemIndicator className="inline-flex h-4 w-4 items-center justify-center">
+                    <Check className="h-4 w-4" />
+                  </BaseSelect.ItemIndicator>
+                </BaseSelect.Item>
+              ))}
+            </BaseSelect.List>
+            <BaseSelect.ScrollDownArrow className="max-h-60 overflow-auto" />
+          </BaseSelect.Popup>
+        </BaseSelect.Positioner>
+      </BaseSelect.Portal>
+    </BaseSelect.Root>
   );
 };
 
