@@ -54,8 +54,8 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
 }) => {
   return (
     <div
-      className="flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between py-2"
-      style={{ paddingLeft: `${nesting * 20}px` }}
+      className="flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-1 py-2"
+      style={{ paddingLeft: `${4 + nesting * 10}px` }}
     >
       <div className="shrink-0 align-middle flex flex-1 items-center">
         <Button
