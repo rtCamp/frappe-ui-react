@@ -109,7 +109,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
 
       <div
         className={cn(
-          "flex min-w-0 items-center overflow-hidden text-ellipsis whitespace-nowrap",
+          "flex min-w-0 items-center text-ellipsis whitespace-nowrap",
           className
         )}
       >
