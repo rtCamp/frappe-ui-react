@@ -39,6 +39,9 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   items,
   size = "md",
   highlightLastItem = true,
+  className,
+  crumbClassName,
+  separatorClassName,
 }) => {
   const { width } = useWindowSize();
 
@@ -92,7 +95,11 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
             </Button>
           </Dropdown>
           <span
-            className="ml-1 mr-0.5 text-base text-ink-gray-4"
+            className={cn(
+              "ml-1 mr-0.5 text-ink-gray-4 font-medium select-none",
+              size === "sm" ? "text-sm" : "text-lg",
+              separatorClassName
+            )}
             aria-hidden="true"
           >
             /
@@ -100,7 +107,12 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         </div>
       )}
 
-      <div className="flex min-w-0 items-center overflow-hidden text-ellipsis whitespace-nowrap">
+      <div
+        className={cn(
+          "flex min-w-0 items-center overflow-hidden text-ellipsis whitespace-nowrap",
+          className
+        )}
+      >
         {crumbs.map((item, i) => {
           const isLast = i === crumbs.length - 1;
           const commonClasses = cn(
@@ -128,7 +140,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
             <button
               type="button"
               onClick={handleClick}
-              className={cn(commonClasses, "cursor-pointer")}
+              className={cn(commonClasses, "cursor-pointer", crumbClassName)}
             >
               {renderPrefix(item)}
               <span>{item.label}</span>
@@ -147,7 +159,8 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                 <span
                   className={cn(
                     "mx-0.5 text-ink-gray-4 font-medium select-none",
-                    size === "sm" ? "text-sm" : "text-lg"
+                    size === "sm" ? "text-sm" : "text-lg",
+                    separatorClassName
                   )}
                   aria-hidden="true"
                 >
