@@ -1,9 +1,10 @@
 import type { ReactNode, ComponentType } from "react";
-import type { ButtonProps } from "@headlessui/react";
+import type { ButtonProps } from "../button";
 import type { ButtonTheme } from "../button";
 
 export interface DropdownOption {
   label: string;
+  key?: string | number;
   onClick?: (val?: boolean) => void;
   link?: string;
   icon?: string | ReactNode;
@@ -19,6 +20,7 @@ export interface DropdownOption {
 
 export interface DropdownGroupOption {
   key: string | number;
+  groupKey?: string | number;
   group?: string;
   hideLabel?: boolean;
   items: DropdownOption[];
@@ -29,8 +31,14 @@ export type DropdownOptions = (DropdownOption | DropdownGroupOption)[];
 export interface DropdownProps {
   options: DropdownOptions;
   placement?: "left" | "right" | "center";
+  dropdownClassName?: string;
+  groupClassName?: string;
+  itemClassName?: string;
+  selectedKey?: string | number;
+  selectedGroupKey?: string | number;
   button?: Omit<ButtonProps, "children" | "onClick" | "active"> & {
     label?: string;
   };
   children?: ReactNode;
+  renderItems?: (options: DropdownOptions) => ReactNode;
 }
