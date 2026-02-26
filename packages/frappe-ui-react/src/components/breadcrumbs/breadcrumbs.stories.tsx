@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { ChevronDown, Clock } from "lucide-react";
+import { action } from "storybook/actions";
+
 import Breadcrumbs from "./breadcrumbs";
 import { type BreadcrumbsProps } from "./types";
-import { action } from "storybook/actions";
 
 export default {
   title: "Components/Breadcrumbs",
@@ -72,6 +74,57 @@ export const WithPrefixSlot: StoryObj<BreadcrumbsProps> = {
       {
         label: "List",
         prefixIcon: "📃",
+      },
+    ],
+  },
+};
+
+export const WithDropdown: StoryObj<BreadcrumbsProps> = {
+  ...BreadcrumbsTemplate,
+  args: {
+    items: [
+      {
+        label: "Timesheets",
+      },
+      {
+        label: "Personal",
+        prefixIcon: <Clock className="w-4 h-4" />,
+        suffixIcon: <ChevronDown className="w-4 h-4" />,
+        dropdown: {
+          dropdownClassName: "w-[220px] px-1",
+          groupClassName: "px-0 py-1",
+          itemClassName: "text-ink-gray-8 hover:text-ink-gray-7",
+          options: [
+            {
+              group: "",
+              key: "views-group",
+              items: [
+                {
+                  label: "Personal",
+                  icon: "clock",
+                },
+                {
+                  label: "Team",
+                  icon: "copy",
+                },
+                {
+                  label: "Project",
+                  icon: "briefcase",
+                },
+              ],
+            },
+            {
+              group: "",
+              key: "create-group",
+              items: [
+                {
+                  label: "Create View",
+                  icon: "plus",
+                },
+              ],
+            },
+          ],
+        },
       },
     ],
   },

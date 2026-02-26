@@ -104,7 +104,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         {crumbs.map((item, i) => {
           const isLast = i === crumbs.length - 1;
           const commonClasses = cn(
-            "flex items-center rounded px-0.5 py-1 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3",
+            "flex items-center rounded px-1.25 py-1 gap-1 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3",
             isLast && highlightLastItem
               ? "text-ink-gray-9"
               : "text-ink-gray-5 hover:text-ink-gray-7",
@@ -124,17 +124,25 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
             }
           };
 
+          const crumbContent = (
+            <button
+              type="button"
+              onClick={handleClick}
+              className={cn(commonClasses, "cursor-pointer")}
+            >
+              {renderPrefix(item)}
+              <span>{item.label}</span>
+              {renderSuffix(item)}
+            </button>
+          );
+
           return (
             <React.Fragment key={item.label}>
-              <button
-                type="button"
-                onClick={handleClick}
-                className={cn(commonClasses, "cursor-pointer")}
-              >
-                {renderPrefix(item)}
-                <span>{item.label}</span>
-                {renderSuffix(item)}
-              </button>
+              {item.dropdown ? (
+                <Dropdown {...item.dropdown}>{crumbContent}</Dropdown>
+              ) : (
+                crumbContent
+              )}
               {!isLast && (
                 <span
                   className={cn(
