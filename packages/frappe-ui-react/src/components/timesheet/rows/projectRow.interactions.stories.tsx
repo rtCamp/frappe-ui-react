@@ -180,15 +180,15 @@ export const TotalHoursColors: Story = {
     const canvas = within(canvasElement);
 
     expect(canvas.getByText("10:00")).toHaveClass("text-ink-gray-6");
-    expect(canvas.getByText("20:00")).toHaveClass("text-ink-green-3");
+    expect(canvas.getByText("20:00")).toHaveClass("text-ink-green-4");
     expect(canvas.getByText("30:00")).toHaveClass("text-ink-red-4");
-    expect(canvas.getByText("40:00")).toHaveClass("text-ink-amber-3");
+    expect(canvas.getByText("40:00")).toHaveClass("text-ink-amber-4");
 
     const noneSpan = canvas.getByText("50:00");
     expect(noneSpan).not.toHaveClass("text-ink-gray-6");
-    expect(noneSpan).not.toHaveClass("text-ink-green-3");
+    expect(noneSpan).not.toHaveClass("text-ink-green-4");
     expect(noneSpan).not.toHaveClass("text-ink-red-4");
-    expect(noneSpan).not.toHaveClass("text-ink-amber-3");
+    expect(noneSpan).not.toHaveClass("text-ink-amber-4");
   },
 };
 

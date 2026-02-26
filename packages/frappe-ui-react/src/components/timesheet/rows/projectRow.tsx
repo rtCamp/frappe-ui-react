@@ -33,9 +33,9 @@ const totalHoursVariants = cva("", {
   variants: {
     status: {
       "Not Submitted": "text-ink-gray-6",
-      Approved: "text-ink-green-3",
+      Approved: "text-ink-green-4",
       Rejected: "text-ink-red-4",
-      "Approval Pending": "text-ink-amber-3",
+      "Approval Pending": "text-ink-amber-4",
       None: "",
     },
   },
