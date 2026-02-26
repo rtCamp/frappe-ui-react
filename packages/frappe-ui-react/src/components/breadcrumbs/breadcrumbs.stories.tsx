@@ -30,6 +30,18 @@ export default {
       description:
         "Function to render a suffix element for each breadcrumb item.",
     },
+    className: {
+      control: "text",
+      description: "Additional class name for the breadcrumbs container.",
+    },
+    crumbClassName: {
+      control: "text",
+      description: "Additional class name for each breadcrumb item.",
+    },
+    separatorClassName: {
+      control: "text",
+      description: "Additional class name for the separator element.",
+    },
   },
   parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
