@@ -38,6 +38,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   placement = "left",
   dropdownClassName = "",
   groupClassName = "",
+  itemClassName = "",
   button,
   renderItems,
   children,
@@ -172,14 +173,14 @@ const Dropdown: React.FC<DropdownProps> = ({
     } else if (item.switch) {
       return (
         <div
-          className={`${cssClasses.itemButton} ${getTextColor(item)}`}
+          className={cn(cssClasses.itemButton, getTextColor(item))}
           onClick={(e) => e.preventDefault()}
         >
           {item.icon &&
             (typeof item.icon === "string" ? (
               <FeatherIcon
                 name={item.icon as FeatherIconProps["name"]}
-                className={`${cssClasses.itemIcon} ${getIconColor(item)}`}
+                className={cn(cssClasses.itemIcon, getIconColor(item))}
               />
             ) : React.isValidElement(item.icon) ? (
               item.icon
@@ -270,9 +271,12 @@ const Dropdown: React.FC<DropdownProps> = ({
     } else {
       return (
         <button
-          className={`${cssClasses.itemButton} ${getTextColor(
-            item
-          )} ${getSubmenuBackgroundColor(item)}`}
+          className={cn(
+            cssClasses.itemButton,
+            getTextColor(item),
+            getSubmenuBackgroundColor(item),
+            itemClassName
+          )}
           data-testid="dropdown-item-button"
         >
           {item.icon &&
