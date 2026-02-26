@@ -92,8 +92,10 @@ export const WithDropdown: StoryObj<BreadcrumbsProps> = {
         suffixIcon: <ChevronDown className="w-4 h-4" />,
         dropdown: {
           dropdownClassName: "w-[220px] px-1",
-          groupClassName: "px-0 py-1",
+          groupClassName: "px-0 py-1 space-y-1",
           itemClassName: "text-ink-gray-8 hover:text-ink-gray-7",
+          selectedKey: "personal",
+          selectedGroupKey: "views-group",
           options: [
             {
               group: "",
@@ -101,14 +103,17 @@ export const WithDropdown: StoryObj<BreadcrumbsProps> = {
               items: [
                 {
                   label: "Personal",
+                  key: "personal",
                   icon: "clock",
                 },
                 {
                   label: "Team",
+                  key: "team",
                   icon: "copy",
                 },
                 {
                   label: "Project",
+                  key: "project",
                   icon: "briefcase",
                 },
               ],
@@ -119,6 +124,7 @@ export const WithDropdown: StoryObj<BreadcrumbsProps> = {
               items: [
                 {
                   label: "Create View",
+                  key: "create-view",
                   icon: "plus",
                 },
               ],
