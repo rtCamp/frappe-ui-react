@@ -1,5 +1,11 @@
+/**
+ * External dependencies.
+ */
 import React from "react";
 
+/**
+ * Internal dependencies.
+ */
 import FeatherIcon, { type FeatherIconProps } from "../featherIcon";
 import LoadingIndicator from "../loadingIndicator";
 import type { ButtonProps, ButtonThemeVariant } from "./types";
