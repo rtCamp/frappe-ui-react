@@ -39,6 +39,8 @@ const Dropdown: React.FC<DropdownProps> = ({
   dropdownClassName = "",
   groupClassName = "",
   itemClassName = "",
+  selectedKey,
+  selectedGroupKey,
   button,
   renderItems,
   children,
@@ -75,6 +77,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     (option: DropdownOption): DropdownOption => {
       return {
         label: option.label,
+        key: option.key,
         icon: option.icon,
         component: option.component,
         onClick: option.switch ? option.onClick : () => handleItemClick(option),
@@ -121,9 +124,12 @@ const Dropdown: React.FC<DropdownProps> = ({
             groups.push(currentGroup);
             currentGroup = null;
           }
-          const groupOption: DropdownGroupOption = {
+          const groupOption: DropdownGroupOption & {
+            groupKey?: string | number;
+          } = {
             ...option,
             key: `group-${i}`,
+            groupKey: option.key,
             items: filterAndNormalizeOptions(option.items),
           } as DropdownGroupOption;
           groups.push(groupOption);
@@ -166,7 +172,9 @@ const Dropdown: React.FC<DropdownProps> = ({
     return "start";
   }, [placement]);
 
-  const renderDropdownItem = (item: DropdownOption) => {
+  const renderDropdownItem = (
+    item: DropdownOption & { groupKey?: string | number }
+  ) => {
     if (item.component) {
       const CustomComponent = item.component;
       return <CustomComponent active={false} />;
@@ -269,13 +277,18 @@ const Dropdown: React.FC<DropdownProps> = ({
         </Menu.SubmenuRoot>
       );
     } else {
+      console.log(item, selectedGroupKey);
       return (
         <button
           className={cn(
             cssClasses.itemButton,
             getTextColor(item),
             getSubmenuBackgroundColor(item),
-            itemClassName
+            itemClassName,
+            item?.key &&
+              selectedKey &&
+              (!selectedGroupKey || item.groupKey === selectedGroupKey) &&
+              (item.theme === "red" ? "bg-surface-red-3" : "bg-surface-gray-3")
           )}
           data-testid="dropdown-item-button"
         >
@@ -347,7 +360,10 @@ const Dropdown: React.FC<DropdownProps> = ({
                         <Menu.Item
                           closeOnClick={!item.switch}
                           onClick={() => !item.switch && item.onClick?.()}
-                          render={renderDropdownItem(item)}
+                          render={renderDropdownItem({
+                            ...item,
+                            groupKey: group.groupKey,
+                          })}
                           nativeButton={
                             !item.switch && !item.submenu && !item.component
                           }
