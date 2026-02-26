@@ -41,6 +41,16 @@ export default {
       description:
         "Function to render custom dropdown items, receives options as argument.",
     },
+    selectedKey: {
+      control: "text",
+      description:
+        "Key of the currently selected dropdown item, used for highlighting.",
+    },
+    selectedGroupKey: {
+      control: "text",
+      description:
+        "Key of the currently selected dropdown group, used for highlighting.",
+    },
   },
   parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],
