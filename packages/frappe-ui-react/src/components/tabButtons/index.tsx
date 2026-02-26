@@ -1,6 +1,7 @@
 import { Radio, RadioGroup } from "@headlessui/react";
 
 import { Button } from "../button";
+import { cn } from "../../utils";
 
 interface TabButtonItem {
   label: string;
@@ -26,49 +27,54 @@ const TabButtons = ({
   className = "",
 }: TabButtonsProps) => {
   return (
-    <RadioGroup value={value} onChange={onChange} className={className}>
-      <div className="flex space-x-0.5 rounded-md bg-surface-gray-2 h-7 items-center px-[1px] text-sm border border-gray-200">
-        {buttons.map((button) => (
-          <Radio
-            key={button.value || button.label}
-            value={button.value || button.label}
-            disabled={button.disabled}
-            className="focus:outline-none group"
-          >
-            {({ checked, focus }) => (
-              <Button
-                onClick={button.onClick}
-                disabled={button.disabled}
-                {...Object.fromEntries(
-                  Object.entries(button).filter(
-                    ([key]) =>
-                      ![
-                        "value",
-                        "disabled",
-                        "label",
-                        "hideLabel",
-                        "onClick",
-                      ].includes(key)
-                  )
-                )}
-                className={`!h-6.5 ${
-                  focus ? "ring-outline-gray-2 focus-visible:ring" : ""
-                } ${checked ? "!bg-surface-white" : ""} ${
-                  button.disabled
-                    ? ""
-                    : checked
-                      ? "text-ink-gray-9 shadow"
-                      : "!text-ink-gray-5"
-                } cursor-pointer`}
-              >
-                {!button.hideLabel && button.label && (
-                  <span className="flex h-4 items-center">{button.label}</span>
-                )}
-              </Button>
-            )}
-          </Radio>
-        ))}
-      </div>
+    <RadioGroup
+      value={value}
+      onChange={onChange}
+      className={cn(
+        "flex space-x-0.5 rounded-md bg-surface-gray-2 h-7 items-center px-[1px] text-sm border border-gray-200",
+        className
+      )}
+    >
+      {buttons.map((button) => (
+        <Radio
+          key={button.value || button.label}
+          value={button.value || button.label}
+          disabled={button.disabled}
+          className="focus:outline-none group flex-1"
+        >
+          {({ checked, focus }) => (
+            <Button
+              onClick={button.onClick}
+              disabled={button.disabled}
+              {...Object.fromEntries(
+                Object.entries(button).filter(
+                  ([key]) =>
+                    ![
+                      "value",
+                      "disabled",
+                      "label",
+                      "hideLabel",
+                      "onClick",
+                    ].includes(key)
+                )
+              )}
+              className={`!h-6.5 w-full${
+                focus ? "ring-outline-gray-2 focus-visible:ring" : ""
+              } ${checked ? "!bg-surface-white" : ""} ${
+                button.disabled
+                  ? ""
+                  : checked
+                    ? "text-ink-gray-9 shadow"
+                    : "!text-ink-gray-5"
+              } cursor-pointer`}
+            >
+              {!button.hideLabel && button.label && (
+                <span className="flex h-4 items-center">{button.label}</span>
+              )}
+            </Button>
+          )}
+        </Radio>
+      ))}
     </RadioGroup>
   );
 };

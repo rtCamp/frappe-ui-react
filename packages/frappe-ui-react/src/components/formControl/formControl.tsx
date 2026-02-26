@@ -38,13 +38,13 @@ const FormControl: React.FC<FormControlProps> = ({
       case "select":
         return (
           <Select
-            htmlId={htmlId}
+            id={htmlId}
             {...controlAttrs}
             size={size}
             variant={variant}
-            options={controlAttrs.options as (string | SelectOption)[]}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-              controlAttrs.onChange?.(e.target.value);
+            options={controlAttrs.options as SelectOption[]}
+            onChange={(val) => {
+              controlAttrs.onChange?.(val);
             }}
           />
         );

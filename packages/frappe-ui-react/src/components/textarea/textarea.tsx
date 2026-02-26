@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useCallback, forwardRef } from "react";
 
 import { debounce } from "../../utils/debounce";
+import { cn } from "../../utils";
 import type { TextareaProps } from "./types";
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -16,6 +17,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       rows = 3,
       htmlId,
       placeholder,
+      className = "",
     },
     ref
   ) => {
@@ -112,7 +114,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={setRefs}
           rows={rows}
           placeholder={placeholder}
-          className={inputClasses}
+          className={cn(inputClasses, className)}
           disabled={disabled}
           id={htmlId}
           value={value}

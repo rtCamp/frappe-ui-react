@@ -191,13 +191,13 @@ export const CustomHeader: Story = {
           />
         </div>
         <Select
-          onChange={(e) => updateActiveView(e.target.value)}
+          onChange={(val) => updateActiveView(val)}
           options={enabledModes.map((mode: { id: string; label: string }) => ({
             value: mode.id,
             label: mode.label,
           }))}
           variant="ghost"
-          prefix={() => <ChevronDown size={16} className="text-ink-gray-4" />}
+          Prefix={() => <ChevronDown size={16} className="text-ink-gray-4" />}
         />
       </div>
     ),
