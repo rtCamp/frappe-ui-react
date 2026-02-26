@@ -277,7 +277,6 @@ const Dropdown: React.FC<DropdownProps> = ({
         </Menu.SubmenuRoot>
       );
     } else {
-      console.log(item, selectedGroupKey);
       return (
         <button
           className={cn(
