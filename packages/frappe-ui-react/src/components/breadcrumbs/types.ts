@@ -1,10 +1,12 @@
 import type { ReactNode } from "react";
+import type { DropdownProps } from "../dropdown";
 
 export interface BreadcrumbItem {
   label: string;
   onClick?: () => void;
   prefixIcon?: ReactNode;
   suffixIcon?: ReactNode;
+  dropdown?: DropdownProps;
 }
 
 export interface BreadcrumbsProps {
