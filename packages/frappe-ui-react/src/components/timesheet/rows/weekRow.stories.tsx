@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { useArgs } from "storybook/preview-api";
+import { action } from "storybook/actions";
 
 import { WeekRow, type WeekRowProps } from "./weekRow";
 
@@ -50,9 +51,13 @@ const meta: Meta<WeekRowProps> = {
       description: "Total hours logged for the week.",
     },
     onToggle: {
-      action: "changed",
+      action: "toggle",
       description:
         "Callback function when the week row is toggled between collapsed and expanded.",
+    },
+    onButtonClick: {
+      action: "button-clicked",
+      description: "Callback function when the action button is clicked.",
     },
   },
 };
@@ -69,6 +74,7 @@ export const Default: Story = {
     today: "Jan 4",
     thisWeek: true,
     status: "Not Submitted",
+    onButtonClick: action("Button clicked"),
   },
   render: (args) => {
     const [_args, setUseArgs] = useArgs();
