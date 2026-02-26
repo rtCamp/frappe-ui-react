@@ -51,9 +51,13 @@ const meta: Meta<WeekRowProps> = {
       description: "Total hours logged for the week.",
     },
     onToggle: {
-      action: "changed",
+      action: "toggle",
       description:
         "Callback function when the week row is toggled between collapsed and expanded.",
+    },
+    onButtonClick: {
+      action: "button-clicked",
+      description: "Callback function when the action button is clicked.",
     },
   },
 };

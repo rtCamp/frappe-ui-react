@@ -31,6 +31,7 @@ export interface WeekRowProps {
   status?: WeekRowStatus;
   thisWeek?: boolean;
   onToggle?: () => void;
+  onButtonClick?: () => void;
   dates: string[];
   today?: string;
   totalHours?: string;
@@ -145,6 +146,7 @@ export const WeekRow: React.FC<WeekRowProps> = ({
   dates,
   today = "",
   onToggle,
+  onButtonClick,
   totalHours = "",
 }) => {
   const isStatusNone = status === "None";
@@ -205,6 +207,7 @@ export const WeekRow: React.FC<WeekRowProps> = ({
 
       <div className="shrink-0 align-middle w-12 flex justify-end items-center whitespace-nowrap">
         <Button
+          onClick={onButtonClick}
           className={cn(
             buttonVariants({ status, thisWeek, collapsed }),
             statusIcon[status]?.variant === "ghost" &&
