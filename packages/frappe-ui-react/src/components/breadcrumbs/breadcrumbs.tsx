@@ -1,4 +1,11 @@
+/**
+ * External dependencies.
+ */
 import React, { useCallback, useMemo } from "react";
+
+/**
+ * Internal dependencies.
+ */
 import useWindowSize from "../hooks/useWindowSize";
 import {
   Dropdown,
@@ -7,6 +14,7 @@ import {
 } from "../dropdown";
 import { Button } from "../button";
 import type { BreadcrumbsProps, BreadcrumbItem } from "./types";
+import { cn } from "../../utils";
 
 const ThreeDotsIcon: React.FC = () => (
   <svg
@@ -27,7 +35,14 @@ const ThreeDotsIcon: React.FC = () => (
   </svg>
 );
 
-const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
+  items,
+  size = "md",
+  highlightLastItem = true,
+  className,
+  crumbClassName,
+  separatorClassName,
+}) => {
   const { width } = useWindowSize();
 
   const filteredItems = useMemo(() => {
@@ -80,7 +95,11 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
             </Button>
           </Dropdown>
           <span
-            className="ml-1 mr-0.5 text-base text-ink-gray-4"
+            className={cn(
+              "ml-1 mr-0.5 text-ink-gray-4 font-medium select-none",
+              size === "sm" ? "text-sm" : "text-lg",
+              separatorClassName
+            )}
             aria-hidden="true"
           >
             /
@@ -88,12 +107,22 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
         </div>
       )}
 
-      <div className="flex min-w-0 items-center overflow-hidden text-ellipsis whitespace-nowrap">
+      <div
+        className={cn(
+          "flex min-w-0 items-center text-ellipsis whitespace-nowrap",
+          className
+        )}
+      >
         {crumbs.map((item, i) => {
           const isLast = i === crumbs.length - 1;
-          const commonClasses = `flex items-center rounded px-0.5 py-1 text-lg font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3 ${
-            isLast ? "text-ink-gray-9" : "text-ink-gray-5 hover:text-ink-gray-7"
-          }`;
+          const commonClasses = cn(
+            "flex items-center rounded px-1.25 py-1 gap-1 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3",
+            isLast && highlightLastItem
+              ? "text-ink-gray-9"
+              : "text-ink-gray-5 hover:text-ink-gray-7",
+            size === "sm" && "text-sm",
+            size === "md" && "text-lg"
+          );
 
           const handleClick = (
             e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>
@@ -107,20 +136,32 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
             }
           };
 
+          const crumbContent = (
+            <button
+              type="button"
+              onClick={handleClick}
+              className={cn(commonClasses, "cursor-pointer", crumbClassName)}
+            >
+              {renderPrefix(item)}
+              <span>{item.label}</span>
+              {renderSuffix(item)}
+            </button>
+          );
+
           return (
             <React.Fragment key={item.label}>
-              <button
-                type="button"
-                onClick={handleClick}
-                className={`${commonClasses} cursor-pointer`}
-              >
-                {renderPrefix(item)}
-                <span>{item.label}</span>
-                {renderSuffix(item)}
-              </button>
+              {item.dropdown ? (
+                <Dropdown {...item.dropdown}>{crumbContent}</Dropdown>
+              ) : (
+                crumbContent
+              )}
               {!isLast && (
                 <span
-                  className="mx-0.5 text-base text-ink-gray-4 select-none"
+                  className={cn(
+                    "mx-0.5 text-ink-gray-4 font-medium select-none",
+                    size === "sm" ? "text-sm" : "text-lg",
+                    separatorClassName
+                  )}
                   aria-hidden="true"
                 >
                   /
