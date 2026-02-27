@@ -41,6 +41,9 @@ const totalHoursVariants = cva("", {
   },
 });
 
+const NESTING_OFFSET = 10;
+const BASE_PADDING = 4;
+
 export const ProjectRow: React.FC<ProjectRowProps> = ({
   label = "This Week",
   nesting = 0,
@@ -55,7 +58,7 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
   return (
     <div
       className="flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-1 py-2"
-      style={{ paddingLeft: `${4 + nesting * 10}px` }}
+      style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
     >
       <div className="shrink-0 align-middle flex flex-1 items-center">
         <Button
