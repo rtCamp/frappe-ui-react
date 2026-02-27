@@ -18,19 +18,19 @@ type ProjectRowStatus =
   | "None";
 
 export interface ProjectRowProps {
-  /** Label for the week row. */
+  /** Label for the project row. */
   label?: string;
-  /** Nesting level for the week row, used for indentation. */
+  /** Nesting level for the project row, used for indentation. */
   nesting?: number;
-  /** Whether the week row is collapsed or expanded. */
+  /** Whether the project row is collapsed or expanded. */
   collapsed?: boolean;
-  /** Callback function when the week row is toggled between collapsed and expanded. */
+  /** Callback function when the project row is toggled between collapsed and expanded. */
   onToggle?: () => void;
   /** Array of time entries for each day of the week. */
   timeEntries: string[];
   /** Total hours logged for the week. */
   totalHours?: string;
-  /** Status of the timesheet for the week. */
+  /** Status of the timesheet for the project row. */
   status?: ProjectRowStatus;
   /** Optional icon to display next to the label. */
   prefixIcon?: React.ReactNode;

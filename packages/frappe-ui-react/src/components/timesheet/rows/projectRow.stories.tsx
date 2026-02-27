@@ -11,15 +11,15 @@ const meta: Meta<ProjectRowProps> = {
   argTypes: {
     label: {
       control: "text",
-      description: "Label for the week row.",
+      description: "Label for the project row.",
     },
     nesting: {
       control: "number",
-      description: "Nesting level for the week row, used for indentation.",
+      description: "Nesting level for the project row, used for indentation.",
     },
     collapsed: {
       control: "boolean",
-      description: "Whether the week row is collapsed or expanded.",
+      description: "Whether the project row is collapsed or expanded.",
     },
     status: {
       control: "select",
@@ -30,16 +30,16 @@ const meta: Meta<ProjectRowProps> = {
         "Approval Pending",
         "None",
       ],
-      description: "Status of the timesheet for the week.",
+      description: "Status of the timesheet for the project row.",
     },
     totalHours: {
       control: "text",
-      description: "Total hours logged for the week.",
+      description: "Total hours logged for the project row.",
     },
     onToggle: {
       action: "toggle",
       description:
-        "Callback function when the week row is toggled between collapsed and expanded.",
+        "Callback function when the project row is toggled between collapsed and expanded.",
     },
     timeEntries: {
       control: "object",
