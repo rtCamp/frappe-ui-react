@@ -105,10 +105,11 @@ export const Toggle: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const getDateCells = () =>
-      canvasElement.querySelectorAll(".shrink-0.align-middle.w-16.text-center");
-
-    // Expanded: 7 date cells visible, total cell shows "Total"
-    expect(getDateCells()).toHaveLength(7);
+      canvasElement.querySelectorAll(
+        ".shrink-0.align-middle.w-16.text-sm.text-end"
+      );
+    // Expanded: 7 date cells visible and total cell shows "Total"
+    expect(getDateCells()).toHaveLength(8);
     expect(canvas.getByText("Total")).toBeInTheDocument();
     expect(canvas.queryByText("40:00")).not.toBeInTheDocument();
 
@@ -119,7 +120,7 @@ export const Toggle: Story = {
     expect(args.onToggle).toHaveBeenCalledTimes(1);
 
     await waitFor(() => {
-      expect(getDateCells()).toHaveLength(0);
+      expect(getDateCells()).toHaveLength(1);
       expect(canvas.queryByText("Total")).not.toBeInTheDocument();
       expect(canvas.getByText("40:00")).toBeInTheDocument();
     });
@@ -129,7 +130,7 @@ export const Toggle: Story = {
     expect(args.onToggle).toHaveBeenCalledTimes(2);
 
     await waitFor(() => {
-      expect(getDateCells()).toHaveLength(7);
+      expect(getDateCells()).toHaveLength(8);
       expect(canvas.getByText("Total")).toBeInTheDocument();
       expect(canvas.queryByText("40:00")).not.toBeInTheDocument();
     });
