@@ -25,15 +25,25 @@ type WeekRowStatus =
   | "None";
 
 export interface WeekRowProps {
+  /** Label for the week row. */
   label?: string;
+  /** Nesting level for the week row, used for indentation. */
   nesting?: number;
+  /** Whether the week row is collapsed or expanded. */
   collapsed?: boolean;
+  /** Status of the timesheet for the week. */
   status?: WeekRowStatus;
+  /** Whether the week row represents the current week. */
   thisWeek?: boolean;
+  /** Callback function when the week row is toggled between collapsed and expanded. */
   onToggle?: () => void;
+  /** Callback function when the action button is clicked. */
   onButtonClick?: () => void;
+  /** Array of date strings representing the days in the week. */
   dates: string[];
+  /** The date string representing today's date, used for highlighting. */
   today?: string;
+  /** Total hours logged for the week. */
   totalHours?: string;
 }
 
