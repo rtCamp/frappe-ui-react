@@ -60,12 +60,12 @@ const Select: React.FC<SelectProps> = ({
                   key={option.value}
                   value={option.value}
                   disabled={option.disabled}
-                  className="focus:outline-none rounded min-h-7 px-2 text-base text-ink-gray-9 flex items-center data-highlighted:bg-surface-gray-2 border-0 data-[state=checked]:bg-surface-gray-2 data-disabled:text-ink-gray-4 select-none"
+                  className="focus:outline-none rounded min-h-7 px-2 text-base text-ink-gray-9 flex items-center data-highlighted:bg-surface-gray-2 border-0 data-:bg-surface-gray-2 data-disabled:text-ink-gray-4 select-none"
                 >
                   <BaseSelect.ItemText className="truncate">
                     {Option ? Option({ option }) : option.label}
                   </BaseSelect.ItemText>
-                  <BaseSelect.ItemIndicator className="ml-auto inline-flex h-4 w-4 items-center justify-center">
+                  <BaseSelect.ItemIndicator className="ml-auto pl-1 inline-flex items-center justify-center">
                     <Check className="h-4 w-4" />
                   </BaseSelect.ItemIndicator>
                 </BaseSelect.Item>
