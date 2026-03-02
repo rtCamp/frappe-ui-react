@@ -22,6 +22,10 @@ export default {
       control: "boolean",
       description: "Whether to highlight the last breadcrumb item.",
     },
+    compactCrumbs: {
+      control: "boolean",
+      description: "Whether to compact the breadcrumbs on smaller screens.",
+    },
     renderPrefix: {
       description:
         "Function to render a prefix element for each breadcrumb item.",
