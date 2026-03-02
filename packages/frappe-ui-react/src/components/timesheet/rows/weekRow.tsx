@@ -186,7 +186,9 @@ export const WeekRow: React.FC<WeekRowProps> = ({
             {label}
           </span>
           {status && status !== "None" && (
-            <Badge theme={statusTheme[status]}>{status}</Badge>
+            <Badge theme={statusTheme[status]} className="shrink-0">
+              {status}
+            </Badge>
           )}
         </div>
       </div>
