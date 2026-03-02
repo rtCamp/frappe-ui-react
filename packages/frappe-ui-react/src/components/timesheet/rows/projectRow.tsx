@@ -69,22 +69,26 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
       className="flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-1 py-2"
       style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
     >
-      <div className="shrink-0 align-middle flex flex-1 items-center">
+      <div className="min-w-0 align-middle flex flex-1 items-center">
         <Button
           onClick={onToggle}
           disabled={!onToggle}
           variant="ghost"
           className={cn(
-            "border-none outline-none focus:ring-0 focus-visible:ring-0 transition-transform bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent",
+            "shrink-0 border-none outline-none focus:ring-0 focus-visible:ring-0 transition-transform bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent",
             collapsed ? "-rotate-90" : "rotate-0"
           )}
           icon={() => <ChevronDown strokeWidth={1.5} size={16} />}
           aria-label="Toggle week"
         />
-        <div className="flex items-center text-ink-gray-9 gap-2">
-          {prefixIcon || <Folder strokeWidth={1.5} size={16} />}
-          <span className="text-sm font-semibold">{label}</span>
-          {suffixIcon ? suffixIcon : null}
+        <div className="min-w-0 flex items-center text-ink-gray-9 gap-2">
+          <span className="shrink-0">
+            {prefixIcon || <Folder strokeWidth={1.5} size={16} />}
+          </span>
+          <span className="text-sm font-semibold truncate min-w-0">
+            {label}
+          </span>
+          <span className="shrink-0">{suffixIcon ? suffixIcon : null}</span>
         </div>
       </div>
       {timeEntries.map((timeEntry, index) => {
