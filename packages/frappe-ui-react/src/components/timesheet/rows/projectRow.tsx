@@ -54,7 +54,7 @@ const NESTING_OFFSET = 10;
 const BASE_PADDING = 4;
 
 export const ProjectRow: React.FC<ProjectRowProps> = ({
-  label = "This Week",
+  label,
   nesting = 0,
   collapsed = false,
   onToggle,
@@ -79,7 +79,7 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
             collapsed ? "-rotate-90" : "rotate-0"
           )}
           icon={() => <ChevronDown strokeWidth={1.5} size={16} />}
-          aria-label="Toggle week"
+          aria-label="Toggle project"
         />
         <div className="min-w-0 flex items-center text-ink-gray-9 gap-2">
           <span className="shrink-0">
@@ -94,7 +94,7 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
       {timeEntries.map((timeEntry, index) => {
         return (
           <div
-            key={index}
+            key={`${timeEntry}-${index}`}
             className="shrink-0 flex justify-end w-16 text-sm text-ink-gray-6 whitespace-nowrap px-2 py-1.5"
           >
             {timeEntry === "" ? (
