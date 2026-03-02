@@ -36,6 +36,10 @@ export default {
       control: "text",
       description: "Alternative to label prop, rendered as children",
     },
+    className: {
+      control: "text",
+      description: "Additional class name for custom styling",
+    },
   },
   parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],

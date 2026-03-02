@@ -1,6 +1,13 @@
+/**
+ * External dependencies.
+ */
 import React, { useMemo } from "react";
 
+/**
+ * Internal dependencies.
+ */
 import type { BadgeProps } from "./types";
+import { cn } from "../../utils";
 
 const Badge: React.FC<BadgeProps> = ({
   theme = "gray",
@@ -10,6 +17,7 @@ const Badge: React.FC<BadgeProps> = ({
   children,
   prefix,
   suffix,
+  className,
 }) => {
   const classes = useMemo(() => {
     const solidClasses = {
@@ -62,14 +70,22 @@ const Badge: React.FC<BadgeProps> = ({
 
   return (
     <div
-      className={`inline-flex select-none items-center gap-1 rounded-full ${classes}`}
+      className={cn(
+        "inline-flex select-none items-center gap-1 rounded-full",
+        classes,
+        className
+      )}
     >
       {prefix && (
-        <div className={size === "lg" ? "max-h-6" : "max-h-4"}>{prefix}</div>
+        <div className={cn(size === "lg" ? "max-h-6" : "max-h-4")}>
+          {prefix}
+        </div>
       )}
       {children || label?.toString()}
       {suffix && (
-        <div className={size === "lg" ? "max-h-6" : "max-h-4"}>{suffix}</div>
+        <div className={cn(size === "lg" ? "max-h-6" : "max-h-4")}>
+          {suffix}
+        </div>
       )}
     </div>
   );
