@@ -14,11 +14,12 @@ const meta: Meta<HeaderRowProps> = {
     },
     breadcrumbs: {
       control: "object",
-      description: "Breadcrumbs configuration for the header row.",
+      description:
+        "Props configuration for the Breadcrumbs component displayed in the header row.",
     },
     days: {
       control: "object",
-      description: "Array of day labels to display in the header row.",
+      description: "Array of day labels for each day of the week.",
     },
     className: {
       control: "text",
@@ -79,9 +80,7 @@ export const Nesting: Story = {
     </div>
   ),
   play: async ({ canvasElement }) => {
-    const rows = canvasElement.querySelectorAll(
-      ".flex.items-center.border-b.border-outline-gray-1"
-    );
+    const rows = canvasElement.querySelectorAll('[data-testid="header-row"]');
 
     expect(rows[0]).toHaveStyle({ paddingLeft: "4px" });
     expect(rows[1]).toHaveStyle({ paddingLeft: "14px" });

@@ -5,7 +5,7 @@ import { Breadcrumbs, type BreadcrumbsProps } from "../../breadcrumbs";
 import { cn } from "../../../utils";
 
 export interface HeaderRowProps {
-  /** Array of breadcrumb items to display in the header row. */
+  /** Props configuration for the Breadcrumbs component displayed in the header row. */
   breadcrumbs: BreadcrumbsProps;
   /** Nesting level for the week row, used for indentation. */
   nesting?: number;
@@ -31,13 +31,14 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
         className
       )}
       style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
+      data-testid="header-row"
     >
       <div className="shrink-0 align-middle flex flex-1 items-center">
         <Breadcrumbs compactCrumbs={false} {...breadcrumbs} />
       </div>
       {days.map((day, index) => (
         <div
-          key={index}
+          key={`${day}-${index}`}
           className="shrink-0 flex justify-end w-16 text-sm text-ink-gray-6 whitespace-nowrap px-2 py-1.5"
         >
           <span>{day}</span>
