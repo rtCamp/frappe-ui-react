@@ -53,7 +53,7 @@ const Select: React.FC<SelectProps> = ({
       <BaseSelect.Portal>
         <BaseSelect.Positioner className="z-60">
           <BaseSelect.Popup className="p-1 m-0 bg-surface-modal ring-1 ring-outline-gray-1 ring-opacity-5 rounded-lg shadow-2xl will-change-[opacity,transform] overflow-hidden origin-center data-[state=open]:animate-[fadeInScale_100ms] data-[state=closed]:animate-[fadeOutScale_100ms]">
-            <BaseSelect.ScrollUpArrow className="rounded min-h-7 px-2 text-base text-ink-gray-9 flex items-center data-[highlighted]:bg-surface-gray-2 border-0 data-[state=checked]:bg-surface-gray-2 data-[disabled]:text-ink-gray-4 select-none" />
+            <BaseSelect.ScrollUpArrow className="variants" />
             <BaseSelect.List className="max-h-60 overflow-auto">
               {options.map((option) => (
                 <BaseSelect.Item
