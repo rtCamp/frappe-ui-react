@@ -13,11 +13,12 @@ const meta: Meta<HeaderRowProps> = {
     },
     breadcrumbs: {
       control: "object",
-      description: "Breadcrumbs configuration for the header row.",
+      description:
+        "Props configuration for the Breadcrumbs component displayed in the header row.",
     },
     days: {
       control: "object",
-      description: "Array of day labels to display in the header row.",
+      description: "Array of day labels for each day of the week.",
     },
     className: {
       control: "text",
