@@ -50,17 +50,42 @@ export default {
   },
 } as Meta<typeof Select>;
 
-const Template: StoryObj<SelectProps> = {
+const OPTIONS = [
+  {
+    label: "Matcha Tiramisu",
+    value: "matcha-tiramisu",
+  },
+  {
+    label: "Strawberry Cheesecake",
+    value: "strawberry-cheesecake",
+  },
+  {
+    label: "Chocolate Lava Cake",
+    value: "chocolate-lava-cake",
+  },
+  {
+    label: "Mango Sticky Rice",
+    value: "mango-sticky-rice",
+    disabled: true,
+  },
+  {
+    label: "Pistachio Baklava",
+    value: "pistachio-baklava",
+  },
+  {
+    label: "Ube Ice Cream",
+    value: "ube-ice-cream",
+  },
+  {
+    label: "Salted Caramel Tart",
+    value: "salted-caramel-tart",
+  },
+];
+
+export const Default: StoryObj<SelectProps> = {
   args: {
     value: "",
-    options: [
-      { label: "John Doe", value: "john-doe" },
-      { label: "Jane Doe", value: "jane-doe" },
-      { label: "John Smith", value: "john-smith" },
-      { label: "Jane Smith", value: "jane-smith", disabled: true },
-      { label: "John Wayne", value: "john-wayne" },
-      { label: "Jane Wayne", value: "jane-wayne" },
-    ],
+    options: OPTIONS,
     placeholder: "Select option",
   },
   render: (args) => {
@@ -76,14 +101,67 @@ const Template: StoryObj<SelectProps> = {
   },
 };
 
-export const Default = {
-  ...Template,
+export const WithPrefix: StoryObj<SelectProps> = {
+  args: {
+    value: "",
+    options: OPTIONS,
+    placeholder: "Select option",
+    Prefix: () => <User size={16} className="text-ink-gray-9" />,
+  },
+  render: (args) => {
+    const [value, setValue] = useState(args.value || "");
+
+    return (
+      <Select
+        {...args}
+        value={value}
+        onChange={(value) => setValue(value ?? "")}
+      />
+    );
+  },
 };
 
-export const WithPrefix = {
-  ...Template,
+export const WithSuffix: StoryObj<SelectProps> = {
   args: {
-    ...Template.args,
-    Prefix: () => <User size={16} className="text-ink-gray-9" />,
+    value: "",
+    options: OPTIONS,
+    placeholder: "Select option",
+    Suffix: () => <User size={16} className="text-ink-gray-9" />,
+  },
+  render: (args) => {
+    const [value, setValue] = useState(args.value || "");
+
+    return (
+      <Select
+        {...args}
+        value={value}
+        onChange={(value) => setValue(value ?? "")}
+      />
+    );
+  },
+};
+
+export const WithOptionSlot: StoryObj<SelectProps> = {
+  args: {
+    value: "",
+    options: OPTIONS,
+    placeholder: "Select option",
+    Option: ({ option }) => (
+      <div className="flex items-center gap-2">
+        <User size={16} className="text-ink-gray-9" />
+        <span>{option.label}</span>
+      </div>
+    ),
+  },
+  render: (args) => {
+    const [value, setValue] = useState(args.value || "");
+
+    return (
+      <Select
+        {...args}
+        value={value}
+        onChange={(value) => setValue(value ?? "")}
+      />
+    );
   },
 };
