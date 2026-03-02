@@ -60,7 +60,7 @@ const Select: React.FC<SelectProps> = ({
                   key={option.value}
                   value={option.value}
                   disabled={option.disabled}
-                  className="focus:outline-none rounded min-h-7 px-2 text-base text-ink-gray-9 flex items-center data-highlighted:bg-surface-gray-2 border-0 data-:bg-surface-gray-2 data-disabled:text-ink-gray-4 select-none"
+                  className="focus:outline-none rounded min-h-7 px-2 text-base text-ink-gray-9 flex items-center data-highlighted:bg-surface-gray-2 border-0 data-selected:bg-surface-gray-2 data-disabled:text-ink-gray-4 select-none"
                 >
                   <BaseSelect.ItemText className="truncate">
                     {Option ? Option({ option }) : option.label}
