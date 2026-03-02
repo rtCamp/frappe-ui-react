@@ -169,22 +169,26 @@ export const WeekRow: React.FC<WeekRowProps> = ({
       className="flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-1 py-2"
       style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
     >
-      <div className="shrink-0 align-middle flex flex-1 items-center gap-2">
+      <div className="min-w-0 align-middle flex flex-1 items-center gap-2">
         <Button
           onClick={onToggle}
           disabled={!onToggle}
           variant="ghost"
           className={cn(
-            "border-none outline-none focus:ring-0 focus-visible:ring-0 transition-transform bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent",
+            "shrink-0 border-none outline-none focus:ring-0 focus-visible:ring-0 transition-transform bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent",
             collapsed ? "-rotate-90" : "rotate-0"
           )}
           icon={() => <ChevronDown strokeWidth={1.5} size={18} />}
           aria-label="Toggle week"
         />
-        <span className="text-sm font-semibold text-gray-900">{label}</span>
-        {status && status !== "None" && (
-          <Badge theme={statusTheme[status]}>{status}</Badge>
-        )}
+        <div className="min-w-0 flex items-center gap-2">
+          <span className="text-sm font-semibold text-gray-900 truncate">
+            {label}
+          </span>
+          {status && status !== "None" && (
+            <Badge theme={statusTheme[status]}>{status}</Badge>
+          )}
+        </div>
       </div>
       {!collapsed &&
         dates.map((date) => {
