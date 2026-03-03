@@ -41,7 +41,7 @@ const TabButtons = ({
         }
       }}
       className={cn(
-        "flex space-x-0.5 rounded-md bg-surface-gray-2 h-7 items-center p-px text-sm border border-outline-gray-2",
+        "flex space-x-0.5 rounded-md bg-surface-gray-2 h-7 items-center text-base border border-outline-gray-2",
         className
       )}
     >
@@ -49,7 +49,10 @@ const TabButtons = ({
         return (
           <Toggle
             className={cn(
-              "rounded-md px-2 outline-black group flex-1 h-6.5 w-full data-pressed:bg-surface-white text-nowrap disabled:text-ink-gray-5"
+              "rounded-md px-2 outline-black group flex-1 h-6.5 w-full border border-transparent text-nowrap",
+              "hover:bg-surface-gray-3",
+              "data-pressed:bg-surface-white data-pressed:border-outline-gray-2 data-pressed:hover:bg-surface-gray-4",
+              "disabled:text-ink-gray-5 disabled:hover:bg-surface-gray-2"
             )}
             aria-label={button.label}
             value={button.value}
