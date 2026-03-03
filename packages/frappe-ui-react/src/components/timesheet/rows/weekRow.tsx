@@ -131,25 +131,28 @@ export const WeekRow: React.FC<WeekRowProps> = ({
         </div>
       )}
 
-      <div className="shrink-0 align-middle w-12 flex justify-end items-center whitespace-nowrap">
-        <Button
-          onClick={onButtonClick}
-          className={cn(
-            buttonVariants({ status, thisWeek }),
-            statusIcon[status]?.variant === "ghost" &&
-              "border-none outline-none focus:ring-0 focus-visible:ring-0 bg-transparent hover:bg-transparent active:bg-transparent",
-            isStatusNone && "cursor-default!"
-          )}
-          variant={statusIcon[status]?.variant}
-          size="sm"
-          icon={() => {
-            const IconComponent = statusIcon[status]?.icon;
-            return IconComponent ? <IconComponent size={16} /> : null;
-          }}
-          disabled={isStatusNone}
-          aria-label="Submit week"
-          title={statusLabel[status]}
-        />
+      <div className="shrink-0 align-middle w-12 h-7 flex justify-end items-center whitespace-nowrap">
+        {!isStatusNone ? (
+          <Button
+            onClick={onButtonClick}
+            className={cn(
+              buttonVariants({
+                status,
+                thisWeek,
+                variant: statusIcon[status]?.variant,
+                collapsed,
+              })
+            )}
+            variant={statusIcon[status]?.variant}
+            size="sm"
+            icon={() => {
+              const IconComponent = statusIcon[status]?.icon;
+              return IconComponent ? <IconComponent size={16} /> : null;
+            }}
+            aria-label="Submit week"
+            title={statusLabel[status]}
+          />
+        ) : null}
       </div>
     </div>
   );
