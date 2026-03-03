@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-export type SelectSize = "sm" | "md" | "lg" | "xl";
+export type SelectSize = "sm" | "md" | "lg";
 export type SelectVariant = "subtle" | "outline" | "ghost";
 
 export interface SelectOption {
@@ -12,12 +12,14 @@ export interface SelectOption {
 export interface SelectProps {
   size?: SelectSize;
   variant?: SelectVariant;
-  disabled?: boolean;
-  value?: string;
   placeholder?: string;
-  options: (string | SelectOption)[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  prefix?: (args?: any) => ReactNode;
-  htmlId?: string;
-  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  disabled?: boolean;
+  id?: string;
+  value?: string;
+  options: SelectOption[];
+  className?: string;
+  prefix?: () => ReactNode;
+  suffix?: () => ReactNode;
+  option?: ({ option }: { option: SelectOption }) => ReactNode;
+  onChange?: (value: string | undefined) => void;
 }

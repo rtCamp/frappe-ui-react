@@ -13,6 +13,7 @@ export interface BreadcrumbsProps {
   items: BreadcrumbItem[];
   size?: "sm" | "md";
   highlightLastItem?: boolean;
+  compactCrumbs?: boolean;
   className?: string;
   crumbClassName?: string;
   separatorClassName?: string;
