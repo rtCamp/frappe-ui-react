@@ -6,7 +6,8 @@ import { CalendarX2 } from "lucide-react";
 /**
  * Internal dependencies.
  */
-import { cn } from "../../../utils";
+import { cn } from "../../../../utils";
+import { BASE_PADDING, NESTING_OFFSET } from "../constants";
 
 export interface TimeOffRowProps {
   /** Label for the time-off row. */
@@ -22,9 +23,6 @@ export interface TimeOffRowProps {
   /** Additional class names for the time-off row container. */
   className?: string;
 }
-
-const NESTING_OFFSET = 10;
-const BASE_PADDING = 4;
 
 export const TimeOffRow: React.FC<TimeOffRowProps> = ({
   label = "Time-off",
