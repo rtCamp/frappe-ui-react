@@ -1,3 +1,3 @@
-export { RowHeader } from "./rows/rowHeader";
-export { RowWeek } from "./rows/rowWeek";
+export { HeaderRow } from "./rows/header/headerRow";
+export { WeekRow } from "./rows/week/weekRow";
 export { TimeOffRow } from "./rows/timeOffRow";

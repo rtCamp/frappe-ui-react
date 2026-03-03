@@ -36,6 +36,7 @@ export const TabButtonsExample: Story = {
         buttons={[
           { label: "Tasks assigned to me", value: "mytasks" },
           { label: "Tasks created by me", value: "created" },
+          { label: "Tasks disabled", value: "disabled", disabled: true },
         ]}
         value={currentTab}
         onChange={(value) => setCurrentTab(value as string)}

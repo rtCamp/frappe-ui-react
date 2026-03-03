@@ -35,11 +35,11 @@ export default {
       description:
         "Array of options to display in the dropdown, each with a label and value",
     },
-    prefix: {
+    Prefix: {
       control: false,
       description: "Element to display before the selected value",
     },
-    htmlId: {
+    id: {
       control: "text",
       description: "HTML id attribute for the select input",
     },
@@ -50,41 +50,118 @@ export default {
   },
 } as Meta<typeof Select>;
 
-const Template: StoryObj<SelectProps> = {
+const OPTIONS = [
+  {
+    label: "Matcha Tiramisu",
+    value: "matcha-tiramisu",
+  },
+  {
+    label: "Strawberry Cheesecake",
+    value: "strawberry-cheesecake",
+  },
+  {
+    label: "Chocolate Lava Cake",
+    value: "chocolate-lava-cake",
+  },
+  {
+    label: "Mango Sticky Rice",
+    value: "mango-sticky-rice",
+    disabled: true,
+  },
+  {
+    label: "Pistachio Baklava",
+    value: "pistachio-baklava",
+  },
+  {
+    label: "Ube Ice Cream",
+    value: "ube-ice-cream",
+  },
+  {
+    label: "Salted Caramel Tart",
+    value: "salted-caramel-tart",
+  },
+];
+
+export const Default: StoryObj<SelectProps> = {
   args: {
     value: "",
-    options: [
-      { label: "John Doe", value: "john-doe" },
-      { label: "Jane Doe", value: "jane-doe" },
-      { label: "John Smith", value: "john-smith" },
-      { label: "Jane Smith", value: "jane-smith", disabled: true },
-      { label: "John Wayne", value: "john-wayne" },
-      { label: "Jane Wayne", value: "jane-wayne" },
-    ],
+    options: OPTIONS,
+    placeholder: "Select option",
   },
   render: (args) => {
     const [value, setValue] = useState(args.value || "");
 
     return (
-      <div className="p-4 w-[300px]">
-        <Select
-          {...args}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
-      </div>
+      <Select
+        {...args}
+        value={value}
+        onChange={(value) => setValue(value ?? "")}
+      />
     );
   },
 };
 
-export const Default = {
-  ...Template,
+export const WithPrefix: StoryObj<SelectProps> = {
+  args: {
+    value: "",
+    options: OPTIONS,
+    placeholder: "Select option",
+    prefix: () => <User size={16} className="text-ink-gray-9" />,
+  },
+  render: (args) => {
+    const [value, setValue] = useState(args.value || "");
+
+    return (
+      <Select
+        {...args}
+        value={value}
+        onChange={(value) => setValue(value ?? "")}
+      />
+    );
+  },
 };
 
-export const WithPrefix = {
-  ...Template,
+export const WithSuffix: StoryObj<SelectProps> = {
   args: {
-    ...Template.args,
-    prefix: () => <User size={16} className="text-ink-gray-9" />,
+    value: "",
+    options: OPTIONS,
+    placeholder: "Select option",
+    suffix: () => <User size={16} className="text-ink-gray-9" />,
+  },
+  render: (args) => {
+    const [value, setValue] = useState(args.value || "");
+
+    return (
+      <Select
+        {...args}
+        value={value}
+        onChange={(value) => setValue(value ?? "")}
+      />
+    );
+  },
+};
+
+export const WithOptionSlot: StoryObj<SelectProps> = {
+  args: {
+    value: "",
+    options: OPTIONS,
+    placeholder: "Select option",
+    option: ({ option }) => (
+      <div className="flex items-center gap-2">
+        <User size={16} className="text-ink-gray-9" />
+        <span>{option.label}</span>
+      </div>
+    ),
+  },
+  render: (args) => {
+    const [value, setValue] = useState(args.value || "");
+
+    return (
+      <Select
+        {...args}
+        value={value}
+        onChange={(value) => setValue(value ?? "")}
+      />
+    );
   },
 };
