@@ -663,9 +663,11 @@ input {
     --color-ink-green-1: var(--color-dark-green-50);
     --color-ink-green-2: var(--color-dark-green-100);
     --color-ink-green-3: var(--color-dark-green-200);
+    --color-ink-green-4: var(--color-dark-green-300);
     --color-ink-amber-1: var(--color-dark-amber-50);
     --color-ink-amber-2: var(--color-dark-amber-100);
     --color-ink-amber-3: var(--color-dark-amber-200);
+    --color-ink-amber-4: var(--color-dark-amber-300);
     --color-ink-blue-1: var(--color-dark-blue-50);
     --color-ink-blue-2: var(--color-dark-blue-100);
     --color-ink-blue-3: var(--color-dark-blue-200);

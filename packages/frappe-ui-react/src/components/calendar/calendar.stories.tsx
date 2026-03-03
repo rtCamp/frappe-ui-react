@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { CalendarConfig, CalendarEvent } from "./types";
 import { Calendar } from "./calendar";
 import { Button } from "../button";
-import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Select } from "../select";
 import { DatePicker } from "../datePicker";
 import { dayjs } from "../../utils/dayjs";
@@ -43,6 +43,7 @@ const config: Partial<CalendarConfig> = {
   enableShortcuts: false,
   timeFormat: "12h",
 };
+
 const getCurrentMonthYear = () => {
   const date = new Date();
   const year = date.getFullYear();
@@ -147,6 +148,7 @@ export const CustomHeader: Story = {
   args: {
     ...Default.args,
     header: ({
+      activeView,
       currentMonthYear,
       decrement,
       increment,
@@ -155,7 +157,7 @@ export const CustomHeader: Story = {
       setCalendarDate,
       formatter,
     }) => (
-      <div className="mb-2 w-full flex justify-between items-center py-2">
+      <div className="mb-2 flex items-center justify-between gap-3">
         <DatePicker
           formatter={formatter}
           value={currentMonthYear}
@@ -191,13 +193,13 @@ export const CustomHeader: Story = {
           />
         </div>
         <Select
-          onChange={(e) => updateActiveView(e.target.value)}
+          className="w-auto"
+          value={activeView}
+          onChange={(val) => updateActiveView(val)}
           options={enabledModes.map((mode: { id: string; label: string }) => ({
             value: mode.id,
             label: mode.label,
           }))}
-          variant="ghost"
-          prefix={() => <ChevronDown size={16} className="text-ink-gray-4" />}
         />
       </div>
     ),
