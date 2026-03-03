@@ -38,11 +38,11 @@ const meta: Meta<WeekRowProps> = {
     status: {
       control: "select",
       options: [
-        "Not Submitted",
-        "Approved",
-        "Rejected",
-        "Approval Pending",
-        "None",
+        "not-submitted",
+        "approved",
+        "rejected",
+        "approval-pending",
+        "none",
       ],
       description: "Status of the timesheet for the week.",
     },
@@ -88,7 +88,7 @@ export const Toggle: Story = {
     dates: DATES,
     today: TODAY,
     thisWeek: true,
-    status: "Not Submitted",
+    status: "not-submitted",
     onToggle: fn(),
   },
   render: (args) => {
@@ -151,7 +151,7 @@ export const TodayHighlight: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={true}
-        status="Not Submitted"
+        status="not-submitted"
       />
       <WeekRow
         label="Past week — Jan 4 should NOT be highlighted"
@@ -160,7 +160,7 @@ export const TodayHighlight: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={false}
-        status="Approved"
+        status="approved"
       />
     </div>
   ),
@@ -189,7 +189,7 @@ export const StatusBadge: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={true}
-        status="Not Submitted"
+        status="not-submitted"
       />
       <WeekRow
         label="Week B"
@@ -198,7 +198,7 @@ export const StatusBadge: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={true}
-        status="Approved"
+        status="approved"
       />
       <WeekRow
         label="Week C"
@@ -207,7 +207,7 @@ export const StatusBadge: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={true}
-        status="Rejected"
+        status="rejected"
       />
       <WeekRow
         label="Week D"
@@ -216,7 +216,7 @@ export const StatusBadge: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={true}
-        status="Approval Pending"
+        status="approval-pending"
       />
       <WeekRow
         label="Week E"
@@ -225,7 +225,7 @@ export const StatusBadge: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={false}
-        status="None"
+        status="none"
       />
     </div>
   ),
@@ -267,7 +267,7 @@ export const ActionButtonState: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={true}
-        status="Not Submitted"
+        status="not-submitted"
       />
       <WeekRow
         label="None — action disabled"
@@ -276,7 +276,7 @@ export const ActionButtonState: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={false}
-        status="None"
+        status="none"
       />
     </div>
   ),
@@ -304,7 +304,7 @@ export const TotalHoursVisibility: Story = {
           dates={DATES}
           today={TODAY}
           thisWeek={false}
-          status="None"
+          status="none"
           onToggle={toggle}
         />
         <WeekRow
@@ -314,7 +314,7 @@ export const TotalHoursVisibility: Story = {
           dates={DATES}
           today={TODAY}
           thisWeek={false}
-          status="Not Submitted"
+          status="not-submitted"
           onToggle={toggle}
         />
       </div>
@@ -348,7 +348,7 @@ export const TotalHoursColors: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={true}
-        status="Not Submitted"
+        status="not-submitted"
       />
       <WeekRow
         label="Approved"
@@ -357,7 +357,7 @@ export const TotalHoursColors: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={true}
-        status="Approved"
+        status="approved"
       />
       <WeekRow
         label="Rejected"
@@ -366,7 +366,7 @@ export const TotalHoursColors: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={true}
-        status="Rejected"
+        status="rejected"
       />
       <WeekRow
         label="Approval Pending (this week → amber)"
@@ -375,7 +375,7 @@ export const TotalHoursColors: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={true}
-        status="Approval Pending"
+        status="approval-pending"
       />
       <WeekRow
         label="Approval Pending (past week → red)"
@@ -384,7 +384,7 @@ export const TotalHoursColors: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={false}
-        status="Approval Pending"
+        status="approval-pending"
       />
     </div>
   ),
@@ -415,7 +415,7 @@ export const RejectedPastWeekButton: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={true}
-        status="Rejected"
+        status="rejected"
       />
       <WeekRow
         label="Rejected — past week"
@@ -424,7 +424,7 @@ export const RejectedPastWeekButton: Story = {
         dates={DATES}
         today={TODAY}
         thisWeek={false}
-        status="Rejected"
+        status="rejected"
       />
     </div>
   ),
