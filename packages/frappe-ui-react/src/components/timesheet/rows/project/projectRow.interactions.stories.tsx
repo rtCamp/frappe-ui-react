@@ -52,11 +52,6 @@ const meta: Meta<ProjectRowProps> = {
       description:
         "Optional function to render a prefix icon next to the label.",
     },
-    renderSuffix: {
-      control: false,
-      description:
-        "Optional function to render a suffix icon next to the label.",
-    },
     className: {
       control: "text",
       description: "Additional class names for the project row container.",
@@ -216,14 +211,6 @@ export const Icons: Story = {
         timeEntries={[]}
         renderPrefix={() => <Star data-testid="custom-prefix" size={16} />}
       />
-      <ProjectRow
-        label="With suffix"
-        collapsed={false}
-        totalHours="40:00"
-        status="approved"
-        timeEntries={[]}
-        renderSuffix={() => <Star data-testid="custom-suffix" size={16} />}
-      />
     </div>
   ),
   play: async ({ canvasElement }) => {
@@ -236,8 +223,5 @@ export const Icons: Story = {
     // custom prefix renders, folder does not
     expect(canvas.getByTestId("custom-prefix")).toBeInTheDocument();
     expect(rows[1].querySelector("svg.lucide-folder")).not.toBeInTheDocument();
-
-    // suffix icon renders
-    expect(canvas.getByTestId("custom-suffix")).toBeInTheDocument();
   },
 };

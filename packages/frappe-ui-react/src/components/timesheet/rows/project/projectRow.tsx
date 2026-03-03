@@ -6,16 +6,10 @@ import { ChevronDown, Folder } from "lucide-react";
 /**
  * Internal dependencies.
  */
-import { Button } from "../../button";
-import { cn } from "../../../utils";
-import {
-  BASE_PADDING,
-  NESTING_OFFSET,
-  totalHoursVariants,
-  type ProjectRowStatus,
-} from "./projectRowConstants";
-
-export type { ProjectRowStatus };
+import { Button } from "../../../button";
+import { cn } from "../../../../utils";
+import { totalHoursVariants } from "./constants";
+import { BASE_PADDING, NESTING_OFFSET, type RowStatus } from "../constants";
 
 export interface ProjectRowProps {
   /** Label for the project row. */
@@ -31,11 +25,9 @@ export interface ProjectRowProps {
   /** Total hours logged for the week. */
   totalHours?: string;
   /** Status of the timesheet for the project row. */
-  status?: ProjectRowStatus;
+  status?: RowStatus;
   /** Optional function to render a prefix icon next to the label. */
   renderPrefix?: () => React.ReactNode;
-  /** Optional function to render a suffix icon next to the label. */
-  renderSuffix?: () => React.ReactNode;
   /** Additional class names for the project row container. */
   className?: string;
 }
@@ -49,7 +41,6 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
   totalHours = "",
   status = "not-submitted",
   renderPrefix,
-  renderSuffix,
   className,
 }) => {
   return (
@@ -82,9 +73,6 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
           </span>
           <span className="text-sm font-semibold truncate min-w-0">
             {label}
-          </span>
-          <span className="shrink-0">
-            {renderSuffix ? renderSuffix() : null}
           </span>
         </div>
       </div>

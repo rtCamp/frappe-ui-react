@@ -50,11 +50,6 @@ const meta: Meta<ProjectRowProps> = {
       description:
         "Optional function to render a prefix icon next to the label.",
     },
-    renderSuffix: {
-      control: false,
-      description:
-        "Optional function to render a suffix icon next to the label.",
-    },
     className: {
       control: "text",
       description: "Additional class names for the project row container.",
