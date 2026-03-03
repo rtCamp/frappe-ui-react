@@ -59,7 +59,7 @@ const FormControl: React.FC<FormControlProps> = ({
       case "textarea":
         return (
           <Textarea
-            htmlId={htmlId}
+            id={htmlId}
             {...controlAttrs}
             size={size}
             variant={variant}

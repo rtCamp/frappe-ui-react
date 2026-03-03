@@ -106,7 +106,7 @@ export const WithPrefix: StoryObj<SelectProps> = {
     value: "",
     options: OPTIONS,
     placeholder: "Select option",
-    Prefix: () => <User size={16} className="text-ink-gray-9" />,
+    prefix: () => <User size={16} className="text-ink-gray-9" />,
   },
   render: (args) => {
     const [value, setValue] = useState(args.value || "");
@@ -126,7 +126,7 @@ export const WithSuffix: StoryObj<SelectProps> = {
     value: "",
     options: OPTIONS,
     placeholder: "Select option",
-    Suffix: () => <User size={16} className="text-ink-gray-9" />,
+    suffix: () => <User size={16} className="text-ink-gray-9" />,
   },
   render: (args) => {
     const [value, setValue] = useState(args.value || "");
@@ -146,7 +146,7 @@ export const WithOptionSlot: StoryObj<SelectProps> = {
     value: "",
     options: OPTIONS,
     placeholder: "Select option",
-    Option: ({ option }) => (
+    option: ({ option }) => (
       <div className="flex items-center gap-2">
         <User size={16} className="text-ink-gray-9" />
         <span>{option.label}</span>
