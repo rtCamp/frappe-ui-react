@@ -32,10 +32,12 @@ export interface ProjectRowProps {
   totalHours?: string;
   /** Status of the timesheet for the project row. */
   status?: ProjectRowStatus;
-  /** Optional icon to display next to the label. */
-  prefixIcon?: React.ReactNode;
-  /** Optional icon to display next to the label. */
-  suffixIcon?: React.ReactNode;
+  /** Optional function to render a prefix icon next to the label. */
+  renderPrefix?: () => React.ReactNode;
+  /** Optional function to render a suffix icon next to the label. */
+  renderSuffix?: () => React.ReactNode;
+  /** Additional class names for the project row container. */
+  className?: string;
 }
 
 const totalHoursVariants = cva("", {
@@ -61,12 +63,16 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
   timeEntries,
   totalHours = "",
   status = "Not Submitted",
-  prefixIcon,
-  suffixIcon,
+  renderPrefix,
+  renderSuffix,
+  className,
 }) => {
   return (
     <div
-      className="flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-1 py-2"
+      className={cn(
+        "flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-1 py-2",
+        className
+      )}
       style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
     >
       <div className="min-w-0 align-middle flex flex-1 items-center">
@@ -83,12 +89,18 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
         />
         <div className="min-w-0 flex items-center text-ink-gray-9 gap-2">
           <span className="shrink-0">
-            {prefixIcon || <Folder strokeWidth={1.5} size={16} />}
+            {renderPrefix ? (
+              renderPrefix()
+            ) : (
+              <Folder strokeWidth={1.5} size={16} />
+            )}
           </span>
           <span className="text-sm font-semibold truncate min-w-0">
             {label}
           </span>
-          <span className="shrink-0">{suffixIcon ? suffixIcon : null}</span>
+          <span className="shrink-0">
+            {renderSuffix ? renderSuffix() : null}
+          </span>
         </div>
       </div>
       {timeEntries.map((timeEntry, index) => {
