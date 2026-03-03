@@ -1,7 +1,13 @@
+/**
+ * External dependencies.
+ */
 import React from "react";
 import { Select as BaseSelect } from "@base-ui/react/select";
 import { ChevronDown, Check } from "lucide-react";
 
+/**
+ * Internal dependencies.
+ */
 import type { SelectOption, SelectProps } from "./types";
 import { selectTriggerVariants } from "./variants";
 import { cn } from "../../utils";
