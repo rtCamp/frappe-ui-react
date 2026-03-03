@@ -71,7 +71,7 @@ export const WeekRow: React.FC<WeekRowProps> = ({
       )}
       style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
     >
-      <div className="min-w-0 align-middle flex flex-1 items-center gap-2">
+      <div className="min-w-0 align-middle flex flex-1 items-center">
         <Button
           onClick={onToggle}
           disabled={!onToggle}
@@ -80,11 +80,11 @@ export const WeekRow: React.FC<WeekRowProps> = ({
             "shrink-0 border-none outline-none focus:ring-0 focus-visible:ring-0 transition-transform bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent",
             collapsed ? "-rotate-90" : "rotate-0"
           )}
-          icon={() => <ChevronDown strokeWidth={1.5} size={18} />}
+          icon={() => <ChevronDown strokeWidth={1.5} size={16} />}
           aria-label="Toggle week"
         />
         <div className="min-w-0 flex items-center gap-2">
-          <span className="text-sm font-semibold text-gray-900 truncate">
+          <span className="text-sm font-semibold text-ink-gray-9 truncate">
             {label}
           </span>
           {status !== "none" && (
@@ -119,8 +119,13 @@ export const WeekRow: React.FC<WeekRowProps> = ({
         })}
 
       {!(isStatusNone && collapsed) && (
-        <div className="shrink-0 align-middle w-16 text-sm text-end text-ink-gray-5 whitespace-nowrap px-2 py-1.5">
-          <span className={totalHoursVariants({ status, collapsed, thisWeek })}>
+        <div className="shrink-0 text-end align-middle w-16 px-2 py-1.5">
+          <span
+            className={cn(
+              "w-full text-sm text-ink-gray-5 whitespace-nowrap",
+              collapsed && totalHoursVariants({ status, thisWeek })
+            )}
+          >
             {collapsed ? totalHours : "Total"}
           </span>
         </div>
@@ -130,7 +135,7 @@ export const WeekRow: React.FC<WeekRowProps> = ({
         <Button
           onClick={onButtonClick}
           className={cn(
-            buttonVariants({ status, thisWeek, collapsed }),
+            buttonVariants({ status, thisWeek }),
             statusIcon[status]?.variant === "ghost" &&
               "border-none outline-none focus:ring-0 focus-visible:ring-0 bg-transparent hover:bg-transparent active:bg-transparent",
             isStatusNone && "cursor-default!"

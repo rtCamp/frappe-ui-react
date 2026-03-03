@@ -112,8 +112,8 @@ export const Toggle: Story = {
       canvasElement.querySelectorAll(
         ".shrink-0.align-middle.w-16.text-sm.text-end"
       );
-    // Expanded: 7 date cells visible and total cell shows "Total"
-    expect(getDateCells()).toHaveLength(8);
+    // Expanded: 7 date cells visible
+    expect(getDateCells()).toHaveLength(7);
     expect(canvas.getByText("Total")).toBeInTheDocument();
     expect(canvas.queryByText("40:00")).not.toBeInTheDocument();
 
@@ -124,7 +124,7 @@ export const Toggle: Story = {
     expect(args.onToggle).toHaveBeenCalledTimes(1);
 
     await waitFor(() => {
-      expect(getDateCells()).toHaveLength(1);
+      expect(getDateCells()).toHaveLength(0);
       expect(canvas.queryByText("Total")).not.toBeInTheDocument();
       expect(canvas.getByText("40:00")).toBeInTheDocument();
     });
@@ -134,7 +134,7 @@ export const Toggle: Story = {
     expect(args.onToggle).toHaveBeenCalledTimes(2);
 
     await waitFor(() => {
-      expect(getDateCells()).toHaveLength(8);
+      expect(getDateCells()).toHaveLength(7);
       expect(canvas.getByText("Total")).toBeInTheDocument();
       expect(canvas.queryByText("40:00")).not.toBeInTheDocument();
     });
