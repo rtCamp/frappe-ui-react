@@ -47,13 +47,19 @@ const meta: Meta<ProjectRowProps> = {
       control: "object",
       description: "Array of time entries for each day of the week.",
     },
-    prefixIcon: {
+    renderPrefix: {
       control: false,
-      description: "Optional icon to display next to the label.",
+      description:
+        "Optional function to render a prefix icon next to the label.",
     },
-    suffixIcon: {
+    renderSuffix: {
       control: false,
-      description: "Optional icon to display next to the label.",
+      description:
+        "Optional function to render a suffix icon next to the label.",
+    },
+    className: {
+      control: "text",
+      description: "Additional class names for the project row container.",
     },
   },
 };
@@ -89,7 +95,7 @@ export const Toggle: Story = {
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
-    const toggleButton = canvas.getByRole("button", { name: "Toggle week" });
+    const toggleButton = canvas.getByRole("button", { name: "Toggle project" });
 
     expect(toggleButton).toHaveClass("rotate-0");
     expect(toggleButton).not.toHaveClass("-rotate-90");
@@ -138,7 +144,7 @@ export const TimeEntryDisplay: Story = {
 
 export const TotalHoursColors: Story = {
   render: () => (
-    <div className="w-295 p-4 space-y-2">
+    <div className="w-295 p-4 space-y-1">
       <ProjectRow
         label="Not Submitted"
         collapsed={false}
@@ -194,7 +200,7 @@ export const TotalHoursColors: Story = {
 
 export const Icons: Story = {
   render: () => (
-    <div className="w-295 p-4 space-y-2">
+    <div className="w-295 p-4 space-y-1">
       <ProjectRow
         label="Default icon"
         collapsed={false}
@@ -208,7 +214,7 @@ export const Icons: Story = {
         totalHours="40:00"
         status="Approved"
         timeEntries={[]}
-        prefixIcon={<Star data-testid="custom-prefix" size={16} />}
+        renderPrefix={() => <Star data-testid="custom-prefix" size={16} />}
       />
       <ProjectRow
         label="With suffix"
@@ -216,7 +222,7 @@ export const Icons: Story = {
         totalHours="40:00"
         status="Approved"
         timeEntries={[]}
-        suffixIcon={<Star data-testid="custom-suffix" size={16} />}
+        renderSuffix={() => <Star data-testid="custom-suffix" size={16} />}
       />
     </div>
   ),

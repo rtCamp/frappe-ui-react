@@ -45,13 +45,19 @@ const meta: Meta<ProjectRowProps> = {
       control: "object",
       description: "Array of time entries for each day of the week.",
     },
-    prefixIcon: {
+    renderPrefix: {
       control: false,
-      description: "Optional icon to display next to the label.",
+      description:
+        "Optional function to render a prefix icon next to the label.",
     },
-    suffixIcon: {
+    renderSuffix: {
       control: false,
-      description: "Optional icon to display next to the label.",
+      description:
+        "Optional function to render a suffix icon next to the label.",
+    },
+    className: {
+      control: "text",
+      description: "Additional class names for the project row container.",
     },
   },
 };
