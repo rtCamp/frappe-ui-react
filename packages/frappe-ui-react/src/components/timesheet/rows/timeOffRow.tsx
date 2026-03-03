@@ -60,7 +60,9 @@ export const TimeOffRow: React.FC<TimeOffRowProps> = ({
             className="shrink-0 flex justify-end w-16 text-sm text-ink-gray-6 whitespace-nowrap px-2 py-1.5"
           >
             {timeOffEntry === "" ? (
-              <span className="w-10.25 text-center text-ink-gray-4">-</span>
+              <span className="w-full ml-1.5 text-center text-ink-gray-4">
+                -
+              </span>
             ) : (
               <span>{timeOffEntry}</span>
             )}
