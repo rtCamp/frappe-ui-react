@@ -39,6 +39,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   items,
   size = "md",
   highlightLastItem = true,
+  compactCrumbs = true,
   className,
   crumbClassName,
   separatorClassName,
@@ -50,7 +51,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   }, [items]);
 
   const dropdownItems: DropdownOption[] = useMemo(() => {
-    if (width > 640) return [];
+    if (width > 640 || !compactCrumbs) return [];
 
     const allExceptLastTwo = filteredItems.slice(0, -2);
     return allExceptLastTwo.map((item) => {
@@ -64,12 +65,12 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         onClick: onClick,
       };
     });
-  }, [width, filteredItems]);
+  }, [width, filteredItems, compactCrumbs]);
 
   const crumbs: BreadcrumbItem[] = useMemo(() => {
-    if (width > 640) return filteredItems;
+    if (width > 640 || !compactCrumbs) return filteredItems;
     return filteredItems.slice(-2);
-  }, [width, filteredItems]);
+  }, [width, filteredItems, compactCrumbs]);
 
   const renderSuffix = useCallback((item: BreadcrumbItem) => {
     if (!item.suffixIcon) {
