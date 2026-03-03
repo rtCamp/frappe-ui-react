@@ -42,7 +42,7 @@ type Story = StoryObj<typeof meta>;
 const ENTRIES = ["", "", "08:00", "", "08:00", "", ""];
 const TOTAL = "16:00";
 
-export const TimeEntryDisplay: Story = {
+export const DefaultState: Story = {
   render: () => (
     <div className="w-295 p-4">
       <TimeOffRow timeOffEntries={ENTRIES} totalHours={TOTAL} />
@@ -52,21 +52,9 @@ export const TimeEntryDisplay: Story = {
     const canvas = within(canvasElement);
 
     expect(canvas.getAllByText("08:00")).toHaveLength(2);
-
     const dashSpans = canvas.getAllByText("-");
     expect(dashSpans).toHaveLength(5);
     dashSpans.forEach((span) => expect(span).toHaveClass("text-ink-gray-4"));
-  },
-};
-
-export const TotalHours: Story = {
-  render: () => (
-    <div className="w-295 p-4">
-      <TimeOffRow timeOffEntries={ENTRIES} totalHours={TOTAL} />
-    </div>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
 
     const totalSpan = canvas.getByText(TOTAL);
     expect(totalSpan).toBeInTheDocument();

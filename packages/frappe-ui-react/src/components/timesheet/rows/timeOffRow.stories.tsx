@@ -44,11 +44,9 @@ export const Default: Story = {
     nesting: 2,
     timeOffEntries: ["", "04:00", "", "", "", "", ""],
   },
-  render: (args) => {
-    return (
-      <div className="w-295 p-4">
-        <TimeOffRow {...args} />
-      </div>
-    );
-  },
+  render: (args) => (
+    <div className="w-295 p-4">
+      <TimeOffRow {...args} />
+    </div>
+  ),
 };
