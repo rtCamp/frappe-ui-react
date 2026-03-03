@@ -59,6 +59,10 @@ const meta: Meta<WeekRowProps> = {
       action: "button-clicked",
       description: "Callback function when the action button is clicked.",
     },
+    className: {
+      control: "text",
+      description: "Additional class names for the week row container.",
+    },
   },
 };
 

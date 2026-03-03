@@ -45,6 +45,8 @@ export interface WeekRowProps {
   today?: string;
   /** Total hours logged for the week. */
   totalHours?: string;
+  /** Additional class names for the week row container. */
+  className?: string;
 }
 
 const statusTheme: Record<WeekRowStatus, BadgeProps["theme"]> = {
@@ -161,12 +163,16 @@ export const WeekRow: React.FC<WeekRowProps> = ({
   onToggle,
   onButtonClick,
   totalHours = "",
+  className,
 }) => {
   const isStatusNone = status === "None";
 
   return (
     <div
-      className="flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-1 py-2"
+      className={cn(
+        "flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-1 py-2",
+        className
+      )}
       style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
     >
       <div className="min-w-0 align-middle flex flex-1 items-center gap-2">
