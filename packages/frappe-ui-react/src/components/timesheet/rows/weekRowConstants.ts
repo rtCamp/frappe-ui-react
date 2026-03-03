@@ -66,29 +66,22 @@ export const statusIcon: Record<
 export const totalHoursVariants = cva("", {
   variants: {
     status: {
-      "not-submitted": "",
-      approved: "",
-      rejected: "",
-      "approval-pending": "",
-      none: "",
+      "not-submitted": "text-ink-green-4",
+      approved: "text-ink-green-4",
+      rejected: "text-ink-red-4",
+      "approval-pending": "text-ink-amber-4",
+      none: "text-ink-gray-6",
     },
-    collapsed: { true: "", false: "" },
     thisWeek: { true: "", false: "" },
   },
   compoundVariants: [
-    { collapsed: true, status: "not-submitted", class: "text-ink-green-4" },
-    { collapsed: true, status: "approved", class: "text-ink-green-4" },
-    { collapsed: true, status: "rejected", class: "text-ink-red-4" },
-    { collapsed: true, status: "approval-pending", class: "text-ink-amber-4" },
-    { collapsed: true, status: "none", class: "text-ink-gray-6" },
     {
-      collapsed: true,
       status: "approval-pending",
       thisWeek: false,
       class: "text-ink-red-4",
     },
   ],
-  defaultVariants: { collapsed: false, thisWeek: true },
+  defaultVariants: { thisWeek: true },
 });
 
 export const buttonVariants = cva("", {
@@ -101,19 +94,16 @@ export const buttonVariants = cva("", {
       none: "",
     },
     thisWeek: { true: "", false: "" },
-    collapsed: { true: "", false: "" },
   },
   compoundVariants: [
     {
       status: "rejected",
       thisWeek: false,
-      collapsed: false,
       class: "text-ink-gray-5",
     },
   ],
   defaultVariants: {
     thisWeek: true,
-    collapsed: false,
   },
 });
 
