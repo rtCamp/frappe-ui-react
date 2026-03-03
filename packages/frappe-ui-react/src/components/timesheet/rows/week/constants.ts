@@ -8,25 +8,11 @@ import { cva } from "class-variance-authority";
 /**
  * Internal dependencies.
  */
-import type { BadgeProps } from "../../badge";
-import type { ButtonVariant } from "../../button";
+import type { BadgeProps } from "../../../badge";
+import type { ButtonVariant } from "../../../button";
+import type { RowStatus } from "../constants";
 
-export type WeekRowStatus =
-  | "not-submitted"
-  | "approved"
-  | "rejected"
-  | "approval-pending"
-  | "none";
-
-export const statusLabel: Record<WeekRowStatus, string> = {
-  "not-submitted": "Not Submitted",
-  approved: "Approved",
-  rejected: "Rejected",
-  "approval-pending": "Approval Pending",
-  none: "None",
-};
-
-export const statusTheme: Record<WeekRowStatus, BadgeProps["theme"]> = {
+export const statusTheme: Record<RowStatus, BadgeProps["theme"]> = {
   "not-submitted": "gray",
   approved: "green",
   rejected: "red",
@@ -35,7 +21,7 @@ export const statusTheme: Record<WeekRowStatus, BadgeProps["theme"]> = {
 };
 
 export const statusIcon: Record<
-  WeekRowStatus,
+  RowStatus,
   {
     variant: ButtonVariant;
     icon: React.ComponentType<{ size?: number }> | null;
@@ -117,6 +103,3 @@ export const buttonVariants = cva("", {
     variant: "solid",
   },
 });
-
-export const NESTING_OFFSET = 10;
-export const BASE_PADDING = 4;

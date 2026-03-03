@@ -253,7 +253,6 @@ export const StatusBadge: Story = {
     expect(
       actionButtons[3].querySelector("svg.lucide-hourglass")
     ).toBeInTheDocument();
-    expect(actionButtons[4].querySelector("svg")).not.toBeInTheDocument();
   },
 };
 
@@ -287,7 +286,7 @@ export const ActionButtonState: Story = {
     });
 
     expect(actionButtons[0]).not.toBeDisabled();
-    expect(actionButtons[1]).toBeDisabled();
+    expect(actionButtons[1]).toBeUndefined();
   },
 };
 

@@ -7,21 +7,21 @@ import { ChevronDown } from "lucide-react";
 /**
  * Internal dependencies.
  */
-import { Badge } from "../../badge";
-import { Button } from "../../button";
-import { cn } from "../../../utils";
+import { Badge } from "../../../badge";
+import { Button } from "../../../button";
+import { cn } from "../../../../utils";
+import {
+  buttonVariants,
+  statusIcon,
+  statusTheme,
+  totalHoursVariants,
+} from "./constants";
 import {
   BASE_PADDING,
   NESTING_OFFSET,
-  buttonVariants,
-  statusIcon,
   statusLabel,
-  statusTheme,
-  totalHoursVariants,
-  type WeekRowStatus,
-} from "./weekRowConstants";
-
-export type { WeekRowStatus };
+  type RowStatus,
+} from "../constants";
 
 export interface WeekRowProps {
   /** Label for the week row. */
@@ -31,7 +31,7 @@ export interface WeekRowProps {
   /** Whether the week row is collapsed or expanded. */
   collapsed?: boolean;
   /** Status of the timesheet for the week. */
-  status?: WeekRowStatus;
+  status?: RowStatus;
   /** Whether the week row represents the current week. */
   thisWeek?: boolean;
   /** Callback function when the week row is toggled between collapsed and expanded. */
