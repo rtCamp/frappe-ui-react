@@ -1,28 +1,27 @@
 /**
  * External dependencies.
  */
-import {
-  ChevronDown,
-  Send,
-  CircleCheck,
-  CircleX,
-  Hourglass,
-} from "lucide-react";
-import { cva } from "class-variance-authority";
+import React from "react";
+import { ChevronDown } from "lucide-react";
 
 /**
  * Internal dependencies.
  */
-import { Badge, type BadgeProps } from "../../badge";
-import { Button, type ButtonVariant } from "../../button";
+import { Badge } from "../../badge";
+import { Button } from "../../button";
 import { cn } from "../../../utils";
+import {
+  BASE_PADDING,
+  NESTING_OFFSET,
+  buttonVariants,
+  statusIcon,
+  statusLabel,
+  statusTheme,
+  totalHoursVariants,
+  type WeekRowStatus,
+} from "./weekRowConstants";
 
-type WeekRowStatus =
-  | "Not Submitted"
-  | "Approved"
-  | "Rejected"
-  | "Approval Pending"
-  | "None";
+export type { WeekRowStatus };
 
 export interface WeekRowProps {
   /** Label for the week row. */
@@ -49,114 +48,11 @@ export interface WeekRowProps {
   className?: string;
 }
 
-const statusTheme: Record<WeekRowStatus, BadgeProps["theme"]> = {
-  "Not Submitted": "gray",
-  Approved: "green",
-  Rejected: "red",
-  "Approval Pending": "orange",
-  None: "gray",
-};
-
-const statusIcon: Record<
-  WeekRowStatus,
-  { variant: ButtonVariant; icon: React.ReactNode }
-> = {
-  "Not Submitted": {
-    variant: "solid",
-    icon: <Send size={16} />,
-  },
-  Approved: {
-    variant: "ghost",
-    icon: <CircleCheck size={16} />,
-  },
-  Rejected: {
-    variant: "ghost",
-    icon: <CircleX size={16} />,
-  },
-  "Approval Pending": {
-    variant: "ghost",
-    icon: <Hourglass size={16} />,
-  },
-  None: {
-    variant: "ghost",
-    icon: null,
-  },
-};
-
-const totalHoursVariants = cva("", {
-  variants: {
-    status: {
-      "Not Submitted": "",
-      Approved: "",
-      Rejected: "",
-      "Approval Pending": "",
-      None: "",
-    },
-    collapsed: { true: "", false: "" },
-    thisWeek: { true: "", false: "" },
-  },
-  compoundVariants: [
-    {
-      collapsed: true,
-      status: "Not Submitted",
-      class: "text-ink-green-4",
-    },
-    {
-      collapsed: true,
-      status: "Approved",
-      class: "text-ink-green-4",
-    },
-    { collapsed: true, status: "Rejected", class: "text-ink-red-4" },
-    {
-      collapsed: true,
-      status: "Approval Pending",
-      class: "text-ink-amber-4",
-    },
-    { collapsed: true, status: "None", class: "text-ink-gray-6" },
-    {
-      collapsed: true,
-      status: "Approval Pending",
-      thisWeek: false,
-      class: "text-ink-red-4",
-    },
-  ],
-  defaultVariants: { collapsed: false, thisWeek: true },
-});
-
-const buttonVariants = cva("", {
-  variants: {
-    status: {
-      "Not Submitted": "text-ink-white",
-      Approved: "text-ink-green-4",
-      Rejected: "text-ink-red-4",
-      "Approval Pending": "text-ink-amber-4",
-      None: "",
-    },
-    thisWeek: { true: "", false: "" },
-    collapsed: { true: "", false: "" },
-  },
-  compoundVariants: [
-    {
-      status: "Rejected",
-      thisWeek: false,
-      collapsed: false,
-      class: "text-ink-gray-5",
-    },
-  ],
-  defaultVariants: {
-    thisWeek: true,
-    collapsed: false,
-  },
-});
-
-const NESTING_OFFSET = 10;
-const BASE_PADDING = 4;
-
 export const WeekRow: React.FC<WeekRowProps> = ({
   label = "This Week",
   nesting = 0,
   collapsed = false,
-  status = "Not Submitted",
+  status = "not-submitted",
   thisWeek = false,
   dates,
   today = "",
@@ -165,7 +61,7 @@ export const WeekRow: React.FC<WeekRowProps> = ({
   totalHours = "",
   className,
 }) => {
-  const isStatusNone = status === "None";
+  const isStatusNone = status === "none";
 
   return (
     <div
@@ -191,9 +87,9 @@ export const WeekRow: React.FC<WeekRowProps> = ({
           <span className="text-sm font-semibold text-gray-900 truncate">
             {label}
           </span>
-          {status && status !== "None" && (
+          {status !== "none" && (
             <Badge theme={statusTheme[status]} className="shrink-0">
-              {status}
+              {statusLabel[status]}
             </Badge>
           )}
         </div>
@@ -241,10 +137,13 @@ export const WeekRow: React.FC<WeekRowProps> = ({
           )}
           variant={statusIcon[status]?.variant}
           size="sm"
-          icon={() => statusIcon[status]?.icon}
+          icon={() => {
+            const IconComponent = statusIcon[status]?.icon;
+            return IconComponent ? <IconComponent size={16} /> : null;
+          }}
           disabled={isStatusNone}
           aria-label="Submit week"
-          title={status}
+          title={statusLabel[status]}
         />
       </div>
     </div>

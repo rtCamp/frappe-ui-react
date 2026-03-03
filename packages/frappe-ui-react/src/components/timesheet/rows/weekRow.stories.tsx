@@ -38,11 +38,11 @@ const meta: Meta<WeekRowProps> = {
     status: {
       control: "select",
       options: [
-        "Not Submitted",
-        "Approved",
-        "Rejected",
-        "Approval Pending",
-        "None",
+        "not-submitted",
+        "approved",
+        "rejected",
+        "approval-pending",
+        "none",
       ],
       description: "Status of the timesheet for the week.",
     },
@@ -77,7 +77,7 @@ export const Default: Story = {
     dates: ["Dec 29", "Dec 30", "Dec 31", "Jan 1", "Jan 2", "Jan 3", "Jan 4"],
     today: "Jan 4",
     thisWeek: true,
-    status: "Not Submitted",
+    status: "not-submitted",
     onButtonClick: action("Button clicked"),
   },
   render: (args) => {
@@ -129,7 +129,7 @@ export const Variants: Story = {
             ]}
             thisWeek={true}
             today="Jan 4"
-            status="Not Submitted"
+            status="not-submitted"
           />
           <WeekRow
             label="Last Week"
@@ -152,7 +152,7 @@ export const Variants: Story = {
             ]}
             today="Jan 4"
             thisWeek={true}
-            status="Approval Pending"
+            status="approval-pending"
           />
           <WeekRow
             label="Dec 15 - Dec 21, 2025"
@@ -175,7 +175,7 @@ export const Variants: Story = {
             ]}
             today="Jan 4"
             thisWeek={true}
-            status="Rejected"
+            status="rejected"
           />
           <WeekRow
             label="Dec 8 - Dec 14, 2025"
@@ -198,7 +198,7 @@ export const Variants: Story = {
             ]}
             today="Jan 4"
             thisWeek={false}
-            status="Approved"
+            status="approved"
           />
           <WeekRow
             label="Dec 1 - Dec 7, 2025"
@@ -221,7 +221,7 @@ export const Variants: Story = {
             ]}
             today="Jan 4"
             thisWeek={false}
-            status="None"
+            status="none"
           />
           <h2 className="py-4">This Week = False</h2>
           <WeekRow
@@ -245,7 +245,7 @@ export const Variants: Story = {
             ]}
             thisWeek={false}
             today="Jan 4"
-            status="Not Submitted"
+            status="not-submitted"
           />
           <WeekRow
             label="Last Week"
@@ -268,7 +268,7 @@ export const Variants: Story = {
             ]}
             today="Jan 4"
             thisWeek={false}
-            status="Approval Pending"
+            status="approval-pending"
           />
           <WeekRow
             label="Dec 15 - Dec 21, 2025"
@@ -291,7 +291,7 @@ export const Variants: Story = {
             ]}
             today="Jan 4"
             thisWeek={false}
-            status="Rejected"
+            status="rejected"
           />
           <WeekRow
             label="Dec 8 - Dec 14, 2025"
@@ -314,7 +314,7 @@ export const Variants: Story = {
             ]}
             today="Jan 4"
             thisWeek={false}
-            status="Approved"
+            status="approved"
           />
           <WeekRow
             label="Dec 1 - Dec 7, 2025"
@@ -337,7 +337,7 @@ export const Variants: Story = {
             ]}
             today="Jan 4"
             thisWeek={false}
-            status="None"
+            status="none"
           />
         </div>
       </div>
