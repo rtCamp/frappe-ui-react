@@ -2,9 +2,21 @@ import React from "react";
 import { Select as BaseSelect } from "@base-ui/react/select";
 import { ChevronDown, Check } from "lucide-react";
 
-import type { SelectProps } from "./types";
+import type { SelectOption, SelectProps } from "./types";
 import { selectTriggerVariants } from "./variants";
 import { cn } from "../../utils";
+
+const DefaultPrefix = () => {
+  return <></>;
+};
+
+const DefaultSuffix = () => {
+  return <ChevronDown className="h-4 w-4" />;
+};
+
+const DefaultOption = ({ option }: { option: SelectOption }) => {
+  return option.label;
+};
 
 const Select: React.FC<SelectProps> = ({
   size = "sm",
@@ -14,12 +26,16 @@ const Select: React.FC<SelectProps> = ({
   id,
   value,
   options,
-  Prefix,
-  Suffix,
-  Option,
+  prefix,
+  suffix,
+  option,
   onChange,
   className,
 }) => {
+  const Prefix = prefix ?? DefaultPrefix;
+  const Suffix = suffix ?? DefaultSuffix;
+  const Option = option ?? DefaultOption;
+
   return (
     <BaseSelect.Root
       id={id}
@@ -39,15 +55,14 @@ const Select: React.FC<SelectProps> = ({
         )}
       >
         <span className="inline-flex items-center gap-2 min-w-0 flex-1">
-          {Prefix && <span className="shrink-0">{Prefix()}</span>}
+          <Prefix />
           <BaseSelect.Value
             placeholder={placeholder}
             className="truncate text-left"
           />
         </span>
-
         <BaseSelect.Icon className="shrink-0">
-          {Suffix ? Suffix() : <ChevronDown className="h-4 w-4" />}
+          <Suffix />
         </BaseSelect.Icon>
       </BaseSelect.Trigger>
       <BaseSelect.Portal>
@@ -63,7 +78,7 @@ const Select: React.FC<SelectProps> = ({
                   className="focus:outline-none rounded min-h-7 px-2 text-base text-ink-gray-9 flex items-center data-highlighted:bg-surface-gray-2 border-0 data-selected:bg-surface-gray-2 data-disabled:text-ink-gray-4 select-none"
                 >
                   <BaseSelect.ItemText className="truncate">
-                    {Option ? Option({ option }) : option.label}
+                    <Option option={option} />
                   </BaseSelect.ItemText>
                   <BaseSelect.ItemIndicator className="ml-auto pl-1 inline-flex items-center justify-center">
                     <Check className="h-4 w-4" />

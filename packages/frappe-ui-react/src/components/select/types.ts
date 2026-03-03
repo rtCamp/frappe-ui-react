@@ -18,8 +18,8 @@ export interface SelectProps {
   value?: string;
   options: SelectOption[];
   className?: string;
-  Prefix?: () => ReactNode;
-  Suffix?: () => ReactNode;
-  Option?: ({ option }: { option: SelectOption }) => ReactNode;
+  prefix?: () => ReactNode;
+  suffix?: () => ReactNode;
+  option?: ({ option }: { option: SelectOption }) => ReactNode;
   onChange?: (value: string | undefined) => void;
 }
