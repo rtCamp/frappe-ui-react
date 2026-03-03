@@ -18,7 +18,7 @@ export interface TimeOffRowProps {
   /** Total time-off hours logged for the week. */
   totalHours?: string;
   /** Optional icon to display next to the label. */
-  prefixIcon?: React.ReactNode;
+  renderPrefix?: () => React.ReactNode;
   /** Additional class names for the time-off row container. */
   className?: string;
 }
@@ -31,7 +31,7 @@ export const TimeOffRow: React.FC<TimeOffRowProps> = ({
   nesting = 0,
   timeOffEntries,
   totalHours = "",
-  prefixIcon,
+  renderPrefix,
   className,
 }) => {
   return (
@@ -45,7 +45,11 @@ export const TimeOffRow: React.FC<TimeOffRowProps> = ({
     >
       <div className="min-w-0 flex flex-1 items-center text-ink-gray-9">
         <span className="shrink-0 px-2 py-1.5">
-          {prefixIcon || <CalendarX2 strokeWidth={1.5} size={16} />}
+          {renderPrefix ? (
+            renderPrefix()
+          ) : (
+            <CalendarX2 strokeWidth={1.5} size={16} />
+          )}
         </span>
         <span className="text-sm font-semibold truncate min-w-0">{label}</span>
       </div>

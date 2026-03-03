@@ -25,7 +25,7 @@ const meta: Meta<TimeOffRowProps> = {
       control: "object",
       description: "Array of time-off entries for each day of the week.",
     },
-    prefixIcon: {
+    renderPrefix: {
       control: false,
       description: "Optional icon to display next to the label.",
     },
@@ -69,7 +69,7 @@ export const PrefixIcon: Story = {
       <TimeOffRow
         timeOffEntries={ENTRIES}
         totalHours={TOTAL}
-        prefixIcon={<Star data-testid="custom-prefix" size={16} />}
+        renderPrefix={() => <Star data-testid="custom-prefix" size={16} />}
       />
     </div>
   ),
