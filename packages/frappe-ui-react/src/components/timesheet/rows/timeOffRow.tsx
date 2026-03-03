@@ -52,7 +52,7 @@ export const TimeOffRow: React.FC<TimeOffRowProps> = ({
       {timeOffEntries.map((timeOffEntry, index) => {
         return (
           <div
-            key={`${timeOffEntry}-${index}`}
+            key={index}
             className="shrink-0 flex justify-end w-16 text-sm text-ink-gray-6 whitespace-nowrap px-2 py-1.5"
           >
             {timeOffEntry === "" ? (
