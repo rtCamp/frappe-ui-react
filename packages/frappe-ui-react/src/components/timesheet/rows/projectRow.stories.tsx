@@ -24,11 +24,11 @@ const meta: Meta<ProjectRowProps> = {
     status: {
       control: "select",
       options: [
-        "Not Submitted",
-        "Approved",
-        "Rejected",
-        "Approval Pending",
-        "None",
+        "not-submitted",
+        "approved",
+        "rejected",
+        "approval-pending",
+        "none",
       ],
       description: "Status of the timesheet for the project row.",
     },
@@ -70,7 +70,7 @@ export const Default: Story = {
     label: "Atlas UI Stabilization",
     collapsed: false,
     totalHours: "42:00",
-    status: "Approved",
+    status: "approved",
     nesting: 2,
     timeEntries: [
       "05:30",
@@ -100,7 +100,7 @@ export const Variants: Story = {
     label: "Atlas UI Stabilization",
     collapsed: false,
     totalHours: "42:00",
-    status: "Approved",
+    status: "approved",
     nesting: 2,
     timeEntries: [
       "05:30",
@@ -131,7 +131,7 @@ export const Variants: Story = {
           <ProjectRow
             {...args}
             totalHours="37:00"
-            status="Rejected"
+            status="rejected"
             timeEntries={[
               "07:15",
               "07:15",

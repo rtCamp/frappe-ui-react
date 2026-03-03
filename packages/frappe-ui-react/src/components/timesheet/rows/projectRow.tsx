@@ -2,20 +2,20 @@
  * External dependencies.
  */
 import { ChevronDown, Folder } from "lucide-react";
-import { cva } from "class-variance-authority";
 
 /**
  * Internal dependencies.
  */
 import { Button } from "../../button";
 import { cn } from "../../../utils";
+import {
+  BASE_PADDING,
+  NESTING_OFFSET,
+  totalHoursVariants,
+  type ProjectRowStatus,
+} from "./projectRowConstants";
 
-type ProjectRowStatus =
-  | "Not Submitted"
-  | "Approved"
-  | "Rejected"
-  | "Approval Pending"
-  | "None";
+export type { ProjectRowStatus };
 
 export interface ProjectRowProps {
   /** Label for the project row. */
@@ -40,21 +40,6 @@ export interface ProjectRowProps {
   className?: string;
 }
 
-const totalHoursVariants = cva("", {
-  variants: {
-    status: {
-      "Not Submitted": "text-ink-gray-6",
-      Approved: "text-ink-green-4",
-      Rejected: "text-ink-red-4",
-      "Approval Pending": "text-ink-amber-4",
-      None: "",
-    },
-  },
-});
-
-const NESTING_OFFSET = 10;
-const BASE_PADDING = 4;
-
 export const ProjectRow: React.FC<ProjectRowProps> = ({
   label,
   nesting = 0,
@@ -62,7 +47,7 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
   onToggle,
   timeEntries,
   totalHours = "",
-  status = "Not Submitted",
+  status = "not-submitted",
   renderPrefix,
   renderSuffix,
   className,

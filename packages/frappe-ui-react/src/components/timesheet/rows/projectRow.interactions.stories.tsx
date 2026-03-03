@@ -26,11 +26,11 @@ const meta: Meta<ProjectRowProps> = {
     status: {
       control: "select",
       options: [
-        "Not Submitted",
-        "Approved",
-        "Rejected",
-        "Approval Pending",
-        "None",
+        "not-submitted",
+        "approved",
+        "rejected",
+        "approval-pending",
+        "none",
       ],
       description: "Status of the timesheet for the project row.",
     },
@@ -74,7 +74,7 @@ export const Toggle: Story = {
     label: "Atlas UI Stabilization",
     collapsed: false,
     totalHours: "42:00",
-    status: "Approved",
+    status: "approved",
     timeEntries: ENTRIES,
     onToggle: fn(),
   },
@@ -125,7 +125,7 @@ export const TimeEntryDisplay: Story = {
         label="Atlas UI Stabilization"
         collapsed={false}
         totalHours="42:00"
-        status="Approved"
+        status="approved"
         timeEntries={["05:30", "06:45", "", "06:00", "04:15", "07:15", "03:45"]}
       />
     </div>
@@ -149,35 +149,35 @@ export const TotalHoursColors: Story = {
         label="Not Submitted"
         collapsed={false}
         totalHours="10:00"
-        status="Not Submitted"
+        status="not-submitted"
         timeEntries={[]}
       />
       <ProjectRow
         label="Approved"
         collapsed={false}
         totalHours="20:00"
-        status="Approved"
+        status="approved"
         timeEntries={[]}
       />
       <ProjectRow
         label="Rejected"
         collapsed={false}
         totalHours="30:00"
-        status="Rejected"
+        status="rejected"
         timeEntries={[]}
       />
       <ProjectRow
         label="Approval Pending"
         collapsed={false}
         totalHours="40:00"
-        status="Approval Pending"
+        status="approval-pending"
         timeEntries={[]}
       />
       <ProjectRow
         label="None"
         collapsed={false}
         totalHours="50:00"
-        status="None"
+        status="none"
         timeEntries={[]}
       />
     </div>
@@ -205,14 +205,14 @@ export const Icons: Story = {
         label="Default icon"
         collapsed={false}
         totalHours="40:00"
-        status="Approved"
+        status="approved"
         timeEntries={[]}
       />
       <ProjectRow
         label="Custom prefix"
         collapsed={false}
         totalHours="40:00"
-        status="Approved"
+        status="approved"
         timeEntries={[]}
         renderPrefix={() => <Star data-testid="custom-prefix" size={16} />}
       />
@@ -220,7 +220,7 @@ export const Icons: Story = {
         label="With suffix"
         collapsed={false}
         totalHours="40:00"
-        status="Approved"
+        status="approved"
         timeEntries={[]}
         renderSuffix={() => <Star data-testid="custom-suffix" size={16} />}
       />
