@@ -93,252 +93,73 @@ export const Default: Story = {
   },
 };
 
+const WEEK_ENTRIES = [
+  { label: "This Week", status: "not-submitted", totalHours: "40:00" },
+  { label: "Last Week", status: "approval-pending", totalHours: "35:00" },
+  { label: "Dec 15 - Dec 21, 2025", status: "rejected", totalHours: "35:00" },
+  { label: "Dec 8 - Dec 14, 2025", status: "approved", totalHours: "35:00" },
+  { label: "Dec 1 - Dec 7, 2025", status: "none", totalHours: "35:00" },
+] as const;
+
+const THIS_WEEK_DATES = [
+  "Dec 29",
+  "Dec 30",
+  "Dec 31",
+  "Jan 1",
+  "Jan 2",
+  "Jan 3",
+  "Jan 4",
+];
+const PAST_WEEK_DATES = [
+  "Dec 22",
+  "Dec 23",
+  "Dec 24",
+  "Dec 25",
+  "Dec 26",
+  "Dec 27",
+  "Jan 28",
+];
+
 export const Variants: Story = {
   args: {},
   render: () => {
-    const [collapseds, setCollapseds] = useState({
-      "This Week": false,
-      "Last Week": false,
-      "Dec 15 - Dec 21, 2025": false,
-      "Dec 8 - Dec 14, 2025": false,
-      "Dec 1 - Dec 7, 2025": false,
-    });
+    const [collapseds, setCollapseds] = useState<Record<string, boolean>>(
+      Object.fromEntries(WEEK_ENTRIES.map(({ label }) => [label, false]))
+    );
+    const toggle = (label: string) =>
+      setCollapseds((prev) => ({ ...prev, [label]: !prev[label] }));
 
     return (
       <div className="w-295 p-4">
         <div className="w-full text-sm">
           <h2 className="py-4">This Week = True</h2>
-          <WeekRow
-            label="This Week"
-            collapsed={collapseds["This Week"]}
-            totalHours="40:00"
-            onToggle={() =>
-              setCollapseds((prev) => ({
-                ...prev,
-                "This Week": !prev["This Week"],
-              }))
-            }
-            dates={[
-              "Dec 29",
-              "Dec 30",
-              "Dec 31",
-              "Jan 1",
-              "Jan 2",
-              "Jan 3",
-              "Jan 4",
-            ]}
-            thisWeek={true}
-            today="Jan 4"
-            status="not-submitted"
-          />
-          <WeekRow
-            label="Last Week"
-            collapsed={collapseds["Last Week"]}
-            totalHours="35:00"
-            onToggle={() =>
-              setCollapseds((prev) => ({
-                ...prev,
-                "Last Week": !prev["Last Week"],
-              }))
-            }
-            dates={[
-              "Dec 29",
-              "Dec 30",
-              "Dec 31",
-              "Jan 1",
-              "Jan 2",
-              "Jan 3",
-              "Jan 4",
-            ]}
-            today="Jan 4"
-            thisWeek={true}
-            status="approval-pending"
-          />
-          <WeekRow
-            label="Dec 15 - Dec 21, 2025"
-            collapsed={collapseds["Dec 15 - Dec 21, 2025"]}
-            totalHours="35:00"
-            onToggle={() =>
-              setCollapseds((prev) => ({
-                ...prev,
-                "Dec 15 - Dec 21, 2025": !prev["Dec 15 - Dec 21, 2025"],
-              }))
-            }
-            dates={[
-              "Dec 29",
-              "Dec 30",
-              "Dec 31",
-              "Jan 1",
-              "Jan 2",
-              "Jan 3",
-              "Jan 4",
-            ]}
-            today="Jan 4"
-            thisWeek={true}
-            status="rejected"
-          />
-          <WeekRow
-            label="Dec 8 - Dec 14, 2025"
-            collapsed={collapseds["Dec 8 - Dec 14, 2025"]}
-            totalHours="35:00"
-            onToggle={() =>
-              setCollapseds((prev) => ({
-                ...prev,
-                "Dec 8 - Dec 14, 2025": !prev["Dec 8 - Dec 14, 2025"],
-              }))
-            }
-            dates={[
-              "Dec 29",
-              "Dec 30",
-              "Dec 31",
-              "Jan 1",
-              "Jan 2",
-              "Jan 3",
-              "Jan 4",
-            ]}
-            today="Jan 4"
-            thisWeek={false}
-            status="approved"
-          />
-          <WeekRow
-            label="Dec 1 - Dec 7, 2025"
-            collapsed={collapseds["Dec 1 - Dec 7, 2025"]}
-            totalHours="35:00"
-            onToggle={() =>
-              setCollapseds((prev) => ({
-                ...prev,
-                "Dec 1 - Dec 7, 2025": !prev["Dec 1 - Dec 7, 2025"],
-              }))
-            }
-            dates={[
-              "Dec 29",
-              "Dec 30",
-              "Dec 31",
-              "Jan 1",
-              "Jan 2",
-              "Jan 3",
-              "Jan 4",
-            ]}
-            today="Jan 4"
-            thisWeek={false}
-            status="none"
-          />
+          {WEEK_ENTRIES.map(({ label, status, totalHours }) => (
+            <WeekRow
+              key={`${label}-true`}
+              label={label}
+              collapsed={collapseds[label]}
+              totalHours={totalHours}
+              onToggle={() => toggle(label)}
+              dates={THIS_WEEK_DATES}
+              today="Jan 4"
+              thisWeek={true}
+              status={status}
+            />
+          ))}
           <h2 className="py-4">This Week = False</h2>
-          <WeekRow
-            label="This Week"
-            collapsed={collapseds["This Week"]}
-            totalHours="40:00"
-            onToggle={() =>
-              setCollapseds((prev) => ({
-                ...prev,
-                "This Week": !prev["This Week"],
-              }))
-            }
-            dates={[
-              "Dec 22",
-              "Dec 23",
-              "Dec 24",
-              "Dec 25",
-              "Dec 26",
-              "Dec 27",
-              "Jan 28",
-            ]}
-            thisWeek={false}
-            today="Jan 4"
-            status="not-submitted"
-          />
-          <WeekRow
-            label="Last Week"
-            collapsed={collapseds["Last Week"]}
-            totalHours="35:00"
-            onToggle={() =>
-              setCollapseds((prev) => ({
-                ...prev,
-                "Last Week": !prev["Last Week"],
-              }))
-            }
-            dates={[
-              "Dec 22",
-              "Dec 23",
-              "Dec 24",
-              "Dec 25",
-              "Dec 26",
-              "Dec 27",
-              "Jan 28",
-            ]}
-            today="Jan 4"
-            thisWeek={false}
-            status="approval-pending"
-          />
-          <WeekRow
-            label="Dec 15 - Dec 21, 2025"
-            collapsed={collapseds["Dec 15 - Dec 21, 2025"]}
-            totalHours="35:00"
-            onToggle={() =>
-              setCollapseds((prev) => ({
-                ...prev,
-                "Dec 15 - Dec 21, 2025": !prev["Dec 15 - Dec 21, 2025"],
-              }))
-            }
-            dates={[
-              "Dec 22",
-              "Dec 23",
-              "Dec 24",
-              "Dec 25",
-              "Dec 26",
-              "Dec 27",
-              "Jan 28",
-            ]}
-            today="Jan 4"
-            thisWeek={false}
-            status="rejected"
-          />
-          <WeekRow
-            label="Dec 8 - Dec 14, 2025"
-            collapsed={collapseds["Dec 8 - Dec 14, 2025"]}
-            totalHours="35:00"
-            onToggle={() =>
-              setCollapseds((prev) => ({
-                ...prev,
-                "Dec 8 - Dec 14, 2025": !prev["Dec 8 - Dec 14, 2025"],
-              }))
-            }
-            dates={[
-              "Dec 22",
-              "Dec 23",
-              "Dec 24",
-              "Dec 25",
-              "Dec 26",
-              "Dec 27",
-              "Jan 28",
-            ]}
-            today="Jan 4"
-            thisWeek={false}
-            status="approved"
-          />
-          <WeekRow
-            label="Dec 1 - Dec 7, 2025"
-            collapsed={collapseds["Dec 1 - Dec 7, 2025"]}
-            totalHours="35:00"
-            onToggle={() =>
-              setCollapseds((prev) => ({
-                ...prev,
-                "Dec 1 - Dec 7, 2025": !prev["Dec 1 - Dec 7, 2025"],
-              }))
-            }
-            dates={[
-              "Dec 22",
-              "Dec 23",
-              "Dec 24",
-              "Dec 25",
-              "Dec 26",
-              "Dec 27",
-              "Jan 28",
-            ]}
-            today="Jan 4"
-            thisWeek={false}
-            status="none"
-          />
+          {WEEK_ENTRIES.map(({ label, status, totalHours }) => (
+            <WeekRow
+              key={`${label}-false`}
+              label={label}
+              collapsed={collapseds[label]}
+              totalHours={totalHours}
+              onToggle={() => toggle(label)}
+              dates={PAST_WEEK_DATES}
+              today="Jan 4"
+              thisWeek={false}
+              status={status}
+            />
+          ))}
         </div>
       </div>
     );
