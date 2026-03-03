@@ -1,15 +1,15 @@
 /**
  * Internal dependencies.
  */
-import { Breadcrumbs, type BreadcrumbsProps } from "../../breadcrumbs";
-import { cn } from "../../../utils";
+import { Breadcrumbs, type BreadcrumbsProps } from "../../../breadcrumbs";
+import { cn } from "../../../../utils";
 
 export interface HeaderRowProps {
   /** Props configuration for the Breadcrumbs component displayed in the header row. */
   breadcrumbs: BreadcrumbsProps;
   /** Nesting level for the week row, used for indentation. */
   nesting?: number;
-  /** Array of time entries for each day of the week. */
+  /** Array of day labels for each day of the week. */
   days: string[];
   /** Additional class names for the header row container. */
   className?: string;
