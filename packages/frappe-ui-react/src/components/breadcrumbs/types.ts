@@ -7,12 +7,14 @@ export interface BreadcrumbItem {
   prefixIcon?: ReactNode;
   suffixIcon?: ReactNode;
   dropdown?: DropdownProps;
+  interactive?: boolean;
 }
 
 export interface BreadcrumbsProps {
   items: BreadcrumbItem[];
-  size?: "sm" | "md";
+  size?: "sm" | "md" | "lg";
   highlightLastItem?: boolean;
+  highlightAllItems?: boolean;
   compactCrumbs?: boolean;
   className?: string;
   crumbClassName?: string;
