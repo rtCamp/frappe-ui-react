@@ -51,7 +51,7 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
       )}
       style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
     >
-      <div className="min-w-0 align-middle flex flex-1 items-center">
+      <div className="min-w-0 flex flex-1 items-center">
         <Button
           onClick={onToggle}
           disabled={!onToggle}
@@ -80,10 +80,10 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
         return (
           <div
             key={`${timeEntry}-${index}`}
-            className="shrink-0 flex justify-end w-16 text-sm text-ink-gray-6 whitespace-nowrap px-2 py-1.5"
+            className="shrink-0 flex justify-end items-center text-sm text-ink-gray-6 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5"
           >
             {timeEntry === "" ? (
-              <span className="w-full ml-1.5 text-center text-ink-gray-4">
+              <span className="flex-1 ml-1.5 text-center text-ink-gray-4">
                 -
               </span>
             ) : (
@@ -93,11 +93,11 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
         );
       })}
 
-      <div className="shrink-0 align-middle w-16 text-sm text-end text-ink-gray-5 whitespace-nowrap px-2 py-1.5">
-        <span className={totalHoursVariants({ status })}>{totalHours}</span>
+      <div className="shrink-0 flex justify-end items-center text-sm text-end text-ink-gray-5 whitespace-nowrap w-16 h-7 px-2 py-1.5">
+        <span className={cn(totalHoursVariants({ status }))}>{totalHours}</span>
       </div>
 
-      <div className="shrink-0 align-middle w-12"></div>
+      <div className="shrink-0 w-12 h-7"></div>
     </div>
   );
 };
