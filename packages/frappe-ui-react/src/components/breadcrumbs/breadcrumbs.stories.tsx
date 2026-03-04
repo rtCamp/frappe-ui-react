@@ -22,6 +22,10 @@ export default {
       control: "boolean",
       description: "Whether to highlight the last breadcrumb item.",
     },
+    highlightAllItems: {
+      control: "boolean",
+      description: "Whether to highlight all breadcrumb items.",
+    },
     compactCrumbs: {
       control: "boolean",
       description: "Whether to compact the breadcrumbs on smaller screens.",
@@ -60,14 +64,17 @@ export const WithOnClickOption: StoryObj<BreadcrumbsProps> = {
   args: {
     items: [
       {
+        id: "home",
         label: "Home",
         onClick: action("Home clicked"),
       },
       {
+        id: "views",
         label: "Views",
         onClick: action("Views clicked"),
       },
       {
+        id: "kanban",
         label: "Kanban",
         onClick: action("Kanban clicked"),
       },
@@ -80,14 +87,17 @@ export const WithPrefixSlot: StoryObj<BreadcrumbsProps> = {
   args: {
     items: [
       {
+        id: "home",
         label: "Home",
         prefixIcon: "🏡",
       },
       {
+        id: "views",
         label: "Views",
         prefixIcon: "🏞️",
       },
       {
+        id: "list",
         label: "List",
         prefixIcon: "📃",
       },
@@ -100,9 +110,11 @@ export const WithDropdown: StoryObj<BreadcrumbsProps> = {
   args: {
     items: [
       {
+        id: "timesheets",
         label: "Timesheets",
       },
       {
+        id: "personal",
         label: "Personal",
         prefixIcon: <Clock className="w-4 h-4" />,
         suffixIcon: <ChevronDown className="w-4 h-4" />,

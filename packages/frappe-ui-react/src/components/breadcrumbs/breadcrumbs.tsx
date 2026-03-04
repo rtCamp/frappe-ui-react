@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 
 /**
  * Internal dependencies.
@@ -27,6 +27,8 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   className,
   crumbClassName,
   separatorClassName,
+  renderPrefix,
+  renderSuffix,
 }) => {
   const { width } = useWindowSize();
 
@@ -55,20 +57,6 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
     if (width > 640 || !compactCrumbs) return filteredItems;
     return filteredItems.slice(-2);
   }, [width, filteredItems, compactCrumbs]);
-
-  const renderSuffix = useCallback((item: BreadcrumbItem) => {
-    if (!item.suffixIcon) {
-      return null;
-    }
-    return <span className="mr-1">{item.suffixIcon}</span>;
-  }, []);
-
-  const renderPrefix = useCallback((item: BreadcrumbItem) => {
-    if (!item.prefixIcon) {
-      return null;
-    }
-    return <span className="mr-1">{item.prefixIcon}</span>;
-  }, []);
 
   return (
     <div className="flex min-w-0 items-center">
@@ -125,14 +113,22 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                 crumbClassName
               )}
             >
-              {renderPrefix(item)}
+              {renderPrefix ? (
+                renderPrefix(item)
+              ) : item?.prefixIcon ? (
+                <span className="mr-1">{item.prefixIcon}</span>
+              ) : null}
               <span>{item.label}</span>
-              {renderSuffix(item)}
+              {renderSuffix ? (
+                renderSuffix(item)
+              ) : item?.suffixIcon ? (
+                <span className="ml-1">{item.suffixIcon}</span>
+              ) : null}
             </button>
           );
 
           return (
-            <React.Fragment key={item.label}>
+            <React.Fragment key={item.id || item.label}>
               {item.dropdown ? (
                 <Dropdown {...item.dropdown}>{crumbContent}</Dropdown>
               ) : (
@@ -144,8 +140,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                     "mx-0.5",
                     separatorVariants({
                       size,
-                      highlightItem:
-                        (isLast && highlightLastItem) || highlightAllItems,
+                      highlightItem: highlightAllItems,
                     }),
                     separatorClassName
                   )}
