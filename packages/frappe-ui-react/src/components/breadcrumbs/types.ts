@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { DropdownProps } from "../dropdown";
 
 export interface BreadcrumbItem {
+  id?: string | number;
   label: string;
   onClick?: () => void;
   prefixIcon?: ReactNode;
