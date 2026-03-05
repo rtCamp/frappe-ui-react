@@ -70,6 +70,7 @@ export const WeekRow: React.FC<WeekRowProps> = ({
         className
       )}
       style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
+      data-testid="week-row"
     >
       <div className="min-w-0 align-middle flex flex-1 items-center">
         <Button
