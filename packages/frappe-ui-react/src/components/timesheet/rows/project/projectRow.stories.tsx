@@ -141,6 +141,7 @@ export const Variants: Story = {
               "01:30",
               "",
             ]}
+            highlightTimeEntries={true}
             collapsed={collapseds.row_2}
             onToggle={() =>
               setCollapseds((prev) => ({ ...prev, row_2: !prev.row_2 }))
