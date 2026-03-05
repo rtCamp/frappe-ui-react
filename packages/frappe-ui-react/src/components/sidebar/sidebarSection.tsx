@@ -69,7 +69,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
     >
       <Collapsible.Trigger
         className={cn(
-          "relative flex items-center gap-1 px-2 py-1.5 cursor-pointer",
+          "relative flex items-center gap-1 px-2 py-1.5 cursor-pointer rounded-md focus:outline-none focus-visible:ring focus-visible:ring-outline-gray-3",
           {
             hidden: sidebarCollapsed,
           }
