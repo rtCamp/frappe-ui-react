@@ -30,11 +30,11 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
     return items.map((item) => (
       <Button
         className={cn(
-          "w-full transition-all ease-in-out justify-start py-1 px-0",
+          "w-full transition-all ease-in-out justify-start py-1 px-2",
           {
             "!bg-surface-selected shadow-sm": item.isActive,
             "hover:bg-surface-gray-2": !item.isActive,
-            "px-2": sidebarCollapsed,
+            "px-0": sidebarCollapsed,
           }
         )}
         variant="ghost"
@@ -115,7 +115,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
               {
                 "!bg-surface-selected shadow-sm": item.isActive,
                 "hover:bg-surface-gray-2": !item.isActive,
-                "px-2": sidebarCollapsed,
+                "px-0": sidebarCollapsed,
               }
             )}
             variant="ghost"
