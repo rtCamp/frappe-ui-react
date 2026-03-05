@@ -84,7 +84,7 @@ export const WeekRow: React.FC<WeekRowProps> = ({
           aria-label="Toggle week"
         />
         <div className="min-w-0 flex items-center gap-2">
-          <span className="text-sm font-semibold text-ink-gray-9 truncate leading-3.5">
+          <span className="text-base font-medium text-ink-gray-9 truncate leading-3.5">
             {label}
           </span>
           {status !== "none" && (
