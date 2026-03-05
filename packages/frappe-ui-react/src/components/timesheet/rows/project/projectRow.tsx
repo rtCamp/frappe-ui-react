@@ -71,7 +71,7 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
               <Folder strokeWidth={1.5} size={16} />
             )}
           </span>
-          <span className="text-sm font-semibold truncate min-w-0">
+          <span className="text-base font-medium truncate min-w-0">
             {label}
           </span>
         </div>
@@ -80,7 +80,7 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
         return (
           <div
             key={`${timeEntry}-${index}`}
-            className="shrink-0 flex justify-end items-center text-sm text-ink-gray-6 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5"
+            className="shrink-0 flex justify-end items-center text-base text-ink-gray-6 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5"
           >
             {timeEntry === "" ? (
               <span className="flex-1 ml-1.5 text-center text-ink-gray-4">
@@ -93,7 +93,7 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
         );
       })}
 
-      <div className="shrink-0 flex justify-end items-center text-sm text-end text-ink-gray-5 whitespace-nowrap w-16 h-7 px-2 py-1.5">
+      <div className="shrink-0 flex justify-end items-center text-base text-end font-medium text-ink-gray-5 whitespace-nowrap w-16 h-7 px-2 py-1.5">
         <span className={cn(totalHoursVariants({ status }))}>{totalHours}</span>
       </div>
 
