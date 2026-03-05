@@ -20,12 +20,14 @@ export interface ProjectRowProps {
   collapsed?: boolean;
   /** Callback function when the project row is toggled between collapsed and expanded. */
   onToggle?: () => void;
-  /** Array of time entries for each day of the week. */
+  /** Array of time entries for each day of the week for the project. */
   timeEntries: string[];
   /** Total hours logged for the week. */
   totalHours?: string;
   /** Status of the timesheet for the project row. */
   status?: RowStatus;
+  /** Optionally highlight time entries **/
+  highlightTimeEntries?: boolean;
   /** Optional function to render a prefix icon next to the label. */
   renderPrefix?: () => React.ReactNode;
   /** Additional class names for the project row container. */
@@ -40,6 +42,7 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
   timeEntries,
   totalHours = "",
   status = "not-submitted",
+  highlightTimeEntries = false,
   renderPrefix,
   className,
 }) => {
@@ -80,7 +83,12 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
         return (
           <div
             key={`${timeEntry}-${index}`}
-            className="shrink-0 flex justify-end items-center text-base text-ink-gray-6 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5"
+            className={cn(
+              "shrink-0 flex justify-end items-center text-base text-ink-gray-6 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5",
+              highlightTimeEntries &&
+                timeEntry !== "" &&
+                "text-ink-gray-9 font-medium"
+            )}
           >
             {timeEntry === "" ? (
               <span className="flex-1 ml-1.5 text-center text-ink-gray-4">

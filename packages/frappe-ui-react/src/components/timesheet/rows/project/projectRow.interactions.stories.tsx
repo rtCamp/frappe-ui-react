@@ -45,7 +45,12 @@ const meta: Meta<ProjectRowProps> = {
     },
     timeEntries: {
       control: "object",
-      description: "Array of time entries for each day of the week.",
+      description:
+        "Array of time entries for each day of the week for the project.",
+    },
+    highlightTimeEntries: {
+      control: "boolean",
+      description: "Optionally highlight time entries",
     },
     renderPrefix: {
       control: false,
