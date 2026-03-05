@@ -48,7 +48,7 @@ export interface MemberRowProps {
 }
 
 export const MemberRow: React.FC<MemberRowProps> = ({
-  label = "This Week",
+  label,
   avatarUrl,
   nesting = 0,
   collapsed = false,
@@ -120,7 +120,7 @@ export const MemberRow: React.FC<MemberRowProps> = ({
       </div>
 
       <div className="shrink-0 w-12 h-7 flex justify-end items-center whitespace-nowrap">
-        {!isStatusNone ? (
+        {!isStatusNone && statusIcon[status]?.icon ? (
           <Button
             onClick={onButtonClick}
             className={cn(
