@@ -60,8 +60,20 @@ const meta: Meta<TaskRowProps> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const PopOverContent: React.FC<{
+  taskIndex: number | undefined;
+  dayIndex: number;
+}> = ({ taskIndex, dayIndex }) => (
+  <div className="w-fit p-2 bg-surface-white border border-outline-gray-1 rounded whitespace-nowrap">
+    <p className="text-sm">
+      Task Index: {taskIndex}, Day Index: {dayIndex}
+    </p>
+  </div>
+);
+
 export const Default: Story = {
   args: {
+    taskIndex: 0,
     label: "UI Responsiveness Testing",
     totalHours: "11:30",
     starred: true,
@@ -76,6 +88,9 @@ export const Default: Story = {
       { time: "01:00" },
       { time: "00:45" },
     ],
+    popoverContent: (taskIndex, dayIndex) => (
+      <PopOverContent taskIndex={taskIndex} dayIndex={dayIndex} />
+    ),
   },
   render: (args) => {
     return (
@@ -186,7 +201,14 @@ export const Variants: Story = {
     return (
       <div className="w-295 p-4">
         {TASKS.map((task, index) => (
-          <TaskRow key={index} taskIndex={index} {...task} />
+          <TaskRow
+            key={index}
+            taskIndex={index}
+            popoverContent={(taskIndex, dayIndex) => (
+              <PopOverContent taskIndex={taskIndex} dayIndex={dayIndex} />
+            )}
+            {...task}
+          />
         ))}
       </div>
     );

@@ -11,7 +11,7 @@ import {
   Loader,
 } from "lucide-react";
 
-export type MemberStatus =
+export type TaskStatus =
   | "open"
   | "working"
   | "pending-rev"
@@ -19,8 +19,14 @@ export type MemberStatus =
   | "completed"
   | "cancelled";
 
+export type TaskRowTimeEntry = {
+  time: string;
+  nonBillable?: boolean;
+  disabled?: boolean;
+};
+
 export const statusIcon: Record<
-  MemberStatus,
+  TaskStatus,
   React.ComponentType<{
     size?: number;
     strokeWidth?: number;
