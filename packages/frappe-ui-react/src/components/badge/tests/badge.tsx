@@ -17,13 +17,13 @@ describe("Badge", () => {
   test("renders with different themes", () => {
     const { rerender } = render(<Badge theme="red">Red Badge</Badge>);
     expect(screen.getByText("Red Badge")).toHaveClass("text-ink-red-4");
-    expect(screen.getByText("Red Badge")).toHaveClass("bg-surface-red-1");
+    expect(screen.getByText("Red Badge")).toHaveClass("bg-surface-red-2");
 
     rerender(<Badge theme="blue">Blue Badge</Badge>);
     expect(screen.getByText("Blue Badge")).toHaveClass("text-ink-blue-2");
 
     rerender(<Badge theme="green">Green Badge</Badge>);
-    expect(screen.getByText("Green Badge")).toHaveClass("text-ink-green-3");
+    expect(screen.getByText("Green Badge")).toHaveClass("text-ink-green-4");
   });
 
   test("renders with different sizes", () => {

@@ -3,7 +3,7 @@
  */
 import { cva } from "class-variance-authority";
 
-export const totalHoursVariants = cva("", {
+export const totalHoursVariants = cva("lining-nums tabular-nums", {
   variants: {
     status: {
       "not-submitted": "text-ink-gray-6",
