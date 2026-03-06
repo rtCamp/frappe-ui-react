@@ -30,7 +30,7 @@ export const Filter: React.FC<FilterProps> = ({
     return {
       id: generateFilterId(),
       field: firstField?.name || "",
-      operator: "is",
+      operator: "",
       value: null,
     };
   }, [fields]);
@@ -88,7 +88,7 @@ export const Filter: React.FC<FilterProps> = ({
               iconLeft={() => (
                 <ListFilter size={16} className="text-ink-gray-7" />
               )}
-              className={cn(" bg-red-200", {
+              className={cn({
                 "rounded-r-none": hasFilters,
               })}
             >
