@@ -79,17 +79,17 @@ export const TaskRow: React.FC<TaskRowProps> = ({
         return (
           <div
             key={index}
-            className="shrink-0 flex justify-end items-center text-base text-ink-gray-6 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5"
+            className="shrink-0 flex justify-end items-center text-base text-ink-gray-6 whitespace-nowrap w-16 h-7 pl-2 py-1.5 leading-3.5"
           >
             <Button
               variant="ghost"
-              className="w-14.25 relative group flex justify-center items-center !disabled:hover:bg-surface-gray-2 !disabled:focus:bg-surface-gray-2 !disabled:active:bg-surface-gray-3 disabled:cursor-default!"
+              className="w-14.25 relative group flex justify-center items-center !disabled:hover:bg-surface-gray-2 !disabled:focus:bg-surface-gray-2 !disabled:active:bg-surface-gray-3 disabled:cursor-default! lining-nums tabular-nums [&_span]:overflow-visible [&_span]:whitespace-normal"
               disabled={timeEntry.disabled}
               onClick={() => onCellClick?.(taskIndex, index)}
             >
               {timeEntry.time === "" ? (
                 <>
-                  <span className="group-hover:hidden flex-1 ml-1.5 text-center text-ink-gray-4">
+                  <span className="group-hover:hidden flex-1 text-center text-ink-gray-4">
                     -
                   </span>
                   <span className="group-hover:flex hidden absolute w-full h-full top-0 left-0 justify-center items-center">
@@ -107,7 +107,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({
         );
       })}
 
-      <div className="shrink-0 flex justify-end items-center text-base text-end text-ink-gray-6 whitespace-nowrap w-16 h-7 px-2 py-1.5">
+      <div className="shrink-0 flex justify-end items-center text-base text-end text-ink-gray-6 whitespace-nowrap w-16 h-7 px-2 py-1.5 lining-nums tabular-nums">
         <span>{totalHours}</span>
       </div>
 
