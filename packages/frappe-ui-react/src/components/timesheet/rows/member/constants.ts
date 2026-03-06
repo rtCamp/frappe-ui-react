@@ -2,7 +2,7 @@
  * External dependencies.
  */
 import React from "react";
-import { Send, CircleCheck, CircleX, Hourglass } from "lucide-react";
+import { CircleCheck, CircleX } from "lucide-react";
 import { cva } from "class-variance-authority";
 
 /**
@@ -28,8 +28,8 @@ export const statusIcon: Record<
   }
 > = {
   "not-submitted": {
-    variant: "solid",
-    icon: Send,
+    variant: "ghost",
+    icon: null,
   },
   approved: {
     variant: "ghost",
@@ -40,8 +40,8 @@ export const statusIcon: Record<
     icon: CircleX,
   },
   "approval-pending": {
-    variant: "ghost",
-    icon: Hourglass,
+    variant: "solid",
+    icon: CircleCheck,
   },
   none: {
     variant: "ghost",
@@ -54,36 +54,25 @@ export const totalHoursVariants = cva(
   {
     variants: {
       status: {
-        "not-submitted": "text-ink-green-4",
+        "not-submitted": "",
         approved: "text-ink-green-4",
         rejected: "text-ink-red-4",
         "approval-pending": "text-ink-amber-4",
-        none: "",
+        none: "text-ink-green-4",
       },
-      thisWeek: { true: "", false: "" },
     },
-    compoundVariants: [
-      {
-        status: "approval-pending",
-        thisWeek: false,
-        class: "text-ink-red-4",
-      },
-    ],
-    defaultVariants: { thisWeek: true },
   }
 );
 
 export const buttonVariants = cva("", {
   variants: {
     status: {
-      "not-submitted": "text-ink-white",
+      "not-submitted": "",
       approved: "text-ink-green-4",
       rejected: "text-ink-red-4",
-      "approval-pending": "text-ink-amber-4",
+      "approval-pending": "text-ink-white",
       none: "",
     },
-    thisWeek: { true: "", false: "" },
-    collapsed: { true: "", false: "" },
     variant: {
       solid: "",
       subtle: "",
@@ -92,17 +81,7 @@ export const buttonVariants = cva("", {
         "border-none outline-none focus:ring-0 focus-visible:ring-0 bg-transparent hover:bg-transparent active:bg-transparent",
     },
   },
-  compoundVariants: [
-    {
-      status: "rejected",
-      thisWeek: false,
-      collapsed: false,
-      class: "text-ink-gray-5",
-    },
-  ],
   defaultVariants: {
-    thisWeek: true,
-    collapsed: false,
     variant: "solid",
   },
 });
