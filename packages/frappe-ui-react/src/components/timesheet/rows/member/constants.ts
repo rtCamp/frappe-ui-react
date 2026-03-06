@@ -49,17 +49,20 @@ export const statusIcon: Record<
   },
 };
 
-export const totalHoursVariants = cva("text-base font-medium", {
-  variants: {
-    status: {
-      "not-submitted": "",
-      approved: "text-ink-green-4",
-      rejected: "text-ink-red-4",
-      "approval-pending": "text-ink-amber-4",
-      none: "text-ink-green-4",
+export const totalHoursVariants = cva(
+  "text-base font-medium lining-nums tabular-nums",
+  {
+    variants: {
+      status: {
+        "not-submitted": "",
+        approved: "text-ink-green-4",
+        rejected: "text-ink-red-4",
+        "approval-pending": "text-ink-amber-4",
+        none: "text-ink-green-4",
+      },
     },
-  },
-});
+  }
+);
 
 export const buttonVariants = cva("", {
   variants: {

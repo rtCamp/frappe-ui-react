@@ -55,12 +55,10 @@ export const TimeOffRow: React.FC<TimeOffRowProps> = ({
         return (
           <div
             key={index}
-            className="shrink-0 flex justify-end items-center text-base text-ink-gray-6 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5"
+            className="shrink-0 flex justify-end items-center text-base text-ink-gray-6 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5 lining-nums tabular-nums"
           >
             {timeOffEntry === "" ? (
-              <span className="flex-1 ml-1.5 text-center text-ink-gray-4">
-                -
-              </span>
+              <span className="flex-1 ml-2 text-center text-ink-gray-4">-</span>
             ) : (
               <span>{timeOffEntry}</span>
             )}
@@ -68,7 +66,7 @@ export const TimeOffRow: React.FC<TimeOffRowProps> = ({
         );
       })}
 
-      <div className="shrink-0 flex justify-end items-center text-base text-end font-medium text-ink-amber-4 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5">
+      <div className="shrink-0 flex justify-end items-center text-base text-end font-medium text-ink-amber-4 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5 lining-nums tabular-nums">
         <span>{totalHours}</span>
       </div>
 
