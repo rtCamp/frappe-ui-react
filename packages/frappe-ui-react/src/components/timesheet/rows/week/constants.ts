@@ -49,7 +49,7 @@ export const statusIcon: Record<
   },
 };
 
-export const totalHoursVariants = cva("", {
+export const totalHoursVariants = cva("text-base font-medium", {
   variants: {
     status: {
       "not-submitted": "text-ink-green-4",

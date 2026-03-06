@@ -84,12 +84,14 @@ const Sidebar: React.FC<SidebarProps> = ({
             })}
         </SidebarHeader>
       )}
-      {sections.map((section, index) => (
-        <React.Fragment key={`section-${index}`}>
-          <SidebarSection sidebarCollapsed={shouldCollapse} {...section} />
-          {index !== sections.length - 1 && <Divider className="h-1 mt-2" />}
-        </React.Fragment>
-      ))}
+      <div className="px-2">
+        {sections.map((section, index) => (
+          <React.Fragment key={`section-${index}`}>
+            <SidebarSection sidebarCollapsed={shouldCollapse} {...section} />
+            {index !== sections.length - 1 && <Divider className="h-1 mt-2" />}
+          </React.Fragment>
+        ))}
+      </div>
       <div className="mt-auto flex flex-col gap-2">
         {/* footer-items slot */}
         {children &&
