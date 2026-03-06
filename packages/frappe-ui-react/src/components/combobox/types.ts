@@ -20,4 +20,5 @@ export interface ComboboxProps {
     selectedOption?: SimpleOption | null
   ) => void;
   className?: string;
+  inputClassName?: string;
 }
