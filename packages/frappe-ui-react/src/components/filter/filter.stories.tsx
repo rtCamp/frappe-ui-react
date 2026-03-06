@@ -28,10 +28,6 @@ const meta: Meta<typeof Filter> = {
       action: "changed",
       description: "Callback when filters change",
     },
-    placeholder: {
-      control: "text",
-      description: "Placeholder text for filter button",
-    },
     maxFilters: {
       control: "number",
       description: "Maximum number of filters allowed",
@@ -144,7 +140,6 @@ export const Default: Story = {
   render: (args) => <FilterWithState {...args} />,
   args: {
     fields: sampleFields,
-    placeholder: "Filter",
   },
 };
 
@@ -152,7 +147,6 @@ export const WithInitialFilters: Story = {
   render: (args) => <FilterWithState {...args} />,
   args: {
     fields: sampleFields,
-    placeholder: "Filter",
     value: [
       {
         id: "1",
@@ -168,7 +162,6 @@ export const MultipleFilters: Story = {
   render: (args) => <FilterWithState {...args} />,
   args: {
     fields: sampleFields,
-    placeholder: "Filter",
     value: [
       {
         id: "1",
@@ -196,7 +189,6 @@ export const WithoutCount: Story = {
   render: (args) => <FilterWithState {...args} />,
   args: {
     fields: sampleFields,
-    placeholder: "Filter",
     showCount: false,
     value: [
       {
@@ -213,7 +205,6 @@ export const LimitedFilters: Story = {
   render: (args) => <FilterWithState {...args} />,
   args: {
     fields: sampleFields,
-    placeholder: "Filter",
     maxFilters: 3,
   },
 };
@@ -226,7 +217,6 @@ export const SimpleFields: Story = {
       { name: "email", label: "Email", type: "string" },
       { name: "age", label: "Age", type: "number" },
     ],
-    placeholder: "Filter",
   },
 };
 
@@ -234,7 +224,6 @@ export const DefaultOpen: Story = {
   render: (args) => <FilterWithState {...args} />,
   args: {
     fields: sampleFields,
-    placeholder: "Filter",
     defaultOpen: true,
   },
 };
