@@ -84,16 +84,14 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
           <div
             key={`${timeEntry}-${index}`}
             className={cn(
-              "shrink-0 flex justify-end items-center text-base text-ink-gray-6 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5",
+              "shrink-0 flex justify-end items-center text-base text-ink-gray-6 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5 lining-nums tabular-nums",
               highlightTimeEntries &&
                 timeEntry !== "" &&
                 "text-ink-gray-9 font-medium"
             )}
           >
             {timeEntry === "" ? (
-              <span className="flex-1 ml-1.5 text-center text-ink-gray-4">
-                -
-              </span>
+              <span className="flex-1 ml-2 text-center text-ink-gray-4">-</span>
             ) : (
               <span>{timeEntry}</span>
             )}
