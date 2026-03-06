@@ -49,7 +49,7 @@ const TabButtons = ({
         return (
           <Toggle
             className={cn(
-              "rounded-md px-2 outline-black group flex-1 h-6.5 w-full border border-transparent text-nowrap",
+              "rounded-md px-2 outline-black group flex-1 h-6.5 w-full border border-transparent text-nowrap text-center",
               "hover:bg-surface-gray-3",
               "data-pressed:bg-surface-white data-pressed:border-outline-gray-2 data-pressed:hover:bg-surface-gray-4",
               "disabled:text-ink-gray-5 disabled:hover:bg-surface-gray-2"
@@ -58,7 +58,7 @@ const TabButtons = ({
             value={button.value}
             disabled={button.disabled}
           >
-            <p className="flex h-4 items-center">{button.label}</p>
+            <p className="h-4 text-center">{button.label}</p>
           </Toggle>
         );
       })}
