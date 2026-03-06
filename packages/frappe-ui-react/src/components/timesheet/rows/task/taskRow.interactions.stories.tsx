@@ -189,7 +189,7 @@ export const CellInteractions: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const cellButtons = canvas.getAllByRole("button");
-    cellButtons.forEach((button) => console.log(button));
+
     expect(cellButtons[0]).toHaveTextContent("01:00");
     expect(cellButtons[1]).toHaveTextContent("-");
     expect(

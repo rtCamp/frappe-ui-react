@@ -100,7 +100,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({
                 render={
                   <Button
                     variant="ghost"
-                    className="w-14.25 relative group flex justify-center items-center !disabled:hover:bg-surface-gray-2 !disabled:focus:bg-surface-gray-2 !disabled:active:bg-surface-gray-3 disabled:cursor-default! lining-nums tabular-nums [&_span]:overflow-visible [&_span]:whitespace-normal"
+                    className="w-14.25 relative group flex justify-center items-center enabled:hover:bg-surface-gray-2 enabled:focus:bg-surface-gray-2 enabled:active:bg-surface-gray-3 disabled:cursor-default! lining-nums tabular-nums [&_span]:overflow-visible [&_span]:whitespace-normal"
                     disabled={timeEntry.disabled}
                     onClick={() => onCellClick?.(taskIndex, index)}
                   />
