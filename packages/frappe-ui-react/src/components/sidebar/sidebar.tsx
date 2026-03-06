@@ -1,10 +1,18 @@
+/**
+ * External dependencies.
+ */
 import React, { useState, useCallback } from "react";
 
+/**
+ * Internal dependencies.
+ */
 import SidebarHeader from "./sidebarHeader";
 import SidebarSection from "./sidebarSection";
-import SidebarItem from "./sidebarItem";
 import { useMediaQuery } from "./useMediaQuery";
 import { Divider } from "../divider";
+import { Button } from "../button";
+import { cn } from "../../utils";
+import Tooltip from "../tooltip/tooltip";
 import { MenuCollapse } from "../../icons";
 
 export type SidebarHeaderProps = {
@@ -84,14 +92,12 @@ const Sidebar: React.FC<SidebarProps> = ({
             })}
         </SidebarHeader>
       )}
-      <div className="px-2">
-        {sections.map((section, index) => (
-          <React.Fragment key={`section-${index}`}>
-            <SidebarSection sidebarCollapsed={shouldCollapse} {...section} />
-            {index !== sections.length - 1 && <Divider className="h-1 mt-2" />}
-          </React.Fragment>
-        ))}
-      </div>
+      {sections.map((section, index) => (
+        <React.Fragment key={`section-${index}`}>
+          <SidebarSection sidebarCollapsed={shouldCollapse} {...section} />
+          {index !== sections.length - 1 && <Divider className="h-1 mt-2" />}
+        </React.Fragment>
+      ))}
       <div className="mt-auto flex flex-col gap-2">
         {/* footer-items slot */}
         {children &&
@@ -102,20 +108,35 @@ const Sidebar: React.FC<SidebarProps> = ({
             }
             return false;
           })}
-        <SidebarItem
-          label={shouldCollapse ? "Expand" : "Collapse"}
-          onClick={() => !isMobile && setCollapsed(!isCollapsed)} // Prevent toggling on mobile
-          sidebarCollapsed={isCollapsed}
-          icon={
-            <span
-              className={`transition-transform duration-300 ease-in-out ${
-                shouldCollapse ? "rotate-180" : ""
-              }`}
-            >
-              <MenuCollapse className="size-4 text-ink-gray-6" />
-            </span>
-          }
-        />
+        <Button
+          className={cn("w-full justify-start py-1 px-4 text-ink-gray-6", {
+            "px-2": isCollapsed,
+          })}
+          onClick={() => setCollapsed(!isCollapsed)}
+          variant="ghost"
+          iconLeft={() => (
+            <Tooltip text="Collapse" placement="right" disabled={!isCollapsed}>
+              <MenuCollapse
+                className={cn(
+                  "min-w-4 w-4 text-ink-gray-6 transition-all ease-in-out duration-150",
+                  {
+                    "-rotate-180": isCollapsed,
+                  }
+                )}
+              />
+            </Tooltip>
+          )}
+        >
+          {!isCollapsed && (
+            <Tooltip text="Collapse" placement="right" hoverDelay={1.5}>
+              <span
+                className={`flex-1 flex-shrink-0 truncate text-sm transition-all ease-in-out`}
+              >
+                Collapse
+              </span>
+            </Tooltip>
+          )}
+        </Button>
       </div>
     </div>
   );

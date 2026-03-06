@@ -30,11 +30,11 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
     return items.map((item) => (
       <Button
         className={cn(
-          "w-full transition-all ease-in-out justify-start py-1 px-2",
+          "w-full transition-all ease-in-out justify-start py-1 px-4 text-ink-gray-6",
           {
             "!bg-surface-selected shadow-sm": item.isActive,
             "hover:bg-surface-gray-2": !item.isActive,
-            "px-0": sidebarCollapsed,
+            "px-2": sidebarCollapsed,
           }
         )}
         variant="ghost"
@@ -69,7 +69,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
     >
       <Collapsible.Trigger
         className={cn(
-          "relative flex items-center gap-1 px-2 py-1.5 cursor-pointer rounded-md focus:outline-none focus-visible:ring focus-visible:ring-outline-gray-3",
+          "relative flex items-center gap-1 px-4 py-1.5 cursor-pointer rounded-md focus:outline-none focus-visible:ring focus-visible:ring-outline-gray-3 text-ink-gray-6",
           {
             hidden: sidebarCollapsed,
           }
@@ -77,7 +77,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
       >
         {!sidebarCollapsed && (
           <span
-            className={`w-4 h-4 text-ink-gray-5 transition-all duration-300 ease-in-out ${
+            className={`w-4 h-4 transition-all duration-300 ease-in-out ${
               collapsed ? "" : "-rotate-90"
             }`}
           >
@@ -94,7 +94,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
           </div>
         )}
         <h3
-          className={`h-4 text-sm text-ink-gray-5 transition-all duration-300 ease-in-out ${
+          className={`h-4 text-sm transition-all duration-300 ease-in-out ${
             sidebarCollapsed
               ? "w-0 overflow-hidden opacity-0"
               : "w-auto opacity-100"
@@ -111,11 +111,11 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
         {items.map((item: any) => (
           <Button
             className={cn(
-              "w-full transition-all ease-in-out justify-start py-1 pl-6",
+              "w-full transition-all ease-in-out justify-start py-1 pl-6 text-ink-gray-6",
               {
                 "!bg-surface-selected shadow-sm": item.isActive,
                 "hover:bg-surface-gray-2": !item.isActive,
-                "px-0": sidebarCollapsed,
+                "px-2": sidebarCollapsed,
               }
             )}
             variant="ghost"

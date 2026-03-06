@@ -34,7 +34,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
     <Button
       label={label}
       onClick={handleClick}
-      className={`w-full flex justify-start items-center ${
+      className={`w-full flex justify-start items-center text-ink-gray-6  ${
         isActive ? "!bg-surface-selected shadow-sm" : "hover:bg-surface-gray-2"
       }`}
       variant="ghost"
