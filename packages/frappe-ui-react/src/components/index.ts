@@ -16,6 +16,7 @@ export * from "./divider";
 export * from "./dropdown";
 export * from "./errorMessage";
 export * from "./fileUploader";
+export * from "./filter";
 export * from "./formControl";
 export * from "./gridLayout";
 export * from "./hooks";
