@@ -30,7 +30,7 @@ const meta: Meta<TaskRowProps> = {
         "completed",
         "cancelled",
       ],
-      description: "Status of the timesheet for the task row.",
+      description: "Status of the task row.",
     },
     starred: {
       control: "boolean",

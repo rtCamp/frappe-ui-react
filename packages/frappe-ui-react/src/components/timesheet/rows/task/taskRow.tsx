@@ -37,7 +37,7 @@ export interface TaskRowProps {
   ) => React.ReactNode;
   /** Total hours logged for the week. */
   totalHours?: string;
-  /** Status of the timesheet for the task row. */
+  /** Status of the task row. */
   status?: TaskStatus;
   /** Additional class names for the task row container. */
   className?: string;
@@ -63,6 +63,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({
         className
       )}
       style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
+      data-testid="task-row"
     >
       <div className="min-w-0 flex flex-1 items-center">
         <div className="min-w-0 flex items-center gap-2">
@@ -94,29 +95,32 @@ export const TaskRow: React.FC<TaskRowProps> = ({
             className="shrink-0 flex justify-end items-center text-base text-ink-gray-6 whitespace-nowrap w-16 h-7 pl-2 py-1.5 leading-3.5"
           >
             <Popover.Root>
-              <Popover.Trigger openOnHover>
-                <Button
-                  variant="ghost"
-                  className="w-14.25 relative group flex justify-center items-center !disabled:hover:bg-surface-gray-2 !disabled:focus:bg-surface-gray-2 !disabled:active:bg-surface-gray-3 disabled:cursor-default! lining-nums tabular-nums [&_span]:overflow-visible [&_span]:whitespace-normal"
-                  disabled={timeEntry.disabled}
-                  onClick={() => onCellClick?.(taskIndex, index)}
-                >
-                  {timeEntry.time === "" ? (
-                    <>
-                      <span className="group-hover:hidden group-disabled:group-hover:flex flex-1 text-center text-ink-gray-4">
-                        -
-                      </span>
-                      <span className="group-hover:flex group-disabled:group-hover:hidden hidden absolute w-full h-full top-0 left-0 justify-center items-center">
-                        <Plus strokeWidth={1.5} size={16} className="" />
-                      </span>
-                    </>
-                  ) : (
-                    <span>{timeEntry.time}</span>
-                  )}
-                  {timeEntry.nonBillable ? (
-                    <span className="block absolute z-10 -bottom-0.5 left-1/2 w-1 h-1 rounded-full bg-surface-amber-3 transform -translate-x-1/2"></span>
-                  ) : null}
-                </Button>
+              <Popover.Trigger
+                openOnHover
+                render={
+                  <Button
+                    variant="ghost"
+                    className="w-14.25 relative group flex justify-center items-center !disabled:hover:bg-surface-gray-2 !disabled:focus:bg-surface-gray-2 !disabled:active:bg-surface-gray-3 disabled:cursor-default! lining-nums tabular-nums [&_span]:overflow-visible [&_span]:whitespace-normal"
+                    disabled={timeEntry.disabled}
+                    onClick={() => onCellClick?.(taskIndex, index)}
+                  />
+                }
+              >
+                {timeEntry.time === "" ? (
+                  <>
+                    <span className="group-hover:hidden group-disabled:group-hover:flex flex-1 text-center text-ink-gray-4">
+                      -
+                    </span>
+                    <span className="group-hover:flex group-disabled:group-hover:hidden hidden absolute w-full h-full top-0 left-0 justify-center items-center">
+                      <Plus strokeWidth={1.5} size={16} className="" />
+                    </span>
+                  </>
+                ) : (
+                  <span>{timeEntry.time}</span>
+                )}
+                {timeEntry.nonBillable ? (
+                  <span className="block absolute z-10 -bottom-0.5 left-1/2 w-1 h-1 rounded-full bg-surface-amber-3 transform -translate-x-1/2"></span>
+                ) : null}
               </Popover.Trigger>
               <Popover.Portal>
                 <Popover.Positioner sideOffset={8} align="end">
