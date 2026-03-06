@@ -75,7 +75,7 @@ export const TotalRow: React.FC<TotalRowProps> = ({
         return (
           <div
             key={index}
-            className="shrink-0 flex justify-end items-center text-base font-medium text-ink-gray-9 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5"
+            className="shrink-0 flex justify-end items-center text-base font-medium text-ink-gray-9 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5 lining-nums tabular-nums"
           >
             <span>{totalTimeEntry}</span>
           </div>

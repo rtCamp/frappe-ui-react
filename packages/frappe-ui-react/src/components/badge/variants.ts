@@ -7,8 +7,8 @@ export const badgeVariants = cva(
       theme: {
         gray: "text-ink-gray-6",
         blue: "text-ink-blue-2",
-        green: "text-ink-green-3",
-        orange: "text-ink-amber-3",
+        green: "text-ink-green-4",
+        orange: "text-ink-amber-4",
         red: "text-ink-red-4",
       },
       variant: {
@@ -27,8 +27,8 @@ export const badgeVariants = cva(
       { variant: "subtle", theme: "gray", className: "bg-surface-gray-2" },
       { variant: "subtle", theme: "blue", className: "bg-surface-blue-1" },
       { variant: "subtle", theme: "green", className: "bg-surface-green-2" },
-      { variant: "subtle", theme: "orange", className: "bg-surface-amber-1" },
-      { variant: "subtle", theme: "red", className: "bg-surface-red-1" },
+      { variant: "subtle", theme: "orange", className: "bg-surface-amber-2" },
+      { variant: "subtle", theme: "red", className: "bg-surface-red-2" },
       {
         variant: "solid",
         theme: "gray",

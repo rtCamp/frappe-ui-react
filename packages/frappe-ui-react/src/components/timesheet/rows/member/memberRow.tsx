@@ -22,40 +22,38 @@ import {
   statusLabel,
   type RowStatus,
 } from "../constants";
+import { Avatar } from "../../../avatar";
 
-export interface WeekRowProps {
-  /** Label for the week row. */
+export interface MemberRowProps {
+  /** Name of the member. */
   label?: string;
-  /** Nesting level for the week row, used for indentation. */
+  /** URL for the member's avatar image. */
+  avatarUrl?: string;
+  /** Nesting level for the member row, used for indentation. */
   nesting?: number;
-  /** Whether the week row is collapsed or expanded. */
+  /** Whether the member row is collapsed or expanded. */
   collapsed?: boolean;
-  /** Status of the timesheet for the week. */
+  /** Status of the timesheet for the member. */
   status?: RowStatus;
-  /** Whether the week row represents the current week. */
-  thisWeek?: boolean;
-  /** Callback function when the week row is toggled between collapsed and expanded. */
+  /** Callback function when the member row is toggled between collapsed and expanded. */
   onToggle?: () => void;
   /** Callback function when the action button is clicked. */
   onButtonClick?: () => void;
-  /** Array of date strings representing the days in the week. */
-  dates: string[];
-  /** The date string representing today's date, used for highlighting. */
-  today?: string;
+  /** Array of time entries for each day of the week for the member. */
+  timeEntries: string[];
   /** Total hours logged for the week. */
   totalHours?: string;
-  /** Additional class names for the week row container. */
+  /** Additional class names for the member row container. */
   className?: string;
 }
 
-export const WeekRow: React.FC<WeekRowProps> = ({
-  label = "This Week",
+export const MemberRow: React.FC<MemberRowProps> = ({
+  label,
+  avatarUrl,
   nesting = 0,
   collapsed = false,
   status = "not-submitted",
-  thisWeek = false,
-  dates,
-  today = "",
+  timeEntries,
   onToggle,
   onButtonClick,
   totalHours = "",
@@ -70,7 +68,7 @@ export const WeekRow: React.FC<WeekRowProps> = ({
         className
       )}
       style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
-      data-testid="week-row"
+      data-testid="member-row"
     >
       <div className="min-w-0 align-middle flex flex-1 items-center">
         <Button
@@ -82,9 +80,10 @@ export const WeekRow: React.FC<WeekRowProps> = ({
             collapsed ? "-rotate-90" : "rotate-0"
           )}
           icon={() => <ChevronDown strokeWidth={1.5} size={16} />}
-          aria-label="Toggle week"
+          aria-label="Toggle member"
         />
         <div className="min-w-0 flex items-center gap-2">
+          <Avatar image={avatarUrl} shape="circle" label={label} size="xs" />
           <span className="text-base font-medium text-ink-gray-9 truncate leading-3.5">
             {label}
           </span>
@@ -95,52 +94,37 @@ export const WeekRow: React.FC<WeekRowProps> = ({
           )}
         </div>
       </div>
-      {!collapsed &&
-        dates.map((date) => {
-          const monthAndDay = date.split(" ");
-          const isToday = thisWeek && date === today;
-          return (
-            <div
-              key={date}
-              className="shrink-0 flex justify-end items-center text-sm text-end text-ink-gray-5 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5"
-            >
-              <span>
-                {monthAndDay[0]}{" "}
-                <span
-                  className={cn(
-                    isToday &&
-                      "w-4.25 h-4.25 px-1 py-px rounded-sm bg-surface-red-5 text-ink-white"
-                  )}
-                >
-                  {monthAndDay[1]}
-                </span>
-              </span>
-            </div>
-          );
-        })}
-
-      {!(isStatusNone && collapsed) && (
-        <div className="shrink-0 flex justify-end items-center text-sm text-end text-ink-gray-5 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5">
-          <span
-            className={cn(
-              collapsed && totalHoursVariants({ status, thisWeek })
-            )}
+      {timeEntries.map((timeEntry, index) => {
+        return (
+          <div
+            key={index}
+            className="shrink-0 flex justify-end items-center text-base text-ink-gray-9 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5 lining-nums tabular-nums"
           >
-            {collapsed ? totalHours : "Total"}
-          </span>
-        </div>
-      )}
+            {timeEntry === "" ? (
+              <span className="flex-1 ml-2 text-center text-ink-gray-4">-</span>
+            ) : (
+              <span
+                className={cn(isStatusNone ? "text-ink-gray-6" : "font-medium")}
+              >
+                {timeEntry}
+              </span>
+            )}
+          </div>
+        );
+      })}
+
+      <div className="shrink-0 flex justify-end items-center text-sm text-end text-ink-gray-5 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5">
+        <span className={cn(totalHoursVariants({ status }))}>{totalHours}</span>
+      </div>
 
       <div className="shrink-0 w-12 h-7 flex justify-end items-center whitespace-nowrap">
-        {!isStatusNone ? (
+        {!isStatusNone && statusIcon[status]?.icon ? (
           <Button
             onClick={onButtonClick}
             className={cn(
               buttonVariants({
                 status,
-                thisWeek,
                 variant: statusIcon[status]?.variant,
-                collapsed,
               })
             )}
             variant={statusIcon[status]?.variant}
@@ -149,7 +133,6 @@ export const WeekRow: React.FC<WeekRowProps> = ({
               const IconComponent = statusIcon[status]?.icon;
               return IconComponent ? <IconComponent size={16} /> : null;
             }}
-            aria-label="Submit week"
             title={statusLabel[status]}
           />
         ) : null}
