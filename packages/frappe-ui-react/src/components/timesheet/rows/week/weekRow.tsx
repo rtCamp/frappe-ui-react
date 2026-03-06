@@ -70,6 +70,7 @@ export const WeekRow: React.FC<WeekRowProps> = ({
         className
       )}
       style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
+      data-testid="week-row"
     >
       <div className="min-w-0 align-middle flex flex-1 items-center">
         <Button
@@ -84,7 +85,7 @@ export const WeekRow: React.FC<WeekRowProps> = ({
           aria-label="Toggle week"
         />
         <div className="min-w-0 flex items-center gap-2">
-          <span className="text-sm font-semibold text-ink-gray-9 truncate leading-3.5">
+          <span className="text-base font-medium text-ink-gray-9 truncate leading-3.5">
             {label}
           </span>
           {status !== "none" && (
@@ -101,7 +102,7 @@ export const WeekRow: React.FC<WeekRowProps> = ({
           return (
             <div
               key={date}
-              className="shrink-0 flex justify-end items-center align-middle w-16 h-7 text-sm text-end text-ink-gray-5 whitespace-nowrap px-2 py-1.5 leading-3.5"
+              className="shrink-0 flex justify-end items-center text-sm text-end text-ink-gray-5 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5"
             >
               <span>
                 {monthAndDay[0]}{" "}
@@ -119,10 +120,9 @@ export const WeekRow: React.FC<WeekRowProps> = ({
         })}
 
       {!(isStatusNone && collapsed) && (
-        <div className="shrink-0 flex items-center justify-center text-end align-middle w-16 h-7 px-2 py-1.5">
+        <div className="shrink-0 flex justify-end items-center text-sm text-end text-ink-gray-5 whitespace-nowrap w-16 h-7 px-2 py-1.5 leading-3.5">
           <span
             className={cn(
-              "w-full text-sm text-ink-gray-5 whitespace-nowrap leading-3.5",
               collapsed && totalHoursVariants({ status, thisWeek })
             )}
           >
@@ -131,7 +131,7 @@ export const WeekRow: React.FC<WeekRowProps> = ({
         </div>
       )}
 
-      <div className="shrink-0 align-middle w-12 h-7 flex justify-end items-center whitespace-nowrap">
+      <div className="shrink-0 w-12 h-7 flex justify-end items-center whitespace-nowrap">
         {!isStatusNone ? (
           <Button
             onClick={onButtonClick}

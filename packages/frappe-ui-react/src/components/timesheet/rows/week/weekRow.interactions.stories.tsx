@@ -110,7 +110,7 @@ export const Toggle: Story = {
     const canvas = within(canvasElement);
     const getDateCells = () =>
       canvasElement.querySelectorAll(
-        ".shrink-0.align-middle.w-16.text-sm.text-end"
+        '[data-testid="week-row"] > div:nth-child(n+2):nth-last-child(n+3)'
       );
     // Expanded: 7 date cells visible
     expect(getDateCells()).toHaveLength(7);
