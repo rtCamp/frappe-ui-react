@@ -16,10 +16,6 @@ const meta: Meta<TaskRowProps> = {
       control: "text",
       description: "Label for the task row.",
     },
-    nesting: {
-      control: "number",
-      description: "Nesting level for the task row, used for indentation.",
-    },
     status: {
       control: "select",
       options: [
@@ -78,7 +74,6 @@ export const Default: Story = {
     totalHours: "11:30",
     starred: true,
     status: "open",
-    nesting: 2,
     timeEntries: [
       { time: "01:15" },
       { time: "02:00", nonBillable: true },
@@ -106,7 +101,6 @@ const TASKS: TaskRowProps[] = [
     label: "UI Responsiveness Testing",
     totalHours: "11:30",
     status: "open",
-    nesting: 2,
     timeEntries: [
       { time: "01:15" },
       { time: "02:00" },
@@ -122,7 +116,6 @@ const TASKS: TaskRowProps[] = [
     totalHours: "11:30",
     starred: true,
     status: "working",
-    nesting: 2,
     timeEntries: [
       { time: "01:15" },
       { time: "02:00", nonBillable: true },
@@ -137,7 +130,6 @@ const TASKS: TaskRowProps[] = [
     label: "UI Responsiveness Testing",
     totalHours: "11:30",
     status: "pending-rev",
-    nesting: 2,
     timeEntries: [
       { time: "01:15" },
       { time: "02:00" },
@@ -152,7 +144,6 @@ const TASKS: TaskRowProps[] = [
     label: "UI Responsiveness Testing",
     totalHours: "11:30",
     status: "overdue",
-    nesting: 2,
     timeEntries: [
       { time: "01:15" },
       { time: "02:00" },
@@ -167,7 +158,6 @@ const TASKS: TaskRowProps[] = [
     label: "UI Responsiveness Testing",
     totalHours: "11:30",
     status: "completed",
-    nesting: 2,
     timeEntries: [
       { time: "01:15" },
       { time: "02:00" },
@@ -182,7 +172,6 @@ const TASKS: TaskRowProps[] = [
     label: "UI Responsiveness Testing",
     totalHours: "11:30",
     status: "cancelled",
-    nesting: 2,
     timeEntries: [
       { time: "01:15" },
       { time: "02:00" },

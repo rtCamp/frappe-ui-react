@@ -9,13 +9,11 @@ import { ChevronDown, Folder } from "lucide-react";
 import { Button } from "../../../button";
 import { cn } from "../../../../utils";
 import { totalHoursVariants } from "./constants";
-import { BASE_PADDING, NESTING_OFFSET, type RowStatus } from "../constants";
+import { type RowStatus } from "../constants";
 
 export interface ProjectRowProps {
   /** Label for the project row. */
   label?: string;
-  /** Nesting level for the project row, used for indentation. */
-  nesting?: number;
   /** Whether the project row is collapsed or expanded. */
   collapsed?: boolean;
   /** Callback function when the project row is toggled between collapsed and expanded. */
@@ -36,7 +34,6 @@ export interface ProjectRowProps {
 
 export const ProjectRow: React.FC<ProjectRowProps> = ({
   label,
-  nesting = 0,
   collapsed = false,
   onToggle,
   timeEntries,
@@ -52,7 +49,6 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({
         "flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-1 py-2",
         className
       )}
-      style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
     >
       <div className="min-w-0 flex flex-1 items-center gap-2">
         <Button

@@ -16,18 +16,11 @@ import {
   statusTheme,
   totalHoursVariants,
 } from "./constants";
-import {
-  BASE_PADDING,
-  NESTING_OFFSET,
-  statusLabel,
-  type RowStatus,
-} from "../constants";
+import { statusLabel, type RowStatus } from "../constants";
 
 export interface WeekRowProps {
   /** Label for the week row. */
   label?: string;
-  /** Nesting level for the week row, used for indentation. */
-  nesting?: number;
   /** Whether the week row is collapsed or expanded. */
   collapsed?: boolean;
   /** Status of the timesheet for the week. */
@@ -50,7 +43,6 @@ export interface WeekRowProps {
 
 export const WeekRow: React.FC<WeekRowProps> = ({
   label = "This Week",
-  nesting = 0,
   collapsed = false,
   status = "not-submitted",
   thisWeek = false,
@@ -69,7 +61,6 @@ export const WeekRow: React.FC<WeekRowProps> = ({
         "flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-1 py-2",
         className
       )}
-      style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
       data-testid="week-row"
     >
       <div className="min-w-0 align-middle flex flex-1 items-center gap-2">

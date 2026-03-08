@@ -15,15 +15,12 @@ import {
   type TaskRowTimeEntry,
   type TaskStatus,
 } from "./constants";
-import { BASE_PADDING, NESTING_OFFSET } from "../constants";
 
 export interface TaskRowProps {
   /** Optional index of the task, used for identifying the task in callbacks. */
   taskIndex?: number;
   /** Label for the task row. */
   label?: string;
-  /** Nesting level for the task row, used for indentation. */
-  nesting?: number;
   /** Whether the task row is starred. */
   starred?: boolean;
   /** Array of time entries for each day of the week for the task. */
@@ -46,7 +43,6 @@ export interface TaskRowProps {
 export const TaskRow: React.FC<TaskRowProps> = ({
   taskIndex,
   label,
-  nesting = 0,
   starred = false,
   timeEntries,
   onCellClick,
@@ -62,7 +58,6 @@ export const TaskRow: React.FC<TaskRowProps> = ({
         "flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-1 py-2",
         className
       )}
-      style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
       data-testid="task-row"
     >
       <div className="min-w-0 flex flex-1 items-center">

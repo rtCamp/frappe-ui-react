@@ -14,10 +14,6 @@ const meta: Meta<MemberRowProps> = {
       control: "text",
       description: "Name of the member.",
     },
-    nesting: {
-      control: "number",
-      description: "Nesting level for the member row, used for indentation.",
-    },
     collapsed: {
       control: "boolean",
       description: "Whether the member row is collapsed or expanded.",

@@ -18,10 +18,6 @@ const meta: Meta<TaskRowProps> = {
       control: "text",
       description: "Label for the task row.",
     },
-    nesting: {
-      control: "number",
-      description: "Nesting level for the task row, used for indentation.",
-    },
     status: {
       control: "select",
       options: [
@@ -80,42 +76,36 @@ export const StatusVariants: Story = {
         timeEntries={TIME_ENTRIES}
         totalHours="11:30"
         status="open"
-        nesting={0}
       />
       <TaskRow
         label="Working"
         timeEntries={TIME_ENTRIES}
         totalHours="11:30"
         status="working"
-        nesting={1}
       />
       <TaskRow
         label="Pending Review"
         timeEntries={TIME_ENTRIES}
         totalHours="11:30"
         status="pending-rev"
-        nesting={2}
       />
       <TaskRow
         label="Overdue"
         timeEntries={TIME_ENTRIES}
         totalHours="11:30"
         status="overdue"
-        nesting={3}
       />
       <TaskRow
         label="Completed"
         timeEntries={TIME_ENTRIES}
         totalHours="11:30"
         status="completed"
-        nesting={4}
       />
       <TaskRow
         label="Cancelled"
         timeEntries={TIME_ENTRIES}
         totalHours="11:30"
         status="cancelled"
-        nesting={5}
       />
     </div>
   ),
@@ -153,14 +143,6 @@ export const StatusVariants: Story = {
     expect(rows[5].querySelector("svg.lucide-circle-x")).toHaveClass(
       "text-ink-gray-9"
     );
-
-    // Nesting
-    expect(rows[0]).toHaveStyle({ paddingLeft: "4px" });
-    expect(rows[1]).toHaveStyle({ paddingLeft: "14px" });
-    expect(rows[2]).toHaveStyle({ paddingLeft: "24px" });
-    expect(rows[3]).toHaveStyle({ paddingLeft: "34px" });
-    expect(rows[4]).toHaveStyle({ paddingLeft: "44px" });
-    expect(rows[5]).toHaveStyle({ paddingLeft: "54px" });
   },
 };
 

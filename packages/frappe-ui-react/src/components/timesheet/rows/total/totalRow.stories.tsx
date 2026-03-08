@@ -7,10 +7,6 @@ const meta: Meta<TotalRowProps> = {
   component: TotalRow,
   parameters: { docs: { source: { type: "dynamic" } } },
   argTypes: {
-    nesting: {
-      control: "number",
-      description: "Nesting level for the total row, used for indentation.",
-    },
     status: {
       control: "select",
       options: [
@@ -49,7 +45,6 @@ export const Default: Story = {
   args: {
     totalHours: "44:30",
     status: "approved",
-    nesting: 2,
     breadcrumbs: {
       items: [
         { label: "Projects", interactive: false },
