@@ -67,7 +67,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({
     >
       <div className="min-w-0 flex flex-1 items-center">
         <div className="min-w-0 flex items-center gap-2">
-          <span className="shrink-0">
+          <span className="w-4 shrink-0">
             <StatusIcon
               strokeWidth={1.5}
               size={16}
@@ -78,7 +78,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({
             {label}
           </span>
           {starred ? (
-            <span className="shrink-0">
+            <span className="w-4 shrink-0">
               <Star
                 strokeWidth={1.5}
                 size={16}
