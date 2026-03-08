@@ -70,13 +70,13 @@ export const MemberRow: React.FC<MemberRowProps> = ({
       style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
       data-testid="member-row"
     >
-      <div className="min-w-0 align-middle flex flex-1 items-center">
+      <div className="min-w-0 align-middle flex flex-1 items-center gap-2">
         <Button
           onClick={onToggle}
           disabled={!onToggle}
           variant="ghost"
           className={cn(
-            "shrink-0 border-none outline-none focus:ring-0 focus-visible:ring-0 transition-transform bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent",
+            "w-4 shrink-0 border-none outline-none focus:ring-0 focus-visible:ring-0 transition-transform bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent",
             collapsed ? "-rotate-90" : "rotate-0"
           )}
           icon={() => <ChevronDown strokeWidth={1.5} size={16} />}

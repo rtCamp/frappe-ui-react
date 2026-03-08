@@ -1,4 +1,4 @@
-export const NESTING_OFFSET = 10;
+export const NESTING_OFFSET = 8;
 export const BASE_PADDING = 4;
 
 export type RowStatus =

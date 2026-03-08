@@ -50,7 +50,7 @@ export const TotalRow: React.FC<TotalRowProps> = ({
     >
       <div className="min-w-0 flex flex-1 items-center">
         <div className="min-w-0 flex items-center text-ink-gray-9 gap-2">
-          <span className="shrink-0">
+          <span className="w-4 shrink-0 flex justify-center items-center">
             {renderPrefix ? (
               renderPrefix()
             ) : starred ? (

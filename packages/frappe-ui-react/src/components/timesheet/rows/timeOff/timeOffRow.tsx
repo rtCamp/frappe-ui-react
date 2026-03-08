@@ -41,8 +41,8 @@ export const TimeOffRow: React.FC<TimeOffRowProps> = ({
       style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
       data-testid="time-off-row"
     >
-      <div className="min-w-0 flex flex-1 items-center text-ink-gray-9">
-        <span className="shrink-0 px-2 py-1.5">
+      <div className="min-w-0 flex flex-1 items-center text-ink-gray-9 gap-2">
+        <span className="w-4 shrink-0">
           {renderPrefix ? (
             renderPrefix()
           ) : (
