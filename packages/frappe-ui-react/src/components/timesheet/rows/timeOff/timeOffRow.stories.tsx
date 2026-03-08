@@ -11,10 +11,6 @@ const meta: Meta<TimeOffRowProps> = {
       control: "text",
       description: "Label for the time-off row.",
     },
-    nesting: {
-      control: "number",
-      description: "Nesting level for the time-off row, used for indentation.",
-    },
     totalHours: {
       control: "text",
       description: "Total time-off hours logged for the week.",
@@ -41,7 +37,6 @@ export const Default: Story = {
   args: {
     label: "Time-off",
     totalHours: "04:00",
-    nesting: 2,
     timeOffEntries: ["", "04:00", "", "", "", "", ""],
   },
   render: (args) => (

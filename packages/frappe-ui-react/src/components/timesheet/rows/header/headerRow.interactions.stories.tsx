@@ -70,20 +70,3 @@ export const BreadcrumbsRender: Story = {
     }
   },
 };
-
-export const Nesting: Story = {
-  render: () => (
-    <div className="w-295 p-4 space-y-1">
-      <HeaderRow breadcrumbs={BREADCRUMBS} days={DAYS} nesting={0} />
-      <HeaderRow breadcrumbs={BREADCRUMBS} days={DAYS} nesting={1} />
-      <HeaderRow breadcrumbs={BREADCRUMBS} days={DAYS} nesting={3} />
-    </div>
-  ),
-  play: async ({ canvasElement }) => {
-    const rows = canvasElement.querySelectorAll('[data-testid="header-row"]');
-
-    expect(rows[0]).toHaveStyle({ paddingLeft: "4px" });
-    expect(rows[1]).toHaveStyle({ paddingLeft: "14px" });
-    expect(rows[2]).toHaveStyle({ paddingLeft: "34px" });
-  },
-};

@@ -16,12 +16,7 @@ import {
   statusTheme,
   totalHoursVariants,
 } from "./constants";
-import {
-  BASE_PADDING,
-  NESTING_OFFSET,
-  statusLabel,
-  type RowStatus,
-} from "../constants";
+import { statusLabel, type RowStatus } from "../constants";
 import { Avatar } from "../../../avatar";
 
 export interface MemberRowProps {
@@ -29,8 +24,6 @@ export interface MemberRowProps {
   label?: string;
   /** URL for the member's avatar image. */
   avatarUrl?: string;
-  /** Nesting level for the member row, used for indentation. */
-  nesting?: number;
   /** Whether the member row is collapsed or expanded. */
   collapsed?: boolean;
   /** Status of the timesheet for the member. */
@@ -50,7 +43,6 @@ export interface MemberRowProps {
 export const MemberRow: React.FC<MemberRowProps> = ({
   label,
   avatarUrl,
-  nesting = 0,
   collapsed = false,
   status = "not-submitted",
   timeEntries,
@@ -67,7 +59,6 @@ export const MemberRow: React.FC<MemberRowProps> = ({
         "flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-1 py-2",
         className
       )}
-      style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
       data-testid="member-row"
     >
       <div className="min-w-0 align-middle flex flex-1 items-center gap-2">

@@ -13,10 +13,6 @@ const meta: Meta<ProjectRowProps> = {
       control: "text",
       description: "Label for the project row.",
     },
-    nesting: {
-      control: "number",
-      description: "Nesting level for the project row, used for indentation.",
-    },
     collapsed: {
       control: "boolean",
       description: "Whether the project row is collapsed or expanded.",
@@ -71,7 +67,6 @@ export const Default: Story = {
     collapsed: false,
     totalHours: "42:00",
     status: "approved",
-    nesting: 2,
     timeEntries: [
       "05:30",
       "06:45",
@@ -101,7 +96,6 @@ export const Variants: Story = {
     collapsed: false,
     totalHours: "42:00",
     status: "approved",
-    nesting: 2,
     timeEntries: [
       "05:30",
       "06:45",

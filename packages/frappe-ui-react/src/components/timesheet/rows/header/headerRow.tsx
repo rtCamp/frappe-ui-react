@@ -3,13 +3,10 @@
  */
 import { Breadcrumbs, type BreadcrumbsProps } from "../../../breadcrumbs";
 import { cn } from "../../../../utils";
-import { BASE_PADDING, NESTING_OFFSET } from "../constants";
 
 export interface HeaderRowProps {
   /** Props configuration for the Breadcrumbs component displayed in the header row. */
   breadcrumbs: BreadcrumbsProps;
-  /** Nesting level for the week row, used for indentation. */
-  nesting?: number;
   /** Array of day labels for each day of the week. */
   days: string[];
   /** Additional class names for the header row container. */
@@ -18,7 +15,6 @@ export interface HeaderRowProps {
 
 export const HeaderRow: React.FC<HeaderRowProps> = ({
   breadcrumbs,
-  nesting = 0,
   days,
   className,
 }) => {
@@ -28,7 +24,6 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
         "flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-1 h-7",
         className
       )}
-      style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
       data-testid="header-row"
     >
       <div className="shrink-0 flex flex-1 items-center">
