@@ -8,12 +8,10 @@ import { Star, StarOff } from "lucide-react";
  */
 import { cn } from "../../../../utils";
 import { totalHoursVariants } from "./constants";
-import { BASE_PADDING, NESTING_OFFSET, type RowStatus } from "../constants";
+import { type RowStatus } from "../constants";
 import { Breadcrumbs, type BreadcrumbsProps } from "../../../breadcrumbs";
 
 export interface TotalRowProps {
-  /** Nesting level for the total row, used for indentation. */
-  nesting?: number;
   /** Props configuration for the Breadcrumbs component displayed in the total row. */
   breadcrumbs: BreadcrumbsProps;
   /** Whether the total row is starred or not. */
@@ -31,7 +29,6 @@ export interface TotalRowProps {
 }
 
 export const TotalRow: React.FC<TotalRowProps> = ({
-  nesting = 0,
   breadcrumbs,
   starred = false,
   totalTimeEntries,
@@ -46,11 +43,10 @@ export const TotalRow: React.FC<TotalRowProps> = ({
         "flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-1 py-2",
         className
       )}
-      style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
     >
       <div className="min-w-0 flex flex-1 items-center">
         <div className="min-w-0 flex items-center text-ink-gray-9 gap-2">
-          <span className="shrink-0">
+          <span className="w-4 shrink-0 flex justify-center items-center">
             {renderPrefix ? (
               renderPrefix()
             ) : starred ? (

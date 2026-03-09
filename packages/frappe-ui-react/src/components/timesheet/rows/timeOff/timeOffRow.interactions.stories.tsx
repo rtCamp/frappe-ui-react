@@ -13,10 +13,6 @@ const meta: Meta<TimeOffRowProps> = {
       control: "text",
       description: "Label for the time-off row.",
     },
-    nesting: {
-      control: "number",
-      description: "Nesting level for the time-off row, used for indentation.",
-    },
     totalHours: {
       control: "text",
       description: "Total time-off hours logged for the week.",
@@ -84,22 +80,5 @@ export const PrefixIcon: Story = {
     expect(
       rows[1].querySelector("svg.lucide-calendar-x-2")
     ).not.toBeInTheDocument();
-  },
-};
-
-export const Nesting: Story = {
-  render: () => (
-    <div className="w-295 p-4 space-y-1">
-      <TimeOffRow timeOffEntries={ENTRIES} totalHours={TOTAL} nesting={0} />
-      <TimeOffRow timeOffEntries={ENTRIES} totalHours={TOTAL} nesting={1} />
-      <TimeOffRow timeOffEntries={ENTRIES} totalHours={TOTAL} nesting={3} />
-    </div>
-  ),
-  play: async ({ canvasElement }) => {
-    const rows = canvasElement.querySelectorAll('[data-testid="time-off-row"]');
-
-    expect(rows[0]).toHaveStyle({ paddingLeft: "4px" });
-    expect(rows[1]).toHaveStyle({ paddingLeft: "14px" });
-    expect(rows[2]).toHaveStyle({ paddingLeft: "34px" });
   },
 };

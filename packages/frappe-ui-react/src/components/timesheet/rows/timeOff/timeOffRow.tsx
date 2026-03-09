@@ -7,13 +7,10 @@ import { CalendarX2 } from "lucide-react";
  * Internal dependencies.
  */
 import { cn } from "../../../../utils";
-import { BASE_PADDING, NESTING_OFFSET } from "../constants";
 
 export interface TimeOffRowProps {
   /** Label for the time-off row. */
   label?: string;
-  /** Nesting level for the time-off row, used for indentation. */
-  nesting?: number;
   /** Array of time-off entries for each day of the week. */
   timeOffEntries: string[];
   /** Total time-off hours logged for the week. */
@@ -26,7 +23,6 @@ export interface TimeOffRowProps {
 
 export const TimeOffRow: React.FC<TimeOffRowProps> = ({
   label = "Time-off",
-  nesting = 0,
   timeOffEntries,
   totalHours = "",
   renderPrefix,
@@ -38,11 +34,10 @@ export const TimeOffRow: React.FC<TimeOffRowProps> = ({
         "flex items-center border-b border-outline-gray-1 transition-colors w-full justify-between px-1 py-2",
         className
       )}
-      style={{ paddingLeft: `${BASE_PADDING + nesting * NESTING_OFFSET}px` }}
       data-testid="time-off-row"
     >
-      <div className="min-w-0 flex flex-1 items-center text-ink-gray-9">
-        <span className="shrink-0 px-2 py-1.5">
+      <div className="min-w-0 flex flex-1 items-center text-ink-gray-9 gap-2">
+        <span className="w-4 shrink-0">
           {renderPrefix ? (
             renderPrefix()
           ) : (
