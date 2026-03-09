@@ -82,6 +82,8 @@ export interface FilterProps {
   showCount?: boolean;
   /** Whether the filter panel is open by default */
   defaultOpen?: boolean;
+  /** Popover alignment relative to the trigger */
+  align?: "start" | "center" | "end";
 }
 
 /** Props for FilterRow component (internal) */

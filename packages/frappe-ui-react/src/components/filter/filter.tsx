@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { ListFilter, Plus } from "lucide-react";
+import { ListFilter, Plus, ChevronDown } from "lucide-react";
 import { Popover } from "@base-ui/react/popover";
 import { Button } from "../button";
 import { FilterRow } from "./filterRow";
@@ -17,6 +17,7 @@ export const Filter: React.FC<FilterProps> = ({
   maxFilters = 10,
   showCount = true,
   defaultOpen = false,
+  align = "center",
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -79,7 +80,7 @@ export const Filter: React.FC<FilterProps> = ({
   );
 
   return (
-    <div className={cn("inline-flex items-center ", className)}>
+    <div className={cn("inline-flex items-center", className)}>
       <Popover.Root open={isOpen} onOpenChange={handleOpenChange}>
         <Popover.Trigger
           render={
@@ -88,13 +89,18 @@ export const Filter: React.FC<FilterProps> = ({
               iconLeft={() => (
                 <ListFilter size={16} className="text-ink-gray-7" />
               )}
-              className={cn({
-                "rounded-r-none": hasFilters,
+              iconRight={
+                !hasFilters
+                  ? () => <ChevronDown size={16} className="text-ink-gray-5" />
+                  : undefined
+              }
+              className={cn("gap-2", {
+                "rounded-r-none border-r-0": hasFilters,
               })}
             >
               Filter
               {showCount && hasFilters && (
-                <span className="ml-1 px-1.5 py-0.5 text-xs bg-white rounded-sm shadow-xl">
+                <span className="ml-2 px-1.5 py-0.5 text-xs bg-white rounded-sm shadow-sm">
                   {filterCount}
                 </span>
               )}
@@ -103,12 +109,12 @@ export const Filter: React.FC<FilterProps> = ({
         />
 
         <Popover.Portal>
-          <Popover.Positioner sideOffset={4}>
+          <Popover.Positioner sideOffset={4} align={align}>
             <Popover.Popup
-              className={`
-                bg-surface-modal border border-outline-gray-1 rounded-lg shadow-xl
-                p-3 min-w-100 max-w-150 animate-fade-in z-100
-              `}
+              className={cn(
+                "bg-surface-modal border border-outline-gray-1 rounded-lg shadow-xl",
+                "p-3 min-w-100 max-w-150 a nimate-fade-in z-100"
+              )}
             >
               <div className="space-y-1">
                 {value.map((filter, index) => (
@@ -127,10 +133,10 @@ export const Filter: React.FC<FilterProps> = ({
               {value.length < maxFilters && (
                 <button
                   onClick={handleAddFilter}
-                  className={`
-                    flex items-center gap-1.5 text-sm text-ink-gray-5 
-                    hover:text-ink-gray-7 mt-2 py-1 transition-colors
-                  `}
+                  className={cn(
+                    "flex items-center gap-1.5 text-sm text-ink-gray-5",
+                    "hover:text-ink-gray-7 mt-2 py-1 transition-colors"
+                  )}
                 >
                   <Plus className="h-4 w-4" />
                   Add filter
@@ -147,7 +153,7 @@ export const Filter: React.FC<FilterProps> = ({
           icon="x"
           size="sm"
           onClick={handleClearAll}
-          className="rounded-l-none border-l-0"
+          className="rounded-l-none border-l border-l-outline-gray-2"
           aria-label="Clear all filters"
         />
       )}
