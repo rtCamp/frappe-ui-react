@@ -38,6 +38,7 @@ export { default as TaskStatus } from "./taskStatus";
 export * from "./textInput";
 export * from "./textarea";
 export * from "./textEditor";
+export * from "./timesheet";
 export * from "./toast";
 export * from "./tooltip";
 export * from "./tree";

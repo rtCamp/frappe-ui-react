@@ -53,7 +53,7 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ["Getting Started", "Theme", "Components"],
+        order: ["Getting Started", "DesignSystem", "Theme", "Components"],
       },
     },
   },

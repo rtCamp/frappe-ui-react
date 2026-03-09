@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import Autocomplete from "./autoComplete";
@@ -164,6 +164,7 @@ export const SingleOptionWithPrefixSlots: Story = {
             setValue(_value as string);
           }}
           options={options}
+          //@ts-expect-error -- this is fine since we have specified object type in docuementation
           compareFn={(a, b) => a?.value === b?.value}
         />
       </div>
@@ -188,6 +189,7 @@ export const SingleOptionWithoutSearch: Story = {
             setValues(_value as string[]);
           }}
           options={options}
+          //@ts-expect-error -- this is fine since we have specified object type in docuementation
           compareFn={(a, b) => a?.value === b?.value}
         />
       </div>

@@ -28,6 +28,29 @@ export default {
       control: "text",
       description: "Custom trigger element for the dropdown.",
     },
+    dropdownClassName: {
+      control: "text",
+      description: "Additional class name for the dropdown content.",
+    },
+    groupClassName: {
+      control: "text",
+      description: "Additional class name for dropdown groups.",
+    },
+    renderItems: {
+      control: false,
+      description:
+        "Function to render custom dropdown items, receives options as argument.",
+    },
+    selectedKey: {
+      control: "text",
+      description:
+        "Key of the currently selected dropdown item, used for highlighting.",
+    },
+    selectedGroupKey: {
+      control: "text",
+      description:
+        "Key of the currently selected dropdown group, used for highlighting.",
+    },
   },
   parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   tags: ["autodocs"],

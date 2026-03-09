@@ -1,10 +1,17 @@
-import { Radio, RadioGroup } from "@headlessui/react";
+/**
+ * External dependencies.
+ */
+import { Toggle } from "@base-ui/react/toggle";
+import { ToggleGroup } from "@base-ui/react/toggle-group";
 
-import { Button } from "../button";
+/**
+ * Internal dependencies.
+ */
+import { cn } from "../../utils";
 
 interface TabButtonItem {
   label: string;
-  value: string | number;
+  value: string;
   disabled?: boolean;
   hideLabel?: boolean;
   onClick?: () => void;
@@ -14,8 +21,8 @@ interface TabButtonItem {
 
 interface TabButtonsProps {
   buttons: TabButtonItem[];
-  value: string | number;
-  onChange: (value: string | number) => void;
+  value: string;
+  onChange: (value: string) => void;
   className?: string;
 }
 
@@ -26,50 +33,36 @@ const TabButtons = ({
   className = "",
 }: TabButtonsProps) => {
   return (
-    <RadioGroup value={value} onChange={onChange} className={className}>
-      <div className="flex space-x-0.5 rounded-md bg-surface-gray-2 h-7 items-center px-[1px] text-sm border border-gray-200">
-        {buttons.map((button) => (
-          <Radio
-            key={button.value || button.label}
-            value={button.value || button.label}
-            disabled={button.disabled}
-            className="focus:outline-none group"
-          >
-            {({ checked, focus }) => (
-              <Button
-                onClick={button.onClick}
-                disabled={button.disabled}
-                {...Object.fromEntries(
-                  Object.entries(button).filter(
-                    ([key]) =>
-                      ![
-                        "value",
-                        "disabled",
-                        "label",
-                        "hideLabel",
-                        "onClick",
-                      ].includes(key)
-                  )
-                )}
-                className={`!h-6.5 ${
-                  focus ? "ring-outline-gray-2 focus-visible:ring" : ""
-                } ${checked ? "!bg-surface-white" : ""} ${
-                  button.disabled
-                    ? ""
-                    : checked
-                      ? "text-ink-gray-9 shadow"
-                      : "!text-ink-gray-5"
-                } cursor-pointer`}
-              >
-                {!button.hideLabel && button.label && (
-                  <span className="flex h-4 items-center">{button.label}</span>
-                )}
-              </Button>
+    <ToggleGroup
+      value={[value]}
+      onValueChange={(val) => {
+        if (val[0]) {
+          onChange(val[0]);
+        }
+      }}
+      className={cn(
+        "flex space-x-0.5 rounded-md bg-surface-gray-2 h-7 items-center text-base border border-outline-gray-2",
+        className
+      )}
+    >
+      {buttons.map((button) => {
+        return (
+          <Toggle
+            className={cn(
+              "rounded-md px-2 outline-black group flex-1 h-6.5 w-full border border-transparent text-nowrap text-center",
+              "hover:bg-surface-gray-3",
+              "data-pressed:bg-surface-white data-pressed:border-outline-gray-2 data-pressed:hover:bg-surface-gray-4",
+              "disabled:text-ink-gray-5 disabled:hover:bg-surface-gray-2"
             )}
-          </Radio>
-        ))}
-      </div>
-    </RadioGroup>
+            aria-label={button.label}
+            value={button.value}
+            disabled={button.disabled}
+          >
+            <p className="h-4 text-center">{button.label}</p>
+          </Toggle>
+        );
+      })}
+    </ToggleGroup>
   );
 };
 

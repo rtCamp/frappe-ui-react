@@ -22,7 +22,7 @@ const ListViewFooter = ({ left, right, onLoadMore }: ListViewFooterProps) => {
   const pageLengthOptions = useMemo(() => {
     return options.pageLengthOptions.map((o) => ({
       label: o.toString(),
-      value: o,
+      value: o.toString(),
     }));
   }, [options.pageLengthOptions]);
 
@@ -46,8 +46,8 @@ const ListViewFooter = ({ left, right, onLoadMore }: ListViewFooterProps) => {
         <div>{left}</div>
       ) : (
         <TabButtons
-          value={pageLength}
-          onChange={setPageLength as (value: string | number) => void}
+          value={pageLength.toString()}
+          onChange={(val) => setPageLength(Number(val))}
           buttons={pageLengthOptions}
         />
       )}

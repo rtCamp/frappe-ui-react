@@ -1,10 +1,19 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { LucidePanelRightOpen } from "lucide-react";
+/**
+ * External dependencies.
+ */
+import React, { useState, useCallback } from "react";
 
+/**
+ * Internal dependencies.
+ */
 import SidebarHeader from "./sidebarHeader";
 import SidebarSection from "./sidebarSection";
-import SidebarItem from "./sidebarItem";
 import { useMediaQuery } from "./useMediaQuery";
+import { Divider } from "../divider";
+import { Button } from "../button";
+import { cn } from "../../utils";
+import Tooltip from "../tooltip/tooltip";
+import { MenuCollapse } from "../../icons";
 
 export type SidebarHeaderProps = {
   title: string;
@@ -35,8 +44,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   children,
   className = "",
 }) => {
+  // Responsive behavior - auto-collapse on small screens
+  const isMobile = useMediaQuery("(max-width: 640px)");
+
   // Internal collapse state
-  const [internalCollapsed, setInternalCollapsed] = useState(false);
+  const [internalCollapsed, setInternalCollapsed] = useState(isMobile);
   const isControlled = typeof collapsedProp === "boolean";
   const isCollapsed = isControlled ? collapsedProp : internalCollapsed;
 
@@ -51,16 +63,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     },
     [isControlled, onCollapseChange]
   );
-
-  // Responsive behavior - auto-collapse on small screens
-  const isMobile = useMediaQuery("(max-width: 640px)");
-
-  // Auto collapse sidebar on mobile
-  useEffect(() => {
-    if (isMobile && !isCollapsed) {
-      setCollapsed(true);
-    }
-  }, [isMobile, isCollapsed, setCollapsed]);
 
   // Compute whether sidebar should be collapsed (either manually or due to mobile)
   const shouldCollapse = isCollapsed || isMobile;
@@ -90,12 +92,11 @@ const Sidebar: React.FC<SidebarProps> = ({
             })}
         </SidebarHeader>
       )}
-      {sections.map((section) => (
-        <SidebarSection
-          key={section.label}
-          sidebarCollapsed={shouldCollapse}
-          {...section}
-        />
+      {sections.map((section, index) => (
+        <React.Fragment key={`section-${index}`}>
+          <SidebarSection sidebarCollapsed={shouldCollapse} {...section} />
+          {index !== sections.length - 1 && <Divider className="h-1 mt-2" />}
+        </React.Fragment>
       ))}
       <div className="mt-auto flex flex-col gap-2">
         {/* footer-items slot */}
@@ -107,20 +108,35 @@ const Sidebar: React.FC<SidebarProps> = ({
             }
             return false;
           })}
-        <SidebarItem
-          label={shouldCollapse ? "Expand" : "Collapse"}
-          onClick={() => !isMobile && setCollapsed(!isCollapsed)} // Prevent toggling on mobile
-          sidebarCollapsed={isCollapsed}
-          icon={
-            <span
-              className={`transition-transform duration-300 ease-in-out ${
-                shouldCollapse ? "rotate-180" : ""
-              }`}
-            >
-              <LucidePanelRightOpen size={16} className="text-ink-gray-6" />
-            </span>
-          }
-        />
+        <Button
+          className={cn("w-full justify-start py-1 px-4 text-ink-gray-6", {
+            "px-2": isCollapsed,
+          })}
+          onClick={() => setCollapsed(!isCollapsed)}
+          variant="ghost"
+          iconLeft={() => (
+            <Tooltip text="Collapse" placement="right" disabled={!isCollapsed}>
+              <MenuCollapse
+                className={cn(
+                  "min-w-4 w-4 text-ink-gray-6 transition-all ease-in-out duration-150",
+                  {
+                    "-rotate-180": isCollapsed,
+                  }
+                )}
+              />
+            </Tooltip>
+          )}
+        >
+          {!isCollapsed && (
+            <Tooltip text="Collapse" placement="right" hoverDelay={1.5}>
+              <span
+                className={`flex-1 flex-shrink-0 truncate text-sm transition-all ease-in-out`}
+              >
+                Collapse
+              </span>
+            </Tooltip>
+          )}
+        </Button>
       </div>
     </div>
   );
