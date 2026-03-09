@@ -1,6 +1,12 @@
+/**
+ * External dependencies.
+ */
 import React, { useMemo, useCallback } from "react";
 import { Menu } from "@base-ui/react/menu";
 
+/**
+ * Internal dependencies.
+ */
 import { Button, type ButtonProps } from "../button";
 import { Switch } from "../switch";
 import type {
@@ -10,7 +16,7 @@ import type {
   DropdownOptions,
 } from "./types";
 import FeatherIcon, { type FeatherIconProps } from "../featherIcon";
-import clsx from "clsx";
+import { cn } from "../../utils";
 
 const cssClasses = {
   dropdownContent:
@@ -24,13 +30,19 @@ const cssClasses = {
     "group flex h-7 w-full items-center rounded px-2 text-base focus:outline-none",
   submenuTrigger:
     "group flex h-7 w-full items-center rounded px-2 text-base text-ink-gray-6 focus:outline-none",
-  dropdownPositioner: "z-100",
+  dropdownPositioner: "z-100 py-1",
 };
 
 const Dropdown: React.FC<DropdownProps> = ({
   options = [],
   placement = "left",
+  dropdownClassName = "",
+  groupClassName = "",
+  itemClassName = "",
+  selectedKey,
+  selectedGroupKey,
   button,
+  renderItems,
   children,
   ...attrs
 }) => {
@@ -54,7 +66,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       : "focus:bg-surface-gray-3 data-[highlighted]:bg-surface-gray-3 data-[state=open]:bg-surface-gray-3";
 
   const getSubmenuBackgroundColor = (item: DropdownOption) =>
-    clsx(
+    cn(
       getBackgroundColor(item),
       item.theme === "red"
         ? " data-[state=open]:bg-surface-red-3"
@@ -65,6 +77,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     (option: DropdownOption): DropdownOption => {
       return {
         label: option.label,
+        key: option.key,
         icon: option.icon,
         component: option.component,
         onClick: option.switch ? option.onClick : () => handleItemClick(option),
@@ -111,9 +124,12 @@ const Dropdown: React.FC<DropdownProps> = ({
             groups.push(currentGroup);
             currentGroup = null;
           }
-          const groupOption: DropdownGroupOption = {
+          const groupOption: DropdownGroupOption & {
+            groupKey?: string | number;
+          } = {
             ...option,
             key: `group-${i}`,
+            groupKey: option.key,
             items: filterAndNormalizeOptions(option.items),
           } as DropdownGroupOption;
           groups.push(groupOption);
@@ -156,21 +172,23 @@ const Dropdown: React.FC<DropdownProps> = ({
     return "start";
   }, [placement]);
 
-  const renderDropdownItem = (item: DropdownOption) => {
+  const renderDropdownItem = (
+    item: DropdownOption & { groupKey?: string | number }
+  ) => {
     if (item.component) {
       const CustomComponent = item.component;
       return <CustomComponent active={false} />;
     } else if (item.switch) {
       return (
         <div
-          className={`${cssClasses.itemButton} ${getTextColor(item)}`}
+          className={cn(cssClasses.itemButton, getTextColor(item))}
           onClick={(e) => e.preventDefault()}
         >
           {item.icon &&
             (typeof item.icon === "string" ? (
               <FeatherIcon
                 name={item.icon as FeatherIconProps["name"]}
-                className={`${cssClasses.itemIcon} ${getIconColor(item)}`}
+                className={cn(cssClasses.itemIcon, getIconColor(item))}
               />
             ) : React.isValidElement(item.icon) ? (
               item.icon
@@ -195,7 +213,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                   (typeof item.icon === "string" ? (
                     <FeatherIcon
                       name={item.icon as FeatherIconProps["name"]}
-                      className={clsx(cssClasses.itemIcon, getIconColor(item))}
+                      className={cn(cssClasses.itemIcon, getIconColor(item))}
                     />
                   ) : React.isValidElement(item.icon) ? (
                     item.icon
@@ -208,7 +226,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                     aria-hidden="true"
                   />
                 )}
-                className={clsx(
+                className={cn(
                   cssClasses.submenuTrigger,
                   getSubmenuBackgroundColor(item)
                 )}
@@ -261,9 +279,17 @@ const Dropdown: React.FC<DropdownProps> = ({
     } else {
       return (
         <button
-          className={`${cssClasses.itemButton} ${getTextColor(
-            item
-          )} ${getSubmenuBackgroundColor(item)}`}
+          className={cn(
+            cssClasses.itemButton,
+            getTextColor(item),
+            getSubmenuBackgroundColor(item),
+            itemClassName,
+            item?.key &&
+              selectedKey &&
+              item.key === selectedKey &&
+              (!selectedGroupKey || item.groupKey === selectedGroupKey) &&
+              (item.theme === "red" ? "bg-surface-red-3" : "bg-surface-gray-3")
+          )}
           data-testid="dropdown-item-button"
         >
           {item.icon &&
@@ -307,33 +333,45 @@ const Dropdown: React.FC<DropdownProps> = ({
           className={cssClasses.dropdownPositioner}
         >
           <Menu.Popup
-            className={clsx(cssClasses.dropdownContent, {
-              "origin-top-left": placement === "left",
-              "origin-top-right": placement === "right",
-              "origin-top": placement === "center",
-            })}
+            className={cn(
+              cssClasses.dropdownContent,
+              {
+                "origin-top-left": placement === "left",
+                "origin-top-right": placement === "right",
+                "origin-top": placement === "center",
+              },
+              dropdownClassName
+            )}
           >
-            {groups.map((group) => (
-              <Menu.Group key={group.key} className={cssClasses.groupContainer}>
-                {group.group && !group.hideLabel && (
-                  <Menu.GroupLabel className={cssClasses.groupLabel}>
-                    {group.group}
-                  </Menu.GroupLabel>
-                )}
-                {group.items.map((item) => (
-                  <div data-testid="dropdown-item" key={item.label}>
-                    <Menu.Item
-                      closeOnClick={!item.switch}
-                      onClick={() => !item.switch && item.onClick?.()}
-                      render={renderDropdownItem(item)}
-                      nativeButton={
-                        !item.switch && !item.submenu && !item.component
-                      }
-                    />
-                  </div>
+            {renderItems
+              ? renderItems(options)
+              : groups.map((group) => (
+                  <Menu.Group
+                    key={group.key}
+                    className={cn(cssClasses.groupContainer, groupClassName)}
+                  >
+                    {group.group && !group.hideLabel && (
+                      <Menu.GroupLabel className={cssClasses.groupLabel}>
+                        {group.group}
+                      </Menu.GroupLabel>
+                    )}
+                    {group.items.map((item) => (
+                      <div data-testid="dropdown-item" key={item.label}>
+                        <Menu.Item
+                          closeOnClick={!item.switch}
+                          onClick={() => !item.switch && item.onClick?.()}
+                          render={renderDropdownItem({
+                            ...item,
+                            groupKey: group.groupKey,
+                          })}
+                          nativeButton={
+                            !item.switch && !item.submenu && !item.component
+                          }
+                        />
+                      </div>
+                    ))}
+                  </Menu.Group>
                 ))}
-              </Menu.Group>
-            ))}
           </Menu.Popup>
         </Menu.Positioner>
       </Menu.Portal>

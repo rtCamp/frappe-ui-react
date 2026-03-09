@@ -6,8 +6,9 @@ import {
   ComboboxOptions,
   ComboboxOption,
 } from "@headlessui/react";
-import type { ComboboxProps, SimpleOption } from "./types";
 import { Check } from "lucide-react";
+import type { ComboboxProps, SimpleOption } from "./types";
+import { cn } from "../../utils";
 
 // Utility for display
 const getLabel = (option: SimpleOption) =>
@@ -26,6 +27,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
   disabled,
   onChange,
   className,
+  inputClassName,
 }) => {
   const allOptionsFlat: SimpleOption[] = useMemo(() => {
     const flat: SimpleOption[] = [];
@@ -99,7 +101,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
       onChange={handleChange}
       disabled={disabled}
     >
-      <div className={`relative w-full ${className ?? ""}`}>
+      <div className={cn("relative w-full", className)}>
         <div className="relative w-full">
           {/* Show icon in input if selected option has icon */}
           {selectedOption && getIcon(selectedOption) && (
@@ -108,15 +110,18 @@ export const Combobox: React.FC<ComboboxProps> = ({
             </span>
           )}
           <ComboboxInput
-            className={`
+            className={cn(
+              `
               w-full bg-surface-gray-2 border border-surface-gray-2 rounded
               ${selectedOption && getIcon(selectedOption) ? "pl-8" : "pl-2"}
-              pr-6 py-1 min-h-[25px] text-base
+              pr-6 py-1 min-h-6 text-base
               placeholder-ink-gray-4 text-ink-gray-8
               outline-none focus:border-outline-gray-4 focus:ring-2 focus:ring-outline-gray-3
               transition-colors
               disabled:bg-surface-gray-1 disabled:text-ink-gray-5
-            `}
+            `,
+              inputClassName
+            )}
             displayValue={displayValue}
             placeholder={placeholder}
             onChange={(e) => setQuery(e.target.value)}
