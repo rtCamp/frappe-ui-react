@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Button } from "../button";
 import { FilterSelect } from "./filterSelect";
+import { cn } from "../../utils";
 import type {
   FilterRowProps,
   FilterOperatorOption,
@@ -181,14 +182,14 @@ export const FilterRow: React.FC<FilterRowProps> = ({
             onChange={(e) => handleValueChange(e.target.value || null)}
             placeholder="Value"
             disabled={!filter.operator}
-            className={`
-              min-w-35 bg-surface-gray-2 border-none rounded
-              px-2 py-1 min-h-7 text-base
-              placeholder-ink-gray-4 text-ink-gray-8
-              outline-none focus:ring-2 focus:ring-outline-gray-3
-              transition-colors
-              disabled:bg-surface-gray-1 disabled:text-ink-gray-5
-            `}
+            className={cn(
+              "min-w-35 bg-surface-gray-2 border-none rounded",
+              "px-2 py-1 min-h-7 text-base",
+              "placeholder-ink-gray-4 text-ink-gray-8",
+              "outline-none focus:ring-2 focus:ring-outline-gray-3",
+              "transition-colors",
+              "disabled:bg-surface-gray-1 disabled:text-ink-gray-5"
+            )}
           />
         ))}
 

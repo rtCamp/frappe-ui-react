@@ -7,6 +7,7 @@ import {
   ComboboxOption,
 } from "@headlessui/react";
 import { Check, ChevronDown } from "lucide-react";
+import { cn } from "../../utils";
 import type {
   FilterSelectProps,
   FilterSelectOption,
@@ -109,7 +110,7 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
       onChange={handleChange}
       disabled={disabled}
     >
-      <div className={`relative ${className ?? ""}`} style={style}>
+      <div className={cn("relative", className)} style={style}>
         <div className="relative w-full">
           {selectedOption && getIcon(selectedOption) && (
             <span className="absolute left-2 top-1/2 -translate-y-1/2 flex items-center pointer-events-none z-10">
@@ -118,15 +119,15 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
           )}
           <ComboboxInput
             ref={inputRef}
-            className={`
-              w-full bg-surface-gray-2 border-none rounded
-              ${selectedOption && getIcon(selectedOption) ? "pl-8" : "pl-2"}
-              pr-6 py-1 min-h-7 text-base
-              placeholder-ink-gray-4 text-ink-gray-8
-              outline-none focus:ring-2 focus:ring-outline-gray-3
-              transition-colors cursor-pointer
-              disabled:bg-surface-gray-1 disabled:text-ink-gray-5
-            `}
+            className={cn(
+              "w-full bg-surface-gray-2 border-none rounded",
+              selectedOption && getIcon(selectedOption) ? "pl-8" : "pl-2",
+              "pr-6 py-1 min-h-7 text-base",
+              "placeholder-ink-gray-4 text-ink-gray-8",
+              "outline-none focus:ring-2 focus:ring-outline-gray-3",
+              "transition-colors cursor-pointer",
+              "disabled:bg-surface-gray-1 disabled:text-ink-gray-5"
+            )}
             displayValue={displayValue}
             placeholder={placeholder}
             onChange={(e) => setQuery(e.target.value)}
@@ -141,11 +142,11 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
           <ChevronDown className="h-4 w-4" />
         </ComboboxButton>
         <ComboboxOptions
-          className={`
-            absolute z-100 mt-1 px-1.5 py-1.5 bg-surface-modal border border-outline-gray-1 
-            rounded-lg shadow-xl min-w-40 max-h-60 animate-fade-in overflow-y-auto 
-            [&::-webkit-scrollbar]:hidden [scrollbar-width:none]
-          `}
+          className={cn(
+            "absolute z-100 mt-1 px-1.5 py-1.5 bg-surface-modal border border-outline-gray-1",
+            "rounded-lg shadow-xl min-w-40 max-h-60 animate-fade-in overflow-y-auto",
+            "[&::-webkit-scrollbar]:hidden [scrollbar-width:none]"
+          )}
         >
           {filteredOptions.length === 0 && (
             <div className="px-2 py-2 text-ink-gray-5 text-base text-center">
@@ -166,11 +167,15 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
                     value={getValue(item)}
                     disabled={isDisabled(item)}
                     className={({ focus, selected }) =>
-                      `flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer text-base
-                      ${focus ? "bg-surface-gray-3" : ""}
-                      ${selected ? "text-ink-gray-8 font-medium" : "text-ink-gray-7"}
-                      ${isDisabled(item) ? "opacity-50 cursor-not-allowed" : ""}
-                    `
+                      cn(
+                        "flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer text-base",
+                        {
+                          "bg-surface-gray-3": focus,
+                          "text-ink-gray-8 font-medium": selected,
+                          "text-ink-gray-7": !selected,
+                          "opacity-50 cursor-not-allowed": isDisabled(item),
+                        }
+                      )
                     }
                   >
                     {({ selected }) => (
@@ -195,11 +200,15 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
                 value={getValue(opt)}
                 disabled={isDisabled(opt)}
                 className={({ focus, selected }) =>
-                  `flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer text-base
-                  ${focus ? "bg-surface-gray-3" : ""}
-                  ${selected ? "text-ink-gray-8 font-medium" : "text-ink-gray-7"}
-                  ${isDisabled(opt) ? "opacity-50 cursor-not-allowed" : ""}
-                `
+                  cn(
+                    "flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer text-base",
+                    {
+                      "bg-surface-gray-3": focus,
+                      "text-ink-gray-8 font-medium": selected,
+                      "text-ink-gray-7": !selected,
+                      "opacity-50 cursor-not-allowed": isDisabled(opt),
+                    }
+                  )
                 }
               >
                 {({ selected }) => (
