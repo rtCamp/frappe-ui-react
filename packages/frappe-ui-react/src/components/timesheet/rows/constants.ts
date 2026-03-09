@@ -1,6 +1,3 @@
-export const NESTING_OFFSET = 10;
-export const BASE_PADDING = 4;
-
 export type RowStatus =
   | "not-submitted"
   | "approved"

@@ -7,10 +7,6 @@ const meta: Meta<HeaderRowProps> = {
   component: HeaderRow,
   parameters: { docs: { source: { type: "dynamic" } } },
   argTypes: {
-    nesting: {
-      control: "number",
-      description: "Nesting level for the week row, used for indentation.",
-    },
     breadcrumbs: {
       control: "object",
       description:
@@ -42,7 +38,6 @@ export const Default: Story = {
       highlightLastItem: false,
       size: "sm",
     },
-    nesting: 1,
     days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
   },
   render: (args) => (

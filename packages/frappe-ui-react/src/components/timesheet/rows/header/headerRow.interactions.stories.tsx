@@ -8,10 +8,6 @@ const meta: Meta<HeaderRowProps> = {
   component: HeaderRow,
   parameters: { docs: { source: { type: "dynamic" } } },
   argTypes: {
-    nesting: {
-      control: "number",
-      description: "Nesting level for the week row, used for indentation.",
-    },
     breadcrumbs: {
       control: "object",
       description:
@@ -68,22 +64,5 @@ export const BreadcrumbsRender: Story = {
     for (const item of BREADCRUMBS.items) {
       expect(canvas.getByText(item.label)).toBeInTheDocument();
     }
-  },
-};
-
-export const Nesting: Story = {
-  render: () => (
-    <div className="w-295 p-4 space-y-1">
-      <HeaderRow breadcrumbs={BREADCRUMBS} days={DAYS} nesting={0} />
-      <HeaderRow breadcrumbs={BREADCRUMBS} days={DAYS} nesting={1} />
-      <HeaderRow breadcrumbs={BREADCRUMBS} days={DAYS} nesting={3} />
-    </div>
-  ),
-  play: async ({ canvasElement }) => {
-    const rows = canvasElement.querySelectorAll('[data-testid="header-row"]');
-
-    expect(rows[0]).toHaveStyle({ paddingLeft: "4px" });
-    expect(rows[1]).toHaveStyle({ paddingLeft: "14px" });
-    expect(rows[2]).toHaveStyle({ paddingLeft: "34px" });
   },
 };

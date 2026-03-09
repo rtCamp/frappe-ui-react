@@ -9,10 +9,6 @@ const meta: Meta<TotalRowProps> = {
   component: TotalRow,
   parameters: { docs: { source: { type: "dynamic" } } },
   argTypes: {
-    nesting: {
-      control: "number",
-      description: "Nesting level for the total row, used for indentation.",
-    },
     status: {
       control: "select",
       options: [

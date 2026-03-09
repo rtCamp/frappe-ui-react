@@ -14,10 +14,6 @@ const meta: Meta<MemberRowProps> = {
       control: "text",
       description: "Name of the member.",
     },
-    nesting: {
-      control: "number",
-      description: "Nesting level for the member row, used for indentation.",
-    },
     collapsed: {
       control: "boolean",
       description: "Whether the member row is collapsed or expanded.",
@@ -130,21 +126,18 @@ export const StatusVariants: Story = {
         timeEntries={TIME_ENTRIES}
         totalHours="30:00"
         status="rejected"
-        nesting={1}
       />
       <MemberRow
         label="Member C"
         timeEntries={TIME_ENTRIES}
         totalHours="40:00"
         status="approval-pending"
-        nesting={2}
       />
       <MemberRow
         label="Member D"
         timeEntries={TIME_ENTRIES}
         totalHours="50:00"
         status="none"
-        nesting={3}
       />
     </div>
   ),
@@ -173,12 +166,6 @@ export const StatusVariants: Story = {
     expect(canvas.getByText("30:00")).toHaveClass("text-ink-red-4");
     expect(canvas.getByText("40:00")).toHaveClass("text-ink-amber-4");
     expect(canvas.getByText("50:00")).toHaveClass("text-ink-green-4");
-
-    // Nesting
-    expect(rows[0]).toHaveStyle({ paddingLeft: "4px" });
-    expect(rows[1]).toHaveStyle({ paddingLeft: "14px" });
-    expect(rows[2]).toHaveStyle({ paddingLeft: "24px" });
-    expect(rows[3]).toHaveStyle({ paddingLeft: "34px" });
   },
 };
 

@@ -14,10 +14,6 @@ const meta: Meta<WeekRowProps> = {
       control: "text",
       description: "Label for the week row.",
     },
-    nesting: {
-      control: "number",
-      description: "Nesting level for the week row, used for indentation.",
-    },
     collapsed: {
       control: "boolean",
       description: "Whether the week row is collapsed or expanded.",
