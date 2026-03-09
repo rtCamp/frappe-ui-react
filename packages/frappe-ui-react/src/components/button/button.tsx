@@ -196,7 +196,9 @@ const Button = ({
       ) : isIconButton && !loading ? (
         renderIcon(icon, label)
       ) : (
-        <span className={isIconButton ? "sr-only" : "truncate"}>
+        <span
+          className={isIconButton ? "sr-only" : "flex items-center truncate"}
+        >
           {children || label}
         </span>
       )}
