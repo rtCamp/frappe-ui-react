@@ -13,6 +13,7 @@ export type SidebarSectionProps = {
     icon: React.ComponentType<{ className?: string }>;
     to: string;
     isActive: boolean;
+    onClick?: () => void;
   }[];
   collapsible?: boolean;
   sidebarCollapsed: boolean;
@@ -29,6 +30,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
   if (!collapsible) {
     return items.map((item) => (
       <Button
+        onClick={item.onClick}
         className={cn(
           "w-full transition-all ease-in-out justify-start py-1 px-4 text-ink-gray-6",
           {
@@ -110,6 +112,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
       >
         {items.map((item: any) => (
           <Button
+            onClick={item.onClick}
             className={cn(
               "w-full transition-all ease-in-out justify-start py-1 pl-6 text-ink-gray-6",
               {
