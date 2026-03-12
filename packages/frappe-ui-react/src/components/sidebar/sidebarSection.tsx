@@ -25,7 +25,9 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
   collapsible,
   sidebarCollapsed,
 }) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(
+    items.some((item) => item.isActive)
+  );
 
   if (!collapsible) {
     return items.map((item) => (
