@@ -25,6 +25,7 @@ export * from "./progress";
 export * from "./popover";
 export * from "./rating";
 export * from "./select";
+export * from "./skeleton";
 export * from "./sidebar";
 export * from "./spinner";
 export * from "./switch";
