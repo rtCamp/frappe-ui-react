@@ -56,12 +56,12 @@ export const Avatar: Story = {
 
 export const Card: Story = {
   render: () => (
-    <div className="w-[300px] border border-gray-500/10 dark:border-gray-400 bg-card gap-4 overflow-hidden rounded-xl py-4 flex flex-col">
+    <div className="w-[300px] border border-gray-500/10 dark:border-gray-400 gap-4 overflow-hidden rounded-xl py-4 flex flex-col">
       <div className="gap-1 px-4 space-y-2 w-full">
         <Skeleton className="h-4 w-11/12" />
         <Skeleton className="h-4 w-1/3" />
       </div>
-      <div className="px-4 group-data-[size=sm]/card:px-3">
+      <div className="px-4">
         <Skeleton className="aspect-video w-full" />
       </div>
     </div>
