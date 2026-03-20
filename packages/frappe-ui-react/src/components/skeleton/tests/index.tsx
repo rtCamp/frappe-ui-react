@@ -23,7 +23,8 @@ describe("Skeleton Component", () => {
   it("applies default classes for animation and background", () => {
     const { container } = render(<Skeleton />);
     expect(container.firstChild).toHaveClass("animate-pulse");
-    expect(container.firstChild).toHaveClass("bg-gray-200");
+    expect(container.firstChild).toHaveClass("bg-surface-gray-3");
+    expect(container.firstChild).toHaveClass("dark:bg-surface-gray-4");
     expect(container.firstChild).toHaveClass("rounded-md");
   });
 
