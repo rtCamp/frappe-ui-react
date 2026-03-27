@@ -1,12 +1,13 @@
 import { useState } from "react";
+import { Popover } from "@base-ui/react/popover";
 
 import type { DateRangePickerProps } from "./types";
 import { useDatePicker } from "./useDatePicker";
-import { getDate, getDateValue } from "./utils";
-import { Popover } from "../popover";
+import { getDate, getDateValue, parsePlacement } from "./utils";
 import { Button } from "../button";
 import { TextInput } from "../textInput";
 import FeatherIcon from "../featherIcon";
+import { cn } from "../../utils";
 
 function useDateRangePicker({
   value,
@@ -134,6 +135,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   placeholder,
   formatter,
   placement,
+  sideOffset = 4,
   label,
   onChange,
   children,
@@ -173,223 +175,233 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
     }
   };
 
+  const { side, align } = parsePlacement(placement);
+
+  const togglePopover = () => setOpen(!open);
+
+  const from = fromDate ? fromDate.slice(0, 10) : "";
+  const to = toDate ? toDate.slice(0, 10) : "";
+  const displayValue = formatter
+    ? formatter(from, to)
+    : from && to
+      ? `${from} to ${to}`
+      : from || "";
+
   return (
-    <Popover
-      trigger="click"
-      placement={placement || "bottom-start"}
-      show={open}
-      onUpdateShow={handleOpenChange}
-      target={({ togglePopover }) => {
-        const from = fromDate ? fromDate.slice(0, 10) : "";
-        const to = toDate ? toDate.slice(0, 10) : "";
-        const displayValue = formatter
-          ? formatter(from, to)
-          : from && to
-            ? `${from} to ${to}`
-            : from || "";
-
-        if (children) {
-          return children({ togglePopover, isOpen: open, displayValue });
-        }
-
-        return (
-          <div className="flex w-full flex-col space-y-1.5">
-            {label && (
-              <label className="block text-xs text-ink-gray-5">{label}</label>
-            )}
-            <TextInput
-              type="text"
-              placeholder={placeholder}
-              value={displayValue}
-              suffix={() => (
-                <FeatherIcon name="chevron-down" className="w-4 h-4" />
+    <Popover.Root open={open} onOpenChange={handleOpenChange}>
+      <Popover.Trigger
+        render={
+          children ? (
+            <span>
+              {children({ togglePopover, isOpen: open, displayValue })}
+            </span>
+          ) : (
+            <div className="flex w-full flex-col space-y-1.5">
+              {label && (
+                <label className="block text-xs text-ink-gray-5">{label}</label>
               )}
-            />
-          </div>
-        );
-      }}
-      body={({ togglePopover }) => (
-        <div className="absolute min-w-60 z-10 mt-2 w-fit select-none text-base text-ink-gray-9 rounded-lg bg-surface-modal shadow-2xl border border-gray-200">
-          {/* Month Switcher */}
-          <div className="flex items-center justify-between px-2 pt-2 gap-1">
-            <Button
-              size="sm"
-              className="text-sm font-medium text-ink-gray-7"
-              variant="ghost"
-              onClick={cycleView}
-            >
-              {view === "date" && formattedMonth}
-              {view === "month" && currentYear}
-              {view === "year" && `${yearRangeStart} - ${yearRangeStart + 11}`}
-            </Button>
-            <div className="flex items-center">
-              <Button
-                className="h-7 w-7"
-                icon="chevron-left"
-                onClick={prev}
-                variant="ghost"
-              />
-              <Button
-                className="text-xs"
-                variant="ghost"
-                onClick={() => {
-                  handleToday();
-                  togglePopover();
-                }}
-              >
-                Today
-              </Button>
-              <Button
-                className="h-7 w-7"
-                icon="chevron-right"
-                onClick={next}
-                variant="ghost"
+              <TextInput
+                type="text"
+                placeholder={placeholder}
+                value={displayValue}
+                suffix={() => (
+                  <FeatherIcon name="chevron-down" className="w-4 h-4" />
+                )}
               />
             </div>
-          </div>
-          {/* Calendar / Month Grid / Year Grid */}
-          <div className="p-2">
-            {view === "date" && (
-              <div className="flex flex-col items-center justify-center text-ink-gray-8">
-                <div className="flex items-center text-xs font-medium uppercase text-ink-gray-4 mb-1">
-                  {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
-                    <div
-                      key={i}
-                      className="flex h-6 w-8 items-center justify-center"
-                    >
-                      {d}
+          )
+        }
+      />
+
+      <Popover.Portal>
+        <Popover.Positioner side={side} align={align} sideOffset={sideOffset}>
+          <Popover.Popup
+            className={cn(
+              "min-w-60 w-fit select-none text-base text-ink-gray-9",
+              "rounded-lg bg-surface-modal shadow-2xl border border-gray-200 z-100"
+            )}
+          >
+            {/* Month Switcher */}
+            <div className="flex items-center justify-between px-2 pt-2 gap-1">
+              <Button
+                size="sm"
+                className="text-sm font-medium text-ink-gray-7"
+                variant="ghost"
+                onClick={cycleView}
+              >
+                {view === "date" && formattedMonth}
+                {view === "month" && currentYear}
+                {view === "year" &&
+                  `${yearRangeStart} - ${yearRangeStart + 11}`}
+              </Button>
+              <div className="flex items-center">
+                <Button
+                  className="h-7 w-7"
+                  icon="chevron-left"
+                  onClick={prev}
+                  variant="ghost"
+                />
+                <Button
+                  className="text-xs"
+                  variant="ghost"
+                  onClick={() => {
+                    handleToday();
+                    setOpen(false);
+                  }}
+                >
+                  Today
+                </Button>
+                <Button
+                  className="h-7 w-7"
+                  icon="chevron-right"
+                  onClick={next}
+                  variant="ghost"
+                />
+              </div>
+            </div>
+            {/* Calendar / Month Grid / Year Grid */}
+            <div className="p-2">
+              {view === "date" && (
+                <div className="flex flex-col items-center justify-center text-ink-gray-8">
+                  <div className="flex items-center text-xs font-medium uppercase text-ink-gray-4 mb-1">
+                    {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
+                      <div
+                        key={i}
+                        className="flex h-6 w-8 items-center justify-center"
+                      >
+                        {d}
+                      </div>
+                    ))}
+                  </div>
+                  {datesAsWeeks.map((week, i) => (
+                    <div key={i} className="flex items-center">
+                      {week.map((date) => {
+                        const val = getDateValue(date);
+                        const today = getDate();
+                        const isToday =
+                          date.getDate() === today.getDate() &&
+                          date.getMonth() === today.getMonth() &&
+                          date.getFullYear() === today.getFullYear() &&
+                          date.getMonth() === currentMonth - 1;
+                        const isToDate =
+                          toDate && getDateValue(date) === toDate;
+                        const isFromDate =
+                          fromDate && getDateValue(date) === fromDate;
+
+                        return (
+                          <div
+                            key={val}
+                            className={`flex h-8 w-8 cursor-pointer items-center justify-center text-sm rounded hover:bg-surface-gray-2 ${
+                              date.getMonth() !== currentMonth - 1
+                                ? "text-ink-gray-3"
+                                : "text-ink-gray-8"
+                            } ${
+                              isToday ? "font-extrabold text-ink-gray-9" : ""
+                            } ${
+                              isInRange(date) && !isFromDate && !isToDate
+                                ? "rounded-none bg-surface-gray-3"
+                                : ""
+                            } ${
+                              (isFromDate || isToDate) && fromDate === toDate
+                                ? "rounded bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                                : `${
+                                    isFromDate
+                                      ? "rounded-l-md rounded-r-none bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                                      : ""
+                                  } ${
+                                    isToDate
+                                      ? "rounded-r-md rounded-l-none  bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                                      : ""
+                                  } `
+                            }
+                            `}
+                            onClick={() => {
+                              if (handleDateClick(date)) {
+                                setOpen(false);
+                              }
+                            }}
+                          >
+                            {date.getDate()}
+                          </div>
+                        );
+                      })}
                     </div>
                   ))}
                 </div>
-                {datesAsWeeks.map((week, i) => (
-                  <div key={i} className="flex items-center">
-                    {week.map((date) => {
-                      const val = getDateValue(date);
-                      const today = getDate();
-                      const isToday =
-                        date.getDate() === today.getDate() &&
-                        date.getMonth() === today.getMonth() &&
-                        date.getFullYear() === today.getFullYear() &&
-                        date.getMonth() === currentMonth - 1;
-                      const isToDate = toDate && getDateValue(date) === toDate;
-                      const isFromDate =
-                        fromDate && getDateValue(date) === fromDate;
+              )}
 
-                      return (
-                        <div
-                          key={val}
-                          className={`flex h-8 w-8 cursor-pointer items-center justify-center text-sm rounded hover:bg-surface-gray-2 ${
-                            date.getMonth() !== currentMonth - 1
-                              ? "text-ink-gray-3"
-                              : "text-ink-gray-8"
-                          } ${
-                            isToday ? "font-extrabold text-ink-gray-9" : ""
-                          } ${
-                            isInRange(date) && !isFromDate && !isToDate
-                              ? "rounded-none bg-surface-gray-3"
-                              : ""
-                          } ${
-                            (isFromDate || isToDate) && fromDate === toDate
-                              ? "rounded bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
-                              : `${
-                                  isFromDate
-                                    ? "rounded-l-md rounded-r-none bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
-                                    : ""
-                                } ${
-                                  isToDate
-                                    ? "rounded-r-md rounded-l-none  bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
-                                    : ""
-                                } `
-                          }
-                          `}
-                          onClick={() =>
-                            handleDateClick(date) && togglePopover()
-                          }
-                        >
-                          {date.getDate()}
-                        </div>
-                      );
-                    })}
-                  </div>
-                ))}
-              </div>
-            )}
+              {view === "month" && (
+                <div
+                  className="grid grid-cols-3 gap-1"
+                  role="grid"
+                  aria-label="Select month"
+                >
+                  {months.map((m, i) => {
+                    const isSelected = i === currentMonth - 1;
+                    return (
+                      <button
+                        type="button"
+                        key={m}
+                        className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                          isSelected
+                            ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                            : ""
+                        }`}
+                        aria-selected={isSelected}
+                        onClick={() => selectMonth(i)}
+                      >
+                        {m.slice(0, 3)}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
-            {view === "month" && (
-              <div
-                className="grid grid-cols-3 gap-1"
-                role="grid"
-                aria-label="Select month"
-                onMouseDown={(e) => e.stopPropagation()}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {months.map((m, i) => {
-                  const isSelected = i === currentMonth - 1;
-                  return (
-                    <button
-                      type="button"
-                      key={m}
-                      className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
-                        isSelected
-                          ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
-                          : ""
-                      }`}
-                      aria-selected={isSelected}
-                      onClick={() => selectMonth(i)}
-                    >
-                      {m.slice(0, 3)}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-
-            {view === "year" && (
-              <div
-                className="grid grid-cols-3 gap-1"
-                role="grid"
-                aria-label="Select year"
-                onMouseDown={(e) => e.stopPropagation()}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {yearRange.map((y) => {
-                  const isSelected = y === currentYear;
-                  return (
-                    <button
-                      type="button"
-                      key={y}
-                      className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
-                        isSelected
-                          ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
-                          : ""
-                      }`}
-                      aria-selected={isSelected}
-                      onClick={() => selectYear(y)}
-                    >
-                      {y}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          {/* Actions */}
-          {fromDate && toDate && (
-            <div className="flex justify-end p-2 gap-1 border-t border-gray-200">
-              <Button
-                onClick={() => {
-                  clearDates();
-                  togglePopover();
-                }}
-                variant="outline"
-              >
-                Clear
-              </Button>
+              {view === "year" && (
+                <div
+                  className="grid grid-cols-3 gap-1"
+                  role="grid"
+                  aria-label="Select year"
+                >
+                  {yearRange.map((y) => {
+                    const isSelected = y === currentYear;
+                    return (
+                      <button
+                        type="button"
+                        key={y}
+                        className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                          isSelected
+                            ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                            : ""
+                        }`}
+                        aria-selected={isSelected}
+                        onClick={() => selectYear(y)}
+                      >
+                        {y}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      )}
-    />
+
+            {/* Actions */}
+            {fromDate && toDate && (
+              <div className="flex justify-end p-2 gap-1 border-t border-gray-200">
+                <Button
+                  onClick={() => {
+                    clearDates();
+                    setOpen(false);
+                  }}
+                  variant="outline"
+                >
+                  Clear
+                </Button>
+              </div>
+            )}
+          </Popover.Popup>
+        </Popover.Positioner>
+      </Popover.Portal>
+    </Popover.Root>
   );
 };
