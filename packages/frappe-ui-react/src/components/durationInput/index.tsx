@@ -2,7 +2,7 @@
  * External dependencies.
  */
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Slider } from "@base-ui/react/slider";
 import {
   clampHours,
@@ -163,7 +163,7 @@ const DurationInput = ({
         <input
           type="text"
           className={cn(
-            "absolute -translate-y-1/2 top-1/2 right-0 w-12 text-ink-gray-7 text-sm",
+            "absolute -translate-y-1/2 top-1/2 right-4 w-9 text-ink-gray-7 text-sm flex items-center justify-center",
             { "pointer-events-none": disabled }
           )}
           placeholder="00:00"
