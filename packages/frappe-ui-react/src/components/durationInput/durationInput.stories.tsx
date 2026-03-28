@@ -12,8 +12,8 @@ export default {
       control: "text",
       description: "Label displayed above the input",
     },
-    maxDurationInHours: {
-      control: { type: "number", min: 1, max: 24 },
+    maxDuration: {
+      control: { type: "number" },
       description: "Maximum allowed duration in hours",
     },
     hoursLeft: {
@@ -21,8 +21,8 @@ export default {
       description: "Remaining hours available (used to calculate 'X h left')",
     },
     value: {
-      control: { type: "number", min: 0, step: 0.5 },
-      description: "Current duration value in hours",
+      control: "text",
+      description: "Current duration value in HH:MM format",
     },
     variant: {
       control: { type: "select", options: ["sm", "md"] },
@@ -50,7 +50,6 @@ const Template: StoryObj<DurationInputProps> = {
           value={value}
           onChange={(v) => {
             setValue(v);
-            args.onChange?.(v);
           }}
         />
       </div>
@@ -58,53 +57,53 @@ const Template: StoryObj<DurationInputProps> = {
   },
 };
 
-export const Default = {
+export const Default: StoryObj<DurationInputProps> = {
   ...Template,
   args: {
     label: "Duration",
-    maxDurationInHours: 8,
-    hoursLeft: 8,
-    value: 0,
+    maxDuration: "08:00",
+    hoursLeft: "08:00",
+    value: "00:00",
   },
 };
 
-export const WithInitialValue = {
+export const WithInitialValue: StoryObj<DurationInputProps> = {
   ...Template,
   args: {
     label: "Duration",
-    maxDurationInHours: 8,
-    hoursLeft: 5.5,
-    value: 2.5,
+    maxDuration: "08:00",
+    hoursLeft: "05:30",
+    value: "02:30",
   },
 };
 
-export const OverHours = {
+export const OverHours: StoryObj<DurationInputProps> = {
   ...Template,
   args: {
     label: "Duration",
-    maxDurationInHours: 8,
-    hoursLeft: 1,
-    value: 6,
+    maxDuration: "08:00",
+    hoursLeft: "01:00",
+    value: "06:00",
   },
 };
 
-export const CustomMax = {
+export const CustomMax: StoryObj<DurationInputProps> = {
   ...Template,
   args: {
     label: "Sprint Duration",
-    maxDurationInHours: 12,
-    hoursLeft: 12,
-    value: 0,
+    maxDuration: "12:00",
+    hoursLeft: "12:00",
+    value: "00:00",
   },
 };
 
-export const Disabled = {
+export const Disabled: StoryObj<DurationInputProps> = {
   ...Template,
   args: {
     label: "Duration",
-    maxDurationInHours: 8,
-    hoursLeft: 5,
-    value: 3,
+    maxDuration: "08:00",
+    hoursLeft: "05:00",
+    value: "00:00",
     disabled: true,
   },
 };
