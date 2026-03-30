@@ -51,7 +51,7 @@ const DurationInput = ({
     >
       {label ? (
         <div className="w-full flex justify-between text-base font-normal text-ink-gray-5 ">
-          <label>{label}</label>
+          <label htmlFor={`slider-${label}`}>{label}</label>
           <p
             className={
               timeToFloat(hoursLeft) < sliderVal / 60
@@ -65,7 +65,7 @@ const DurationInput = ({
       ) : null}
       <div className="relative">
         <Slider.Root
-          defaultValue={0}
+          id={`slider-${label}`}
           min={0}
           max={timeToFloat(maxDuration) * 60}
           step={SLIDER_STEP_MINUTES}

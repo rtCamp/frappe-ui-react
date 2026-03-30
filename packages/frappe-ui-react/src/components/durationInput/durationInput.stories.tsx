@@ -13,12 +13,13 @@ export default {
       description: "Label displayed above the input",
     },
     maxDuration: {
-      control: { type: "number" },
-      description: "Maximum allowed duration in hours",
+      control: "text",
+      description: "Maximum allowed duration in HH:MM",
     },
     hoursLeft: {
-      control: { type: "number" },
-      description: "Remaining hours available (used to calculate 'X h left')",
+      control: "text",
+      description:
+        "Remaining time available in HH:MM format (used to calculate 'X h left",
     },
     value: {
       control: "text",
@@ -34,14 +35,15 @@ export default {
     },
     onChange: {
       action: "changed",
-      description: "Callback fired with the new duration in hours",
+      description:
+        "Callback fired with the new duration value as a string (e.g. 'HH:MM')",
     },
   },
 } as Meta<typeof DurationInput>;
 
 const Template: StoryObj<DurationInputProps> = {
   render: (args) => {
-    const [value, setValue] = useState(args.value ?? 0);
+    const [value, setValue] = useState(args.value ?? "00:00");
 
     return (
       <div className="p-4 w-[300px]">
