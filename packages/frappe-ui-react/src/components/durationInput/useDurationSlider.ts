@@ -47,7 +47,7 @@ export const useDurationSlider = ({
   const [sliderVal, setSliderVal] = useState(initialValue);
 
   const notchOffsets = useMemo(() => {
-    const totalSteps = maxDuration / sliderStepInMins;
+    const totalSteps = Math.floor(maxDuration / sliderStepInMins);
     return Array.from(
       { length: totalSteps - 1 },
       (_, i) => ((i + 1) / totalSteps) * 100

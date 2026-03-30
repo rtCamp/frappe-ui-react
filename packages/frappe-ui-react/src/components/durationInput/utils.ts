@@ -9,11 +9,11 @@ export const SLIDER_STEP_MINUTES = 30;
  * @returns Formatted time string in HH:MM format
  *
  * @example
- * floatToTime(1.5) // Returns "1:30"
+ * floatToTime(1.5) // Returns "01:30"
  */
 export function floatToTime(
   float: number,
-  hourPadding: number = 1,
+  hourPadding: number = 2,
   minutePadding: number = 2
 ) {
   const totalMinutes = Math.round(float * 60);
@@ -27,14 +27,14 @@ export function floatToTime(
 }
 
 /**
- * Parses a duration string in various formats and returns the value in hours.
+ * Converts a duration string in various formats and returns the value in hours.
  * Accepts both decimal numbers and HH:MM format.
  *
- * @param value - Duration string in format "HH:MM" or decimal number
- * @returns Number of hours, or null if the format is invalid
+ * @param value - Duration string in format "HH:MM"
+ * @returns Number of hours, or 0 if the format is invalid
  *
  * @example
- * parseDurationToHours("1:30") // Returns 1.5
+ * timeToFloat("1:30") // Returns 1.5
  */
 export const timeToFloat = (value: string): number => {
   const trimmedValue = value.trim();
