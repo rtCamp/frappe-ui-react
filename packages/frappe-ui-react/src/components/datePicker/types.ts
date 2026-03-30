@@ -1,7 +1,6 @@
 import type { OffsetFunction } from "@base-ui/react/utils/useAnchorPositioning";
 
 export interface DatePickerChildrenProps {
-  togglePopover: () => void;
   isOpen: boolean;
   displayValue: string;
 }

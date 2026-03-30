@@ -72,7 +72,7 @@ export function isLeapYear(year: number) {
 }
 
 // Parses placement string like "bottom-end" into side and align.
-// This for backwards compatibility, as older versions of date picker used popperjs.
+// This is for backwards compatibility, as older versions of date picker used popperjs.
 export function parsePlacement(placement?: string): {
   side: PopoverSide;
   align: PopoverAlign;

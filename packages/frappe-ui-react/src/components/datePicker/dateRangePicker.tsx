@@ -177,8 +177,6 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
   const { side, align } = parsePlacement(placement);
 
-  const togglePopover = () => setOpen(!open);
-
   const from = fromDate ? fromDate.slice(0, 10) : "";
   const to = toDate ? toDate.slice(0, 10) : "";
   const displayValue = formatter
@@ -192,9 +190,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
       <Popover.Trigger
         render={
           children ? (
-            <span>
-              {children({ togglePopover, isOpen: open, displayValue })}
-            </span>
+            <span>{children({ isOpen: open, displayValue })}</span>
           ) : (
             <div className="flex w-full flex-col space-y-1.5">
               {label && (
