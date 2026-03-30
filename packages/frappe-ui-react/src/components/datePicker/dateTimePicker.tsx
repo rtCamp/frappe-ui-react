@@ -77,8 +77,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
 
   const { side, align } = parsePlacement(placement);
 
-  const togglePopover = () => setOpen(!open);
-
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
       <Popover.Trigger
@@ -86,7 +84,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           children ? (
             <span>
               {children({
-                togglePopover,
                 isOpen: open,
                 displayValue: formattedDisplayValue,
               })}

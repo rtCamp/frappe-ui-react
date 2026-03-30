@@ -52,16 +52,12 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 
   const { side, align } = parsePlacement(placement);
 
-  const togglePopover = () => setOpen(!open);
-
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
       <Popover.Trigger
         render={
           children ? (
-            <span>
-              {children({ togglePopover, isOpen: open, displayValue })}
-            </span>
+            <span>{children({ isOpen: open, displayValue })}</span>
           ) : (
             <div className="flex w-full flex-col space-y-1.5">
               {label && (
@@ -160,6 +156,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                         return (
                           <button
                             key={val}
+                            type="button"
                             className={`flex h-8 w-8 items-center justify-center rounded cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
                               inMonth ? "text-ink-gray-8" : "text-ink-gray-3"
                             } ${
