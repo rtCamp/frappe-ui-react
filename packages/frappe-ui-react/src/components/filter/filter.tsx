@@ -33,7 +33,7 @@ export const Filter: React.FC<FilterProps> = ({
       field: firstField?.name || "",
       operator: "",
       value: null,
-      fieldCategory: firstField?.fieldCategory || "",
+      fieldCategory: firstField?.fieldCategory,
     };
   }, [fields]);
 
@@ -114,7 +114,7 @@ export const Filter: React.FC<FilterProps> = ({
             <Popover.Popup
               className={cn(
                 "rounded-lg border shadow-xl bg-surface-modal border-outline-gray-1",
-                "p-3 min-w-100 max-w-150 a nimate-fade-in z-100"
+                "p-3 min-w-100 max-w-150 animate-fade-in z-100"
               )}
             >
               <div className="space-y-1">

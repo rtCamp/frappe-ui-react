@@ -1,8 +1,7 @@
 import { useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 import { Button } from "../button";
-import { DatePicker } from "../datePicker";
-import { DateRangePicker } from "../datePicker";
+import { DatePicker, DateRangePicker } from "../datePicker";
 import { FilterSelect } from "./filterSelect";
 import { cn } from "../../utils";
 import type {
@@ -19,10 +18,10 @@ const DEFAULT_OPERATORS: Record<string, FilterOperatorOption[]> = {
     { label: "Not Like", value: "not like" },
   ],
   number: [
-    { label: "<", value: "<" },
-    { label: ">", value: ">" },
-    { label: "<=", value: "<=" },
-    { label: ">=", value: ">=" },
+    { label: "Greater Than", value: ">" },
+    { label: "Less Than", value: "<" },
+    { label: "Less Than or Equal To", value: "<=" },
+    { label: "Greater Than or Equal To", value: ">=" },
     { label: "Equals", value: "=" },
     { label: "Not Equals", value: "!=" },
   ],
@@ -174,9 +173,10 @@ export const FilterRow: React.FC<FilterRowProps> = ({
             <DatePicker
               value={typeof filter.value === "string" ? filter.value : ""}
               onChange={(v) =>
-                handleValueChange(typeof v === "string" ? v : null)
+                handleValueChange(
+                  v === "" ? null : typeof v === "string" ? v : null
+                )
               }
-              placeholder="Select date"
             >
               {({ displayValue }) => (
                 <DatePickerTrigger
@@ -190,8 +190,13 @@ export const FilterRow: React.FC<FilterRowProps> = ({
           return (
             <DateRangePicker
               value={Array.isArray(filter.value) ? filter.value : []}
-              onChange={(v) => handleValueChange(v)}
-              placeholder="Select date range"
+              onChange={(v) => {
+                if (Array.isArray(v) && v.length === 2 && !v[0] && !v[1]) {
+                  handleValueChange(null);
+                } else {
+                  handleValueChange(v);
+                }
+              }}
             >
               {({ displayValue }) => (
                 <DatePickerTrigger
