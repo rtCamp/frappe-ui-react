@@ -40,12 +40,14 @@ export interface FilterOperatorOption {
 
 /** Field definition for what can be filtered */
 export interface FilterField {
+  /** The category of the field being filtered */
+  fieldCategory?: string;
   /** Unique identifier for the field */
   name: string;
   /** Display label */
   label: string;
   /** Field type determines available operators and value input */
-  type?: "string" | "number" | "date" | "select" | "multiselect";
+  type?: "string" | "number" | "date" | "daterange" | "select" | "multiselect";
   /** Available operators for this field (defaults based on type) */
   operators?: FilterOperatorOption[];
   /** Options for select/multiselect type fields */
@@ -60,6 +62,8 @@ export interface FilterCondition {
   id: string;
   /** The field being filtered */
   field: string;
+  /** The category of the field being filtered */
+  fieldCategory?: string;
   /** The operator being applied */
   operator: string;
   /** The value(s) to filter by */
