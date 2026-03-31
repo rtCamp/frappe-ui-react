@@ -166,11 +166,10 @@ export const CustomHeader: Story = {
           }
           clearable={false}
         >
-          {({ togglePopover, displayValue }) => (
+          {({ displayValue }) => (
             <Button
               variant="ghost"
               className="text-lg font-medium text-ink-gray-7"
-              onClick={togglePopover}
               iconRight="chevron-down"
             >
               {displayValue}
