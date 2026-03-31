@@ -33,6 +33,7 @@ export const Filter: React.FC<FilterProps> = ({
       field: firstField?.name || "",
       operator: "",
       value: null,
+      fieldCategory: firstField?.fieldCategory || "",
     };
   }, [fields]);
 
@@ -112,7 +113,7 @@ export const Filter: React.FC<FilterProps> = ({
           <Popover.Positioner sideOffset={4} align={align}>
             <Popover.Popup
               className={cn(
-                "bg-surface-modal border border-outline-gray-1 rounded-lg shadow-xl",
+                "rounded-lg border shadow-xl bg-surface-modal border-outline-gray-1",
                 "p-3 min-w-100 max-w-150 a nimate-fade-in z-100"
               )}
             >
@@ -138,7 +139,7 @@ export const Filter: React.FC<FilterProps> = ({
                     "hover:text-ink-gray-7 mt-2 py-1 transition-colors"
                   )}
                 >
-                  <Plus className="h-4 w-4" />
+                  <Plus className="w-4 h-4" />
                   Add filter
                 </button>
               )}
