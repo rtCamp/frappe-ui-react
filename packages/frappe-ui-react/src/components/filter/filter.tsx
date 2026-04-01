@@ -133,7 +133,7 @@ export const Filter: React.FC<FilterProps> = ({
             <Popover.Popup
               className={cn(
                 "rounded-lg border shadow-xl bg-surface-modal border-outline-gray-1",
-                "p-3 min-w-100 max-w-150 animate-fade-in z-100"
+                "p-1 min-w-100 max-w-150 animate-fade-in z-100"
               )}
             >
               <div className="space-y-1">
@@ -154,7 +154,7 @@ export const Filter: React.FC<FilterProps> = ({
                 <button
                   onClick={handleAddFilter}
                   className={cn(
-                    "flex items-center gap-1.5 text-sm text-ink-gray-5",
+                    "flex items-center gap-1.5 text-sm text-ink-gray-5 px-2 py-1.5",
                     "hover:text-ink-gray-7 mt-2 py-1 transition-colors"
                   )}
                 >

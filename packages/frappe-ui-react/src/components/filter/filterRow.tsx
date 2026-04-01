@@ -141,7 +141,7 @@ export const FilterRow: React.FC<FilterRowProps> = ({
   return (
     <div className="flex gap-2 items-center py-1">
       {/* Where / And label */}
-      <span className="w-12 text-sm text-ink-gray-5 shrink-0">
+      <span className="w-12 text-sm text-ink-gray-7 shrink-0 px-2 py-1.5">
         {isFirst ? "Where" : "And"}
       </span>
 
@@ -245,7 +245,7 @@ export const FilterRow: React.FC<FilterRowProps> = ({
         variant="ghost"
         size="sm"
         onClick={onRemove}
-        className="text-ink-gray-4 hover:text-ink-gray-6 shrink-0"
+        className="text-ink-gray-7 hover:text-ink-gray-6 shrink-0"
         aria-label="Remove filter"
       />
     </div>
