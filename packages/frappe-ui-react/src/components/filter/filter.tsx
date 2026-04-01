@@ -65,9 +65,13 @@ export const Filter: React.FC<FilterProps> = ({
   );
 
   // Clear all filters
-  const handleClearAll = useCallback(() => {
-    onChange?.([]);
-  }, [onChange]);
+  const handleClearAll = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      onChange?.([]);
+    },
+    [onChange]
+  );
 
   // Handle popover open - add initial filter if empty
   const handleOpenChange = useCallback(
