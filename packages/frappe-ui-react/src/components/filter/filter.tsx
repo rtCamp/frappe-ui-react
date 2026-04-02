@@ -33,6 +33,7 @@ export const Filter: React.FC<FilterProps> = ({
       field: firstField?.name || "",
       operator: "",
       value: null,
+      fieldCategory: firstField?.fieldCategory,
     };
   }, [fields]);
 
@@ -64,9 +65,13 @@ export const Filter: React.FC<FilterProps> = ({
   );
 
   // Clear all filters
-  const handleClearAll = useCallback(() => {
-    onChange?.([]);
-  }, [onChange]);
+  const handleClearAll = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      onChange?.([]);
+    },
+    [onChange]
+  );
 
   // Handle popover open - add initial filter if empty
   const handleOpenChange = useCallback(
@@ -84,27 +89,42 @@ export const Filter: React.FC<FilterProps> = ({
       <Popover.Root open={isOpen} onOpenChange={handleOpenChange}>
         <Popover.Trigger
           render={
-            <Button
-              size="sm"
-              iconLeft={() => (
-                <ListFilter size={16} className="text-ink-gray-7" />
+            <span>
+              <Button
+                size="sm"
+                iconLeft={() => (
+                  <ListFilter size={16} className="text-ink-gray-7" />
+                )}
+                iconRight={
+                  !hasFilters
+                    ? () => (
+                        <ChevronDown size={16} className="text-ink-gray-5" />
+                      )
+                    : undefined
+                }
+                className={cn("gap-2", {
+                  "rounded-r-none border-r-0": hasFilters,
+                })}
+              >
+                Filter
+                {showCount && hasFilters && (
+                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-white rounded-sm shadow-sm">
+                    {filterCount}
+                  </span>
+                )}
+              </Button>
+
+              {/* Clear all button (shown when filters exist) */}
+              {hasFilters && (
+                <Button
+                  icon="x"
+                  size="sm"
+                  onClick={handleClearAll}
+                  className="rounded-l-none border-l border-l-outline-gray-2"
+                  aria-label="Clear all filters"
+                />
               )}
-              iconRight={
-                !hasFilters
-                  ? () => <ChevronDown size={16} className="text-ink-gray-5" />
-                  : undefined
-              }
-              className={cn("gap-2", {
-                "rounded-r-none border-r-0": hasFilters,
-              })}
-            >
-              Filter
-              {showCount && hasFilters && (
-                <span className="ml-2 px-1.5 py-0.5 text-xs bg-white rounded-sm shadow-sm">
-                  {filterCount}
-                </span>
-              )}
-            </Button>
+            </span>
           }
         />
 
@@ -112,8 +132,8 @@ export const Filter: React.FC<FilterProps> = ({
           <Popover.Positioner sideOffset={4} align={align}>
             <Popover.Popup
               className={cn(
-                "bg-surface-modal border border-outline-gray-1 rounded-lg shadow-xl",
-                "p-3 min-w-100 max-w-150 a nimate-fade-in z-100"
+                "rounded-lg border shadow-xl bg-surface-modal border-outline-gray-1",
+                "p-1 min-w-100 max-w-150 animate-fade-in z-100"
               )}
             >
               <div className="space-y-1">
@@ -134,11 +154,11 @@ export const Filter: React.FC<FilterProps> = ({
                 <button
                   onClick={handleAddFilter}
                   className={cn(
-                    "flex items-center gap-1.5 text-sm text-ink-gray-5",
+                    "flex items-center gap-1.5 text-sm text-ink-gray-5 px-2 py-1.5",
                     "hover:text-ink-gray-7 mt-2 py-1 transition-colors"
                   )}
                 >
-                  <Plus className="h-4 w-4" />
+                  <Plus className="w-4 h-4" />
                   Add filter
                 </button>
               )}
@@ -146,17 +166,6 @@ export const Filter: React.FC<FilterProps> = ({
           </Popover.Positioner>
         </Popover.Portal>
       </Popover.Root>
-
-      {/* Clear all button (shown when filters exist) */}
-      {hasFilters && (
-        <Button
-          icon="x"
-          size="sm"
-          onClick={handleClearAll}
-          className="rounded-l-none border-l border-l-outline-gray-2"
-          aria-label="Clear all filters"
-        />
-      )}
     </div>
   );
 };
