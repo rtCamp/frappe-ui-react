@@ -116,6 +116,11 @@ const sampleFields: FilterField[] = [
     label: "Estimate (hours)",
     type: "number",
   },
+  {
+    name: "date_range",
+    label: "Date Range",
+    type: "daterange",
+  },
 ];
 
 // Controlled component wrapper
