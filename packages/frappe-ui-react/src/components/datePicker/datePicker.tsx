@@ -57,7 +57,9 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       <Popover.Trigger
         render={
           children ? (
-            <span>{children({ isOpen: open, displayValue })}</span>
+            <span className="!mb-0">
+              {children({ isOpen: open, displayValue })}
+            </span>
           ) : (
             <div className="flex w-full flex-col space-y-1.5">
               {label && (
@@ -78,11 +80,16 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       />
 
       <Popover.Portal>
-        <Popover.Positioner side={side} align={align} sideOffset={sideOffset}>
+        <Popover.Positioner
+          side={side}
+          align={align}
+          sideOffset={sideOffset}
+          className="z-100"
+        >
           <Popover.Popup
             className={cn(
-              "text-base select-none min-w-60 w-fit text-ink-gray-9",
-              "rounded-lg border border-gray-200 shadow-2xl bg-surface-modal z-100"
+              "text-base select-none min-w-60 w-fit text-ink-gray-9 relative",
+              "rounded-lg border border-gray-200 shadow-2xl bg-surface-modal"
             )}
           >
             {/* Month Switcher */}
