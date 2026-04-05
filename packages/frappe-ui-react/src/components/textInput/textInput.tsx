@@ -5,8 +5,92 @@ import React, {
   type InputHTMLAttributes,
   forwardRef,
 } from "react";
+import { cva } from "class-variance-authority";
 import { debounce } from "../../utils/debounce";
+import { cn } from "../../utils";
 import type { TextInputProps } from "./types";
+
+const inputVariants = cva(
+  "transition-colors w-full dark:[color-scheme:dark] outline-none appearance-none",
+  {
+    variants: {
+      size: {
+        sm: "text-base rounded h-7",
+        md: "text-base rounded h-8",
+        lg: "text-lg rounded-md h-10",
+        xl: "text-xl rounded-md h-10",
+      },
+      variant: {
+        subtle:
+          "border border-surface-gray-2 bg-surface-gray-2 placeholder-ink-gray-4 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
+        outline:
+          "border border-outline-gray-2 bg-surface-white placeholder-ink-gray-4 hover:border-outline-gray-3 hover:shadow-sm focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
+        ghost: "border-0 focus:ring-0 focus-visible:ring-0",
+      },
+      disabled: {
+        true: "",
+        false: "",
+      },
+      hasPrefix: {
+        true: "",
+        false: "",
+      },
+      hasSuffix: {
+        true: "",
+        false: "",
+      },
+    },
+    compoundVariants: [
+      // disabled
+      // sm padding
+      { size: "sm", hasPrefix: false, className: "pl-2" },
+      { size: "sm", hasPrefix: true, className: "pl-9" },
+      { size: "sm", hasSuffix: false, className: "pr-2 py-1.5" },
+      { size: "sm", hasSuffix: true, className: "pr-8 py-1.5" },
+      // md padding
+      { size: "md", hasPrefix: false, className: "pl-2.5" },
+      { size: "md", hasPrefix: true, className: "pl-10" },
+      { size: "md", hasSuffix: false, className: "pr-2.5 py-1.5" },
+      { size: "md", hasSuffix: true, className: "pr-9 py-1.5" },
+      // lg padding
+      { size: "lg", hasPrefix: false, className: "pl-3" },
+      { size: "lg", hasPrefix: true, className: "pl-12" },
+      { size: "lg", hasSuffix: false, className: "pr-3 py-1.5" },
+      { size: "lg", hasSuffix: true, className: "pr-10 py-1.5" },
+      // xl padding
+      { size: "xl", hasPrefix: false, className: "pl-3" },
+      { size: "xl", hasPrefix: true, className: "pl-13" },
+      { size: "xl", hasSuffix: false, className: "pr-3 py-1.5" },
+      { size: "xl", hasSuffix: true, className: "pr-10 py-1.5" },
+      // disabled compound variants
+      {
+        disabled: true,
+        variant: "outline",
+        className:
+          "border border-outline-gray-2 bg-surface-gray-1 placeholder-ink-gray-3 pointer-events-none",
+      },
+      {
+        disabled: true,
+        variant: "subtle",
+        className:
+          "border border-transparent bg-surface-gray-1 placeholder-ink-gray-3 pointer-events-none",
+      },
+      {
+        disabled: true,
+        variant: "ghost",
+        className:
+          "border border-transparent bg-surface-gray-1 placeholder-ink-gray-3 pointer-events-none",
+      },
+    ],
+    defaultVariants: {
+      size: "sm",
+      variant: "subtle",
+      disabled: false,
+      hasPrefix: false,
+      hasSuffix: false,
+    },
+  }
+);
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   (
@@ -37,68 +121,6 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       },
       [ref]
     );
-
-    const textColor = disabled ? "text-ink-gray-5" : "text-ink-gray-8";
-
-    const inputClasses = useMemo(() => {
-      const sizeClasses = {
-        sm: "text-base rounded h-7",
-        md: "text-base rounded h-8",
-        lg: "text-lg rounded-md h-10",
-        xl: "text-xl rounded-md h-10",
-      }[size];
-
-      const paddingClasses = {
-        sm: ["py-1.5", prefix ? "pl-9" : "pl-2", suffix ? "pr-8" : "pr-2"].join(
-          " "
-        ),
-        md: [
-          "py-1.5",
-          prefix ? "pl-10" : "pl-2.5",
-          suffix ? "pr-9" : "pr-2.5",
-        ].join(" "),
-        lg: [
-          "py-1.5",
-          prefix ? "pl-12" : "pl-3",
-          suffix ? "pr-10" : "pr-3",
-        ].join(" "),
-        xl: [
-          "py-1.5",
-          prefix ? "pl-13" : "pl-3",
-          suffix ? "pr-10" : "pr-3",
-        ].join(" "),
-      }[size];
-
-      const currentVariant = disabled ? "disabled" : variant;
-      const variantClasses = {
-        subtle:
-          "border border-surface-gray-2 bg-surface-gray-2 placeholder-ink-gray-4 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-        outline:
-          "border border-outline-gray-2 bg-surface-white placeholder-ink-gray-4 hover:border-outline-gray-3 hover:shadow-sm focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
-        disabled: `border ${
-          variant === "outline" ? "border-outline-gray-2" : "border-transparent"
-        } bg-surface-gray-1 placeholder-ink-gray-3`,
-        ghost: "border-0 focus:ring-0 focus-visible:ring-0",
-      }[currentVariant];
-
-      return [
-        sizeClasses,
-        paddingClasses,
-        variantClasses,
-        textColor,
-        "transition-colors w-full dark:[color-scheme:dark] outline-none",
-      ]
-        .filter(Boolean)
-        .join(" ");
-    }, [size, prefix, suffix, disabled, variant, textColor]);
-
-    const prefixClasses = useMemo(() => {
-      return { sm: "pl-2", md: "pl-2.5", lg: "pl-3", xl: "pl-3" }[size];
-    }, [size]);
-
-    const suffixClasses = useMemo(() => {
-      return { sm: "pr-2", md: "pr-2.5", lg: "pr-3", xl: "pr-3" }[size];
-    }, [size]);
 
     const emitChange = useCallback(
       (value: string) => {
@@ -131,17 +153,26 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
 
     return (
       <div
-        className={`relative flex items-center ${rest?.className || ""}`}
+        className={cn("relative flex items-center", rest.className)}
         style={rest?.style}
       >
         {prefix && (
           <div
-            className={`absolute inset-y-0 left-0 flex items-center ${textColor} ${prefixClasses}`}
+            className={cn(
+              "absolute inset-y-0 left-0 flex items-center text-ink-gray-8",
+              {
+                "text-ink-gray-5": disabled,
+                "pl-2": size === "sm",
+                "pl-2.5": size === "md",
+                "pl-3": size === "lg" || size === "xl",
+              }
+            )}
           >
             {prefix?.(size)}
           </div>
         )}
         <input
+          {...rest}
           ref={setRefs}
           type={type}
           disabled={disabled}
@@ -150,12 +181,22 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           required={rest.required}
           onChange={handleChange}
           data-testid="text-input"
-          className={`appearance-none ${inputClasses}`}
-          {...rest}
+          className={inputVariants({
+            size,
+            variant,
+            disabled,
+            hasPrefix: !!prefix,
+            hasSuffix: !!suffix,
+          })}
         />
         {suffix && (
           <div
-            className={`absolute inset-y-0 right-0 flex items-center ${textColor} ${suffixClasses}`}
+            className={cn("absolute inset-y-0 right-0 flex items-center", {
+              "text-ink-gray-5": disabled,
+              "pr-2": size === "sm",
+              "pr-2.5": size === "md",
+              "pr-3": size === "lg" || size === "xl",
+            })}
           >
             {suffix && suffix()}
           </div>
