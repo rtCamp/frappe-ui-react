@@ -31,6 +31,7 @@
   },
   "scripts": {
     "build": "tsc -b && pnpm copy-assets",
+    "dev": "tsc -b -w && pnpm copy-assets",
     "copy-assets": "node scripts/copy-assets.js",
     "publish:local": "pnpm publish --registry http://localhost:4873",
     "unpublish:local": "pnpm unpublish --registry http://localhost:4873 --force",

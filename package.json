@@ -10,7 +10,7 @@
   },
   "scripts": {
     "prepare": "husky",
-    "dev": "vite",
+    "dev": "pnpm --filter @rtcamp/frappe-ui-react dev",
     "build": "pnpm --filter @rtcamp/frappe-ui-react build",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
