@@ -41,8 +41,8 @@ const Checkbox: React.FC<CheckboxProps> = ({
       md: "w-4 h-4",
     }[size as keyof SizeTypes];
 
-    return `rounded-sm mt-[1px] ${extraInputClasses} ${baseClasses} ${interactionClasses} ${sizeClasses}`;
-  }, [disabled, padding, size, extraInputClasses]);
+    return `rounded-sm mt-[1px] ${baseClasses} ${interactionClasses} ${sizeClasses}`;
+  }, [disabled, padding, size]);
 
   const wrapperClasses = useMemo(() => {
     let paddingClasses = "";
