@@ -12,16 +12,15 @@ import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Strike from "@tiptap/extension-strike";
 import Placeholder from "@tiptap/extension-placeholder";
 import { TableKit } from "@tiptap/extension-table";
-import clsx from "clsx";
 
 /**
  * Internal dependencies.
  */
 import "./textEditor.css";
-import { normalizeClasses } from "../../utils";
 import type { TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
 import { ExtendedCodeBlock } from "./extension/codeBlock";
+import { cn } from "../../utils";
 
 const TextEditor = ({
   content,
@@ -47,9 +46,9 @@ const TextEditor = ({
       autofocus,
       editorProps: {
         attributes: {
-          class: clsx(
+          class: cn(
             "prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-outline-gray-2 prose-th:border-outline-gray-2 prose-td:relative prose-th:relative prose-th:bg-surface-gray-2 border-outline-gray-1",
-            normalizeClasses(editorClass)
+            editorClass
           ),
         },
       },
@@ -100,18 +99,7 @@ const TextEditor = ({
         onTransaction?.(editor);
       },
     },
-    [
-      content,
-      editable,
-      autofocus,
-      editorClass,
-      starterkitOptions,
-      extensions,
-      onChange,
-      onFocus,
-      onBlur,
-      onTransaction,
-    ]
+    [editable, autofocus, editorClass]
   );
 
   return (
