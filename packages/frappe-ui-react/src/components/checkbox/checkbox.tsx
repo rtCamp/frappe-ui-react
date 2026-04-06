@@ -1,6 +1,7 @@
 import React, { useMemo, useCallback } from "react";
 import type { CheckboxProps } from "./types";
 import type { SizeTypes } from "../../common/types";
+import { cn } from "../../utils";
 
 const Checkbox: React.FC<CheckboxProps> = ({
   size = "sm",
@@ -10,7 +11,9 @@ const Checkbox: React.FC<CheckboxProps> = ({
   value,
   onChange,
   htmlId,
-  extraClasses = "",
+  extraLabelClasses = "",
+  extraInputClasses = "",
+  extraWrapperClasses = "",
 }) => {
   const labelClasses = useMemo(() => {
     const sizeClasses: string = {
@@ -38,8 +41,8 @@ const Checkbox: React.FC<CheckboxProps> = ({
       md: "w-4 h-4",
     }[size as keyof SizeTypes];
 
-    return `rounded-sm mt-[1px] ${extraClasses} ${baseClasses} ${interactionClasses} ${sizeClasses}`;
-  }, [disabled, padding, size, extraClasses]);
+    return `rounded-sm mt-[1px] ${extraInputClasses} ${baseClasses} ${interactionClasses} ${sizeClasses}`;
+  }, [disabled, padding, size, extraInputClasses]);
 
   const wrapperClasses = useMemo(() => {
     let paddingClasses = "";
@@ -67,9 +70,9 @@ const Checkbox: React.FC<CheckboxProps> = ({
   );
 
   return (
-    <div className={wrapperClasses}>
+    <div className={cn(wrapperClasses, extraWrapperClasses)}>
       <input
-        className={inputClasses}
+        className={cn(inputClasses, extraInputClasses)}
         type="checkbox"
         disabled={disabled}
         id={htmlId}
@@ -78,7 +81,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
         data-testid="checkbox"
       />
       {label && (
-        <label className={labelClasses} htmlFor={htmlId}>
+        <label className={cn(labelClasses, extraLabelClasses)} htmlFor={htmlId}>
           {label}
         </label>
       )}
