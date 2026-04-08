@@ -16,7 +16,10 @@ export function GanttWeekHeader({ weekIndex }: GanttWeekProps) {
 
   const weekStartDay = addDays(weekStart, weekIndex * 7);
   const weekEndDay = addDays(weekStartDay, daysPerWeek - 1);
-  const label = format(weekStartDay, "MMM d") + " - " + format(weekEndDay, "d");
+  const endFormat =
+    weekEndDay.getMonth() !== weekStartDay.getMonth() ? "MMM d" : "d";
+  const label =
+    format(weekStartDay, "MMM d") + " - " + format(weekEndDay, endFormat);
 
   return (
     <th
