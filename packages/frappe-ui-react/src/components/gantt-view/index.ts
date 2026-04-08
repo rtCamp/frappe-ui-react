@@ -1,1 +1,2 @@
-export { GanttGrid, type GanttGridProps } from "./gantt-grid";
+export * from "./gantt-grid";
+export * from "./types";

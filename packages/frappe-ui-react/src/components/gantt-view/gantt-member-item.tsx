@@ -2,7 +2,7 @@ import { ChevronRight } from "lucide-react";
 import { cn } from "../../utils";
 import { Avatar } from "../avatar";
 import { Badge } from "../badge";
-import type { GanttRowData } from "./gantt-grid";
+import type { GanttRowData } from "./types";
 
 export interface GanttMemberItemProps extends GanttRowData {
   expanded: boolean;

@@ -1,6 +1,6 @@
 import { Folder } from "lucide-react";
 import { Badge } from "../badge";
-import type { GanttProjectData } from "./gantt-grid";
+import type { GanttProjectData } from "./types";
 
 export function GanttProjectItem({
   name,

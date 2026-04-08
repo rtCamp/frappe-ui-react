@@ -3,35 +3,8 @@ import { addDays, format, isToday, startOfWeek } from "date-fns";
 import { cn, getUTCDateTime } from "../../utils";
 import { GanttMemberItem } from "./gantt-member-item";
 import { GanttProjectItem } from "./gantt-project-item";
-import { CELL_HEIGHT, CELL_WIDTH } from "./constants";
-
-const ROW_HEADER_WIDTH = 240;
-
-export interface GanttProjectData {
-  name: string;
-  dateRange?: string;
-  client?: string;
-  badge?: string;
-}
-
-export interface GanttRowData {
-  name: string;
-  role?: string;
-  image?: string;
-  badge?: string;
-  projects?: GanttProjectData[];
-}
-
-export interface GanttGridProps {
-  /** ISO date string (YYYY-MM-DD) for any date within the first week displayed. */
-  startDate: string;
-  /** Number of weeks to display. */
-  weekCount?: number;
-  /** Row data. If omitted, falls back to rowCount placeholder rows. */
-  rows: GanttRowData[];
-  /** Whether to include Saturday and Sunday columns. When false, week boundary is every 5th column. */
-  showWeekend?: boolean;
-}
+import { CELL_HEIGHT, CELL_WIDTH, ROW_HEADER_WIDTH } from "./constants";
+import type { GanttGridProps } from "./types";
 
 export const GanttGrid: React.FC<GanttGridProps> = ({
   startDate,
@@ -78,7 +51,7 @@ export const GanttGrid: React.FC<GanttGridProps> = ({
             </th>
 
             {weeks.map((weekIndex) => {
-              const weekStartDay = addDays(weekStart, weekIndex * daysPerWeek);
+              const weekStartDay = addDays(weekStart, weekIndex * 7);
               const weekEndDay = addDays(weekStartDay, daysPerWeek - 1);
               const label =
                 format(weekStartDay, "MMM d") + " - " + format(weekEndDay, "d");
@@ -100,18 +73,22 @@ export const GanttGrid: React.FC<GanttGridProps> = ({
           {/* Row 2: individual day numbers */}
           <tr>
             {columns.map((i) => {
-              const day = addDays(weekStart, i);
+              const day = addDays(
+                weekStart,
+                Math.floor(i / daysPerWeek) * 7 + (i % daysPerWeek)
+              );
               const isTodayDate = isToday(day);
-              const isSaturday = (i + 2) % daysPerWeek === 0;
-              const isSunday = (i + 1) % daysPerWeek === 0;
+              const isSaturday = (i + 2) % daysPerWeek === 0 && showWeekend;
+              const isSunday = (i + 1) % daysPerWeek === 0 && showWeekend;
+              const isLastday = (i + 1) % daysPerWeek === 0;
               return (
                 <th
                   key={i}
                   className={cn(
                     "font-normal relative border-b border-outline-gray-2 p-2 text-center",
                     {
-                      "border-r border-outline-gray-2 bg-surface-gray-1 rounded-tr-md":
-                        isSunday,
+                      "border-r border-outline-gray-2 ": isLastday,
+                      "bg-surface-gray-1 rounded-tr-md": isSunday,
                       "bg-surface-gray-1 rounded-tl-md": isSaturday,
                     }
                   )}
@@ -159,13 +136,15 @@ export const GanttGrid: React.FC<GanttGridProps> = ({
                     />
                   </th>
                   {columns.map((i) => {
-                    const isSaturday = (i + 2) % daysPerWeek === 0;
-                    const isSunday = (i + 1) % daysPerWeek === 0;
+                    const isSaturday =
+                      (i + 2) % daysPerWeek === 0 && showWeekend;
+                    const isSunday = (i + 1) % daysPerWeek === 0 && showWeekend;
+                    const isLastday = (i + 1) % daysPerWeek === 0;
                     return (
                       <td
                         key={i}
                         className={cn({
-                          "border-r border-outline-gray-2": isSunday,
+                          "border-r border-outline-gray-2": isLastday,
                           "bg-surface-gray-1": isSaturday || isSunday,
                         })}
                         style={{ height: CELL_HEIGHT, width: CELL_WIDTH }}
@@ -189,15 +168,17 @@ export const GanttGrid: React.FC<GanttGridProps> = ({
                         <GanttProjectItem {...project} />
                       </th>
                       {columns.map((i) => {
-                        const isSaturday = (i + 2) % daysPerWeek === 0;
-                        const isSunday = (i + 1) % daysPerWeek === 0;
+                        const isSaturday =
+                          (i + 2) % daysPerWeek === 0 && showWeekend;
+                        const isSunday =
+                          (i + 1) % daysPerWeek === 0 && showWeekend;
+                        const isLastday = (i + 1) % daysPerWeek === 0;
                         return (
                           <td
                             key={i}
                             className={cn({
-                              "bg-surface-gray-1": isSaturday,
-                              "bg-surface-gray-1 border-r border-outline-gray-2":
-                                isSunday,
+                              " border-r border-outline-gray-2": isLastday,
+                              "bg-surface-gray-1": isSaturday || isSunday,
                             })}
                             style={{ height: CELL_HEIGHT, width: CELL_WIDTH }}
                           />

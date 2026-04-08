@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { GanttGrid, type GanttRowData } from "./gantt-grid";
+import type { GanttRowData } from "./types";
+import { GanttGrid } from "./gantt-grid";
 
 const today = new Date().toISOString().slice(0, 10);
 
