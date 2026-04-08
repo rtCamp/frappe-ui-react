@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import { cn } from "../../utils";
 import { Avatar } from "../avatar";
 import { Badge } from "../badge";
@@ -29,15 +30,7 @@ export function GanttMemberItem({
         )}
         aria-label={expanded ? "Collapse" : "Expand"}
       >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path
-            d="M6 4l4 4-4 4"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <ChevronRight size={16} />
       </button>
 
       <div className="flex items-center gap-2 flex-1 min-w-0 overflow-hidden">
