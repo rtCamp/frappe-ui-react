@@ -4,10 +4,10 @@ import { useShallow } from "zustand/react/shallow";
 import { startOfWeek } from "date-fns";
 import { ROW_HEADER_WIDTH } from "./constants";
 import { getUTCDateTime } from "../../utils";
-import type { GanttRowData } from "./types";
+import type { Member } from "./types";
 
 interface GanttProps {
-  rows: GanttRowData[];
+  members: Member[];
   showWeekend: boolean;
   startDate: string;
   weekCount: number;

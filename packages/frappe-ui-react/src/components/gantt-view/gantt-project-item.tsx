@@ -2,9 +2,9 @@ import { Folder } from "lucide-react";
 import type { CSSProperties, MouseEvent } from "react";
 import { cn } from "../../utils";
 import { Badge } from "../badge";
-import type { GanttProjectData } from "./types";
+import type { Project } from "./types";
 
-export interface GanttProjectItemProps extends GanttProjectData {
+export interface GanttProjectItemProps extends Project {
   onResizeStart?: (e: MouseEvent) => void;
   onResizeHandleEnter?: () => void;
   onResizeHandleLeave?: () => void;

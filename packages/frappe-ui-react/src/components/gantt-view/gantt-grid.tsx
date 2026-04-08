@@ -5,11 +5,11 @@ import { GanttProjectItem } from "./gantt-project-item";
 import { GanttWeekHeader } from "./gantt-week-header";
 import { createGanttStore, GanttContext, useGanttStore } from "./gantt-store";
 import { CELL_HEIGHT, CELL_WIDTH } from "./constants";
-import type { GanttGridProps } from "./types";
+import type { GanttGridProps, Project, Member } from "./types";
 
 const GanttGridInner: React.FC = () => {
   const {
-    rows,
+    members,
     expandedRows,
     headerWidth,
     resizeHandleActive,
@@ -22,7 +22,7 @@ const GanttGridInner: React.FC = () => {
     columns,
     showWeekend,
   } = useGanttStore((s) => ({
-    rows: s.rows,
+    members: s.members,
     expandedRows: s.expandedRows,
     headerWidth: s.headerWidth,
     resizeHandleActive: s.resizeHandleActive,
@@ -76,10 +76,10 @@ const GanttGridInner: React.FC = () => {
         </thead>
 
         <tbody>
-          {rows.map((row, rowIndex) => {
+          {members.map((row: Member, rowIndex: number) => {
             const isExpanded = expandedRows.has(rowIndex);
             const hasProjects = Boolean(row.projects?.length);
-            const isLastMember = rowIndex === rows.length - 1;
+            const isLastMember = rowIndex === members.length - 1;
             const isMemberLastRow =
               isLastMember && !(isExpanded && hasProjects);
 
@@ -123,50 +123,55 @@ const GanttGridInner: React.FC = () => {
 
                 {/* Project child rows */}
                 {isExpanded &&
-                  row.projects?.map((project, projectIndex) => {
-                    const isLastProjectRow =
-                      isLastMember &&
-                      projectIndex === (row.projects?.length ?? 0) - 1;
-                    return (
-                      <tr key={`${rowIndex}-project-${projectIndex}`}>
-                        <GanttProjectItem
-                          {...project}
-                          onResizeStart={onResizeMouseDown}
-                          onResizeHandleEnter={() =>
-                            setResizeHandleActive(true)
-                          }
-                          onResizeHandleLeave={() =>
-                            setResizeHandleActive(false)
-                          }
-                          highlightResizeHandle={resizeHandleActive}
-                          style={{
-                            height: CELL_HEIGHT,
-                            width: headerWidth,
-                            minWidth: headerWidth,
-                          }}
-                        />
-                        {columns.map((i) => {
-                          const isSaturday =
-                            (i + 2) % daysPerWeek === 0 && showWeekend;
-                          const isSunday =
-                            (i + 1) % daysPerWeek === 0 && showWeekend;
-                          const isLastday = (i + 1) % daysPerWeek === 0;
-                          return (
-                            <td
-                              key={i}
-                              className={cn({
-                                "border-r border-outline-gray-2": isLastday,
-                                "border-b border-outline-gray-2":
-                                  isLastProjectRow,
-                                "bg-surface-gray-1": isSaturday || isSunday,
-                              })}
-                              style={{ height: CELL_HEIGHT, width: CELL_WIDTH }}
-                            />
-                          );
-                        })}
-                      </tr>
-                    );
-                  })}
+                  row.projects?.map(
+                    (project: Project, projectIndex: number) => {
+                      const isLastProjectRow =
+                        isLastMember &&
+                        projectIndex === (row.projects?.length ?? 0) - 1;
+                      return (
+                        <tr key={`${rowIndex}-project-${projectIndex}`}>
+                          <GanttProjectItem
+                            {...project}
+                            onResizeStart={onResizeMouseDown}
+                            onResizeHandleEnter={() =>
+                              setResizeHandleActive(true)
+                            }
+                            onResizeHandleLeave={() =>
+                              setResizeHandleActive(false)
+                            }
+                            highlightResizeHandle={resizeHandleActive}
+                            style={{
+                              height: CELL_HEIGHT,
+                              width: headerWidth,
+                              minWidth: headerWidth,
+                            }}
+                          />
+                          {columns.map((i) => {
+                            const isSaturday =
+                              (i + 2) % daysPerWeek === 0 && showWeekend;
+                            const isSunday =
+                              (i + 1) % daysPerWeek === 0 && showWeekend;
+                            const isLastday = (i + 1) % daysPerWeek === 0;
+                            return (
+                              <td
+                                key={i}
+                                className={cn({
+                                  "border-r border-outline-gray-2": isLastday,
+                                  "border-b border-outline-gray-2":
+                                    isLastProjectRow,
+                                  "bg-surface-gray-1": isSaturday || isSunday,
+                                })}
+                                style={{
+                                  height: CELL_HEIGHT,
+                                  width: CELL_WIDTH,
+                                }}
+                              />
+                            );
+                          })}
+                        </tr>
+                      );
+                    }
+                  )}
               </React.Fragment>
             );
           })}
@@ -179,7 +184,7 @@ const GanttGridInner: React.FC = () => {
 export const GanttGrid: React.FC<GanttGridProps> = (props) => {
   const [store] = useState(() =>
     createGanttStore({
-      rows: props.rows,
+      members: props.members,
       showWeekend: props.showWeekend ?? true,
       startDate: props.startDate,
       weekCount: props.weekCount ?? 3,

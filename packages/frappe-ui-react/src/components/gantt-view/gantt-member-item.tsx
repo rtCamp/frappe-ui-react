@@ -3,9 +3,9 @@ import type { CSSProperties, MouseEvent } from "react";
 import { cn } from "../../utils";
 import { Avatar } from "../avatar";
 import { Badge } from "../badge";
-import type { GanttRowData } from "./types";
+import type { Member } from "./types";
 
-export interface GanttMemberItemProps extends GanttRowData {
+export interface GanttMemberItemProps extends Member {
   expanded: boolean;
   hasProjects: boolean;
   onToggle: () => void;

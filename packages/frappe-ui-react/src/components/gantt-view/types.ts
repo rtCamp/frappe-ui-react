@@ -1,16 +1,16 @@
-export interface GanttProjectData {
+export interface Project {
   name: string;
   dateRange?: string;
   client?: string;
   badge?: string;
 }
 
-export interface GanttRowData {
+export interface Member {
   name: string;
   role?: string;
   image?: string;
   badge?: string;
-  projects?: GanttProjectData[];
+  projects?: Project[];
 }
 
 export interface GanttGridProps {
@@ -18,8 +18,8 @@ export interface GanttGridProps {
   startDate: string;
   /** Number of weeks to display. */
   weekCount?: number;
-  /** Row data. If omitted, falls back to rowCount placeholder rows. */
-  rows: GanttRowData[];
+  /** Member row data. */
+  members: Member[];
   /** Whether to include Saturday and Sunday columns. When false, week boundary is every 5th column. */
   showWeekend?: boolean;
 }

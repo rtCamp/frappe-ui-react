@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { GanttRowData } from "./types";
+import type { Member } from "./types";
 import { GanttGrid } from "./gantt-grid";
 
 const today = new Date().toISOString().slice(0, 10);
 
-const fakeRows: GanttRowData[] = [
+const fakeRows: Member[] = [
   {
     name: "Samantha Robbins",
     role: "Software Engineer",
@@ -119,7 +119,7 @@ export const Default: Story = {
   args: {
     startDate: today,
     weekCount: 5,
-    rows: fakeRows,
+    members: fakeRows,
   },
 };
 
@@ -127,7 +127,7 @@ export const WithoutWeekend: Story = {
   args: {
     startDate: today,
     weekCount: 20,
-    rows: fakeRows,
+    members: fakeRows,
     showWeekend: false,
   },
 };
