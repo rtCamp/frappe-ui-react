@@ -19,7 +19,7 @@ export function GanttMemberItem({
   onToggle,
 }: GanttMemberItemProps) {
   return (
-    <div className="flex items-center gap-1.5 w-full overflow-hidden">
+    <div className="flex items-center gap-1 w-full overflow-hidden">
       <button
         onClick={onToggle}
         className={cn(
@@ -40,15 +40,17 @@ export function GanttMemberItem({
         </svg>
       </button>
 
-      <Avatar size="xs" shape="circle" image={image} label={name} />
+      <div className="flex items-center gap-2 flex-1 min-w-0 overflow-hidden">
+        <Avatar size="xs" shape="circle" image={image} label={name} />
 
-      <div className="flex flex-col flex-1 min-w-0 leading-tight">
-        <span className="text-sm font-medium text-ink-gray-8 truncate">
-          {name}
-        </span>
-        {role && (
-          <span className="text-xs text-ink-gray-5 truncate">{role}</span>
-        )}
+        <div className="flex flex-col flex-1 min-w-0 leading-tight">
+          <span className="text-sm font-medium text-ink-gray-8 truncate">
+            {name}
+          </span>
+          {role && (
+            <span className="text-xs text-ink-gray-6 truncate">{role}</span>
+          )}
+        </div>
       </div>
 
       {badge && <Badge label={badge} size="sm" variant="subtle" theme="gray" />}

@@ -9,7 +9,7 @@ export function GanttProjectItem({
 }: GanttProjectData) {
   const subtext = [dateRange, client].filter(Boolean).join(" · ");
   return (
-    <div className="flex items-center gap-2 w-full overflow-hidden pl-5">
+    <div className="flex items-center gap-2 w-full overflow-hidden">
       {/* Folder icon */}
       <svg
         className="shrink-0 text-ink-gray-4"
@@ -31,7 +31,7 @@ export function GanttProjectItem({
           {name}
         </span>
         {subtext && (
-          <span className="text-xs text-ink-gray-5 truncate">{subtext}</span>
+          <span className="text-xs text-ink-gray-6 truncate">{subtext}</span>
         )}
       </div>
 

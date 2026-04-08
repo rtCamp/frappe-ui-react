@@ -6,7 +6,6 @@ import { GanttProjectItem } from "./gantt-project-item";
 import { CELL_HEIGHT, CELL_WIDTH } from "./constants";
 
 const ROW_HEADER_WIDTH = 240;
-const ROW_HEIGHT = 52;
 
 export interface GanttProjectData {
   name: string;
@@ -63,156 +62,155 @@ export const GanttGrid: React.FC<GanttGridProps> = ({
   };
 
   return (
-    <table
-      className="relative w-screen h-screen overflow-scroll border-separate border-spacing-0"
-      style={{ width: ROW_HEADER_WIDTH + columnCount * CELL_WIDTH }}
-    >
-      <thead className="sticky top-0 z-10" data-testid="gantt-header">
-        {/* Row 1: corner + week range labels */}
-        <tr>
-          <th
-            rowSpan={2}
-            className="sticky left-0 z-20 bg-surface-white border-b border-r border-outline-gray-2 font-normal"
-            style={{
-              width: ROW_HEADER_WIDTH,
-              minWidth: ROW_HEADER_WIDTH,
-              height: CELL_HEIGHT * 2,
-            }}
-          />
+    <div className="h-screen w-screen overflow-auto">
+      <table
+        className="relative border-separate border-spacing-0"
+        style={{ width: ROW_HEADER_WIDTH + columnCount * CELL_WIDTH }}
+      >
+        <thead className="sticky top-0 z-10" data-testid="gantt-header">
+          {/* Row 1: corner + week range labels */}
+          <tr>
+            <th
+              rowSpan={2}
+              className="sticky left-0 z-20 bg-surface-white border-b border-r border-outline-gray-2 font-normal"
+            >
+              Members
+            </th>
 
-          {weeks.map((weekIndex) => {
-            const weekStartDay = addDays(weekStart, weekIndex * daysPerWeek);
-            const weekEndDay = addDays(weekStartDay, daysPerWeek - 1);
-            const label =
-              format(weekStartDay, "MMM d") + " - " + format(weekEndDay, "d");
-            return (
-              <th
-                key={weekIndex}
-                colSpan={daysPerWeek}
-                className="border-b border-r border-outline-gray-2 bg-surface-white px-2 py-1.5 font-normal"
-                style={{ height: CELL_HEIGHT, width: daysPerWeek * CELL_WIDTH }}
-              >
-                <span className="truncate text-xs text-ink-gray-4">
-                  {label}
-                </span>
-              </th>
-            );
-          })}
-        </tr>
+            {weeks.map((weekIndex) => {
+              const weekStartDay = addDays(weekStart, weekIndex * daysPerWeek);
+              const weekEndDay = addDays(weekStartDay, daysPerWeek - 1);
+              const label =
+                format(weekStartDay, "MMM d") + " - " + format(weekEndDay, "d");
+              return (
+                <th
+                  key={weekIndex}
+                  colSpan={daysPerWeek}
+                  className="border-b border-r border-outline-gray-2 bg-surface-white p-2 font-normal"
+                  style={{ width: daysPerWeek * CELL_WIDTH }}
+                >
+                  <span className="truncate text-xs text-ink-gray-4">
+                    {label}
+                  </span>
+                </th>
+              );
+            })}
+          </tr>
 
-        {/* Row 2: individual day numbers */}
-        <tr>
-          {columns.map((i) => {
-            const day = addDays(weekStart, i);
-            const isTodayDate = isToday(day);
-            const isSaturday = (i + 2) % daysPerWeek === 0;
-            const isSunday = (i + 1) % daysPerWeek === 0;
-            return (
-              <th
-                key={i}
-                className={cn(
-                  "font-normal relative border-b border-outline-gray-2",
-                  {
-                    "border-r border-outline-gray-2 bg-surface-gray-1 rounded-tr-md":
-                      isSunday,
-                    "bg-surface-gray-1 rounded-tl-md": isSaturday,
-                  }
-                )}
-                style={{ height: CELL_HEIGHT, width: CELL_WIDTH }}
-              >
-                <span
+          {/* Row 2: individual day numbers */}
+          <tr>
+            {columns.map((i) => {
+              const day = addDays(weekStart, i);
+              const isTodayDate = isToday(day);
+              const isSaturday = (i + 2) % daysPerWeek === 0;
+              const isSunday = (i + 1) % daysPerWeek === 0;
+              return (
+                <th
+                  key={i}
                   className={cn(
-                    "px-1 py-0.5 rounded-sm text-xs text-ink-gray-4",
+                    "font-normal relative border-b border-outline-gray-2 p-2 text-center",
                     {
-                      "text-white bg-surface-gray-6": isTodayDate,
+                      "border-r border-outline-gray-2 bg-surface-gray-1 rounded-tr-md":
+                        isSunday,
+                      "bg-surface-gray-1 rounded-tl-md": isSaturday,
                     }
                   )}
+                  style={{ width: CELL_WIDTH }}
                 >
-                  {format(day, "d")}
-                </span>
-                <span className="absolute bottom-0 right-0 w-1 h-1 border-r border-outline-gray-modals" />
-              </th>
+                  <span
+                    className={cn(
+                      "inline-flex items-center justify-center w-5.75 rounded-sm text-xs text-ink-gray-4",
+                      {
+                        "text-white bg-surface-gray-7 p-1": isTodayDate,
+                      }
+                    )}
+                  >
+                    {format(day, "d")}
+                  </span>
+                  <span className="absolute bottom-0 right-0 w-1 h-1 border-r border-outline-gray-modals" />
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+
+        <tbody>
+          {rows.map((row, rowIndex) => {
+            const isExpanded = expandedRows.has(rowIndex);
+            const hasProjects = Boolean(row.projects?.length);
+
+            return (
+              <React.Fragment key={rowIndex}>
+                {/* Member row */}
+                <tr>
+                  <th
+                    className="sticky left-0 z-10 bg-surface-white border-b border-r border-outline-gray-2 px-3 font-normal text-left align-middle"
+                    style={{
+                      height: CELL_HEIGHT,
+                      width: ROW_HEADER_WIDTH,
+                      minWidth: ROW_HEADER_WIDTH,
+                    }}
+                  >
+                    <GanttMemberItem
+                      {...row}
+                      expanded={isExpanded}
+                      hasProjects={hasProjects}
+                      onToggle={() => toggleRow(rowIndex)}
+                    />
+                  </th>
+                  {columns.map((i) => {
+                    const isSaturday = (i + 2) % daysPerWeek === 0;
+                    const isSunday = (i + 1) % daysPerWeek === 0;
+                    return (
+                      <td
+                        key={i}
+                        className={cn({
+                          "border-r border-outline-gray-2": isSunday,
+                          "bg-surface-gray-1": isSaturday || isSunday,
+                        })}
+                        style={{ height: CELL_HEIGHT, width: CELL_WIDTH }}
+                      />
+                    );
+                  })}
+                </tr>
+
+                {/* Project child rows */}
+                {isExpanded &&
+                  row.projects?.map((project, projectIndex) => (
+                    <tr key={`${rowIndex}-project-${projectIndex}`}>
+                      <th
+                        className="sticky left-0 z-10 bg-surface-white border-b border-r border-outline-gray-2 pl-8 pr-3 font-normal text-left align-middle"
+                        style={{
+                          height: CELL_HEIGHT,
+                          width: ROW_HEADER_WIDTH,
+                          minWidth: ROW_HEADER_WIDTH,
+                        }}
+                      >
+                        <GanttProjectItem {...project} />
+                      </th>
+                      {columns.map((i) => {
+                        const isSaturday = (i + 2) % daysPerWeek === 0;
+                        const isSunday = (i + 1) % daysPerWeek === 0;
+                        return (
+                          <td
+                            key={i}
+                            className={cn({
+                              "bg-surface-gray-1": isSaturday,
+                              "bg-surface-gray-1 border-r border-outline-gray-2":
+                                isSunday,
+                            })}
+                            style={{ height: CELL_HEIGHT, width: CELL_WIDTH }}
+                          />
+                        );
+                      })}
+                    </tr>
+                  ))}
+              </React.Fragment>
             );
           })}
-        </tr>
-      </thead>
-
-      <tbody>
-        {rows.map((row, rowIndex) => {
-          const isExpanded = expandedRows.has(rowIndex);
-          const hasProjects = Boolean(row.projects?.length);
-
-          return (
-            <React.Fragment key={rowIndex}>
-              {/* Member row */}
-              <tr>
-                <th
-                  className="sticky left-0 z-10 bg-surface-white border-b border-r border-outline-gray-2 px-2 font-normal text-left"
-                  style={{
-                    height: ROW_HEIGHT,
-                    width: ROW_HEADER_WIDTH,
-                    minWidth: ROW_HEADER_WIDTH,
-                  }}
-                >
-                  <GanttMemberItem
-                    {...row}
-                    expanded={isExpanded}
-                    hasProjects={hasProjects}
-                    onToggle={() => toggleRow(rowIndex)}
-                  />
-                </th>
-                {columns.map((i) => {
-                  const isSaturday = (i + 2) % daysPerWeek === 0;
-                  const isSunday = (i + 1) % daysPerWeek === 0;
-                  return (
-                    <td
-                      key={i}
-                      className={cn({
-                        "border-r border-outline-gray-2": isSunday,
-                        "bg-surface-gray-1": isSaturday || isSunday,
-                      })}
-                      style={{ height: ROW_HEIGHT, width: CELL_WIDTH }}
-                    />
-                  );
-                })}
-              </tr>
-
-              {/* Project child rows */}
-              {isExpanded &&
-                row.projects?.map((project, projectIndex) => (
-                  <tr key={`${rowIndex}-project-${projectIndex}`}>
-                    <th
-                      className="sticky left-0 z-10 bg-surface-white border-b border-r border-outline-gray-2 px-2 font-normal text-left"
-                      style={{
-                        height: ROW_HEIGHT,
-                        width: ROW_HEADER_WIDTH,
-                        minWidth: ROW_HEADER_WIDTH,
-                      }}
-                    >
-                      <GanttProjectItem {...project} />
-                    </th>
-                    {columns.map((i) => {
-                      const isSaturday = (i + 2) % daysPerWeek === 0;
-                      const isSunday = (i + 1) % daysPerWeek === 0;
-                      return (
-                        <td
-                          key={i}
-                          className={cn({
-                            "bg-surface-gray-1 ": isSaturday,
-                            "bg-surface-gray-1 border-r border-outline-gray-2":
-                              isSunday,
-                          })}
-                          style={{ height: ROW_HEIGHT, width: CELL_WIDTH }}
-                        />
-                      );
-                    })}
-                  </tr>
-                ))}
-            </React.Fragment>
-          );
-        })}
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   );
 };
 

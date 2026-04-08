@@ -125,7 +125,7 @@ export const Default: Story = {
 export const WithoutWeekend: Story = {
   args: {
     startDate: today,
-    weekCount: 3,
+    weekCount: 20,
     rows: fakeRows,
     showWeekend: false,
   },
