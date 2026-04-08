@@ -1,44 +1,51 @@
 import React, { useState } from "react";
-import { addDays, format, isToday, startOfWeek } from "date-fns";
-import { cn, getUTCDateTime } from "../../utils";
+import { cn } from "../../utils";
 import { GanttMemberItem } from "./gantt-member-item";
 import { GanttProjectItem } from "./gantt-project-item";
-import { CELL_HEIGHT, CELL_WIDTH, ROW_HEADER_WIDTH } from "./constants";
+import { GanttWeekHeader } from "./gantt-week-header";
+import { createGanttStore, GanttContext, useGanttStore } from "./gantt-store";
+import { CELL_HEIGHT, CELL_WIDTH } from "./constants";
 import type { GanttGridProps } from "./types";
 
-export const GanttGrid: React.FC<GanttGridProps> = ({
-  startDate,
-  weekCount = 3,
-  rows,
-  showWeekend = true,
-}) => {
-  const daysPerWeek = showWeekend ? 7 : 5;
-  const columnCount = weekCount * daysPerWeek;
+const GanttGridInner: React.FC = () => {
+  const {
+    rows,
+    expandedRows,
+    headerWidth,
+    resizeHandleActive,
+    toggleRow,
+    setResizeHandleActive,
+    startResize,
+    daysPerWeek,
+    columnCount,
+    weeks,
+    columns,
+    showWeekend,
+  } = useGanttStore((s) => ({
+    rows: s.rows,
+    expandedRows: s.expandedRows,
+    headerWidth: s.headerWidth,
+    resizeHandleActive: s.resizeHandleActive,
+    toggleRow: s.toggleRow,
+    setResizeHandleActive: s.setResizeHandleActive,
+    startResize: s.startResize,
+    daysPerWeek: s.daysPerWeek,
+    columnCount: s.columnCount,
+    weeks: s.weeks,
+    columns: s.columns,
+    showWeekend: s.showWeekend,
+  }));
 
-  const weekStart = startOfWeek(getUTCDateTime(startDate), { weekStartsOn: 1 });
-
-  const weeks = Array.from({ length: weekCount }, (_, i) => i);
-  const columns = Array.from({ length: columnCount }, (_, i) => i);
-
-  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
-
-  const toggleRow = (index: number) => {
-    setExpandedRows((prev) => {
-      const next = new Set(prev);
-      if (next.has(index)) {
-        next.delete(index);
-      } else {
-        next.add(index);
-      }
-      return next;
-    });
+  const onResizeMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    startResize(e.clientX);
   };
 
   return (
     <div className="h-screen w-screen overflow-auto">
       <table
         className="relative border-separate border-spacing-0"
-        style={{ width: ROW_HEADER_WIDTH + columnCount * CELL_WIDTH }}
+        style={{ width: headerWidth + columnCount * CELL_WIDTH }}
       >
         <thead className="sticky top-0 z-10" data-testid="gantt-header">
           {/* Row 1: corner + week range labels */}
@@ -46,68 +53,25 @@ export const GanttGrid: React.FC<GanttGridProps> = ({
             <th
               rowSpan={2}
               className="sticky left-0 z-20 bg-surface-white border-b border-r border-outline-gray-2 font-normal"
+              style={{ width: headerWidth, minWidth: headerWidth }}
             >
               Members
+              <div
+                className={cn(
+                  "absolute top-0 right-0 h-full w-1 cursor-col-resize",
+                  {
+                    "bg-outline-gray-3": resizeHandleActive,
+                  }
+                )}
+                onMouseDown={onResizeMouseDown}
+                onMouseEnter={() => setResizeHandleActive(true)}
+                onMouseLeave={() => setResizeHandleActive(false)}
+              />
             </th>
 
-            {weeks.map((weekIndex) => {
-              const weekStartDay = addDays(weekStart, weekIndex * 7);
-              const weekEndDay = addDays(weekStartDay, daysPerWeek - 1);
-              const label =
-                format(weekStartDay, "MMM d") + " - " + format(weekEndDay, "d");
-              return (
-                <th
-                  key={weekIndex}
-                  colSpan={daysPerWeek}
-                  className="border-b border-r border-outline-gray-2 bg-surface-white p-2 font-normal"
-                  style={{ width: daysPerWeek * CELL_WIDTH }}
-                >
-                  <span className="truncate text-xs text-ink-gray-4">
-                    {label}
-                  </span>
-                </th>
-              );
-            })}
-          </tr>
-
-          {/* Row 2: individual day numbers */}
-          <tr>
-            {columns.map((i) => {
-              const day = addDays(
-                weekStart,
-                Math.floor(i / daysPerWeek) * 7 + (i % daysPerWeek)
-              );
-              const isTodayDate = isToday(day);
-              const isSaturday = (i + 2) % daysPerWeek === 0 && showWeekend;
-              const isSunday = (i + 1) % daysPerWeek === 0 && showWeekend;
-              const isLastday = (i + 1) % daysPerWeek === 0;
-              return (
-                <th
-                  key={i}
-                  className={cn(
-                    "font-normal relative border-b border-outline-gray-2 p-2 text-center",
-                    {
-                      "border-r border-outline-gray-2 ": isLastday,
-                      "bg-surface-gray-1 rounded-tr-md": isSunday,
-                      "bg-surface-gray-1 rounded-tl-md": isSaturday,
-                    }
-                  )}
-                  style={{ width: CELL_WIDTH }}
-                >
-                  <span
-                    className={cn(
-                      "inline-flex items-center justify-center w-5.75 rounded-sm text-xs text-ink-gray-4",
-                      {
-                        "text-white bg-surface-gray-7 p-1": isTodayDate,
-                      }
-                    )}
-                  >
-                    {format(day, "d")}
-                  </span>
-                  <span className="absolute bottom-0 right-0 w-1 h-1 border-r border-outline-gray-modals" />
-                </th>
-              );
-            })}
+            {weeks.map((weekIndex) => (
+              <GanttWeekHeader key={weekIndex} weekIndex={weekIndex} />
+            ))}
           </tr>
         </thead>
 
@@ -115,26 +79,29 @@ export const GanttGrid: React.FC<GanttGridProps> = ({
           {rows.map((row, rowIndex) => {
             const isExpanded = expandedRows.has(rowIndex);
             const hasProjects = Boolean(row.projects?.length);
+            const isLastMember = rowIndex === rows.length - 1;
+            const isMemberLastRow =
+              isLastMember && !(isExpanded && hasProjects);
 
             return (
               <React.Fragment key={rowIndex}>
                 {/* Member row */}
                 <tr>
-                  <th
-                    className="sticky left-0 z-10 bg-surface-white border-b border-r border-outline-gray-2 px-3 font-normal text-left align-middle"
+                  <GanttMemberItem
+                    {...row}
+                    expanded={isExpanded}
+                    hasProjects={hasProjects}
+                    onToggle={() => toggleRow(rowIndex)}
+                    onResizeStart={onResizeMouseDown}
+                    onResizeHandleEnter={() => setResizeHandleActive(true)}
+                    onResizeHandleLeave={() => setResizeHandleActive(false)}
+                    highlightResizeHandle={resizeHandleActive}
                     style={{
                       height: CELL_HEIGHT,
-                      width: ROW_HEADER_WIDTH,
-                      minWidth: ROW_HEADER_WIDTH,
+                      width: headerWidth,
+                      minWidth: headerWidth,
                     }}
-                  >
-                    <GanttMemberItem
-                      {...row}
-                      expanded={isExpanded}
-                      hasProjects={hasProjects}
-                      onToggle={() => toggleRow(rowIndex)}
-                    />
-                  </th>
+                  />
                   {columns.map((i) => {
                     const isSaturday =
                       (i + 2) % daysPerWeek === 0 && showWeekend;
@@ -145,6 +112,7 @@ export const GanttGrid: React.FC<GanttGridProps> = ({
                         key={i}
                         className={cn({
                           "border-r border-outline-gray-2": isLastday,
+                          "border-b border-outline-gray-2": isMemberLastRow,
                           "bg-surface-gray-1": isSaturday || isSunday,
                         })}
                         style={{ height: CELL_HEIGHT, width: CELL_WIDTH }}
@@ -155,43 +123,72 @@ export const GanttGrid: React.FC<GanttGridProps> = ({
 
                 {/* Project child rows */}
                 {isExpanded &&
-                  row.projects?.map((project, projectIndex) => (
-                    <tr key={`${rowIndex}-project-${projectIndex}`}>
-                      <th
-                        className="sticky left-0 z-10 bg-surface-white border-b border-r border-outline-gray-2 pl-8 pr-3 font-normal text-left align-middle"
-                        style={{
-                          height: CELL_HEIGHT,
-                          width: ROW_HEADER_WIDTH,
-                          minWidth: ROW_HEADER_WIDTH,
-                        }}
-                      >
-                        <GanttProjectItem {...project} />
-                      </th>
-                      {columns.map((i) => {
-                        const isSaturday =
-                          (i + 2) % daysPerWeek === 0 && showWeekend;
-                        const isSunday =
-                          (i + 1) % daysPerWeek === 0 && showWeekend;
-                        const isLastday = (i + 1) % daysPerWeek === 0;
-                        return (
-                          <td
-                            key={i}
-                            className={cn({
-                              " border-r border-outline-gray-2": isLastday,
-                              "bg-surface-gray-1": isSaturday || isSunday,
-                            })}
-                            style={{ height: CELL_HEIGHT, width: CELL_WIDTH }}
-                          />
-                        );
-                      })}
-                    </tr>
-                  ))}
+                  row.projects?.map((project, projectIndex) => {
+                    const isLastProjectRow =
+                      isLastMember &&
+                      projectIndex === (row.projects?.length ?? 0) - 1;
+                    return (
+                      <tr key={`${rowIndex}-project-${projectIndex}`}>
+                        <GanttProjectItem
+                          {...project}
+                          onResizeStart={onResizeMouseDown}
+                          onResizeHandleEnter={() =>
+                            setResizeHandleActive(true)
+                          }
+                          onResizeHandleLeave={() =>
+                            setResizeHandleActive(false)
+                          }
+                          highlightResizeHandle={resizeHandleActive}
+                          style={{
+                            height: CELL_HEIGHT,
+                            width: headerWidth,
+                            minWidth: headerWidth,
+                          }}
+                        />
+                        {columns.map((i) => {
+                          const isSaturday =
+                            (i + 2) % daysPerWeek === 0 && showWeekend;
+                          const isSunday =
+                            (i + 1) % daysPerWeek === 0 && showWeekend;
+                          const isLastday = (i + 1) % daysPerWeek === 0;
+                          return (
+                            <td
+                              key={i}
+                              className={cn({
+                                "border-r border-outline-gray-2": isLastday,
+                                "border-b border-outline-gray-2":
+                                  isLastProjectRow,
+                                "bg-surface-gray-1": isSaturday || isSunday,
+                              })}
+                              style={{ height: CELL_HEIGHT, width: CELL_WIDTH }}
+                            />
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
               </React.Fragment>
             );
           })}
         </tbody>
       </table>
     </div>
+  );
+};
+
+export const GanttGrid: React.FC<GanttGridProps> = (props) => {
+  const [store] = useState(() =>
+    createGanttStore({
+      rows: props.rows,
+      showWeekend: props.showWeekend ?? true,
+      startDate: props.startDate,
+      weekCount: props.weekCount ?? 3,
+    })
+  );
+  return (
+    <GanttContext.Provider value={store}>
+      <GanttGridInner />
+    </GanttContext.Provider>
   );
 };
 

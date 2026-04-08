@@ -1,4 +1,5 @@
 import { ChevronRight } from "lucide-react";
+import type { CSSProperties, MouseEvent } from "react";
 import { cn } from "../../utils";
 import { Avatar } from "../avatar";
 import { Badge } from "../badge";
@@ -8,6 +9,11 @@ export interface GanttMemberItemProps extends GanttRowData {
   expanded: boolean;
   hasProjects: boolean;
   onToggle: () => void;
+  onResizeStart?: (e: MouseEvent) => void;
+  onResizeHandleEnter?: () => void;
+  onResizeHandleLeave?: () => void;
+  highlightResizeHandle?: boolean;
+  style?: CSSProperties;
 }
 
 export function GanttMemberItem({
@@ -18,9 +24,17 @@ export function GanttMemberItem({
   expanded,
   hasProjects,
   onToggle,
+  onResizeStart,
+  onResizeHandleEnter,
+  onResizeHandleLeave,
+  highlightResizeHandle,
+  style,
 }: GanttMemberItemProps) {
   return (
-    <div className="flex items-center gap-1 w-full overflow-hidden">
+    <th
+      className="sticky left-0 z-10 bg-surface-white border-b border-r border-outline-gray-2 px-3 font-normal text-left align-middle flex items-center gap-1 w-full overflow-hidden"
+      style={style}
+    >
       <button
         onClick={onToggle}
         className={cn(
@@ -47,6 +61,16 @@ export function GanttMemberItem({
       </div>
 
       {badge && <Badge label={badge} size="sm" variant="subtle" theme="gray" />}
-    </div>
+      {onResizeStart && (
+        <div
+          className={cn("absolute top-0 right-0 h-full w-1 cursor-col-resize", {
+            "bg-outline-gray-3": highlightResizeHandle,
+          })}
+          onMouseDown={onResizeStart}
+          onMouseEnter={onResizeHandleEnter}
+          onMouseLeave={onResizeHandleLeave}
+        />
+      )}
+    </th>
   );
 }
