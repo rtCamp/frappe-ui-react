@@ -88,11 +88,5 @@
     "*.(xml|xml.dist)": "prettier --write",
     "*.yml": "prettier --write"
   },
-  "dependencies": {
-    "and": "^0.0.3",
-    "build": "^0.1.4",
-    "pnpm": "^10.30.2",
-    "react-docgen-typescript": "^2.4.0"
-  },
   "packageManager": "pnpm@10.13.1"
 }
