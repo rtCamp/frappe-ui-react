@@ -4,6 +4,13 @@ import { GanttGrid } from "./gantt-grid";
 
 const today = new Date().toISOString().slice(0, 10);
 
+// Helper: return an ISO date string N days offset from today
+const offsetDate = (n: number) => {
+  const d = new Date();
+  d.setDate(d.getDate() + n);
+  return d.toISOString().slice(0, 10);
+};
+
 const fakeRows: Member[] = [
   {
     name: "Samantha Robbins",
@@ -15,11 +22,18 @@ const fakeRows: Member[] = [
         dateRange: "Jan 12 - Mar 24",
         client: "Atlas Corp",
         badge: "New",
+        allocation: [
+          { hours: 4, startDate: offsetDate(1), endDate: offsetDate(5) },
+          { hours: 6, startDate: offsetDate(8), endDate: offsetDate(10) },
+        ],
       },
       {
         name: "Dashboard Revamp",
         dateRange: "Feb 1 - Apr 15",
         client: "Acme Inc",
+        allocation: [
+          { hours: 8, startDate: offsetDate(3), endDate: offsetDate(12) },
+        ],
       },
     ],
   },
@@ -33,6 +47,9 @@ const fakeRows: Member[] = [
         dateRange: "Mar 1 - Mar 31",
         client: "Internal",
         badge: "Active",
+        allocation: [
+          { hours: 3, startDate: offsetDate(0), endDate: offsetDate(7) },
+        ],
       },
     ],
   },

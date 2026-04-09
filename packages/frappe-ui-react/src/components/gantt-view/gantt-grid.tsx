@@ -3,6 +3,7 @@ import { cn } from "../../utils";
 import { GanttMemberItem } from "./gantt-member-item";
 import { GanttProjectItem } from "./gantt-project-item";
 import { GanttWeekHeader } from "./gantt-week-header";
+import { GanttBlock } from "./gantt-block";
 import { createGanttStore, GanttContext, useGanttStore } from "./gantt-store";
 import { CELL_HEIGHT, CELL_WIDTH } from "./constants";
 import type { GanttGridProps, Project, Member } from "./types";
@@ -162,10 +163,30 @@ const GanttGridInner: React.FC = () => {
                                   "bg-surface-gray-1": isSaturday || isSunday,
                                 })}
                                 style={{
+                                  position: i === 0 ? "relative" : undefined,
                                   height: CELL_HEIGHT,
                                   width: CELL_WIDTH,
                                 }}
-                              />
+                              >
+                                {i === 0 && project.allocation?.length && (
+                                  <div
+                                    className="absolute top-0 left-0 pointer-events-none"
+                                    style={{
+                                      width: columnCount * CELL_WIDTH,
+                                      height: CELL_HEIGHT,
+                                    }}
+                                  >
+                                    {project.allocation.map(
+                                      (alloc, allocIndex) => (
+                                        <GanttBlock
+                                          key={allocIndex}
+                                          allocation={alloc}
+                                        />
+                                      )
+                                    )}
+                                  </div>
+                                )}
+                              </td>
                             );
                           })}
                         </tr>

@@ -1,8 +1,18 @@
+export interface Allocation {
+  /** Hours per day. */
+  hours: number;
+  /** ISO date string (YYYY-MM-DD) for the first day of the allocation. */
+  startDate: string;
+  /** ISO date string (YYYY-MM-DD) for the last day of the allocation (inclusive). */
+  endDate: string;
+}
+
 export interface Project {
   name: string;
   dateRange?: string;
   client?: string;
   badge?: string;
+  allocation?: Allocation[];
 }
 
 export interface Member {
