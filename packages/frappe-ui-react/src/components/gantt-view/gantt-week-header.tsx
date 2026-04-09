@@ -24,8 +24,11 @@ export function GanttWeekHeader({ weekIndex }: GanttWeekProps) {
   return (
     <th
       colSpan={daysPerWeek}
-      className="border-r border-outline-gray-2 bg-surface-white font-normal p-0"
-      style={{ width: daysPerWeek * CELL_WIDTH }}
+      className="border-r border-b border-outline-gray-2 bg-surface-white font-normal p-0"
+      style={{
+        width: daysPerWeek * CELL_WIDTH,
+        maxWidth: daysPerWeek * CELL_WIDTH,
+      }}
     >
       {/* Week label row */}
       <div className="border-b border-outline-gray-2 p-2">
@@ -42,19 +45,19 @@ export function GanttWeekHeader({ weekIndex }: GanttWeekProps) {
           return (
             <div
               key={i}
-              className={cn(
-                "relative border-b border-outline-gray-2 p-2 text-center",
-                {
-                  "bg-surface-gray-1 rounded-tr-md": isSunday,
-                  "bg-surface-gray-1 rounded-tl-md": isSaturday,
-                }
-              )}
-              style={{ width: CELL_WIDTH }}
+              style={{
+                width: CELL_WIDTH,
+                height: CELL_WIDTH,
+              }}
+              className={cn({
+                "bg-surface-gray-1 rounded-tr-md": isSunday,
+                "bg-surface-gray-1 rounded-tl-md": isSaturday,
+              })}
             >
               <span
                 className={cn(
-                  "inline-flex items-center justify-center w-5.75 rounded-sm text-xs text-ink-gray-4",
-                  { "text-white bg-surface-gray-7 p-1": isTodayDate }
+                  "rounded-sm text-xs text-ink-gray-4 px-1.5 py-0.5",
+                  { "text-white bg-surface-gray-7": isTodayDate }
                 )}
               >
                 {format(day, "d")}
