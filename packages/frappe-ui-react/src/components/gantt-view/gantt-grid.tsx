@@ -3,7 +3,9 @@ import { cn } from "../../utils";
 import { GanttMemberItem } from "./gantt-member-item";
 import { GanttProjectItem } from "./gantt-project-item";
 import { GanttWeekHeader } from "./gantt-week-header";
-import { GanttBlock } from "./gantt-block";
+import { GanttProjectBar } from "./gantt-bar/project-bar";
+import { GanttMemberBar } from "./gantt-bar/member-bar";
+import { getMemberAllocation } from "./gantt-bar/utilities/getMemberAllocation";
 import { createGanttStore, GanttContext, useGanttStore } from "./gantt-store";
 import { CELL_HEIGHT, CELL_WIDTH } from "./constants";
 import type { GanttGridProps, Project, Member } from "./types";
@@ -116,8 +118,36 @@ const GanttGridInner: React.FC = () => {
                           "border-b border-outline-gray-2": isMemberLastRow,
                           "bg-surface-gray-1": isSaturday || isSunday,
                         })}
-                        style={{ height: CELL_HEIGHT, width: CELL_WIDTH }}
-                      />
+                        style={{
+                          position: i === 0 ? "relative" : undefined,
+                          height: CELL_HEIGHT,
+                          width: CELL_WIDTH,
+                        }}
+                      >
+                        {i === 0 &&
+                          row.projects?.length &&
+                          (() => {
+                            const memberAlloc = getMemberAllocation(
+                              row.projects
+                            );
+                            return memberAlloc.length ? (
+                              <div
+                                className="absolute top-0 left-0 pointer-events-none"
+                                style={{
+                                  width: columnCount * CELL_WIDTH,
+                                  height: CELL_HEIGHT,
+                                }}
+                              >
+                                {memberAlloc.map((alloc, idx) => (
+                                  <GanttMemberBar
+                                    key={idx}
+                                    allocation={alloc}
+                                  />
+                                ))}
+                              </div>
+                            ) : null;
+                          })()}
+                      </td>
                     );
                   })}
                 </tr>
@@ -178,7 +208,7 @@ const GanttGridInner: React.FC = () => {
                                   >
                                     {project.allocation.map(
                                       (alloc, allocIndex) => (
-                                        <GanttBlock
+                                        <GanttProjectBar
                                           key={allocIndex}
                                           allocation={alloc}
                                         />
