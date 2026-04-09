@@ -1,8 +1,7 @@
 import { differenceInCalendarDays, addDays, isWeekend } from "date-fns";
-import { cn } from "../../utils";
+import { cn } from "../../utils/cn";
 import { CELL_WIDTH, CELL_HEIGHT } from "./constants";
 import { useGanttStore } from "./gantt-store";
-import { getUTCDateTime } from "../../utils";
 import type { Allocation } from "./types";
 
 interface GanttBlockProps {
@@ -10,39 +9,39 @@ interface GanttBlockProps {
 }
 
 /**
- * Returns the number of visible columns from `weekStart` to `date` (exclusive).
- * Negative when `date` is before `weekStart`.
+ * Returns the pixel left offset for a block starting on `date` within the visible grid.
  * Skips weekend days when `showWeekend` is false.
  */
-function visibleColumnsBefore(
-  dateString: string,
+function getBlockLeft(
+  date: Date,
   weekStart: Date,
   showWeekend: boolean
 ): number {
-  const date = getUTCDateTime(dateString);
   const calDays = differenceInCalendarDays(date, weekStart);
-  if (showWeekend) return calDays;
-  // count visible (non-weekend) days between weekStart and date
-  const forward = calDays >= 0;
-  const steps = Math.abs(calDays);
-  let visible = 0;
-  for (let d = 0; d < steps; d++) {
-    const day = forward ? addDays(weekStart, d) : addDays(date, d);
-    if (!isWeekend(day)) visible++;
+  let visibleCols: number;
+  if (showWeekend) {
+    visibleCols = calDays;
+  } else {
+    const forward = calDays >= 0;
+    const steps = Math.abs(calDays);
+    let visible = 0;
+    for (let d = 0; d < steps; d++) {
+      const day = forward ? addDays(weekStart, d) : addDays(date, d);
+      if (!isWeekend(day)) visible++;
+    }
+    visibleCols = forward ? visible : -visible;
   }
-  return forward ? visible : -visible;
+  return Math.max(visibleCols, 0) * CELL_WIDTH;
 }
 
 /**
- * Counts visible (non-weekend when showWeekend=false) days in [start, end] inclusive.
+ * Returns the number of visible (non-weekend when `showWeekend` is false) days in [start, end] inclusive.
  */
 function countVisibleDays(
-  startString: string,
-  endString: string,
+  start: Date,
+  end: Date,
   showWeekend: boolean
 ): number {
-  const start = getUTCDateTime(startString);
-  const end = getUTCDateTime(endString);
   const totalDays = differenceInCalendarDays(end, start) + 1;
   if (showWeekend) return totalDays;
   let count = 0;
@@ -52,6 +51,44 @@ function countVisibleDays(
   return count;
 }
 
+/**
+ * Returns the pixel width for the visible portion of a block spanning `start` to `end` (inclusive),
+ * clamped to the grid. Returns null when the block is entirely outside the visible range.
+ * Skips weekend days when `showWeekend` is false.
+ */
+function getBlockWidth(
+  start: Date,
+  end: Date,
+  weekStart: Date,
+  showWeekend: boolean,
+  columnCount: number
+): number | null {
+  const totalVisibleDays = countVisibleDays(start, end, showWeekend);
+
+  const calDays = differenceInCalendarDays(start, weekStart);
+  let startCol: number;
+  if (showWeekend) {
+    startCol = calDays;
+  } else {
+    const forward = calDays >= 0;
+    const steps = Math.abs(calDays);
+    let visible = 0;
+    for (let d = 0; d < steps; d++) {
+      const day = forward ? addDays(weekStart, d) : addDays(start, d);
+      if (!isWeekend(day)) visible++;
+    }
+    startCol = forward ? visible : -visible;
+  }
+  const endCol = startCol + totalVisibleDays - 1;
+
+  const clampedStart = Math.max(startCol, 0);
+  const clampedEnd = Math.min(endCol, columnCount - 1);
+
+  if (clampedStart > columnCount - 1 || clampedEnd < 0) return null;
+
+  return (clampedEnd - clampedStart + 1) * CELL_WIDTH;
+}
+
 export function GanttBlock({ allocation }: GanttBlockProps) {
   const { weekStart, showWeekend, columnCount } = useGanttStore((s) => ({
     weekStart: s.weekStart,
@@ -59,27 +96,22 @@ export function GanttBlock({ allocation }: GanttBlockProps) {
     columnCount: s.columnCount,
   }));
 
-  // Column index (may be negative if before grid start)
-  const startCol = visibleColumnsBefore(
-    allocation.startDate,
-    weekStart,
-    showWeekend
-  );
   const totalVisibleDays = countVisibleDays(
-    allocation.endDate,
+    allocation.startDate,
     allocation.endDate,
     showWeekend
   );
-  const endCol = startCol + totalVisibleDays - 1;
 
-  // Clamp to visible grid
-  const clampedStart = Math.max(startCol, 0);
-  const clampedEnd = Math.min(endCol, columnCount - 1);
+  const left = getBlockLeft(allocation.startDate, weekStart, showWeekend);
+  const width = getBlockWidth(
+    allocation.startDate,
+    allocation.endDate,
+    weekStart,
+    showWeekend,
+    columnCount
+  );
 
-  if (clampedStart > columnCount - 1 || clampedEnd < 0) return null;
-
-  const left = clampedStart * CELL_WIDTH;
-  const width = (clampedEnd - clampedStart + 1) * CELL_WIDTH;
+  if (width === null) return null;
 
   return (
     <div

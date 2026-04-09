@@ -2,13 +2,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { Member } from "./types";
 import { GanttGrid } from "./gantt-grid";
 
-const today = new Date().toISOString().slice(0, 10);
+const today = new Date();
 
-// Helper: return an ISO date string N days offset from today
+// Helper: return a Date N days offset from today
 const offsetDate = (n: number) => {
   const d = new Date();
   d.setDate(d.getDate() + n);
-  return d.toISOString().slice(0, 10);
+  return d;
 };
 
 const fakeRows: Member[] = [
@@ -112,9 +112,8 @@ const meta: Meta<typeof GanttGrid> = {
   tags: ["autodocs"],
   argTypes: {
     startDate: {
-      control: "text",
-      description:
-        "ISO date string (YYYY-MM-DD) for any date within the first week displayed.",
+      control: "date",
+      description: "Any date within the first week to display.",
     },
     weekCount: {
       control: { type: "number", min: 1, max: 200, step: 1 },

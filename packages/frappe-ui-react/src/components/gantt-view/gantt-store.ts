@@ -3,13 +3,12 @@ import { createStore, useStore } from "zustand";
 import { useShallow } from "zustand/react/shallow";
 import { startOfWeek } from "date-fns";
 import { ROW_HEADER_WIDTH } from "./constants";
-import { getUTCDateTime } from "../../utils";
 import type { Member } from "./types";
 
 interface GanttProps {
   members: Member[];
   showWeekend: boolean;
-  startDate: string;
+  startDate: Date;
   weekCount: number;
 }
 
@@ -36,7 +35,7 @@ export type GanttStore = ReturnType<typeof createGanttStore>;
 export const createGanttStore = (initProps: GanttProps) => {
   const daysPerWeek = initProps.showWeekend ? 7 : 5;
   const columnCount = initProps.weekCount * daysPerWeek;
-  const weekStart = startOfWeek(getUTCDateTime(initProps.startDate), {
+  const weekStart = startOfWeek(initProps.startDate, {
     weekStartsOn: 1,
   });
   const weeks = Array.from({ length: initProps.weekCount }, (_, i) => i);

@@ -1,10 +1,10 @@
 export interface Allocation {
   /** Hours per day. */
   hours: number;
-  /** ISO date string (YYYY-MM-DD) for the first day of the allocation. */
-  startDate: string;
-  /** ISO date string (YYYY-MM-DD) for the last day of the allocation (inclusive). */
-  endDate: string;
+  /** First day of the allocation. */
+  startDate: Date;
+  /** Last day of the allocation (inclusive). */
+  endDate: Date;
 }
 
 export interface Project {
@@ -24,8 +24,8 @@ export interface Member {
 }
 
 export interface GanttGridProps {
-  /** ISO date string (YYYY-MM-DD) for any date within the first week displayed. */
-  startDate: string;
+  /** Any date within the first week to display. */
+  startDate: Date;
   /** Number of weeks to display. */
   weekCount?: number;
   /** Member row data. */
