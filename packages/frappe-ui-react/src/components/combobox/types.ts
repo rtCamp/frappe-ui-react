@@ -15,6 +15,7 @@ export interface ComboboxProps {
   value?: string | null;
   placeholder?: string;
   disabled?: boolean;
+  openOnFocus?: boolean;
   onChange?: (
     value: string | null,
     selectedOption?: SimpleOption | null

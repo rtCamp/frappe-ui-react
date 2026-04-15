@@ -25,6 +25,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
   value,
   placeholder,
   disabled,
+  openOnFocus = false,
   onChange,
   className,
   inputClassName,
@@ -100,6 +101,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
       value={value ?? ""}
       onChange={handleChange}
       disabled={disabled}
+      immediate={openOnFocus}
     >
       <div className={cn("relative w-full", className)}>
         <div className="relative w-full">
