@@ -210,7 +210,12 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
       />
 
       <Popover.Portal>
-        <Popover.Positioner side={side} align={align} sideOffset={sideOffset}>
+        <Popover.Positioner
+          side={side}
+          align={align}
+          sideOffset={sideOffset}
+          className="z-100"
+        >
           <Popover.Popup
             className={cn(
               "min-w-60 w-fit select-none text-base text-ink-gray-9",
