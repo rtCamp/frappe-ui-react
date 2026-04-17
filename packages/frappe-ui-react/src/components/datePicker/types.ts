@@ -1,4 +1,9 @@
-import type { OffsetFunction } from "@base-ui/react/utils/useAnchorPositioning";
+import type { ComponentProps } from "react";
+import { Popover } from "@base-ui/react/popover";
+
+type PopoverSideOffset = ComponentProps<
+  typeof Popover.Positioner
+>["sideOffset"];
 
 export interface DatePickerChildrenProps {
   isOpen: boolean;
@@ -9,7 +14,7 @@ export interface DatePickerProps {
   value?: string | string[];
   modelValue?: string | string[];
   placeholder?: string;
-  sideOffset?: number | undefined | OffsetFunction;
+  sideOffset?: PopoverSideOffset;
   formatter?: (date: string) => string;
   readonly?: boolean;
   inputClass?: string;
@@ -59,7 +64,7 @@ export interface DateTimePickerProps {
 export interface DateRangePickerProps {
   value?: string[];
   placeholder?: string;
-  sideOffset?: number | undefined | OffsetFunction;
+  sideOffset?: PopoverSideOffset;
   formatter?: (from: string, to: string) => string;
   placement?:
     | "top-start"

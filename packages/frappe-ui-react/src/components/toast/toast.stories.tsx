@@ -1,4 +1,5 @@
-import type { Meta } from "@storybook/react-vite/*";
+import type { ComponentType } from "react";
+import type { Meta } from "@storybook/react-vite";
 
 import { useToasts } from "./useToast";
 import ToastProvider from "./toastProvider";
@@ -9,7 +10,7 @@ export default {
   parameters: { docs: { source: { type: "code" } }, layout: "centered" },
   tags: ["autodocs"],
   decorators: [
-    (Story) => (
+    (Story: ComponentType) => (
       <ToastProvider>
         <Story />
       </ToastProvider>
