@@ -107,7 +107,12 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       />
 
       <Popover.Portal>
-        <Popover.Positioner side={side} align={align} sideOffset={4}>
+        <Popover.Positioner
+          side={side}
+          align={align}
+          sideOffset={4}
+          className="z-100"
+        >
           <Popover.Popup
             className={cn(
               "text-base select-none min-w-60 w-fit text-ink-gray-9",
