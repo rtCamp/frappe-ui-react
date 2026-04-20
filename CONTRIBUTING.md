@@ -6,9 +6,11 @@ This guide will walk you through everything you need to know to get started.
 ## Summary
 
 - [Code of conduct](#code-of-conduct)
+- [Our commitment to a secure and reliable ecosystem](#our-commitment-to-a-secure-and-reliable-ecosystem)
 - [A large spectrum of contributions](#a-large-spectrum-of-contributions)
 - [Your first pull request](#your-first-pull-request)
-- [Sending a pull request](#sending-a-pull-request)
+- [How to get your PR merged successfully](#how-to-get-your-pr-merged-successfully)
+  - [The Issue-First rule](#the-issue-first-rule)
   - [How to increase the chances of being accepted](#how-to-increase-the-chances-of-being-accepted)
   - [CI checks and how to fix them](#ci-checks-and-how-to-fix-them)
   - [Coding style](#coding-style)
@@ -21,6 +23,19 @@ This guide will walk you through everything you need to know to get started.
 
 We have adopted the [Contributor Covenant](https://www.contributor-covenant.org/) as our code of conduct, and we expect project participants to adhere to it.
 Please read [the full text](https://github.com/rtCamp/frappe-ui-react/blob/main/CODE_OF_CONDUCT.md) to understand what actions will and will not be tolerated.
+
+## Our commitment to a secure and reliable ecosystem
+
+We take the security and reliability of this library seriously — both for the maintainers and for every application that depends on it.
+As part of that commitment, we follow [SOC 2](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-advisory/system-and-organization-controls) guidelines in our development workflow.
+In practice, this means a couple of things that affect how we handle contributions:
+
+- **All commits must be signed.** We require [GPG or SSH commit signing](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits) so that we can cryptographically verify the identity of every contributor. This protects the supply chain and gives users confidence in every release.
+
+- **External PRs must be linked to a pre-approved issue.** This applies to contributors who are not maintainers or org members. See [The Issue-First rule](#the-issue-first-rule) below.
+
+These are not bureaucratic hurdles — they are guardrails that protect contributors, maintainers, and the broader community.
+We have automated checks that will guide you through both requirements if anything is missing.
 
 ## A large spectrum of contributions
 
@@ -46,9 +61,25 @@ If nobody is working on it at the moment, please leave a comment stating that yo
 If somebody claims an issue but doesn't follow up after more than a week, it's fine to take over, but you should still leave a comment.
 If there has been no activity on the issue for 7 to 14 days, then it's safe to assume that nobody is working on it.
 
-## Sending a pull request
+## How to get your PR merged successfully
 
-Frappe UI React is a community-driven project, so pull requests are always welcome, but before working on a large change, it's best to open an issue first to discuss it with the maintainers.
+Frappe UI React is a community-driven project, and we genuinely love receiving contributions.
+Following the steps below gives your PR the best possible chance of landing quickly and smoothly.
+
+### The Issue-First rule
+
+> **This rule applies to external contributors** — community members who are not org members or repository collaborators. Core maintainers are exempt.
+
+**Before writing a single line of code, please open an issue.**
+
+We know this can feel like an extra step, but it is one of the most valuable things we ask of external contributors.
+Here is why: our architecture evolves continuously, and a change that seems straightforward from the outside might conflict with work already in progress, a planned refactor, or a deliberate design decision.
+By discussing the idea in an issue first, maintainers can give you early feedback — saving you from investing hours (or days) into a PR that turns out to be a poor fit for the current codebase.
+Think of it as a free code review before you write the code.
+
+Once an issue is approved and you are ready to start, leave a comment on it so other contributors know it is being worked on.
+Then, when you open your PR, link the issue using a [supported keyword](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword) in the PR description (e.g. `Fixes #123`).
+Our automated gatekeeper will check for this link and pause the review if it is missing.
 
 When in doubt, keep your pull requests small.
 For the best chances of being accepted, don't bundle more than one feature or bug fix per PR.
