@@ -13,10 +13,7 @@ module.exports = function (api) {
       ],
       "@babel/preset-typescript",
     ],
-    plugins: [
-      ["@babel/plugin-transform-react-jsx", { runtime: "automatic" }],
-      ["babel-plugin-styled-components"],
-    ],
+    plugins: [],
     sourceMaps: true,
   };
 };
