@@ -1,0 +1,11 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="icon/line/inprogress" clip-path="url(#clip0_0_1213)">
+<path id="Union" d="M8 0.75C12.0041 0.75 15.25 3.99594 15.25 8C15.25 12.0041 12.0041 15.25 8 15.25C3.99594 15.25 0.75 12.0041 0.75 8C0.75 3.99594 3.99594 0.75 8 0.75ZM8 1.75C4.54822 1.75 1.75 4.54822 1.75 8C1.75 11.4518 4.54822 14.25 8 14.25C11.4518 14.25 14.25 11.4518 14.25 8C14.25 4.54822 11.4518 1.75 8 1.75Z" fill="var(--fill-0, currentColor)"/>
+<path id="Vector" d="M8 13C9.32608 13 10.5979 12.4732 11.5355 11.5355C12.4732 10.5979 13 9.32608 13 8C13 6.67392 12.4732 5.40215 11.5355 4.46447C10.5979 3.52678 9.32608 3 8 3L8 8L8 13Z" fill="var(--fill-0, currentColor)"/>
+</g>
+<defs>
+<clipPath id="clip0_0_1213">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+</defs>
+</svg>

@@ -1,0 +1,6 @@
+<svg width="16" height="16" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Union">
+<circle id="Vector" cx="7" cy="7" r="6" stroke="var(--stroke-0, #E2E2E2)" stroke-width="2"/>
+<path id="Vector_2" d="M13 7C13 6.21207 12.8448 5.43185 12.5433 4.7039C12.2417 3.97595 11.7998 3.31451 11.2426 2.75736C10.6855 2.20021 10.0241 1.75825 9.2961 1.45672C8.56815 1.15519 7.78793 1 7 1" stroke="var(--stroke-0, currentColor)" stroke-width="2"/>
+</g>
+</svg>

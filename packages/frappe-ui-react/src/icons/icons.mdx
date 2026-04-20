@@ -1,0 +1,15 @@
+import { Meta, IconGallery, IconItem } from '@storybook/addon-docs/blocks';
+
+import * as icons from './index';
+
+<Meta title="Theme/Iconography" />
+
+# Iconography
+
+<IconGallery>
+  {Object.entries(icons).map(([iconName,Icon]) => (
+    <IconItem name={iconName}>
+      <Icon />
+    </IconItem>
+  ))}
+</IconGallery>
