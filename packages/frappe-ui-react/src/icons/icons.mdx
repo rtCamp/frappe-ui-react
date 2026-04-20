@@ -7,9 +7,10 @@ import * as icons from './index';
 # Iconography
 
 <IconGallery>
-{Object.keys(icons).length}
-  {Object.entries(icons).map(([iconName,Icon]) => (
-    <IconItem name={iconName}>
+  {Object.entries(icons)
+  .sort(([iconNameA], [iconNameB]) => iconNameA.localeCompare(iconNameB))
+  .map(([iconName,Icon]) => (
+    <IconItem key={iconName} name={iconName}>
       <Icon />
     </IconItem>
   ))}
