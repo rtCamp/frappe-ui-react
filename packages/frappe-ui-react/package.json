@@ -25,6 +25,11 @@
       "require": "./dist/index.js",
       "types": "./dist-types/index.d.ts"
     },
+    "./icons": {
+      "import": "./dist/icons/index.js",
+      "require": "./dist/icons/index.js",
+      "types": "./dist-types/icons/index.d.ts"
+    },
     "./theme": "./dist/theme.css",
     "./theme-v3": "./dist/themeV3.css",
     "./tailwind/preset": "./dist/utils/tailwind.config.cjs"
@@ -60,7 +65,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
-    "dompurify": "^3.3.1",
+    "dompurify": "^3.4.0",
     "echarts": "^6.0.0",
     "feather-icons": "^4.29.2",
     "lowlight": "^3.3.0",
@@ -69,7 +74,6 @@
     "react-dom": "^19.2.4",
     "react-grid-layout": "^1.5.3",
     "react-resizable": "^3.1.3",
-    "styled-components": "^6.3.8",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18"
   },
