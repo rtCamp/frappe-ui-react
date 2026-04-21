@@ -1,6 +1,6 @@
 import React, { useContext, useCallback, useMemo } from "react";
 
-import { DownSolid } from "../../icons";
+import { Down } from "../../icons/solid";
 import { ListContext } from "./listContext";
 
 export interface ListGroupHeaderProps {
@@ -63,7 +63,7 @@ const ListGroupHeader: React.FC<ListGroupHeaderProps> = ({
           onClick={toggleGroup}
           className="ml-[3px] mr-[11px] rounded p-1 hover:bg-surface-gray-2"
         >
-          <DownSolid
+          <Down
             className={`h-4 w-4 text-ink-gray-6 transition-transform duration-200 ${
               collapsed ? "-rotate-90" : ""
             }`}
