@@ -11,7 +11,7 @@ import * as icons from './index';
   .sort(([iconNameA], [iconNameB]) => iconNameA.localeCompare(iconNameB))
   .map(([iconName,Icon]) => (
     <IconItem key={iconName} name={iconName}>
-      <Icon />
+      <Icon className="text-ink-gray-4" />
     </IconItem>
   ))}
 </IconGallery>
