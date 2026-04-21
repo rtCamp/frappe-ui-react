@@ -1,1 +1,4 @@
-export { default as DownSolid } from "./down-solid.svg?react";
+/* eslint-disable react-refresh/only-export-components */
+
+export * from "./line";
+export * from "./solid";
