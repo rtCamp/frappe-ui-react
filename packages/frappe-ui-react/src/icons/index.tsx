@@ -1,12 +1,4 @@
-export { default as Batches } from "./batches.svg?react";
-export { default as DownSolid } from "./down-solid.svg?react";
-export { default as Folder } from "./folder.svg?react";
-export { default as Layers } from "./layers.svg?react";
-export { default as MenuCollapse } from "./menu-collapse.svg?react";
-export { default as Notifications } from "./notifications.svg?react";
-export { default as People } from "./people.svg?react";
-export { default as Reports } from "./reports.svg?react";
-export { default as Search } from "./search.svg?react";
-export { default as Tasks } from "./tasks.svg?react";
-export { default as Time } from "./time.svg?react";
-export { default as Overdue } from "./overdue.svg?react";
+/* eslint-disable react-refresh/only-export-components */
+
+export * from "./line";
+export * from "./solid";
