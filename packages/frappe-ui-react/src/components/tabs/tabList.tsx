@@ -1,83 +1,24 @@
-import { useRef, useEffect } from "react";
+import { Tabs as BaseTabs } from "@base-ui/react/tabs";
 import type { TabItem } from "./tabs";
 
 interface TabListProps {
   tabs: TabItem[];
-  tabIndex: number;
-  setTabIndex: (index: number) => void;
-  vertical?: boolean;
 }
 
-export const TabList = ({
-  tabs,
-  tabIndex,
-  setTabIndex,
-  vertical,
-}: TabListProps) => {
-  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const indicatorRef = useRef<HTMLDivElement | null>(null);
-
-  // Move indicator on tab change
-  useEffect(() => {
-    const selectedTab = tabRefs.current[tabIndex];
-    const indicator = indicatorRef.current;
-    if (!selectedTab || !indicator) return;
-
-    if (vertical) {
-      indicator.style.height = `${selectedTab.offsetHeight}px`;
-      indicator.style.top = `${selectedTab.offsetTop}px`;
-      indicator.style.right = "0px";
-      indicator.style.width = "2px";
-      indicator.style.left = "";
-    } else {
-      indicator.style.width = `${selectedTab.offsetWidth}px`;
-      indicator.style.left = `${selectedTab.offsetLeft}px`;
-      indicator.style.bottom = "0px";
-      indicator.style.height = "1px";
-      indicator.style.top = "";
-    }
-    indicator.classList.add("transition-all", "duration-300", "ease-in-out");
-  }, [tabIndex, tabs, vertical]);
-
+export const TabList = ({ tabs }: TabListProps) => {
   return (
-    <div
-      className={[
-        "relative flex border-gray-200",
-        vertical
-          ? "gap-5 flex-col border-r overflow-y-auto py-3"
-          : "gap-7.5 border-b overflow-x-auto items-center px-5",
-      ].join(" ")}
-    >
-      {tabs.map((tab, i) => {
-        const selected = tabIndex === i;
-        return (
-          <button
-            ref={(el) => {
-              tabRefs.current[i] = el;
-            }}
-            key={i}
-            className={[
-              "focus:outline-none focus:transition-none flex items-center gap-1.5 text-base text-ink-gray-5 duration-300 ease-in-out hover:text-ink-gray-9 cursor-pointer",
-              selected ? "text-ink-gray-9" : "",
-              vertical ? "px-4" : "py-3",
-            ].join(" ")}
-            onClick={() => setTabIndex(i)}
-            type="button"
-            tabIndex={selected ? 0 : -1}
-            aria-selected={selected}
-          >
-            {tab.icon && <span className="size-4">{tab.icon}</span>}
-            {tab.label}
-          </button>
-        );
-      })}
-      <div
-        ref={indicatorRef}
-        className={[
-          "tab-indicator absolute bg-surface-gray-7",
-          vertical ? "right-0 w-0.5" : "bottom-0 h-px",
-        ].join(" ")}
-      />
-    </div>
+    <BaseTabs.List className="relative flex gap-6 border-b border-outline-gray-modals px-5 data-[orientation=vertical]:flex-col data-[orientation=vertical]:gap-1 data-[orientation=vertical]:border-b-0 data-[orientation=vertical]:border-r data-[orientation=vertical]:px-0 data-[orientation=vertical]:py-3">
+      {tabs.map((tab) => (
+        <BaseTabs.Tab
+          key={tab.label}
+          className="flex cursor-pointer items-center justify-center border-0 py-3 text-base tracking-wide whitespace-nowrap text-ink-gray-5 outline-outline-gray-4 select-none hover:text-ink-gray-8 data-selected:text-ink-gray-8 data-[orientation=vertical]:justify-start data-[orientation=vertical]:px-4 data-[orientation=vertical]:py-2"
+          value={tab.label}
+        >
+          {tab.icon && <span className="mr-2 size-4">{tab.icon}</span>}
+          {tab.label}
+        </BaseTabs.Tab>
+      ))}
+      <BaseTabs.Indicator className="absolute bottom-0 left-0 h-px w-(--active-tab-width) translate-x-(--active-tab-left) bg-surface-gray-6 transition-all duration-200 ease-in-out data-[orientation=vertical]:top-0 data-[orientation=vertical]:bottom-auto data-[orientation=vertical]:left-auto data-[orientation=vertical]:right-0 data-[orientation=vertical]:h-(--active-tab-height) data-[orientation=vertical]:w-px data-[orientation=vertical]:translate-x-0 data-[orientation=vertical]:translate-y-(--active-tab-top)" />
+    </BaseTabs.List>
   );
 };

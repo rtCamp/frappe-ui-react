@@ -1,6 +1,14 @@
-import React, { useState, useCallback } from "react";
+/**
+ * External dependencies.
+ */
+import { Tabs as BaseTabs } from "@base-ui/react/tabs";
+
+/**
+ * Internal dependencies.
+ */
 import { TabList } from "./tabList";
 import { TabPanel } from "./tabPanel";
+import { cn } from "../../utils";
 
 export interface TabItem {
   label: string;
@@ -11,54 +19,39 @@ export interface TabItem {
 export interface TabsProps {
   tabs: TabItem[];
   vertical?: boolean;
-  className?: string;
   tabIndex?: number;
   onTabChange?: (index: number) => void;
-  children?: React.ReactNode;
 }
 
 export const Tabs: React.FC<TabsProps> = ({
   tabs,
-  vertical = false,
-  className = "",
-  tabIndex: controlledIndex,
+  vertical,
+  tabIndex,
   onTabChange,
-  children,
 }) => {
-  const [tabIndex, setTabIndex] = useState(controlledIndex || 0);
-
-  const handleTabChange = useCallback(
-    (index: number) => {
-      setTabIndex(index);
-
-      if (onTabChange) {
-        onTabChange(index);
-      }
-    },
-    [onTabChange]
-  );
+  const controlled = tabIndex !== undefined && onTabChange !== undefined;
 
   return (
-    <div
-      className={[
-        "flex flex-1 overflow-hidden",
-        vertical ? "" : "flex-col",
-        className,
-      ].join(" ")}
+    <BaseTabs.Root
+      className={cn("flex rounded-md border border-outline-gray-modals", {
+        "flex-row": vertical,
+        "flex-col": !vertical,
+      })}
+      {...(controlled
+        ? {
+            value: tabs[tabIndex]?.label,
+            onValueChange: (newValue) => {
+              console.log(newValue);
+
+              const index = tabs.findIndex((t) => t.label === newValue);
+              if (index !== -1) onTabChange(index);
+            },
+          }
+        : { defaultValue: tabs[0].label })}
+      orientation={vertical ? "vertical" : "horizontal"}
     >
-      {children ? (
-        children
-      ) : (
-        <>
-          <TabList
-            tabs={tabs}
-            tabIndex={tabIndex}
-            setTabIndex={handleTabChange}
-            vertical={vertical}
-          />
-          <TabPanel tabs={tabs} tabIndex={tabIndex} />
-        </>
-      )}
-    </div>
+      <TabList tabs={tabs} />
+      <TabPanel tabs={tabs} />
+    </BaseTabs.Root>
   );
 };
