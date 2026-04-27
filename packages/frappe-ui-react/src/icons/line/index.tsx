@@ -405,7 +405,7 @@ export { default as Thumbsup } from "./thumbsup.svg?react";
 export { default as Tick } from "./tick.svg?react";
 export { default as Ticket } from "./ticket.svg?react";
 export { default as TicketAlt } from "./ticket-alt.svg?react";
-export { default as TicketNo } from "./ticket-no..svg?react";
+export { default as TicketNo } from "./ticket-no.svg?react";
 export { default as Tiles } from "./tiles.svg?react";
 export { default as Time } from "./time.svg?react";
 export { default as Time1 } from "./time-1.svg?react";
