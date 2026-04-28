@@ -9,7 +9,7 @@ const meta: Meta<typeof Skeleton> = {
   argTypes: {
     className: {
       control: "text",
-      description: "CSS classes for the Label",
+      description: "CSS classes for the Skeleton",
       type: "string",
     },
   },

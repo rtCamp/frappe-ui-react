@@ -2,7 +2,7 @@ Frappe UI React is a modern component library designed for building frontend app
 
 ## Prerequisites
 
-- Node.js v20
+- Node.js v24
 - TailwindCSS v4
 
 ## Usage
@@ -90,6 +90,7 @@ This library is built on top of several excellent open-source projects:
 - **[TailwindCSS](https://github.com/tailwindlabs/tailwindcss)**: Utility-first CSS framework for building design system-based UIs.
 - **[Headless UI](https://github.com/tailwindlabs/headlessui)**: Unstyled and accessible UI components.
 - **[Radix UI](https://github.com/radix-ui/themes)**: Low-level, unstyled, and accessible UI primitives.
+- **[Base UI](https://base-ui.com/)**: Low-level, unstyled, and accessible UI primitives.
 - **[dayjs](https://github.com/iamkun/dayjs)**: Lightweight JavaScript library for working with dates.
 - **[TipTap](https://tiptap.dev/docs)**: Headless Text Editor 
 

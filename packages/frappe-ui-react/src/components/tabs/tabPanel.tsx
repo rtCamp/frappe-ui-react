@@ -1,23 +1,21 @@
+import { Tabs as BaseUITabs } from "@base-ui/react/tabs";
 import type { TabItem } from "./tabs";
 
 export interface TabPanelProps {
   tabs: TabItem[];
-  tabIndex: number;
 }
 
-export const TabPanel = ({ tabs, tabIndex }: TabPanelProps) => {
+export const TabPanel = ({ tabs }: TabPanelProps) => {
   return (
-    <div className="flex flex-1 overflow-hidden">
-      {tabs.map((tab, i) => (
-        <div
-          key={i}
-          className={[
-            "flex flex-1 flex-col overflow-y-auto focus:outline-none",
-            tabIndex === i ? "" : "hidden",
-          ].join(" ")}
+    <div className="px-5 py-4">
+      {tabs.map((tab) => (
+        <BaseUITabs.Panel
+          key={tab.label}
+          value={tab.label}
+          className="flex flex-1 flex-col overflow-y-auto focus:outline-none"
         >
-          <div className="p-5 text-ink-gray-8">{tab.content}</div>
-        </div>
+          {tab.content}
+        </BaseUITabs.Panel>
       ))}
     </div>
   );
