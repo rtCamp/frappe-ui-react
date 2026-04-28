@@ -21,6 +21,8 @@ export interface TabsProps {
   vertical?: boolean;
   tabIndex?: number;
   className?: string;
+  tabListClassName?: string;
+  tabPanelClassName?: string;
   onTabChange?: (index: number) => void;
 }
 
@@ -29,6 +31,8 @@ export const Tabs: React.FC<TabsProps> = ({
   vertical,
   tabIndex,
   className,
+  tabListClassName,
+  tabPanelClassName,
   onTabChange,
 }) => {
   if (tabs.length === 0) {
@@ -65,8 +69,8 @@ export const Tabs: React.FC<TabsProps> = ({
         : { defaultValue: tabs[0].label })}
       orientation={vertical ? "vertical" : "horizontal"}
     >
-      <TabList tabs={tabs} />
-      <TabPanel tabs={tabs} />
+      <TabList className={tabListClassName} tabs={tabs} />
+      <TabPanel className={tabPanelClassName} tabs={tabs} />
     </BaseTabs.Root>
   );
 };
