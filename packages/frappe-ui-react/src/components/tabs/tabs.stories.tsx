@@ -21,18 +21,10 @@ const meta: Meta<typeof Tabs> = {
       action: "onTabChange",
       description: "Callback when tab changes",
     },
-    className: {
-      control: "text",
-      description: "CSS classes for the Tabs container",
-    },
     vertical: {
       control: "boolean",
       name: "Vertical",
       description: "Display tabs vertically",
-    },
-    children: {
-      control: false,
-      description: "Content inside the Tabs component",
     },
   },
 };
@@ -82,9 +74,6 @@ const tabsWithIcon = [
 export const WithoutIcon: Story = {
   args: {
     tabs: tabsWithoutIcon,
-    tabIndex: 0,
-    onTabChange: () => {},
-    className: "border border-outline-gray-1 rounded",
   },
   render: (args) => <Tabs {...args} />,
   argTypes: {
@@ -98,19 +87,12 @@ export const WithoutIcon: Story = {
       action: "onTabChange",
       description: "Callback when tab changes.",
     },
-    className: {
-      control: "text",
-      description: "CSS classes for the Tabs container.",
-    },
   },
 };
 
 export const WithIcon: Story = {
   args: {
     tabs: tabsWithIcon,
-    tabIndex: 0,
-    onTabChange: () => {},
-    className: "border border-outline-gray-1 rounded",
   },
   render: (args) => <Tabs {...args} />,
   argTypes: {
@@ -127,20 +109,13 @@ export const WithIcon: Story = {
       action: "onTabChange",
       description: "Callback when tab changes.",
     },
-    className: {
-      control: "text",
-      description: "CSS classes for the Tabs container.",
-    },
   },
 };
 
 export const VerticalWithIcon: Story = {
   args: {
     tabs: tabsWithIcon,
-    tabIndex: 0,
-    onTabChange: () => {},
     vertical: true,
-    className: "border border-outline-gray-1 rounded",
   },
   render: (args) => <Tabs {...args} />,
   argTypes: {
@@ -161,10 +136,6 @@ export const VerticalWithIcon: Story = {
       control: "boolean",
       name: "Vertical",
       description: "Display tabs vertically.",
-    },
-    className: {
-      control: "text",
-      description: "CSS classes for the Tabs container.",
     },
   },
 };
