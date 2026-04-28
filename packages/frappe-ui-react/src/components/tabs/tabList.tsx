@@ -1,5 +1,6 @@
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
 import type { TabItem } from "./tabs";
+import { cn } from "../../utils";
 
 interface TabListProps {
   tabs: TabItem[];
@@ -7,11 +8,19 @@ interface TabListProps {
 
 export const TabList = ({ tabs }: TabListProps) => {
   return (
-    <BaseTabs.List className="relative flex gap-6 border-b border-outline-gray-modals px-5 data-[orientation=vertical]:flex-col data-[orientation=vertical]:gap-1 data-[orientation=vertical]:border-b-0 data-[orientation=vertical]:border-r data-[orientation=vertical]:px-0 data-[orientation=vertical]:py-3">
+    <BaseTabs.List
+      className={cn(
+        "relative flex gap-6 border-b border-outline-gray-modals px-5",
+        "data-[orientation=vertical]:flex-col data-[orientation=vertical]:gap-1 data-[orientation=vertical]:border-b-0 data-[orientation=vertical]:border-r data-[orientation=vertical]:px-0 data-[orientation=vertical]:py-3"
+      )}
+    >
       {tabs.map((tab) => (
         <BaseTabs.Tab
           key={tab.label}
-          className="flex cursor-pointer items-center justify-center border-0 py-3 text-base tracking-wide whitespace-nowrap text-ink-gray-5 outline-outline-gray-4 select-none hover:text-ink-gray-8 data-selected:text-ink-gray-8 data-[orientation=vertical]:justify-start data-[orientation=vertical]:px-4 data-[orientation=vertical]:py-2"
+          className={cn(
+            "flex cursor-pointer items-center justify-center border-0 py-3 text-base tracking-wide whitespace-nowrap text-ink-gray-5 outline-outline-gray-4 select-none hover:text-ink-gray-8 data-selected:text-ink-gray-8 duration-300 ease-in-out",
+            "data-[orientation=vertical]:justify-start data-[orientation=vertical]:px-4 data-[orientation=vertical]:py-2"
+          )}
           value={tab.label}
         >
           {tab.icon && <span className="mr-2 size-4">{tab.icon}</span>}
