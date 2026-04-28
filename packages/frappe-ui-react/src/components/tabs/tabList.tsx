@@ -3,15 +3,17 @@ import type { TabItem } from "./tabs";
 import { cn } from "../../utils";
 
 interface TabListProps {
+  className?: string;
   tabs: TabItem[];
 }
 
-export const TabList = ({ tabs }: TabListProps) => {
+export const TabList = ({ tabs, className }: TabListProps) => {
   return (
     <BaseTabs.List
       className={cn(
         "relative flex gap-6 border-b border-outline-gray-modals px-5",
-        "data-[orientation=vertical]:flex-col data-[orientation=vertical]:gap-1 data-[orientation=vertical]:border-b-0 data-[orientation=vertical]:border-r data-[orientation=vertical]:px-0 data-[orientation=vertical]:py-3"
+        "data-[orientation=vertical]:flex-col data-[orientation=vertical]:gap-1 data-[orientation=vertical]:border-b-0 data-[orientation=vertical]:border-r data-[orientation=vertical]:px-0 data-[orientation=vertical]:py-3",
+        className
       )}
     >
       {tabs.map((tab) => (

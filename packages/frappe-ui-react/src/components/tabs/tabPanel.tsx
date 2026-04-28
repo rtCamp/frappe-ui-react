@@ -1,13 +1,15 @@
 import { Tabs as BaseUITabs } from "@base-ui/react/tabs";
 import type { TabItem } from "./tabs";
+import { cn } from "../../utils";
 
 export interface TabPanelProps {
+  className?: string;
   tabs: TabItem[];
 }
 
-export const TabPanel = ({ tabs }: TabPanelProps) => {
+export const TabPanel = ({ tabs, className }: TabPanelProps) => {
   return (
-    <div className="px-5 py-4">
+    <div className={cn("px-5 py-4", className)}>
       {tabs.map((tab) => (
         <BaseUITabs.Panel
           key={tab.label}
