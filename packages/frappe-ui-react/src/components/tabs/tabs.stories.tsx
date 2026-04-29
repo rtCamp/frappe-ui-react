@@ -18,7 +18,7 @@ const meta: Meta<typeof Tabs> = {
       description: "Currently selected tab index",
     },
     onTabChange: {
-      action: "onTabChange",
+      control: false,
       description: "Callback when tab changes",
     },
     vertical: {
@@ -84,7 +84,7 @@ export const WithoutIcon: Story = {
       description: "Currently selected tab index.",
     },
     onTabChange: {
-      action: "onTabChange",
+      control: false,
       description: "Callback when tab changes.",
     },
   },
@@ -106,7 +106,7 @@ export const WithIcon: Story = {
       description: "Currently selected tab index.",
     },
     onTabChange: {
-      action: "onTabChange",
+      control: false,
       description: "Callback when tab changes.",
     },
   },
@@ -129,7 +129,7 @@ export const VerticalWithIcon: Story = {
       description: "Currently selected tab index.",
     },
     onTabChange: {
-      action: "onTabChange",
+      control: false,
       description: "Callback when tab changes.",
     },
     vertical: {
