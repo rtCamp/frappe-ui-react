@@ -1,6 +1,14 @@
-import React, { useState, useCallback } from "react";
+/**
+ * External dependencies.
+ */
+import { Tabs as BaseTabs } from "@base-ui/react/tabs";
+
+/**
+ * Internal dependencies.
+ */
 import { TabList } from "./tabList";
 import { TabPanel } from "./tabPanel";
+import { cn } from "../../utils";
 
 export interface TabItem {
   label: string;
@@ -11,54 +19,58 @@ export interface TabItem {
 export interface TabsProps {
   tabs: TabItem[];
   vertical?: boolean;
-  className?: string;
   tabIndex?: number;
+  className?: string;
+  tabListClassName?: string;
+  tabPanelClassName?: string;
   onTabChange?: (index: number) => void;
-  children?: React.ReactNode;
 }
 
 export const Tabs: React.FC<TabsProps> = ({
   tabs,
-  vertical = false,
-  className = "",
-  tabIndex: controlledIndex,
+  vertical,
+  tabIndex,
+  className,
+  tabListClassName,
+  tabPanelClassName,
   onTabChange,
-  children,
 }) => {
-  const [tabIndex, setTabIndex] = useState(controlledIndex || 0);
-
-  const handleTabChange = useCallback(
-    (index: number) => {
-      setTabIndex(index);
-
-      if (onTabChange) {
-        onTabChange(index);
-      }
-    },
-    [onTabChange]
-  );
+  if (tabs.length === 0) {
+    throw new Error("Tabs has 0 elements");
+  }
+  if (
+    (tabIndex !== undefined && onTabChange === undefined) ||
+    (tabIndex === undefined && onTabChange !== undefined)
+  ) {
+    throw new Error(
+      "Define both tabIndex and onTabChange to be in controlled mode"
+    );
+  }
+  const controlled = tabIndex !== undefined && onTabChange !== undefined;
 
   return (
-    <div
-      className={[
-        "flex flex-1 overflow-hidden",
-        vertical ? "" : "flex-col",
-        className,
-      ].join(" ")}
-    >
-      {children ? (
-        children
-      ) : (
-        <>
-          <TabList
-            tabs={tabs}
-            tabIndex={tabIndex}
-            setTabIndex={handleTabChange}
-            vertical={vertical}
-          />
-          <TabPanel tabs={tabs} tabIndex={tabIndex} />
-        </>
+    <BaseTabs.Root
+      className={cn(
+        "flex rounded-md border border-outline-gray-modals",
+        {
+          "flex-row": vertical,
+          "flex-col": !vertical,
+        },
+        className
       )}
-    </div>
+      {...(controlled
+        ? {
+            value: tabs[tabIndex || 0]?.label,
+            onValueChange: (newValue) => {
+              const index = tabs.findIndex((t) => t.label === newValue);
+              if (index !== -1) onTabChange(index);
+            },
+          }
+        : { defaultValue: tabs[0].label })}
+      orientation={vertical ? "vertical" : "horizontal"}
+    >
+      <TabList className={tabListClassName} tabs={tabs} />
+      <TabPanel className={tabPanelClassName} tabs={tabs} />
+    </BaseTabs.Root>
   );
 };

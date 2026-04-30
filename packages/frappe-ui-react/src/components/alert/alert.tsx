@@ -1,53 +1,153 @@
-import React, { useMemo } from "react";
+/**
+ * External dependencies.
+ */
+import React, { useCallback, useState } from "react";
+import { CircleCheck, CircleX, Info, TriangleAlert, X } from "lucide-react";
+import { cva } from "class-variance-authority";
 
+/**
+ * Internal dependencies.
+ */
 import type { AlertProps } from "./types";
+import { Button } from "../button";
+import { cn } from "../../utils";
+
+const alertVariants = cva(
+  "grid grid-cols-[auto_1fr_auto] gap-3 rounded-md px-4 py-3.5 text-base items-start",
+  {
+    variants: {
+      variant: {
+        subtle: "",
+        outline: "",
+      },
+      theme: {
+        yellow: "",
+        blue: "",
+        red: "",
+        green: "",
+        default: "",
+      },
+    },
+    compoundVariants: [
+      // Subtle
+      { variant: "subtle", theme: "yellow", class: "bg-surface-amber-2" },
+      { variant: "subtle", theme: "blue", class: "bg-surface-blue-2" },
+      { variant: "subtle", theme: "red", class: "bg-surface-red-2" },
+      { variant: "subtle", theme: "green", class: "bg-surface-green-2" },
+      { variant: "subtle", theme: "default", class: "bg-surface-gray-2" },
+
+      // Outline
+      {
+        variant: "outline",
+        theme: "yellow",
+        class: "border border-outline-amber-2",
+      },
+      {
+        variant: "outline",
+        theme: "blue",
+        class: "border border-outline-blue-1",
+      },
+      {
+        variant: "outline",
+        theme: "red",
+        class: "border border-outline-red-2",
+      },
+      {
+        variant: "outline",
+        theme: "green",
+        class: "border border-outline-green-2",
+      },
+      {
+        variant: "outline",
+        theme: "default",
+        class: "border border-outline-gray-3",
+      },
+    ],
+    defaultVariants: {
+      variant: "subtle",
+      theme: "default",
+    },
+  }
+);
+
+const iconData = {
+  yellow: { component: TriangleAlert, css: "text-ink-amber-3" },
+  blue: { component: Info, css: "text-ink-blue-3" },
+  red: { component: CircleX, css: "text-ink-red-3" },
+  green: { component: CircleCheck, css: "text-ink-green-3" },
+  default: { component: Info, css: "text-ink-gray-6" },
+};
 
 const Alert: React.FC<AlertProps> = ({
   title,
-  type = "warning",
-  actions,
-  children,
-  ...rest
+  theme,
+  variant = "subtle",
+  renderDescription,
+  dismissable = true,
+  visible: controlledVisible,
+  onVisibleChange,
+  renderIcon,
+  renderFooter,
+  className,
 }) => {
-  const classes = useMemo(() => {
-    const typeClasses: { [type: string]: string } = {
-      warning: "text-ink-gray-7 bg-surface-blue-1",
-    };
-    return typeClasses[type] || typeClasses["warning"];
-  }, [type]);
+  const [internalVisible, setInternalVisible] = useState(true);
+
+  const isControlled = controlledVisible !== undefined;
+  const visible = isControlled ? controlledVisible : internalVisible;
+
+  const handleDismiss = useCallback(() => {
+    if (!isControlled) {
+      setInternalVisible(false);
+    }
+    onVisibleChange?.(false);
+  }, [isControlled, onVisibleChange]);
+
+  const iconConfig = iconData[theme || "default"];
+
+  if (!visible) return null;
 
   return (
-    <div className="block w-full" {...rest}>
+    <div
+      role="alert"
+      className={cn(alertVariants({ variant, theme }), className)}
+    >
+      {renderIcon ? (
+        renderIcon()
+      ) : renderIcon !== false && iconConfig ? (
+        <iconConfig.component className={cn("h-4 w-4", iconConfig.css)} />
+      ) : null}
+
       <div
-        className={`flex items-start rounded-md px-4 py-3.5 text-base md:px-5 ${classes}`}
+        className={cn(
+          "grid gap-2",
+          (renderIcon === false || !iconConfig) && "col-span-2"
+        )}
       >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            opacity="0.8"
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM12 10.5C12.5523 10.5 13 10.9477 13 11.5V17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17V11.5C11 10.9477 11.4477 10.5 12 10.5ZM13 7.99976C13 7.44747 12.5523 6.99976 12 6.99976C11.4477 6.99976 11 7.44747 11 7.99976V8.1C11 8.65228 11.4477 9.1 12 9.1C12.5523 9.1 13 8.65228 13 8.1V7.99976Z"
-            fill="#318AD8"
-          />
-        </svg>
-        <div className="ml-2 w-full">
-          <div className="flex flex-col md:flex-row md:items-baseline">
-            {title && (
-              <h3 className="text-lg font-medium text-ink-gray-9">{title}</h3>
-            )}
-            <div className="mt-1 md:ml-2 md:mt-0">{children}</div>
-            {actions && (
-              <div className="mt-3 md:ml-auto md:mt-0">{actions}</div>
-            )}
-          </div>
-        </div>
+        <h3 className="text-ink-gray-9">{title}</h3>
+        {renderDescription ? (
+          typeof renderDescription === "string" ? (
+            <p className="text-ink-gray-6 text-base/normal font-[420]">
+              {renderDescription}
+            </p>
+          ) : (
+            renderDescription()
+          )
+        ) : null}
       </div>
+
+      {dismissable && (
+        <Button
+          onClick={handleDismiss}
+          aria-label="Dismiss alert"
+          variant="ghost"
+          className="w-4! h-4! hover:bg-transparent"
+          icon={() => <X className="h-4 w-4" />}
+        />
+      )}
+
+      {renderFooter ? (
+        <div className="col-span-full">{renderFooter()}</div>
+      ) : null}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 {
   "name": "@rtcamp/frappe-ui-react",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist-types/index.d.ts",
@@ -25,6 +25,11 @@
       "require": "./dist/index.js",
       "types": "./dist-types/index.d.ts"
     },
+    "./icons": {
+      "import": "./dist/icons/index.js",
+      "require": "./dist/icons/index.js",
+      "types": "./dist-types/icons/index.d.ts"
+    },
     "./theme": "./dist/theme.css",
     "./theme-v3": "./dist/themeV3.css",
     "./tailwind/preset": "./dist/utils/tailwind.config.cjs"
@@ -42,13 +47,13 @@
     "@headlessui/react": "^2.2.9",
     "@popperjs/core": "^2.11.8",
     "@tailwindcss/typography": "^0.5.19",
+    "@tiptap/extension-blockquote": "^3.17.1",
     "@tiptap/extension-code-block-lowlight": "^3.17.1",
     "@tiptap/extension-highlight": "^3.17.1",
-    "@tiptap/extension-blockquote": "^3.17.1",
     "@tiptap/extension-horizontal-rule": "^3.17.1",
-    "@tiptap/extension-strike": "^3.17.1",
     "@tiptap/extension-list": "^3.17.1",
     "@tiptap/extension-placeholder": "^3.17.1",
+    "@tiptap/extension-strike": "^3.17.1",
     "@tiptap/extension-table": "^3.17.1",
     "@tiptap/extension-task-list": "^3.17.1",
     "@tiptap/extension-text-align": "^3.17.1",
@@ -56,6 +61,7 @@
     "@tiptap/pm": "^3.17.1",
     "@tiptap/react": "^3.17.1",
     "@tiptap/starter-kit": "^3.17.1",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
     "dompurify": "^3.4.0",
@@ -67,6 +73,7 @@
     "react-dom": "^19.2.4",
     "react-grid-layout": "^1.5.3",
     "react-resizable": "^3.1.3",
+    "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {

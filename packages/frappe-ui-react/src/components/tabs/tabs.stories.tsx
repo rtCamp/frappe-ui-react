@@ -18,21 +18,13 @@ const meta: Meta<typeof Tabs> = {
       description: "Currently selected tab index",
     },
     onTabChange: {
-      action: "onTabChange",
+      control: false,
       description: "Callback when tab changes",
-    },
-    className: {
-      control: "text",
-      description: "CSS classes for the Tabs container",
     },
     vertical: {
       control: "boolean",
       name: "Vertical",
       description: "Display tabs vertically",
-    },
-    children: {
-      control: false,
-      description: "Content inside the Tabs component",
     },
   },
 };
@@ -82,9 +74,6 @@ const tabsWithIcon = [
 export const WithoutIcon: Story = {
   args: {
     tabs: tabsWithoutIcon,
-    tabIndex: 0,
-    onTabChange: () => {},
-    className: "border border-outline-gray-1 rounded",
   },
   render: (args) => <Tabs {...args} />,
   argTypes: {
@@ -95,12 +84,8 @@ export const WithoutIcon: Story = {
       description: "Currently selected tab index.",
     },
     onTabChange: {
-      action: "onTabChange",
+      control: false,
       description: "Callback when tab changes.",
-    },
-    className: {
-      control: "text",
-      description: "CSS classes for the Tabs container.",
     },
   },
 };
@@ -108,9 +93,6 @@ export const WithoutIcon: Story = {
 export const WithIcon: Story = {
   args: {
     tabs: tabsWithIcon,
-    tabIndex: 0,
-    onTabChange: () => {},
-    className: "border border-outline-gray-1 rounded",
   },
   render: (args) => <Tabs {...args} />,
   argTypes: {
@@ -124,12 +106,8 @@ export const WithIcon: Story = {
       description: "Currently selected tab index.",
     },
     onTabChange: {
-      action: "onTabChange",
+      control: false,
       description: "Callback when tab changes.",
-    },
-    className: {
-      control: "text",
-      description: "CSS classes for the Tabs container.",
     },
   },
 };
@@ -137,10 +115,7 @@ export const WithIcon: Story = {
 export const VerticalWithIcon: Story = {
   args: {
     tabs: tabsWithIcon,
-    tabIndex: 0,
-    onTabChange: () => {},
     vertical: true,
-    className: "border border-outline-gray-1 rounded",
   },
   render: (args) => <Tabs {...args} />,
   argTypes: {
@@ -154,17 +129,13 @@ export const VerticalWithIcon: Story = {
       description: "Currently selected tab index.",
     },
     onTabChange: {
-      action: "onTabChange",
+      control: false,
       description: "Callback when tab changes.",
     },
     vertical: {
       control: "boolean",
       name: "Vertical",
       description: "Display tabs vertically.",
-    },
-    className: {
-      control: "text",
-      description: "CSS classes for the Tabs container.",
     },
   },
 };
