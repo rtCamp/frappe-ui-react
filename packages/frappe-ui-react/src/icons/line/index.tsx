@@ -157,7 +157,7 @@ export { default as Emoji1 } from "./emoji-1.svg?react";
 export { default as Enrollment } from "./enrollment.svg?react";
 export { default as Enter } from "./enter.svg?react";
 export { default as EraseOrDelete } from "./erase-or-delete.svg?react";
-export { default as Erpnext } from "./ERPNext.svg?react";
+export { default as Erpnext } from "./erpnext.svg?react";
 export { default as ErrorCircle } from "./error-circle.svg?react";
 export { default as Event } from "./event.svg?react";
 export { default as Expand } from "./expand.svg?react";
