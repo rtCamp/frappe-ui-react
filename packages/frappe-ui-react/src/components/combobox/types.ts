@@ -16,6 +16,10 @@ export interface ComboboxProps {
   placeholder?: string;
   disabled?: boolean;
   openOnFocus?: boolean;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  loading?: boolean;
+  emptyMessage?: string;
   onChange?: (
     value: string | null,
     selectedOption?: SimpleOption | null

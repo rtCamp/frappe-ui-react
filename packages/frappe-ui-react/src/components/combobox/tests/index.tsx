@@ -78,4 +78,37 @@ describe("Combobox", () => {
     render(<Combobox options={simpleOptions} placeholder="Select an option" />);
     expect(screen.getByPlaceholderText("Select an option")).toBeInTheDocument();
   });
+
+  it("keeps settled remote options visible while the next search is loading", () => {
+    const onSearchChange = jest.fn();
+    const { rerender } = render(
+      <Combobox
+        options={[
+          { label: "Alpha", value: "alpha" },
+          { label: "Beta", value: "beta" },
+        ]}
+        openOnFocus
+        searchValue=""
+        onSearchChange={onSearchChange}
+      />,
+    );
+
+    const input = screen.getByRole("combobox");
+    fireEvent.focus(input);
+
+    rerender(
+      <Combobox
+        options={[]}
+        loading
+        openOnFocus
+        searchValue="alp"
+        onSearchChange={onSearchChange}
+      />,
+    );
+
+    expect(screen.getByText("Alpha")).toBeInTheDocument();
+    expect(screen.queryByText("Beta")).not.toBeInTheDocument();
+    expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "Loading" })).toBeInTheDocument();
+  });
 });
