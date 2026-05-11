@@ -92,7 +92,10 @@ export const Combobox: React.FC<ComboboxProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [internalQuery, setInternalQuery] = useState("");
-  const [selectedLabelCache, setSelectedLabelCache] = useState("");
+  const [selectedLabelCache, setSelectedLabelCache] = useState<{
+    label: string;
+    value: string;
+  } | null>(null);
   const [settledRemoteOptions, setSettledRemoteOptions] =
     useState<ComboboxItem[]>(options);
   const isSearchControlled = searchValue !== undefined;
@@ -137,7 +140,9 @@ export const Combobox: React.FC<ComboboxProps> = ({
   }, [value, allOptionsFlat]);
   const selectedLabel = selectedOption
     ? getLabel(selectedOption)
-    : selectedLabelCache;
+    : value && selectedLabelCache?.value === value
+      ? selectedLabelCache.label
+      : "";
   const displayQuery = !query && selectedLabel ? selectedLabel : query;
 
   const filteredOptions = (() => {
@@ -161,7 +166,9 @@ export const Combobox: React.FC<ComboboxProps> = ({
       const nextValue = selected ? getValue(selected) : null;
       const nextLabel = selected ? getLabel(selected) : "";
 
-      setSelectedLabelCache(nextLabel);
+      setSelectedLabelCache(
+        nextValue ? { value: nextValue, label: nextLabel } : null
+      );
 
       onChange?.(nextValue, selected);
 
@@ -214,7 +221,6 @@ export const Combobox: React.FC<ComboboxProps> = ({
       open={open}
       autoHighlight
       highlightItemOnHover
-      openOnInputClick={openOnFocus}
       itemToStringLabel={getLabel}
       inputValue={displayQuery}
       onOpenChange={setOpen}
@@ -241,7 +247,10 @@ export const Combobox: React.FC<ComboboxProps> = ({
             onFocus={handleFocus}
             autoComplete="off"
           />
-          <BaseCombobox.Trigger className="absolute inset-y-0 right-0 flex items-center gap-1 pr-2 text-ink-gray-4">
+          <BaseCombobox.Trigger
+            aria-label="Toggle options"
+            className="absolute inset-y-0 right-0 flex items-center gap-1 pr-2 text-ink-gray-4"
+          >
             {loading && <LoadingIndicator className="size-4 text-ink-gray-4" />}
             <SmallDown className="size-4" aria-hidden="true" />
           </BaseCombobox.Trigger>
