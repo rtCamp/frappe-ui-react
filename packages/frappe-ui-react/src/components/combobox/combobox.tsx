@@ -1,12 +1,18 @@
-import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
+/**
+ * External dependencies.
+ */
 import {
-  Combobox as ComboboxRoot,
-  ComboboxInput,
-  ComboboxButton,
-  ComboboxOptions,
-  ComboboxOption,
-} from "@headlessui/react";
-import { Check } from "lucide-react";
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { Combobox as BaseCombobox } from "@base-ui/react";
+
+/**
+ * Internal dependencies.
+ */
 import LoadingIndicator from "../loadingIndicator";
 import type {
   ComboboxOption as ComboboxItem,
@@ -15,6 +21,7 @@ import type {
   SimpleOption,
 } from "./types";
 import { cn } from "../../utils";
+import { Check, SmallDown } from "../../icons";
 
 const getLabel = (option: SimpleOption) =>
   typeof option === "string" ? option : option.label;
@@ -58,14 +65,14 @@ const filterOptions = (options: ComboboxItem[], query: string) => {
       return {
         ...option,
         options: option.options.filter((groupedOption) =>
-          getLabel(groupedOption).toLowerCase().includes(normalizedQuery),
+          getLabel(groupedOption).toLowerCase().includes(normalizedQuery)
         ),
       };
     })
     .filter((option) =>
       isGroupedOption(option)
         ? option.options.length > 0
-        : getLabel(option).toLowerCase().includes(normalizedQuery),
+        : getLabel(option).toLowerCase().includes(normalizedQuery)
     );
 };
 
@@ -83,33 +90,35 @@ export const Combobox: React.FC<ComboboxProps> = ({
   className,
   inputClassName,
 }) => {
+  const [open, setOpen] = useState(false);
   const [internalQuery, setInternalQuery] = useState("");
+  const [selectedLabelCache, setSelectedLabelCache] = useState("");
   const [settledRemoteOptions, setSettledRemoteOptions] =
     useState<ComboboxItem[]>(options);
-  const isRemoteSearch = typeof onSearchChange === "function";
-  const query = searchValue ?? internalQuery;
+  const isSearchControlled = searchValue !== undefined;
+  const query = isSearchControlled ? (searchValue ?? "") : internalQuery;
 
   useEffect(() => {
-    if (!isRemoteSearch || loading) {
+    if (!isSearchControlled || loading) {
       return;
     }
 
     startTransition(() => {
       setSettledRemoteOptions(options);
     });
-  }, [isRemoteSearch, loading, options]);
+  }, [isSearchControlled, loading, options]);
 
   const displayedOptions = useMemo(() => {
-    if (!isRemoteSearch || !loading || options.length > 0) {
+    if (!isSearchControlled || !loading || options.length > 0) {
       return options;
     }
 
     return settledRemoteOptions;
-  }, [isRemoteSearch, loading, options, settledRemoteOptions]);
+  }, [isSearchControlled, loading, options, settledRemoteOptions]);
 
   const allOptionsFlat = useMemo(
     () => flattenOptions(displayedOptions),
-    [displayedOptions],
+    [displayedOptions]
   );
 
   const updateQuery = useCallback(
@@ -126,45 +135,57 @@ export const Combobox: React.FC<ComboboxProps> = ({
     if (!value) return null;
     return allOptionsFlat.find((opt) => getValue(opt) === value) ?? null;
   }, [value, allOptionsFlat]);
+  const selectedLabel = selectedOption
+    ? getLabel(selectedOption)
+    : selectedLabelCache;
+  const displayQuery = !query && selectedLabel ? selectedLabel : query;
 
-  const filteredOptions = useMemo(() => {
-    if (isRemoteSearch) {
-      return loading ? filterOptions(displayedOptions, query) : displayedOptions;
+  const filteredOptions = (() => {
+    if (isSearchControlled) {
+      return loading
+        ? filterOptions(displayedOptions, query)
+        : displayedOptions;
     }
 
-    if (!query || (selectedOption && query === getLabel(selectedOption))) {
+    if (!query) {
       return displayedOptions;
     }
 
     return filterOptions(displayedOptions, query);
-  }, [displayedOptions, isRemoteSearch, loading, query, selectedOption]);
+  })();
+
+  const renderedOptionsFlat = flattenOptions(filteredOptions);
 
   const handleChange = useCallback(
-    (val: string | null) => {
-      const selected = val
-        ? allOptionsFlat.find((opt) => getValue(opt) === val) || null
-        : null;
+    (selected: SimpleOption | null) => {
+      const nextValue = selected ? getValue(selected) : null;
+      const nextLabel = selected ? getLabel(selected) : "";
 
-      onChange?.(val, selected);
+      setSelectedLabelCache(nextLabel);
 
-      if (isRemoteSearch) {
-        updateQuery("");
-        return;
-      }
+      onChange?.(nextValue, selected);
 
-      updateQuery(selected ? getLabel(selected) : "");
+      updateQuery("");
     },
-    [allOptionsFlat, isRemoteSearch, onChange, updateQuery]
+    [onChange, updateQuery]
   );
 
   const handleFocus = useCallback(() => {
-    if (isRemoteSearch) {
-      updateQuery("");
-      return;
+    if (openOnFocus) {
+      setOpen(true);
     }
+  }, [openOnFocus]);
 
-    updateQuery(selectedOption ? getLabel(selectedOption) : "");
-  }, [isRemoteSearch, selectedOption, updateQuery]);
+  const handleInputValueChange = useCallback(
+    (nextQuery: string, details: { reason?: string }) => {
+      if (details.reason === "item-press") {
+        return;
+      }
+
+      updateQuery(nextQuery);
+    },
+    [updateQuery]
+  );
 
   const resolvedEmptyMessage =
     emptyMessage ?? (query ? `No results found for "${query}"` : undefined);
@@ -175,21 +196,32 @@ export const Combobox: React.FC<ComboboxProps> = ({
 
   const hasSelectedIcon = Boolean(selectedOption && getIcon(selectedOption));
 
-  const displayValue = useCallback(
-    (val: string) => {
-      if (!val) return "";
-      const opt = allOptionsFlat.find((opt) => getValue(opt) === val);
-      return opt ? getLabel(opt) : "";
+  const isSameOption = useCallback(
+    (option: SimpleOption | null, candidate: SimpleOption | null) => {
+      if (!option || !candidate) {
+        return option === candidate;
+      }
+
+      return getValue(option) === getValue(candidate);
     },
-    [allOptionsFlat]
+    []
   );
 
   return (
-    <ComboboxRoot
-      value={value ?? ""}
-      onChange={handleChange}
+    <BaseCombobox.Root
+      items={renderedOptionsFlat}
+      value={selectedOption}
+      open={open}
+      autoHighlight
+      highlightItemOnHover
+      openOnInputClick={openOnFocus}
+      itemToStringLabel={getLabel}
+      inputValue={displayQuery}
+      onOpenChange={setOpen}
+      onInputValueChange={handleInputValueChange}
+      onValueChange={handleChange}
+      isItemEqualToValue={isSameOption}
       disabled={disabled}
-      immediate={openOnFocus}
     >
       <div className={cn("relative w-full", className)}>
         <div className="relative w-full">
@@ -198,103 +230,97 @@ export const Combobox: React.FC<ComboboxProps> = ({
               {getIcon(selectedOption)}
             </span>
           )}
-          <ComboboxInput
+          <BaseCombobox.Input
             className={cn(
               "min-h-6 w-full rounded border border-surface-gray-2 bg-surface-gray-2 py-1 text-base text-ink-gray-8 transition-colors placeholder-ink-gray-4 outline-none focus:border-outline-gray-4 focus:ring-2 focus:ring-outline-gray-3 disabled:bg-surface-gray-1 disabled:text-ink-gray-5",
               hasSelectedIcon ? "pl-8" : "pl-2",
-              "pr-8",
-              inputClassName,
+              loading ? "pr-12" : "pr-8",
+              inputClassName
             )}
-            displayValue={displayValue}
             placeholder={placeholder}
-            onChange={(e) => updateQuery(e.target.value)}
             onFocus={handleFocus}
             autoComplete="off"
           />
+          <BaseCombobox.Trigger className="absolute inset-y-0 right-0 flex items-center gap-1 pr-2 text-ink-gray-4">
+            {loading && <LoadingIndicator className="size-4 text-ink-gray-4" />}
+            <SmallDown className="size-4" aria-hidden="true" />
+          </BaseCombobox.Trigger>
         </div>
-        <ComboboxButton className="absolute inset-y-0 right-0 flex items-center pr-2 text-ink-gray-4">
-          {loading ? (
-            <LoadingIndicator className="size-4 text-ink-gray-4" />
-          ) : (
-            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-              <path
-                d="M4 6l4 4 4-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              />
-            </svg>
-          )}
-        </ComboboxButton>
         {showOptionsPanel && (
-          <ComboboxOptions
-            className={cn(
-              "absolute z-100 mt-1 max-h-50 min-w-[160px] w-full overflow-y-auto rounded-lg border border-surface-gray-2 bg-surface-modal px-1.5 py-1.5 shadow-xl animate-fade-in [&::-webkit-scrollbar]:hidden [scrollbar-width:none] [-ms-overflow-style:'none'] [-webkit-overflow-scrolling:'touch']",
-            )}
-          >
-            {showEmptyState && (
-              <div className="px-2 py-2 text-center text-base text-ink-gray-5">
-                {resolvedEmptyMessage}
-              </div>
-            )}
-            {filteredOptions.map((opt) =>
-              isGroupedOption(opt) ? (
-                <div key={opt.group}>
-                  <div className="p-2 text-xs text-ink-gray-5 font-semibold">
-                    {opt.group}
+          <BaseCombobox.Portal>
+            <BaseCombobox.Positioner
+              sideOffset={4}
+              align="start"
+              className="z-100"
+            >
+              <BaseCombobox.Popup
+                className={cn(
+                  "min-w-[160px] w-(--anchor-width) rounded-lg border border-surface-gray-2 bg-surface-modal px-1.5 py-1.5 shadow-xl animate-fade-in"
+                )}
+                aria-label="Options"
+              >
+                {showEmptyState && (
+                  <div className="w-full wrap-break-word px-2 py-2 text-center text-base text-ink-gray-5">
+                    {resolvedEmptyMessage}
                   </div>
-                  {opt.options.map((option) => (
-                    <ComboboxOption
-                      key={getValue(option)}
-                      value={getValue(option)}
-                      disabled={isDisabled(option)}
-                      className={({ active, disabled: isOptionDisabled }) =>
-                        cn(
-                          "flex cursor-pointer items-center gap-2 truncate rounded px-2.5 py-1.5 text-base text-ink-gray-8",
-                          isOptionDisabled && "opacity-50",
-                          active && "bg-surface-gray-3",
-                        )
-                      }
-                    >
-                      {getIcon(option) && (
-                        <span className="mr-1">{getIcon(option)}</span>
-                      )}
-                      <span className="flex-1">{getLabel(option)}</span>
-                      {selectedOption &&
-                        getValue(option) === getValue(selectedOption) && (
-                          <span className="ml-2 text-ink-gray-5">
-                            <Check className="w-4 h-4" />
-                          </span>
+                )}
+                <BaseCombobox.List className="max-h-50 overflow-y-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none] [-ms-overflow-style:'none'] [-webkit-overflow-scrolling:'touch']">
+                  {filteredOptions.map((opt) =>
+                    isGroupedOption(opt) ? (
+                      <div key={opt.group}>
+                        <div className="p-2 text-xs font-semibold text-ink-gray-5">
+                          {opt.group}
+                        </div>
+                        {opt.options.map((option) => (
+                          <BaseCombobox.Item
+                            key={getValue(option)}
+                            value={option}
+                            disabled={isDisabled(option)}
+                            className={cn(
+                              "relative flex cursor-pointer select-none items-center gap-2 truncate rounded px-2.5 py-1.5 pr-8 text-base text-ink-gray-8 focus:outline-none",
+                              "data-disabled:pointer-events-none data-disabled:opacity-50",
+                              "data-highlighted:bg-surface-gray-3 data-highlighted:outline-none",
+                              "data-selected:bg-surface-gray-3"
+                            )}
+                          >
+                            {getIcon(option) && (
+                              <span className="mr-1">{getIcon(option)}</span>
+                            )}
+                            <span className="flex-1">{getLabel(option)}</span>
+                            <BaseCombobox.ItemIndicator className="absolute right-2 inline-flex items-center justify-center text-ink-gray-5">
+                              <Check className="size-4" />
+                            </BaseCombobox.ItemIndicator>
+                          </BaseCombobox.Item>
+                        ))}
+                      </div>
+                    ) : (
+                      <BaseCombobox.Item
+                        key={getValue(opt)}
+                        value={opt}
+                        disabled={isDisabled(opt)}
+                        className={cn(
+                          "relative flex cursor-pointer select-none items-center gap-2 truncate rounded px-2.5 py-1.5 pr-8 text-base text-ink-gray-8 focus:outline-none",
+                          "data-disabled:pointer-events-none data-disabled:opacity-50",
+                          "data-highlighted:bg-surface-gray-3 data-highlighted:outline-none",
+                          "data-selected:bg-surface-gray-3"
                         )}
-                    </ComboboxOption>
-                  ))}
-                </div>
-              ) : (
-                <ComboboxOption
-                  key={getValue(opt)}
-                  value={getValue(opt)}
-                  disabled={isDisabled(opt)}
-                  className={({ active, disabled: isOptionDisabled }) =>
-                    cn(
-                      "flex cursor-pointer items-center gap-2 truncate rounded px-2.5 py-1.5 text-base text-ink-gray-8",
-                      isOptionDisabled && "opacity-50",
-                      active && "bg-surface-gray-3",
+                      >
+                        {getIcon(opt) && (
+                          <span className="mr-1">{getIcon(opt)}</span>
+                        )}
+                        <span className="flex-1">{getLabel(opt)}</span>
+                        <BaseCombobox.ItemIndicator className="absolute right-2 inline-flex items-center justify-center text-ink-gray-5">
+                          <Check className="size-4" />
+                        </BaseCombobox.ItemIndicator>
+                      </BaseCombobox.Item>
                     )
-                  }
-                >
-                  {getIcon(opt) && <span className="mr-1">{getIcon(opt)}</span>}
-                  <span className="flex-1">{getLabel(opt)}</span>
-                  {selectedOption && getValue(opt) === getValue(selectedOption) && (
-                    <span className="ml-2 text-ink-gray-5">
-                      <Check className="size-4" />
-                    </span>
                   )}
-                </ComboboxOption>
-              )
-            )}
-          </ComboboxOptions>
+                </BaseCombobox.List>
+              </BaseCombobox.Popup>
+            </BaseCombobox.Positioner>
+          </BaseCombobox.Portal>
         )}
       </div>
-    </ComboboxRoot>
+    </BaseCombobox.Root>
   );
 };
