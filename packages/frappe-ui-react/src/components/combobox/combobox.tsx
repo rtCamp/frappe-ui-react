@@ -17,64 +17,19 @@ import LoadingIndicator from "../loadingIndicator";
 import type {
   ComboboxOption as ComboboxItem,
   ComboboxProps,
-  GroupedOption,
   SimpleOption,
 } from "./types";
+import {
+  filterOptions,
+  flattenOptions,
+  getIcon,
+  getLabel,
+  getValue,
+  isDisabled,
+  isGroupedOption,
+} from "./utils";
 import { cn } from "../../utils";
 import { Check, SmallDown } from "../../icons";
-
-const getLabel = (option: SimpleOption) =>
-  typeof option === "string" ? option : option.label;
-const getValue = (option: SimpleOption) =>
-  typeof option === "string" ? option : option.value;
-const isDisabled = (option: SimpleOption) =>
-  typeof option === "object" && !!option.disabled;
-const getIcon = (option: SimpleOption) =>
-  typeof option === "object" ? option.icon : undefined;
-const isGroupedOption = (option: ComboboxItem): option is GroupedOption =>
-  typeof option === "object" && "group" in option;
-
-const flattenOptions = (options: ComboboxItem[]) => {
-  const flat: SimpleOption[] = [];
-
-  options.forEach((option) => {
-    if (isGroupedOption(option)) {
-      flat.push(...option.options);
-      return;
-    }
-
-    flat.push(option);
-  });
-
-  return flat;
-};
-
-const filterOptions = (options: ComboboxItem[], query: string) => {
-  const normalizedQuery = query.trim().toLowerCase();
-
-  if (!normalizedQuery) {
-    return options;
-  }
-
-  return options
-    .map((option) => {
-      if (!isGroupedOption(option)) {
-        return option;
-      }
-
-      return {
-        ...option,
-        options: option.options.filter((groupedOption) =>
-          getLabel(groupedOption).toLowerCase().includes(normalizedQuery)
-        ),
-      };
-    })
-    .filter((option) =>
-      isGroupedOption(option)
-        ? option.options.length > 0
-        : getLabel(option).toLowerCase().includes(normalizedQuery)
-    );
-};
 
 export const Combobox: React.FC<ComboboxProps> = ({
   options,
@@ -106,6 +61,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
       return;
     }
 
+    // Defer settled-options updates so typing and focus interactions stay responsive.
     startTransition(() => {
       setSettledRemoteOptions(options);
     });
@@ -145,7 +101,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
       : "";
   const displayQuery = !query && selectedLabel ? selectedLabel : query;
 
-  const filteredOptions = (() => {
+  const filteredOptions = useMemo(() => {
     if (isSearchControlled) {
       return loading
         ? filterOptions(displayedOptions, query)
@@ -157,7 +113,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
     }
 
     return filterOptions(displayedOptions, query);
-  })();
+  }, [displayedOptions, isSearchControlled, loading, query]);
 
   const renderedOptionsFlat = flattenOptions(filteredOptions);
 
