@@ -4,6 +4,7 @@ export { default as SolidAlertTriangle } from "./alert-triangle.svg?react";
 export { default as SolidArrowUp } from "./arrow-up.svg?react";
 export { default as SolidBestPractices } from "./best-practices.svg?react";
 export { default as SolidBody } from "./body.svg?react";
+export { default as SolidBranch } from "./branch.svg?react";
 export { default as SolidCalendarAlt } from "./calendar-alt.svg?react";
 export { default as SolidCalender } from "./calender.svg?react";
 export { default as SolidCall } from "./call.svg?react";
