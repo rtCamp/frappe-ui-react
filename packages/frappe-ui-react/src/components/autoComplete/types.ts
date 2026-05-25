@@ -46,7 +46,7 @@ export interface AutocompleteProps {
   value: AutocompleteOption | AutocompleteOption[] | null | undefined;
   options: AutocompleteOptions | null | undefined;
   children?:
-    | ReactNode
+    | ReactElement
     | ((props: AutocompleteTriggerChildrenProps) => ReactElement);
   multiple?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
