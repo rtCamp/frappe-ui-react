@@ -32,6 +32,7 @@ import {
   getOptionLabel,
   getNextSelectedOptionCache,
   hasAllSelectedOptions,
+  parsePlacement,
   type InternalSelection,
   type InternalOption,
   type InternalOptionGroup,
@@ -79,6 +80,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   );
   const searchInputRef = useRef<HTMLInputElement>(null);
   const comboboxInputId = useId();
+  const triggerId = useId();
   const isSearchControlled = searchValue !== undefined;
   const query = isSearchControlled ? (searchValue ?? "") : internalQuery;
   const isOpenControlled = open !== undefined;
@@ -261,6 +263,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
     emptyMessage ?? (query ? `No results found for "${query}"` : undefined);
   const showEmptyState =
     !loading && visibleGroups.length === 0 && Boolean(resolvedEmptyMessage);
+  const popupPlacement = useMemo(() => parsePlacement(placement), [placement]);
 
   const defaultTriggerContent = (
     <button
@@ -335,7 +338,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
         <div className="w-full space-y-1.5">
           {label && (
             <label
-              htmlFor={comboboxInputId}
+              htmlFor={triggerId}
               className={cn("block text-xs text-ink-gray-5", labelClassName)}
             >
               {label}
@@ -343,6 +346,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
           )}
 
           <BaseCombobox.Trigger
+            id={triggerId}
             aria-label="Toggle options"
             render={triggerContent}
           />
@@ -350,8 +354,8 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
         <BaseCombobox.Portal>
           <BaseCombobox.Positioner
-            side={placement.startsWith("top") ? "top" : "bottom"}
-            align={placement.endsWith("end") ? "end" : "start"}
+            side={popupPlacement.side}
+            align={popupPlacement.align}
             sideOffset={4}
             className="z-100"
           >
@@ -418,9 +422,9 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                         </div>
                       )}
 
-                      {group.items.map((option) => (
+                      {group.items.map((option, optionIndex) => (
                         <BaseCombobox.Item
-                          key={`${group.group}-${String(option.value)}`}
+                          key={`${group.group}-${groupIndex}-${String(option.value)}-${optionIndex}`}
                           value={option}
                           disabled={option.disabled}
                           className={cn(

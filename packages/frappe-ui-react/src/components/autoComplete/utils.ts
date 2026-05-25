@@ -1,6 +1,7 @@
 /**
  * Internal dependencies.
  */
+import type { Placement } from "@popperjs/core";
 import type {
   AutocompleteChangeValue,
   AutocompleteOption,
@@ -19,6 +20,22 @@ export type InternalOptionGroup = {
 };
 
 export type InternalSelection = InternalOption | InternalOption[] | null;
+
+type PositionerSide = "top" | "right" | "bottom" | "left";
+type PositionerAlign = "start" | "center" | "end";
+
+const isPositionerSide = (value?: string): value is PositionerSide => {
+  return (
+    value === "top" ||
+    value === "right" ||
+    value === "bottom" ||
+    value === "left"
+  );
+};
+
+const isPositionerAlign = (value?: string): value is PositionerAlign => {
+  return value === "start" || value === "center" || value === "end";
+};
 
 /**
  * Compares two option-like objects by their value key.
@@ -151,13 +168,37 @@ export const flattenGroups = (groups: InternalOptionGroup[]) => {
 };
 
 /**
+ * Maps Popper-style placement strings onto Base UI side/align values.
+ */
+export const parsePlacement = (
+  placement?: Placement
+): {
+  side: PositionerSide;
+  align: PositionerAlign;
+} => {
+  if (!placement) {
+    return { side: "bottom", align: "start" };
+  }
+
+  const [rawSide, rawAlign] = placement.split("-");
+  const side = isPositionerSide(rawSide) ? rawSide : "bottom";
+  const align = isPositionerAlign(rawAlign)
+    ? rawAlign
+    : isPositionerSide(rawSide)
+      ? "center"
+      : "start";
+
+  return { side, align };
+};
+
+/**
  * Finds the matching internal option for a consumer-provided value.
  */
 export const findOption = (
   options: InternalOption[],
   value: AutocompleteOption | null | undefined
 ) => {
-  if (!value) {
+  if (value === null || value === undefined) {
     return undefined;
   }
 
