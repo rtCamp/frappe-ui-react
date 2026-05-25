@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { TextInputTypes } from "../../common/types";
-import type { AutocompleteOption } from "../autoComplete";
+import type { AutocompleteOption, AutocompleteProps } from "../autoComplete";
 import type { SelectOption } from "../select";
 
 export interface FormControlProps {
@@ -15,7 +15,7 @@ export interface FormControlProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   suffix?: (args?: any) => ReactNode;
   placeholder?: string;
-  children?: ReactNode[];
+  children?: AutocompleteProps["children"];
   htmlId?: string;
   options?: (SelectOption | AutocompleteOption | string)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

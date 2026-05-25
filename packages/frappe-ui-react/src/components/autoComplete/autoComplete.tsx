@@ -410,7 +410,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                 )}
               >
                 {showEmptyState ? (
-                  <div className="rounded-md px-2.5 py-1.5 text-base text-ink-gray-5">
+                  <div className="w-full rounded-md px-2.5 py-1.5 text-base text-center wrap-break-word text-ink-gray-5">
                     {resolvedEmptyMessage}
                   </div>
                 ) : (
@@ -460,7 +460,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                             {multiple && (
                               <div className="flex items-center justify-center w-4 h-4 shrink-0">
                                 {isOptionSelected(option) ? (
-                                  <Check className="w-4 h-4 text-ink-gray-7" />
+                                  <Check className="w-4 h-4 shrink-0 text-ink-gray-7" />
                                 ) : null}
                               </div>
                             )}
