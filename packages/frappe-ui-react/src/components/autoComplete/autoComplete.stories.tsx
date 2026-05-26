@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import Autocomplete from "./autoComplete";
@@ -69,6 +69,14 @@ const meta: Meta<typeof Autocomplete> = {
       control: "number",
       description: "Maximum number of options to display.",
     },
+    searchValue: {
+      control: "text",
+      description: "Controlled search text shown in the popup input.",
+    },
+    open: {
+      control: "boolean",
+      description: "Controlled open state for the popup.",
+    },
     compareFn: {
       control: false,
       description: "Function to compare option values (for objects).",
@@ -82,9 +90,49 @@ const meta: Meta<typeof Autocomplete> = {
       control: "text",
       description: "CSS classes for the popover body.",
     },
+    className: {
+      control: "text",
+      description: "Additional CSS classes for the outer wrapper.",
+    },
+    labelClassName: {
+      control: "text",
+      description: "Additional CSS classes for the label.",
+    },
+    triggerClassName: {
+      control: "text",
+      description: "Additional CSS classes for the trigger button.",
+    },
+    searchInputClassName: {
+      control: "text",
+      description: "Additional CSS classes for the popup search input.",
+    },
+    listClassName: {
+      control: "text",
+      description: "Additional CSS classes for the options list.",
+    },
+    emptyMessage: {
+      control: "text",
+      description: "Custom empty-state message.",
+    },
+    children: {
+      control: false,
+      description: "Optional custom trigger content rendered as the trigger.",
+    },
+    renderFooter: {
+      control: false,
+      description: "Custom render function for the footer.",
+    },
     onChange: {
       action: "update:value",
       description: "Event when selection changes.",
+    },
+    onOpenChange: {
+      action: "openChanged",
+      description: "Event when the popup opens or closes.",
+    },
+    onSearchChange: {
+      action: "searchChanged",
+      description: "Event when the popup search text changes.",
     },
     prefix: {
       control: false,
@@ -151,13 +199,13 @@ export const SingleOptionWithPrefixSlots: Story = {
             value?.image && (
               <img
                 src={value?.image ?? ""}
-                className="mr-2 h-4 w-4 rounded-full"
+                className="w-4 h-4 mr-2 rounded-full"
               />
             )
           }
           itemPrefix={(value) =>
             value?.image && (
-              <img src={value?.image ?? ""} className="h-4 w-4 rounded-full" />
+              <img src={value?.image ?? ""} className="w-4 h-4 rounded-full" />
             )
           }
           onChange={(_value) => {
@@ -178,15 +226,15 @@ export const SingleOptionWithPrefixSlots: Story = {
 
 export const SingleOptionWithoutSearch: Story = {
   render: (args) => {
-    const [values, setValues] = useState<string[]>([]);
+    const [value, setValue] = useState<string | null>(null);
     return (
       <div style={{ width: "450px" }}>
         <Autocomplete
           {...args}
           hideSearch
-          value={values}
+          value={value}
           onChange={(_value) => {
-            setValues(_value as string[]);
+            setValue(_value as string | null);
           }}
           options={options}
           //@ts-expect-error -- this is fine since we have specified object type in docuementation
@@ -197,14 +245,14 @@ export const SingleOptionWithoutSearch: Story = {
   },
   args: {
     options: options,
-    label: "Select Persons",
+    label: "Select Person",
     showFooter: true,
   },
 };
 
 export const MultipleOptions: Story = {
   render: (args) => {
-    const [value, setValue] = useState<string | null>(null);
+    const [value, setValue] = useState<string[]>([]);
     return (
       <div style={{ width: "450px" }}>
         <Autocomplete
@@ -212,7 +260,7 @@ export const MultipleOptions: Story = {
           multiple
           value={value}
           onChange={(_value) => {
-            setValue(_value as string);
+            setValue(_value as string[]);
           }}
           options={options}
         />
@@ -227,7 +275,7 @@ export const MultipleOptions: Story = {
 
 export const MultipleOptionsWithoutSearch: Story = {
   render: (args) => {
-    const [value, setValue] = useState<string | null>(null);
+    const [value, setValue] = useState<string[]>([]);
     return (
       <div style={{ width: "450px" }}>
         <Autocomplete
@@ -236,7 +284,7 @@ export const MultipleOptionsWithoutSearch: Story = {
           multiple
           value={value}
           onChange={(_value) => {
-            setValue(_value as string);
+            setValue(_value as string[]);
           }}
           options={options}
         />
@@ -246,5 +294,67 @@ export const MultipleOptionsWithoutSearch: Story = {
   args: {
     options: options,
     label: "Select Person",
+  },
+};
+
+export const ControlledSearchLoading: Story = {
+  render: (args) => {
+    const [value, setValue] = useState<string | null>(null);
+    const [selectedOption, setSelectedOption] = useState<
+      (typeof options)[number] | null
+    >(null);
+    const [searchValue, setSearchValue] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [filteredOptions, setFilteredOptions] = useState(options);
+
+    useEffect(() => {
+      let cancelled = false;
+
+      setLoading(true);
+
+      const timeoutId = window.setTimeout(() => {
+        if (cancelled) {
+          return;
+        }
+
+        setFilteredOptions(
+          searchValue.trim()
+            ? options.filter((option) =>
+                option.label.toLowerCase().includes(searchValue.toLowerCase())
+              )
+            : options
+        );
+        setLoading(false);
+      }, 250);
+
+      return () => {
+        cancelled = true;
+        window.clearTimeout(timeoutId);
+      };
+    }, [searchValue]);
+
+    return (
+      <div style={{ width: "450px" }}>
+        <Autocomplete
+          {...args}
+          value={selectedOption ?? value}
+          options={filteredOptions}
+          searchValue={searchValue}
+          loading={loading}
+          onSearchChange={setSearchValue}
+          onChange={(_value, nextOption) => {
+            setValue(_value as string | null);
+            setSelectedOption(
+              (nextOption as (typeof options)[number] | null) ?? null
+            );
+          }}
+        />
+      </div>
+    );
+  },
+  args: {
+    label: "Select Person",
+    placeholder: "Start typing to search...",
+    options,
   },
 };

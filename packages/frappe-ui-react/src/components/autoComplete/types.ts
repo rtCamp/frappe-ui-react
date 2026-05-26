@@ -1,5 +1,5 @@
 import type { Placement } from "@popperjs/core";
-import type { ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 
 export type OptionValue = string | number | boolean;
 
@@ -13,6 +13,25 @@ export type Option = {
 
 export type AutocompleteOption = OptionValue | Option;
 
+export type AutocompleteChangeValue = OptionValue | OptionValue[] | null;
+
+export type AutocompleteChangeSelection = Option | Option[] | null;
+
+export type AutocompleteTriggerChildrenProps = {
+  displayValue: string;
+  placeholder?: string;
+  multiple: boolean;
+  open: boolean;
+  selectedOption: AutocompleteChangeSelection;
+};
+
+export type AutocompleteRenderFooterProps = {
+  clearAll: () => void;
+  selectAll: () => void;
+  allOptionsSelected: boolean;
+  selectedOption: AutocompleteChangeSelection;
+};
+
 export type AutocompleteOptionGroup = {
   group: string;
   items: AutocompleteOption[];
@@ -25,7 +44,10 @@ export type AutocompleteOptions =
 
 export interface AutocompleteProps {
   value: AutocompleteOption | AutocompleteOption[] | null | undefined;
-  options: AutocompleteOptions;
+  options: AutocompleteOptions | null | undefined;
+  children?:
+    | ReactElement
+    | ((props: AutocompleteTriggerChildrenProps) => ReactElement);
   multiple?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   prefix?: (args?: any) => ReactNode;
@@ -41,11 +63,25 @@ export interface AutocompleteProps {
   hideSearch?: boolean;
   showFooter?: boolean;
   maxOptions?: number;
+  searchValue?: string;
+  open?: boolean;
   compareFn?: (
     a: NoInfer<Option | null> | object,
     b: NoInfer<Option | null> | object
   ) => boolean;
   placement?: Placement;
   bodyClasses?: string | string[] | { [key: string]: boolean };
-  onChange?: (value: AutocompleteOption | AutocompleteOption[] | null) => void;
+  className?: string;
+  labelClassName?: string;
+  triggerClassName?: string;
+  searchInputClassName?: string;
+  listClassName?: string;
+  emptyMessage?: string;
+  renderFooter?: (props: AutocompleteRenderFooterProps) => ReactNode;
+  onOpenChange?: (open: boolean) => void;
+  onSearchChange?: (value: string) => void;
+  onChange?: (
+    value: AutocompleteChangeValue,
+    selectedOption: AutocompleteChangeSelection
+  ) => void;
 }
