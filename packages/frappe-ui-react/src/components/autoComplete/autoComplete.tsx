@@ -1,33 +1,49 @@
+/**
+ * External dependencies.
+ */
 import React, {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
+  startTransition,
   useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
 } from "react";
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxOption,
-  ComboboxOptions,
-} from "@headlessui/react";
+import { Combobox as BaseCombobox } from "@base-ui/react";
 
-import { Popover } from "../popover";
-import LoadingIndicator from "../loadingIndicator";
-import FeatherIcon from "../featherIcon";
+/**
+ * Internal dependencies.
+ */
 import { Button } from "../button";
+import LoadingIndicator from "../loadingIndicator";
+import { Check, Close, SmallDown } from "../../icons";
+import { cn } from "../../utils";
 import type {
+  AutocompleteChangeValue,
   AutocompleteOption,
-  AutocompleteOptionGroup,
-  AutocompleteOptions,
   AutocompleteProps,
-  Option,
-  OptionValue,
 } from "./types";
+import {
+  defaultCompareFn,
+  filterGroups,
+  flattenGroups,
+  getEmittedValue,
+  getOptionLabel,
+  getNextSelectedOptionCache,
+  hasAllSelectedOptions,
+  parsePlacement,
+  type InternalSelection,
+  type InternalOption,
+  type InternalOptionGroup,
+  processOptions,
+  resolveSelectedOptions,
+} from "./utils";
 
 const Autocomplete: React.FC<AutocompleteProps> = ({
   value,
   options,
+  children,
   multiple = false,
   label,
   placeholder,
@@ -39,188 +55,135 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   itemPrefix,
   itemSuffix,
   maxOptions = 50,
-  compareFn = (
-    a: NoInfer<Option | null> | object,
-    b: NoInfer<Option | null> | object
-    //@ts-expect-error -- this is fine since we have specified object type in docuementation
-  ) => a?.value === b?.value,
+  searchValue,
+  open,
+  compareFn = defaultCompareFn,
   placement = "bottom-start",
   bodyClasses,
+  className,
+  labelClassName,
+  triggerClassName,
+  searchInputClassName,
+  listClassName,
+  emptyMessage,
+  renderFooter,
+  onOpenChange,
+  onSearchChange,
   onChange,
 }) => {
-  const [query, setQuery] = useState<string>("");
-  const [showOptions, setShowOptions] = useState<boolean>(false);
-
+  const [internalQuery, setInternalQuery] = useState("");
+  const [internalOpen, setInternalOpen] = useState(false);
+  const [selectedOptionCache, setSelectedOptionCache] =
+    useState<InternalSelection>(multiple ? [] : null);
+  const [settledGroups, setSettledGroups] = useState<InternalOptionGroup[]>(
+    () => processOptions(options)
+  );
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const cancelRef = useRef<HTMLDivElement>(null);
+  const comboboxInputId = useId();
+  const triggerId = useId();
+  const isSearchControlled = searchValue !== undefined;
+  const query = isSearchControlled ? (searchValue ?? "") : internalQuery;
+  const isOpenControlled = open !== undefined;
+  const popupOpen = isOpenControlled ? open : internalOpen;
 
-  const isOption = useCallback(
-    (option: AutocompleteOption): option is Option => {
-      return typeof option === "object" && option !== null && "value" in option;
-    },
-    []
-  );
+  const processedOptions = useMemo(() => processOptions(options), [options]);
 
-  const isOptionGroup = useCallback(
-    (
-      option: AutocompleteOptionGroup | AutocompleteOption
-    ): option is AutocompleteOptionGroup => {
-      return (
-        typeof option === "object" &&
-        option !== null &&
-        "items" in option &&
-        "group" in option
-      );
-    },
-    []
-  );
+  useEffect(() => {
+    if (!isSearchControlled || loading) {
+      return;
+    }
 
-  const sanitizeOptions = useCallback(
-    (opts: AutocompleteOption[]): Option[] => {
-      if (!opts) {
-        return [];
-      }
-      return opts.map((option) => {
-        return isOption(option)
-          ? option
-          : { label: String(option), value: option };
-      });
-    },
-    [isOption]
-  );
+    // Defer settled-options updates so typing and focus interactions stay responsive.
+    startTransition(() => {
+      setSettledGroups(processedOptions);
+    });
+  }, [isSearchControlled, loading, processedOptions]);
 
-  const filterOptions = useCallback(
-    (opts: Option[]): Option[] => {
-      if (!query) {
-        return opts;
-      }
-
-      const lowerCaseQuery = query.trim().toLowerCase();
-      return opts.filter((option) => {
-        return (
-          option?.label?.toLowerCase().includes(lowerCaseQuery) ||
-          String(option.value).toLowerCase().includes(lowerCaseQuery)
-        );
-      });
-    },
-    [query]
-  );
-
-  const processOptions = useCallback(
-    (opts: AutocompleteOptions) => {
-      if (!opts) {
-        return [];
-      }
-
-      let processedOptions: AutocompleteOptionGroup[];
-      if (opts.length > 0 && isOptionGroup(opts[0])) {
-        processedOptions = opts as AutocompleteOptionGroup[];
-      } else {
-        processedOptions = [
-          { group: "", items: opts as AutocompleteOption[], hideLabel: false },
-        ];
-      }
-
+  const displayedGroups = useMemo(() => {
+    if (!isSearchControlled || !loading || processedOptions.length > 0) {
       return processedOptions;
-    },
-    [isOptionGroup]
-  );
-
-  const groups = useMemo<AutocompleteOptionGroup[]>(() => {
-    if (!options?.length) {
-      return [];
     }
 
-    const processedGroups = processOptions(options);
+    return settledGroups;
+  }, [isSearchControlled, loading, processedOptions, settledGroups]);
 
-    return processedGroups
-      .map((group, i) => {
-        return {
-          key: i,
-          group: group.group,
-          hideLabel: group.hideLabel,
-          items: filterOptions(sanitizeOptions(group.items || [])),
-        };
-      })
-      .filter((group) => group.items.length > 0);
-  }, [options, processOptions, filterOptions, sanitizeOptions]);
+  const currentOptions = useMemo(
+    () => flattenGroups(displayedGroups),
+    [displayedGroups]
+  );
 
-  const allOptions = useMemo<Option[]>(() => {
-    return processOptions(options).flatMap((group) => group.items) as Option[];
-  }, [options, processOptions]);
+  const visibleGroups = useMemo(() => {
+    if (isSearchControlled) {
+      return loading
+        ? filterGroups(displayedGroups, query, maxOptions)
+        : filterGroups(displayedGroups, "", maxOptions);
+    }
 
-  const findOption = useCallback(
-    (option: AutocompleteOption): Option | undefined => {
-      if (!option) {
-        return undefined;
+    return filterGroups(displayedGroups, query, maxOptions);
+  }, [displayedGroups, isSearchControlled, loading, maxOptions, query]);
+
+  const renderedOptions = useMemo(
+    () => flattenGroups(visibleGroups),
+    [visibleGroups]
+  );
+
+  const getLabel = useCallback((option: AutocompleteOption): string => {
+    return getOptionLabel(option);
+  }, []);
+
+  const selectedComboboxValue = useMemo<InternalSelection>(() => {
+    return resolveSelectedOptions({
+      value,
+      multiple,
+      currentOptions,
+      selectedOptionCache,
+    });
+  }, [value, multiple, currentOptions, selectedOptionCache]);
+
+  const updateQuery = useCallback(
+    (nextQuery: string) => {
+      if (!isSearchControlled) {
+        setInternalQuery(nextQuery);
       }
 
-      const value = isOption(option) ? option.value : option;
-      return allOptions.find((o) => o.value === value);
+      onSearchChange?.(nextQuery);
     },
-    [allOptions, isOption]
+    [isSearchControlled, onSearchChange]
   );
 
-  const makeOption = useCallback(
-    (option: AutocompleteOption): Option => {
-      return isOption(option)
-        ? option
-        : { label: String(option), value: option };
-    },
-    [isOption]
-  );
-
-  const getLabel = useCallback(
-    (option: AutocompleteOption): string => {
-      if (isOption(option)) {
-        return option.label || String(option.value);
+  const setPopupOpen = useCallback(
+    (nextOpen: boolean) => {
+      if (!isOpenControlled) {
+        setInternalOpen(nextOpen);
       }
-      return String(option);
+
+      onOpenChange?.(nextOpen);
     },
-    [isOption]
+    [isOpenControlled, onOpenChange]
   );
-
-  const selectedComboboxValue = useMemo<Option | Option[] | null>(() => {
-    if (value === null || value === undefined) {
-      return multiple ? [] : null;
-    }
-
-    if (!multiple) {
-      return (
-        findOption(value as AutocompleteOption) ||
-        makeOption(value as AutocompleteOption)
-      );
-    }
-
-    const values = Array.isArray(value) ? value : [];
-    return values.map((v) => findOption(v) || makeOption(v));
-  }, [value, multiple, findOption, makeOption]);
 
   const handleComboboxChange = useCallback(
-    (val: Option | Option[] | null | null[]) => {
-      if (!val) {
-        return;
-      }
+    (val: InternalSelection) => {
+      updateQuery("");
 
-      setQuery("");
+      const nextSelectedOptionCache = getNextSelectedOptionCache(val, multiple);
+
+      if (nextSelectedOptionCache !== undefined) {
+        setSelectedOptionCache(nextSelectedOptionCache);
+      }
 
       if (!multiple) {
-        setShowOptions(false);
+        setPopupOpen(false);
       }
 
-      const emittedValue: OptionValue | OptionValue[] | null = multiple
-        ? ((val as Option[]).map((o) => o.value) as OptionValue[])
-        : ((val as Option)?.value ?? null);
+      const emittedValue: AutocompleteChangeValue = getEmittedValue(
+        val,
+        multiple
+      );
 
-      if (!emittedValue) {
-        return;
-      }
-
-      if (onChange) {
-        onChange(emittedValue);
-      }
+      onChange?.(emittedValue, val);
     },
-    [multiple, onChange]
+    [multiple, onChange, setPopupOpen, updateQuery]
   );
 
   const displayValue = useMemo<string>(() => {
@@ -229,25 +192,25 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
     }
 
     if (!multiple) {
-      return getLabel(selectedComboboxValue as Option);
+      return getLabel(selectedComboboxValue as InternalOption);
     }
 
-    return (selectedComboboxValue as Option[])
+    return (selectedComboboxValue as InternalOption[])
       .map((v) => getLabel(v))
       .join(", ");
   }, [selectedComboboxValue, multiple, getLabel]);
 
   const isOptionSelected = useCallback(
-    (option: Option): boolean => {
+    (option: InternalOption): boolean => {
       if (!selectedComboboxValue) {
         return false;
       }
 
       if (!multiple) {
-        return compareFn(selectedComboboxValue as Option, option);
+        return compareFn(selectedComboboxValue as InternalOption, option);
       }
 
-      return (selectedComboboxValue as Option[]).some((v) =>
+      return (selectedComboboxValue as InternalOption[]).some((v) =>
         compareFn(v, option)
       );
     },
@@ -255,262 +218,277 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   );
 
   const areAllOptionsSelected = useMemo<boolean>(() => {
-    if (!multiple) {
-      return false;
-    }
-
-    return (
-      allOptions.length > 0 &&
-      allOptions.length === (selectedComboboxValue as Option[])?.length
-    );
-  }, [multiple, allOptions, selectedComboboxValue]);
+    return multiple
+      ? hasAllSelectedOptions(currentOptions, selectedComboboxValue, compareFn)
+      : false;
+  }, [multiple, currentOptions, selectedComboboxValue, compareFn]);
 
   const selectAll = useCallback(() => {
-    handleComboboxChange(allOptions);
-  }, [allOptions, handleComboboxChange]);
+    handleComboboxChange(currentOptions);
+  }, [currentOptions, handleComboboxChange]);
 
-  const clearAll = useCallback(
+  const clearAll = useCallback(() => {
+    if (multiple) {
+      handleComboboxChange([]);
+      return;
+    }
+
+    updateQuery("");
+  }, [multiple, handleComboboxChange, updateQuery]);
+
+  const handleClearClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      if (multiple) {
-        handleComboboxChange([]);
-      } else {
-        setQuery("");
-      }
+      clearAll();
     },
-    [multiple, handleComboboxChange]
+    [clearAll]
   );
 
   useEffect(() => {
-    if (showOptions && searchInputRef.current) {
+    if (popupOpen && !hideSearch && searchInputRef.current) {
       requestAnimationFrame(() => {
         searchInputRef.current?.focus();
       });
     }
-  }, [showOptions]);
+  }, [hideSearch, popupOpen]);
 
-  const comboboxInputId = useMemo(
-    () => `combobox-input-${Math.random().toString(36).substring(2, 9)}`,
-    []
+  const isSameOption = useCallback(
+    (itemValue: InternalOption, selectedValue: InternalOption) => {
+      return compareFn(itemValue, selectedValue);
+    },
+    [compareFn]
   );
 
+  const resolvedEmptyMessage =
+    emptyMessage ?? (query ? `No results found for "${query}"` : undefined);
+  const showEmptyState =
+    !loading && visibleGroups.length === 0 && Boolean(resolvedEmptyMessage);
+  const popupPlacement = useMemo(() => parsePlacement(placement), [placement]);
+
+  const defaultTriggerContent = (
+    <button
+      type="button"
+      className={cn(
+        "flex h-7 w-full max-w-md items-center justify-between gap-2 rounded border border-transparent bg-surface-gray-2 px-2 py-1 transition-colors hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:outline-none focus:ring-2 focus:ring-outline-gray-3 data-popup-open:bg-surface-gray-3",
+        triggerClassName
+      )}
+    >
+      <div className="flex items-center flex-1 min-w-0 overflow-hidden">
+        {prefix && prefix(selectedComboboxValue)}
+        <span
+          className={cn(
+            "truncate text-base leading-5",
+            displayValue ? "text-ink-gray-8" : "text-ink-gray-4"
+          )}
+        >
+          {displayValue || placeholder || ""}
+        </span>
+        {suffix && suffix(selectedComboboxValue)}
+      </div>
+      <SmallDown
+        className="w-4 h-4 shrink-0 text-ink-gray-5"
+        aria-hidden="true"
+      />
+    </button>
+  );
+
+  const triggerContent =
+    typeof children === "function"
+      ? children({
+          displayValue,
+          placeholder,
+          multiple,
+          open: popupOpen,
+          selectedOption: selectedComboboxValue,
+        })
+      : React.isValidElement(children)
+        ? children
+        : defaultTriggerContent;
+
+  const footerContent = renderFooter?.({
+    clearAll,
+    selectAll,
+    allOptionsSelected: areAllOptionsSelected,
+    selectedOption: selectedComboboxValue,
+  });
+  const showFooterSection = Boolean(renderFooter) || (multiple && showFooter);
+
   return (
-    <div className="min-w-24 w-full">
-      <Combobox
+    <div className={cn("min-w-24 w-full", className)}>
+      <BaseCombobox.Root
+        items={renderedOptions}
         value={selectedComboboxValue}
-        onChange={handleComboboxChange}
         multiple={multiple}
-        by={compareFn}
+        open={popupOpen}
+        autoHighlight
+        highlightItemOnHover
+        itemToStringLabel={(item) => item.label}
+        isItemEqualToValue={isSameOption}
+        onOpenChange={(nextOpen) => setPopupOpen(nextOpen)}
+        onInputValueChange={(nextQuery, details) => {
+          if (details.reason === "item-press") {
+            return;
+          }
+
+          updateQuery(nextQuery);
+        }}
+        onValueChange={handleComboboxChange}
         data-testid="autocomplete-component"
       >
-        {({ open: isComboboxOpen }) => (
-          <Popover
-            show={showOptions}
-            onUpdateShow={setShowOptions}
-            placement={placement}
-            popoverClass={bodyClasses}
-            target={({ togglePopover: popoverToggle }) => (
-              <div className="w-full space-y-1.5">
-                {label && (
-                  <label
-                    htmlFor={comboboxInputId}
-                    className="block text-xs text-ink-gray-5"
-                  >
-                    {label}
-                  </label>
-                )}
-                <button
-                  type="button"
-                  className={`flex h-7 w-full max-w-md items-center justify-between gap-2 rounded bg-surface-gray-2 px-2 py-1 transition-colors hover:bg-surface-gray-3 border border-transparent focus:border-outline-gray-4 focus:ring-2 focus:ring-outline-gray-3 focus:outline-none ${
-                    isComboboxOpen ? "bg-surface-gray-3" : ""
-                  }`}
-                  onClick={popoverToggle}
-                  role="button"
-                  aria-label="Toggle options"
-                >
-                  <FeatherIcon
-                    name="chevron-down"
-                    className="h-4 w-4 text-ink-gray-5 shrink-0"
-                    aria-hidden="true"
-                  />
-                  <div className="flex items-center overflow-hidden">
-                    {prefix && prefix(selectedComboboxValue)}
-                    <span
-                      className={`truncate text-base leading-5 ${
-                        displayValue ? "text-ink-gray-8" : "text-ink-gray-4"
-                      }`}
-                    >
-                      {displayValue || placeholder || ""}
-                    </span>
-                    {suffix && suffix(selectedComboboxValue)}
+        <div className="w-full space-y-1.5">
+          {label && (
+            <label
+              htmlFor={triggerId}
+              className={cn("block text-xs text-ink-gray-5", labelClassName)}
+            >
+              {label}
+            </label>
+          )}
+
+          <BaseCombobox.Trigger
+            id={triggerId}
+            aria-label="Toggle options"
+            render={triggerContent}
+          />
+        </div>
+
+        <BaseCombobox.Portal>
+          <BaseCombobox.Positioner
+            side={popupPlacement.side}
+            align={popupPlacement.align}
+            sideOffset={4}
+            className="z-100"
+          >
+            <BaseCombobox.Popup
+              className={cn(
+                "relative mt-1 w-(--anchor-width) max-w-md overflow-hidden rounded-lg bg-surface-modal text-base shadow-2xl",
+                bodyClasses
+              )}
+            >
+              {!hideSearch && (
+                <div className="flex items-stretch space-x-1.5 rounded-lg bg-surface-modal py-1.5">
+                  <div className="relative mx-1.5 flex w-full rounded bg-surface-gray-2 text-base text-ink-gray-8 placeholder-ink-gray-4 transition-colors hover:border-outline-gray-modals focus-within:border-outline-gray-4 focus-within:bg-surface-gray-3 hover:bg-surface-gray-4 cursor-pointer">
+                    <BaseCombobox.Input
+                      id={comboboxInputId}
+                      ref={searchInputRef}
+                      data-testid="autocomplete"
+                      value={query}
+                      placeholder="Search"
+                      autoComplete="off"
+                      className={cn(
+                        "h-7 w-full bg-transparent py-1.5 pl-2 pr-2 outline-none",
+                        searchInputClassName
+                      )}
+                    />
+
+                    <div className="inline-flex items-center justify-center h-7 w-7">
+                      {loading ? (
+                        <LoadingIndicator
+                          data-testid="loading-indicator"
+                          className="w-4 h-4 text-ink-gray-5"
+                        />
+                      ) : (
+                        <button
+                          type="button"
+                          aria-label="Clear"
+                          onClick={handleClearClick}
+                        >
+                          <Close className="w-4 h-4 text-ink-gray-8" />
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </button>
-              </div>
-            )}
-            body={({ isOpen: isPopoverOpen }) =>
-              isPopoverOpen && (
-                <div className="relative mt-1 max-w-md rounded-lg bg-surface-modal text-base shadow-2xl">
-                  {!hideSearch && (
-                    <div>
-                      <div className="sticky top-0 z-[100] flex items-stretch space-x-1.5 bg-surface-modal py-1.5 rounded-lg">
-                        <div className="relative w-full rounded flex mx-2 border border-surface-gray-2 bg-surface-gray-2 text-base text-ink-gray-8 placeholder-ink-gray-4 transition-colors hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:bg-surface-white focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 focus:bg-surface-gray-3 hover:bg-surface-gray-4 text-ink-gray-8 cursor-pointer">
-                          <ComboboxInput
-                            id={comboboxInputId}
-                            ref={searchInputRef}
-                            className=" h-7 w-full py-1.5 pl-2 pr-2 outline-none"
-                            type="text"
-                            data-testid="autocomplete"
-                            displayValue={() => query}
-                            onChange={(
-                              event: React.ChangeEvent<HTMLInputElement>
-                            ) => {
-                              cancelRef.current?.removeAttribute("inert");
-                              cancelRef.current?.removeAttribute("aria-hidden");
-                              setQuery(event.target.value);
-                            }}
-                            autoComplete="off"
-                            onBlur={() => {
-                              cancelRef.current?.removeAttribute("inert");
-                              cancelRef.current?.removeAttribute("aria-hidden");
-                            }}
-                            placeholder="Search"
-                          />
-                          <div
-                            ref={cancelRef}
-                            className="inline-flex h-7 w-7 items-center justify-center"
-                            onMouseEnter={() => {
-                              cancelRef.current?.removeAttribute("inert");
-                              cancelRef.current?.removeAttribute("aria-hidden");
-                            }}
-                          >
-                            {loading ? (
-                              <LoadingIndicator
-                                data-testid="loading-indicator"
-                                className="h-4 w-4 text-ink-gray-5"
-                              />
-                            ) : (
-                              <button
-                                type="button"
-                                aria-label="Clear"
-                                onClick={clearAll}
-                              >
-                                <FeatherIcon
-                                  name="x"
-                                  className="w-4 h-4 text-ink-gray-8"
-                                />
-                              </button>
+                </div>
+              )}
+
+              <BaseCombobox.List
+                className={cn(
+                  "max-h-60 overflow-y-auto px-1.5 pb-1.5",
+                  hideSearch && "pt-1.5",
+                  visibleGroups.length === 0 && !showEmptyState && "p-0",
+                  listClassName
+                )}
+              >
+                {showEmptyState ? (
+                  <div className="w-full rounded-md px-2.5 py-1.5 text-base text-center wrap-break-word text-ink-gray-5">
+                    {resolvedEmptyMessage}
+                  </div>
+                ) : (
+                  visibleGroups.map((group, groupIndex) => (
+                    <div key={`${group.group}-${groupIndex}`}>
+                      {group.group && !group.hideLabel && (
+                        <div className="sticky top-0 truncate bg-surface-modal px-2.5 py-1.5 text-sm font-medium text-ink-gray-5">
+                          {group.group}
+                        </div>
+                      )}
+
+                      {group.items.map((option, optionIndex) => (
+                        <BaseCombobox.Item
+                          key={`${group.group}-${groupIndex}-${String(option.value)}-${optionIndex}`}
+                          value={option}
+                          disabled={option.disabled}
+                          className={cn(
+                            "flex cursor-pointer items-center rounded px-2.5 py-1.5 text-base text-ink-gray-7 outline-none",
+                            "data-disabled:pointer-events-none data-disabled:opacity-50",
+                            "data-highlighted:bg-surface-gray-3"
+                          )}
+                        >
+                          <div className="flex items-center flex-1 min-w-0 gap-2 overflow-hidden">
+                            {itemPrefix && (
+                              <div className="flex items-center shrink-0">
+                                {itemPrefix(option)}
+                              </div>
+                            )}
+
+                            <span className="flex-1 min-w-0 truncate text-ink-gray-7">
+                              {option.label}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2 ml-2 shrink-0">
+                            {itemSuffix && (
+                              <div className="min-w-0 overflow-hidden text-right max-w-56">
+                                {itemSuffix(option)}
+                                {option.description && (
+                                  <div className="text-sm truncate text-ink-gray-5">
+                                    {option.description}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+
+                            {multiple && (
+                              <div className="flex items-center justify-center w-4 h-4 shrink-0">
+                                {isOptionSelected(option) ? (
+                                  <Check className="w-4 h-4 shrink-0 text-ink-gray-7" />
+                                ) : null}
+                              </div>
                             )}
                           </div>
-                        </div>
-                      </div>
+                        </BaseCombobox.Item>
+                      ))}
                     </div>
-                  )}
+                  ))
+                )}
+              </BaseCombobox.List>
 
-                  <ComboboxOptions
-                    static
-                    className={`max-h-[15rem] overflow-y-auto px-1.5 pb-1.5 ${
-                      hideSearch ? "pt-1.5" : ""
-                    }`}
-                  >
-                    {groups.length === 0 ? (
-                      <li className="rounded-md px-2.5 py-1.5 text-base text-ink-gray-5">
-                        No results found
-                      </li>
-                    ) : (
-                      groups.map((group) => (
-                        <div
-                          key={group.group}
-                          className={group.items.length === 0 ? "hidden" : ""}
-                        >
-                          {group.group && !group.hideLabel && (
-                            <div className="sticky top-10 truncate bg-surface-modal px-2.5 py-1.5 text-sm font-medium text-ink-gray-5">
-                              {group.group}
-                            </div>
-                          )}
-                          {group.items
-                            .slice(0, maxOptions)
-                            .map((option, idx) => (
-                              <ComboboxOption
-                                key={idx}
-                                value={option}
-                                disabled={(option as Option).disabled}
-                                className={({ focus }) =>
-                                  `flex cursor-pointer items-center justify-between rounded px-2.5 py-1.5 text-base ${
-                                    focus ? "bg-surface-gray-3" : ""
-                                  } ${
-                                    (option as Option).disabled
-                                      ? "opacity-50"
-                                      : ""
-                                  }`
-                                }
-                              >
-                                <>
-                                  <div className="flex flex-1 gap-2 overflow-hidden items-center">
-                                    {(itemPrefix || multiple) && (
-                                      <div className="flex flex-shrink-0">
-                                        {itemPrefix ? (
-                                          itemPrefix(
-                                            option as AutocompleteOption
-                                          )
-                                        ) : isOptionSelected(
-                                            option as Option
-                                          ) ? (
-                                          <FeatherIcon
-                                            name="check"
-                                            className="h-4 w-4 text-ink-gray-7"
-                                          />
-                                        ) : (
-                                          <div className="h-4 w-4" />
-                                        )}
-                                      </div>
-                                    )}
-                                    <span className="flex-1 truncate text-ink-gray-7">
-                                      {getLabel(option)}
-                                    </span>
-                                  </div>
-
-                                  {itemSuffix && (
-                                    <div className="ml-2 flex-shrink-0">
-                                      {itemSuffix(option as Option)}
-                                      {(option as Option)?.description && (
-                                        <div className="text-sm text-ink-gray-5">
-                                          {(option as Option).description}
-                                        </div>
-                                      )}
-                                    </div>
-                                  )}
-                                </>
-                              </ComboboxOption>
-                            ))}
-                        </div>
-                      ))
-                    )}
-                  </ComboboxOptions>
-
-                  {showFooter && multiple && (
-                    <div className="border-t p-1 border-outline-gray-2">
-                      {multiple ? (
-                        <div className="flex items-center justify-end">
-                          {!areAllOptionsSelected && (
-                            <Button label="Select All" onClick={selectAll} />
-                          )}
-                          {areAllOptionsSelected && (
-                            <Button label="Clear All" onClick={clearAll} />
-                          )}
-                        </div>
+              {showFooterSection && (
+                <div className="p-1.5 border-t border-outline-gray-2">
+                  {footerContent ?? (
+                    <div className="flex items-center justify-end">
+                      {!areAllOptionsSelected ? (
+                        <Button label="Select All" onClick={selectAll} />
                       ) : (
-                        <div className="flex items-center justify-end">
-                          <Button label="Clear" onClick={clearAll} />
-                        </div>
+                        <Button label="Clear All" onClick={clearAll} />
                       )}
                     </div>
                   )}
                 </div>
-              )
-            }
-          />
-        )}
-      </Combobox>
+              )}
+            </BaseCombobox.Popup>
+          </BaseCombobox.Positioner>
+        </BaseCombobox.Portal>
+      </BaseCombobox.Root>
     </div>
   );
 };
