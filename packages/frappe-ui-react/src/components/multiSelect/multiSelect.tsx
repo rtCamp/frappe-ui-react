@@ -22,12 +22,14 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   value = [],
   options,
   placeholder = "Select option",
+  triggerLabel,
   hideSearch = false,
   loading = false,
   compareFn = defaultCompareFn,
   onChange,
   renderOption,
   renderFooter,
+  popupClassName,
 }) => {
   const [query, setQuery] = useState("");
 
@@ -43,10 +45,11 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   }, [value, optionsMap]);
 
   const selectedOptions = useMemo(() => {
+    if (triggerLabel) return triggerLabel;
     if (selectedOptionObjects.length === 0) return placeholder;
     const labels = selectedOptionObjects.map((opt) => opt.label);
     return labels.join(", ");
-  }, [selectedOptionObjects, placeholder]);
+  }, [selectedOptionObjects, placeholder, triggerLabel]);
 
   const clearAll = () => {
     setQuery("");
@@ -78,7 +81,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           <Button
             className={cn(
               "w-full justify-between!",
-              value.length === 0 && "text-ink-gray-4!"
+              !triggerLabel && value.length === 0 && "text-ink-gray-4!"
             )}
             iconRight={() => <ChevronDown className="w-4 h-4 shrink-0" />}
             aria-label="Select options"
@@ -91,7 +94,10 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       <Combobox.Portal>
         <Combobox.Positioner className="group" sideOffset={8} align="start">
           <Combobox.Popup
-            className="shadow-xl rounded-lg border border-outline-gray-1 bg-surface-modal p-2 w-(--anchor-width)"
+            className={cn(
+              "shadow-xl rounded-lg border border-outline-gray-1 bg-surface-modal p-2 w-(--anchor-width)",
+              popupClassName
+            )}
             aria-label="Options"
           >
             {!hideSearch && (
