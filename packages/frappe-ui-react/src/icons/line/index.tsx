@@ -421,6 +421,7 @@ export { default as Unarchive } from "./unarchive.svg?react";
 export { default as Underline } from "./underline.svg?react";
 export { default as Underline1 } from "./underline-1.svg?react";
 export { default as Unlock } from "./unlock.svg?react";
+export { default as Unlink } from "./unlink.svg?react";
 export { default as Unpin } from "./unpin.svg?react";
 export { default as Unpublish } from "./unpublish.svg?react";
 export { default as Up } from "./up.svg?react";
