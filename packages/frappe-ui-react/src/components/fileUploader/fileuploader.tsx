@@ -23,7 +23,7 @@ export interface FileUploaderProps {
     openFileSelector: () => void;
   }) => React.ReactNode;
   onSuccess?: (data: UploadedFile) => void;
-  onFailure?: (error: unknown) => void;
+  onFailure?: (error: unknown, errorMessage?: string) => void;
 }
 
 const FileUploader: React.FC<FileUploaderProps> = ({
@@ -146,7 +146,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
           }
         }
         setError(errorMessage);
-        onFailure?.(err);
+        onFailure?.(err, errorMessage);
       });
   };
 
