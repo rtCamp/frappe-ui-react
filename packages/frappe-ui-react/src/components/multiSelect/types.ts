@@ -15,6 +15,8 @@ export interface MultiSelectProps {
   options: MultiSelectOption[];
   /** Placeholder text when no options are selected */
   placeholder?: string;
+  /** Fixed label always shown in the trigger button, overriding the selected values summary */
+  triggerLabel?: string;
   /** Hide the search input in the dropdown */
   hideSearch?: boolean;
   /** Show loading indicator */
@@ -33,4 +35,6 @@ export interface MultiSelectProps {
     clearAll: () => void;
     selectAll: () => void;
   }) => ReactNode;
+  /** Additional class names for the popup */
+  popupClassName?: string;
 }
