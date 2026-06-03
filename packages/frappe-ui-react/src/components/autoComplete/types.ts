@@ -63,6 +63,7 @@ export interface AutocompleteProps {
   hideSearch?: boolean;
   showFooter?: boolean;
   maxOptions?: number;
+  keepSelectedVisible?: boolean;
   searchValue?: string;
   open?: boolean;
   compareFn?: (
