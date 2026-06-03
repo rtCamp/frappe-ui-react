@@ -119,6 +119,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
     if (!keepSelectedVisible) return filtered;
 
+    // Ensure selected options are visible even if they don't match the query.
     const selectionArray = Array.isArray(selectedOptionCache)
       ? selectedOptionCache
       : selectedOptionCache
@@ -127,7 +128,6 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
     if (!selectionArray.length) return filtered;
 
-    // Ensure selected options are visible even if they don't match the query.
     const withoutSelected = filtered
       .map((group) => ({
         ...group,
