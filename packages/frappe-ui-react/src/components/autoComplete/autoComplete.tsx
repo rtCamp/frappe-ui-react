@@ -55,6 +55,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   itemPrefix,
   itemSuffix,
   maxOptions = 50,
+  keepSelectedVisible = false,
   searchValue,
   open,
   compareFn = defaultCompareFn,
@@ -113,14 +114,43 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   );
 
   const visibleGroups = useMemo(() => {
-    if (isSearchControlled) {
-      return loading
-        ? filterGroups(displayedGroups, query, maxOptions)
-        : filterGroups(displayedGroups, "", maxOptions);
-    }
+    const effectiveQuery = isSearchControlled && !loading ? "" : query;
+    const filtered = filterGroups(displayedGroups, effectiveQuery, maxOptions);
 
-    return filterGroups(displayedGroups, query, maxOptions);
-  }, [displayedGroups, isSearchControlled, loading, maxOptions, query]);
+    if (!keepSelectedVisible) return filtered;
+
+    // Ensure selected options are visible even if they don't match the query.
+    const selectionArray = Array.isArray(selectedOptionCache)
+      ? selectedOptionCache
+      : selectedOptionCache
+        ? [selectedOptionCache]
+        : [];
+
+    if (!selectionArray.length) return filtered;
+
+    const withoutSelected = filtered
+      .map((group) => ({
+        ...group,
+        items: group.items.filter(
+          (item) => !selectionArray.some((sel) => compareFn(item, sel))
+        ),
+      }))
+      .filter((group) => group.items.length > 0);
+
+    return [
+      { group: "", hideLabel: true, items: selectionArray },
+      ...withoutSelected,
+    ];
+  }, [
+    compareFn,
+    displayedGroups,
+    isSearchControlled,
+    keepSelectedVisible,
+    loading,
+    maxOptions,
+    query,
+    selectedOptionCache,
+  ]);
 
   const renderedOptions = useMemo(
     () => flattenGroups(visibleGroups),
@@ -321,6 +351,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
         multiple={multiple}
         open={popupOpen}
         autoHighlight
+        filter={null}
         highlightItemOnHover
         itemToStringLabel={(item) => item.label}
         isItemEqualToValue={isSameOption}

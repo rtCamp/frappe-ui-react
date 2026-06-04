@@ -217,14 +217,13 @@ export const MultipleSelectionFooter: Story = {
 export const ControlledSearchLoading: Story = {
   args: {
     options: directoryOptions,
-    value: null,
-    placeholder: "Select a person",
+    value: [],
+    multiple: true,
+    keepSelectedVisible: true,
+    placeholder: "Select people",
   },
   render: function Render(args) {
-    const [value, setValue] = React.useState<string | null>(null);
-    const [selectedOption, setSelectedOption] = React.useState<
-      (typeof directoryOptions)[number] | null
-    >(null);
+    const [value, setValue] = React.useState<string[]>([]);
     const [searchValue, setSearchValue] = React.useState("");
     const [loading, setLoading] = React.useState(false);
     const [options, setOptions] = React.useState(directoryOptions);
@@ -259,16 +258,15 @@ export const ControlledSearchLoading: Story = {
       <div className="w-112.5">
         <Autocomplete
           {...args}
+          multiple
+          keepSelectedVisible
+          value={value}
           options={options}
-          value={selectedOption ?? value}
           searchValue={searchValue}
           loading={loading}
           onSearchChange={setSearchValue}
-          onChange={(nextValue, nextOption) => {
-            setValue(nextValue as string | null);
-            setSelectedOption(
-              (nextOption as (typeof directoryOptions)[number] | null) ?? null
-            );
+          onChange={(_value) => {
+            setValue(_value as string[]);
           }}
         />
       </div>
@@ -280,13 +278,12 @@ export const ControlledSearchLoading: Story = {
     const trigger = canvas.getByRole("combobox", { name: /toggle options/i });
 
     await userEvent.click(trigger);
+    await userEvent.click(await page.findByText("John Doe"));
+    await userEvent.click(await page.findByText("Jane Doe"));
 
     const search = await page.findByPlaceholderText("Search");
+    await userEvent.clear(search);
     await userEvent.type(search, "smith");
-
-    await waitFor(() => {
-      expect(search).toHaveValue("smith");
-    });
 
     await waitFor(() => {
       expect(page.getByTestId("loading-indicator")).toBeInTheDocument();
@@ -296,30 +293,18 @@ export const ControlledSearchLoading: Story = {
       expect(page.getByText("John Smith")).toBeInTheDocument();
     });
 
-    await userEvent.click(page.getByText("John Smith"));
+    expect(page.getByText("John Doe")).toBeInTheDocument();
+    expect(page.getByText("Jane Doe")).toBeInTheDocument();
+    expect(page.queryByText("Bob Johnson")).not.toBeInTheDocument();
+
+    await userEvent.clear(search);
+    await userEvent.type(search, "zzz");
 
     await waitFor(() => {
-      expect(trigger).toHaveTextContent("John Smith");
+      expect(page.queryByText("John Smith")).not.toBeInTheDocument();
     });
 
-    await userEvent.click(trigger);
-
-    const reopenedSearch = await page.findByPlaceholderText("Search");
-    await userEvent.clear(reopenedSearch);
-    await userEvent.type(reopenedSearch, "zzz");
-
-    await waitFor(() => {
-      expect(reopenedSearch).toHaveValue("zzz");
-    });
-
-    await waitFor(() => {
-      expect(page.getByText('No results found for "zzz"')).toBeInTheDocument();
-    });
-
-    await waitFor(() => {
-      expect(trigger).toHaveTextContent("John Smith");
-    });
-
-    expect(page.queryByText("John Doe")).not.toBeInTheDocument();
+    expect(page.getByText("John Doe")).toBeInTheDocument();
+    expect(page.getByText("Jane Doe")).toBeInTheDocument();
   },
 };

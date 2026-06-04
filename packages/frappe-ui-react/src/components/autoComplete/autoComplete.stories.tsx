@@ -69,6 +69,11 @@ const meta: Meta<typeof Autocomplete> = {
       control: "number",
       description: "Maximum number of options to display.",
     },
+    keepSelectedVisible: {
+      control: "boolean",
+      description:
+        "Keep selected options visible in the list even if they don't match the search query.",
+    },
     searchValue: {
       control: "text",
       description: "Controlled search text shown in the popup input.",
@@ -299,10 +304,7 @@ export const MultipleOptionsWithoutSearch: Story = {
 
 export const ControlledSearchLoading: Story = {
   render: (args) => {
-    const [value, setValue] = useState<string | null>(null);
-    const [selectedOption, setSelectedOption] = useState<
-      (typeof options)[number] | null
-    >(null);
+    const [value, setValue] = useState<string[]>([]);
     const [searchValue, setSearchValue] = useState("");
     const [loading, setLoading] = useState(false);
     const [filteredOptions, setFilteredOptions] = useState(options);
@@ -337,16 +339,15 @@ export const ControlledSearchLoading: Story = {
       <div style={{ width: "450px" }}>
         <Autocomplete
           {...args}
-          value={selectedOption ?? value}
+          multiple
+          value={value}
           options={filteredOptions}
           searchValue={searchValue}
           loading={loading}
+          keepSelectedVisible
           onSearchChange={setSearchValue}
-          onChange={(_value, nextOption) => {
-            setValue(_value as string | null);
-            setSelectedOption(
-              (nextOption as (typeof options)[number] | null) ?? null
-            );
+          onChange={(_value) => {
+            setValue(_value as string[]);
           }}
         />
       </div>
