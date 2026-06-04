@@ -30,9 +30,9 @@
     "format": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\""
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.22.5",
-    "@babel/preset-react": "^7.22.5",
-    "@babel/preset-typescript": "^7.22.5",
+    "@babel/preset-env": "^7.29.5",
+    "@babel/preset-react": "^7.29.5",
+    "@babel/preset-typescript": "^7.29.5",
     "@eslint/js": "^9.30.1",
     "@storybook/addon-a11y": "^9.1.19",
     "@storybook/addon-docs": "^9.1.19",
@@ -47,8 +47,9 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.6.0",
-    "@vitest/browser": "^3.2.4",
-    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/browser": "^4.1.8",
+    "@vitest/browser-playwright": "^4.1.8",
+    "@vitest/coverage-v8": "^4.1.8",
     "babel-jest": "^30.1.2",
     "baseline-browser-mapping": "^2.9.15",
     "eslint": "^9.39.2",
@@ -72,7 +73,7 @@
     "typescript-eslint": "^8.53.0",
     "vite": "^7.3.1",
     "vite-plugin-svgr": "^4.3.0",
-    "vitest": "^3.2.4"
+    "vitest": "^4.1.8"
   },
   "lint-staged": {
     "*.(cjs|js|ts|tsx)": [
@@ -96,11 +97,13 @@
       "ajv@<6.14.0": "^6.14.0",
       "rollup@>=4.0.0 <4.59.0": "^4.59.0",
       "flatted@<3.4.2": "^3.4.2",
-      "brace-expansion@>=4.0.0 <5.0.5": "^5.0.5",
+      "brace-expansion@>=4.0.0 <5.0.6": "^5.0.6",
       "picomatch@>=4.0.0 <4.0.4": "^4.0.4",
       "yaml@>=2.0.0 <2.8.3": "^2.8.3",
       "vite@>=7.0.0 <=7.3.1": "^7.3.2",
-      "postcss@<8.5.10": "^8.5.10"
+      "postcss@<8.5.10": "^8.5.10",
+      "vitest@<4.1.0": "^4.1.8",
+      "ws@>=8.0.0 <8.20.1": "^8.20.1"
     }
   }
 }
