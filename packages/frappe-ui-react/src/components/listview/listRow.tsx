@@ -4,17 +4,20 @@ import { ListContext } from "./listContext";
 import { Checkbox } from "../checkbox";
 import ListRowItem from "./listRowItem";
 import { alignmentMap, getGridTemplateColumns } from "./utils";
+import { cn } from "../../utils";
 
 interface ListRowProps {
   row: any;
   isLastRow?: boolean;
   children?: React.ReactNode;
+  className?: string;
 }
 
 const ListRow: React.FC<ListRowProps> = ({
   row,
   isLastRow = false,
   children,
+  className,
 }) => {
   const { options: list } = useContext(ListContext);
 
@@ -99,7 +102,7 @@ const ListRow: React.FC<ListRowProps> = ({
     >
       <button className="[all:unset] hover:[all:unset]">
         <div
-          className="grid items-center px-2 gap-2"
+          className={cn("grid items-center px-2 gap-2", className)}
           style={{
             height: rowHeight,
             gridTemplateColumns: getGridTemplateColumns(
