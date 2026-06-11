@@ -22,6 +22,7 @@ import type {
 import {
   filterOptions,
   flattenOptions,
+  getDescription,
   getIcon,
   getLabel,
   getValue,
@@ -236,48 +237,82 @@ export const Combobox: React.FC<ComboboxProps> = ({
                         <div className="p-2 text-xs font-semibold text-ink-gray-5">
                           {opt.group}
                         </div>
-                        {opt.options.map((option) => (
+                        {opt.options.map((option) => {
+                          const description = getDescription(option);
+                          return (
+                            <BaseCombobox.Item
+                              key={getValue(option)}
+                              value={option}
+                              disabled={isDisabled(option)}
+                              className={cn(
+                                "relative flex cursor-pointer select-none items-center gap-2 rounded px-2.5 py-1.5 pr-8 text-base text-ink-gray-8 focus:outline-none",
+                                !description && "truncate",
+                                "data-disabled:pointer-events-none data-disabled:opacity-50",
+                                "data-highlighted:bg-surface-gray-3 data-highlighted:outline-none",
+                                "data-selected:bg-surface-gray-3"
+                              )}
+                            >
+                              {getIcon(option) && (
+                                <span className="mr-1">{getIcon(option)}</span>
+                              )}
+                              {description ? (
+                                <div className="min-w-0 flex-1 flex flex-col">
+                                  <span className="truncate font-medium">
+                                    {getLabel(option)}
+                                  </span>
+                                  <span className="truncate text-sm text-ink-gray-5">
+                                    {description}
+                                  </span>
+                                </div>
+                              ) : (
+                                <span className="flex-1">
+                                  {getLabel(option)}
+                                </span>
+                              )}
+                              <BaseCombobox.ItemIndicator className="absolute right-2 inline-flex items-center justify-center text-ink-gray-5">
+                                <Check className="size-4" />
+                              </BaseCombobox.ItemIndicator>
+                            </BaseCombobox.Item>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      (() => {
+                        const description = getDescription(opt);
+                        return (
                           <BaseCombobox.Item
-                            key={getValue(option)}
-                            value={option}
-                            disabled={isDisabled(option)}
+                            key={getValue(opt)}
+                            value={opt}
+                            disabled={isDisabled(opt)}
                             className={cn(
-                              "relative flex cursor-pointer select-none items-center gap-2 truncate rounded px-2.5 py-1.5 pr-8 text-base text-ink-gray-8 focus:outline-none",
+                              "relative flex cursor-pointer select-none items-center gap-2 rounded px-2.5 py-1.5 pr-8 text-base text-ink-gray-8 focus:outline-none",
+                              !description && "truncate",
                               "data-disabled:pointer-events-none data-disabled:opacity-50",
                               "data-highlighted:bg-surface-gray-3 data-highlighted:outline-none",
                               "data-selected:bg-surface-gray-3"
                             )}
                           >
-                            {getIcon(option) && (
-                              <span className="mr-1">{getIcon(option)}</span>
+                            {getIcon(opt) && (
+                              <span className="mr-1">{getIcon(opt)}</span>
                             )}
-                            <span className="flex-1">{getLabel(option)}</span>
+                            {description ? (
+                              <div className="min-w-0 flex-1 flex flex-col">
+                                <span className="truncate font-medium">
+                                  {getLabel(opt)}
+                                </span>
+                                <span className="truncate text-sm text-ink-gray-5">
+                                  {description}
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="flex-1">{getLabel(opt)}</span>
+                            )}
                             <BaseCombobox.ItemIndicator className="absolute right-2 inline-flex items-center justify-center text-ink-gray-5">
                               <Check className="size-4" />
                             </BaseCombobox.ItemIndicator>
                           </BaseCombobox.Item>
-                        ))}
-                      </div>
-                    ) : (
-                      <BaseCombobox.Item
-                        key={getValue(opt)}
-                        value={opt}
-                        disabled={isDisabled(opt)}
-                        className={cn(
-                          "relative flex cursor-pointer select-none items-center gap-2 truncate rounded px-2.5 py-1.5 pr-8 text-base text-ink-gray-8 focus:outline-none",
-                          "data-disabled:pointer-events-none data-disabled:opacity-50",
-                          "data-highlighted:bg-surface-gray-3 data-highlighted:outline-none",
-                          "data-selected:bg-surface-gray-3"
-                        )}
-                      >
-                        {getIcon(opt) && (
-                          <span className="mr-1">{getIcon(opt)}</span>
-                        )}
-                        <span className="flex-1">{getLabel(opt)}</span>
-                        <BaseCombobox.ItemIndicator className="absolute right-2 inline-flex items-center justify-center text-ink-gray-5">
-                          <Check className="size-4" />
-                        </BaseCombobox.ItemIndicator>
-                      </BaseCombobox.Item>
+                        );
+                      })()
                     )
                   )}
                 </BaseCombobox.List>

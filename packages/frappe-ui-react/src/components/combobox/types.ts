@@ -3,6 +3,7 @@ export type SimpleOption =
   | {
       label: string;
       value: string;
+      description?: string;
       icon?: React.ReactNode;
       disabled?: boolean;
     };
