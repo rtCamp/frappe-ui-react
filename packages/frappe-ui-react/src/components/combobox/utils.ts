@@ -32,6 +32,12 @@ export const getIcon = (option: SimpleOption) =>
   typeof option === "object" ? option.icon : undefined;
 
 /**
+ * Gets the description text for a simple option if present.
+ */
+export const getDescription = (option: SimpleOption) =>
+  typeof option === "object" ? option.description : undefined;
+
+/**
  * Returns whether a combobox option is a grouped option.
  */
 export const isGroupedOption = (
