@@ -19,8 +19,12 @@ export interface MultiSelectProps {
   triggerLabel?: string;
   /** Hide the search input in the dropdown */
   hideSearch?: boolean;
+  /** Controlled open state for the popup */
+  open?: boolean;
   /** Show loading indicator */
   loading?: boolean;
+  /** Called when the popup open state changes */
+  onOpenChange?: (open: boolean) => void;
   /** Custom comparison function for option equality */
   compareFn?: (
     a: NoInfer<MultiSelectOption | null>,

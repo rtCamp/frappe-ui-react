@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { Combobox } from "@base-ui/react";
 import { Check, ChevronDown, X } from "lucide-react";
 
@@ -24,7 +24,9 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   placeholder = "Select option",
   triggerLabel,
   hideSearch = false,
+  open,
   loading = false,
+  onOpenChange,
   compareFn = defaultCompareFn,
   onChange,
   renderOption,
@@ -32,6 +34,8 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   popupClassName,
 }) => {
   const [query, setQuery] = useState("");
+  const [popupOpen, setPopupOpen] = useState(false);
+  const resolvedOpen = open ?? popupOpen;
 
   const optionsMap = useMemo(
     () => new Map(options.map((opt) => [opt.value, opt] as const)),
@@ -51,17 +55,24 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     return labels.join(", ");
   }, [selectedOptionObjects, placeholder, triggerLabel]);
 
-  const clearAll = () => {
+  const clearAll = useCallback(() => {
     setQuery("");
     onChange?.([]);
-  };
+  }, [onChange]);
 
-  const selectAll = () => {
+  const selectAll = useCallback(() => {
     setQuery("");
     const allValues = options
       .filter((opt) => !opt.disabled)
       .map((opt) => opt.value);
     onChange?.(allValues);
+  }, [options, onChange]);
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (open === undefined) {
+      setPopupOpen(nextOpen);
+    }
+    onOpenChange?.(nextOpen);
   };
 
   const handleChange = (newValue: MultiSelectOption[]) => {
@@ -72,7 +83,9 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     <Combobox.Root
       items={options}
       multiple
+      open={resolvedOpen}
       value={selectedOptionObjects}
+      onOpenChange={handleOpenChange}
       onValueChange={handleChange}
       isItemEqualToValue={compareFn}
     >
