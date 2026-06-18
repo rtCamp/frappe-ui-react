@@ -48,7 +48,7 @@
     "@popperjs/core": "^2.11.8",
     "@tailwindcss/typography": "^0.5.19",
     "@tiptap/extension-blockquote": "^3.17.1",
-    "@tiptap/extension-code-block-lowlight": "^3.17.1",
+    "@tiptap/extension-code-block-lowlight": "^3.27.0",
     "@tiptap/extension-highlight": "^3.17.1",
     "@tiptap/extension-horizontal-rule": "^3.17.1",
     "@tiptap/extension-list": "^3.17.1",
