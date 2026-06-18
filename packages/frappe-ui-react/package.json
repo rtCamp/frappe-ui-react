@@ -53,7 +53,7 @@
     "@tiptap/extension-horizontal-rule": "^3.17.1",
     "@tiptap/extension-list": "^3.17.1",
     "@tiptap/extension-placeholder": "^3.17.1",
-    "@tiptap/extension-strike": "^3.17.1",
+    "@tiptap/extension-strike": "^3.27.0",
     "@tiptap/extension-table": "^3.17.1",
     "@tiptap/extension-task-list": "^3.17.1",
     "@tiptap/extension-text-align": "^3.17.1",
