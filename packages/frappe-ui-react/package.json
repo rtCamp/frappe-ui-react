@@ -44,7 +44,7 @@
   "dependencies": {
     "@base-ui/react": "^1.1.0",
     "@floating-ui/react": "^0.27.16",
-    "@headlessui/react": "^2.2.9",
+    "@headlessui/react": "^2.2.10",
     "@popperjs/core": "^2.11.8",
     "@tailwindcss/typography": "^0.5.19",
     "@tiptap/extension-blockquote": "^3.17.1",
