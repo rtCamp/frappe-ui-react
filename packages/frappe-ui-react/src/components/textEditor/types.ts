@@ -28,10 +28,8 @@ export interface TextEditorProps {
 
 export type StaticTextEditorProps = Pick<
   TextEditorProps,
-  "editorClass" | "extensions" | "starterkitOptions" | "placeholder"
-> & {
-  html?: string;
-};
+  "editorClass" | "extensions" | "starterkitOptions" | "placeholder" | "content"
+>;
 
 export interface EditorCommand {
   label: string;

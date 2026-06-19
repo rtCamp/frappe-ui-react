@@ -18,9 +18,10 @@ import {
   EMPTY_STARTERKIT_OPTIONS,
   getTextEditorExtensions,
 } from "./editorConfig";
+import { renderStaticCodeBlock } from "./extension/staticCodeBlock";
 
 const StaticTextEditor = ({
-  html = "",
+  content = "",
   editorClass = "",
   extensions = EMPTY_EXTENSIONS,
   starterkitOptions = EMPTY_STARTERKIT_OPTIONS,
@@ -32,16 +33,26 @@ const StaticTextEditor = ({
     [extensions, starterkitOptions, placeholder]
   );
 
-  const content = useMemo(
+  const staticContent = useMemo(
     () =>
       renderToReactElement({
-        content: generateJSON(DOMPurify.sanitize(html), editorExtensions),
+        content: generateJSON(
+          DOMPurify.sanitize(content ?? ""),
+          editorExtensions
+        ),
         extensions: editorExtensions,
+        options: {
+          nodeMapping: {
+            codeBlock: renderStaticCodeBlock,
+          },
+        },
       }),
-    [html, editorExtensions]
+    [content, editorExtensions]
   );
 
-  return <div className={cn(DEFAULT_EDITOR_CLASS, editorClass)}>{content}</div>;
+  return (
+    <div className={cn(DEFAULT_EDITOR_CLASS, editorClass)}>{staticContent}</div>
+  );
 };
 
 export default StaticTextEditor;

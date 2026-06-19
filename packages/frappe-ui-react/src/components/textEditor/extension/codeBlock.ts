@@ -11,7 +11,7 @@ import { getCodeBlockCtx, INDENT, lineStartsBetween } from "./utils";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import CodeBlockComponent from "./codeBlockNode";
 
-const lowlight = createLowlight(all);
+export const lowlight = createLowlight(all);
 
 export const ExtendedCodeBlock = CodeBlockLowlight.extend({
   addKeyboardShortcuts() {
