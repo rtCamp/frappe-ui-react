@@ -89,7 +89,7 @@ export const Basic: Story = {
   },
   render: function BasicRender(args) {
     return (
-      <div className="m-2 w-[550px]">
+      <div className="m-2 w-137.5">
         <TextEditor {...args} />
       </div>
     );
@@ -103,7 +103,7 @@ export const StaticRenderer: StoryObj<typeof StaticTextEditor> = {
   },
   render: (args) => {
     return (
-      <div className="m-2 w-full flex flex-col">
+      <div className="m-2 w-137.5 flex flex-col">
         <StaticTextEditor {...args} />
       </div>
     );

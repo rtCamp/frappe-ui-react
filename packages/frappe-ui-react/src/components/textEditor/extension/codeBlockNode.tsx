@@ -1,7 +1,6 @@
 import { NodeViewContent, NodeViewWrapper } from "@tiptap/react";
 import { type NodeViewProps } from "@tiptap/react";
 import { useMemo } from "react";
-import "./codeBlock.css";
 
 interface Language {
   label: string;

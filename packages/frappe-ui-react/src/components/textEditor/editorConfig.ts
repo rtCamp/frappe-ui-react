@@ -16,6 +16,7 @@ import { TableKit } from "@tiptap/extension-table";
 /**
  * Internal dependencies.
  */
+import "./extension/codeBlock.css";
 import type { TextEditorProps } from "./types";
 import { ExtendedCodeBlock } from "./extension/codeBlock";
 
