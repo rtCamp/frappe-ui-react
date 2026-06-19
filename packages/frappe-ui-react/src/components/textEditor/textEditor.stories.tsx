@@ -98,7 +98,7 @@ export const Basic: Story = {
 
 export const StaticRenderer: StoryObj<typeof StaticTextEditor> = {
   args: {
-    html: CONTENT,
+    content: CONTENT,
     editorClass: "prose-sm min-h-[4rem] border rounded-lg p-2",
   },
   render: (args) => {
