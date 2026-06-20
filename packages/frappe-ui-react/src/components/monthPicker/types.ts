@@ -1,3 +1,4 @@
+import type { ComponentType } from "react";
 import type { Placement } from "@popperjs/core";
 
 export interface MonthPickerProps {
@@ -7,6 +8,8 @@ export interface MonthPickerProps {
   placeholder?: string;
   /** CSS class names to apply to the button */
   className?: string;
+  /** Icon rendered at the trigger's right edge. Defaults to a calendar icon. */
+  inputIcon?: ComponentType<{ className?: string }>;
   /** Popover placement relative to the target */
   placement?: Placement;
   /** Callback fired when the month value changes */

@@ -41,6 +41,7 @@ const MonthPicker = ({
   value,
   placeholder = "Select month",
   className,
+  inputIcon: InputIcon = Calendar,
   placement,
   onChange,
 }: MonthPickerProps) => {
@@ -112,7 +113,7 @@ const MonthPicker = ({
             !value && "text-ink-gray-5!",
             className
           )}
-          iconRight={() => <Calendar className="w-4 h-4" />}
+          iconRight={() => <InputIcon className="w-4 h-4" />}
         >
           {value || placeholder}
         </Button>
@@ -164,7 +165,7 @@ const MonthPicker = ({
                   key={item}
                   onClick={(e) => handleOnClick(e, item)}
                   variant={isSelected ? "solid" : "ghost"}
-                  className="text-sm text-ink-gray-9"
+                  className="text-sm"
                 >
                   {viewMode === "month" ? (item as string).slice(0, 3) : item}
                 </Button>
