@@ -64,7 +64,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
-    "dompurify": "^3.4.10",
+    "dompurify": "^3.4.11",
     "echarts": "^6.0.0",
     "feather-icons": "^4.29.2",
     "lowlight": "^3.3.0",
