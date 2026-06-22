@@ -24,6 +24,7 @@ interface TabButtonsProps {
   value: string;
   onChange: (value: string) => void;
   className?: string;
+  buttonClassName?: string;
 }
 
 const TabButtons = ({
@@ -31,6 +32,7 @@ const TabButtons = ({
   value,
   onChange,
   className = "",
+  buttonClassName = "",
 }: TabButtonsProps) => {
   return (
     <ToggleGroup
@@ -52,7 +54,8 @@ const TabButtons = ({
               "rounded-md px-2 outline-black group flex-1 h-6.5 w-full border border-transparent text-nowrap text-center",
               "hover:bg-surface-gray-3",
               "data-pressed:bg-surface-white data-pressed:border-outline-gray-2 data-pressed:hover:bg-surface-gray-4",
-              "disabled:text-ink-gray-5 disabled:hover:bg-surface-gray-2"
+              "disabled:text-ink-gray-5 disabled:hover:bg-surface-gray-2",
+              buttonClassName
             )}
             aria-label={button.label}
             value={button.value}
