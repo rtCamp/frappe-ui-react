@@ -26,6 +26,11 @@ export interface TextEditorProps {
   Bottom?: FC;
 }
 
+export type StaticTextEditorProps = Pick<
+  TextEditorProps,
+  "editorClass" | "extensions" | "starterkitOptions" | "placeholder" | "content"
+>;
+
 export interface EditorCommand {
   label: string;
   text?: string;
