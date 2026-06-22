@@ -2,10 +2,17 @@
  * External dependencies.
  */
 import { Slider } from "@base-ui/react/slider";
-import { floatToTime, SLIDER_STEP_MINUTES, timeToFloat } from "./utils";
+import {
+  clampHours,
+  floatToTime,
+  SLIDER_STEP_MINUTES,
+  timeToFloat,
+} from "./utils";
 import { cn } from "../../utils";
 import { useDurationSlider } from "./useDurationSlider";
-import { useEffect, useState } from "react";
+import { useCallback, useId, useState } from "react";
+
+type SliderValue = number | readonly number[];
 
 export interface DurationInputProps {
   label?: string;
@@ -26,22 +33,46 @@ const DurationInput = ({
   disabled = false,
   onChange,
 }: DurationInputProps) => {
-  const [inputVal, setInputVal] = useState(value);
+  const sliderId = useId();
+  const [draftValue, setDraftValue] = useState<string | null>(null);
 
-  const { isDragging, setIsDragging, sliderVal, setSliderVal, notchOffsets } =
-    useDurationSlider({
-      initialValue: timeToFloat(value) * 60,
-      maxDuration: timeToFloat(maxDuration) * 60,
-      sliderStepInMins: SLIDER_STEP_MINUTES,
-    });
+  const maxDurationInHours = timeToFloat(maxDuration);
+  const maxDurationInMinutes = maxDurationInHours * 60;
+  const hoursLeftValue = timeToFloat(hoursLeft);
+  const committedHours = clampHours(timeToFloat(value), maxDurationInHours);
+  const committedMinutes = committedHours * 60;
+  const sliderVal = committedMinutes;
+  const inputVal = draftValue ?? value;
 
-  useEffect(() => {
-    setInputVal(value);
-  }, [value]);
+  const { isDragging, setIsDragging, notchOffsets } = useDurationSlider({
+    maxDuration: maxDurationInMinutes,
+    sliderStepInMins: SLIDER_STEP_MINUTES,
+  });
 
-  useEffect(() => {
-    onChange(floatToTime(sliderVal / 60));
-  }, [sliderVal, onChange]);
+  const getSliderMinutes = useCallback(
+    (sliderValue: SliderValue) =>
+      Array.isArray(sliderValue) ? (sliderValue[0] ?? 0) : sliderValue,
+    []
+  );
+
+  const handleSliderChange = useCallback(
+    (nextValue: SliderValue) => {
+      onChange(floatToTime(getSliderMinutes(nextValue) / 60));
+    },
+    [getSliderMinutes, onChange]
+  );
+
+  const commitInputValue = useCallback(() => {
+    const nextValue = floatToTime(
+      clampHours(timeToFloat(draftValue ?? value), maxDurationInHours)
+    );
+
+    setDraftValue(null);
+
+    if (nextValue !== value) {
+      onChange(nextValue);
+    }
+  }, [draftValue, value, maxDurationInHours, onChange]);
 
   return (
     <div
@@ -51,27 +82,27 @@ const DurationInput = ({
     >
       {label ? (
         <div className="w-full flex justify-between text-base font-normal text-ink-gray-5 ">
-          <label htmlFor={`slider-${label}`}>{label}</label>
+          <label htmlFor={sliderId}>{label}</label>
           <p
             className={
-              timeToFloat(hoursLeft) < sliderVal / 60
-                ? "text-ink-red-4"
-                : undefined
+              hoursLeftValue < sliderVal / 60 ? "text-ink-red-4" : undefined
             }
           >
-            {timeToFloat(hoursLeft) - sliderVal / 60}h left
+            {hoursLeftValue - sliderVal / 60}h left
           </p>
         </div>
       ) : null}
       <div className="relative">
         <Slider.Root
-          id={`slider-${label}`}
+          id={sliderId}
           min={0}
-          max={timeToFloat(maxDuration) * 60}
+          max={maxDurationInMinutes}
           step={SLIDER_STEP_MINUTES}
           value={sliderVal}
-          onValueChange={setSliderVal}
-          onValueCommitted={() => setIsDragging(false)}
+          onValueChange={handleSliderChange}
+          onValueCommitted={() => {
+            setIsDragging(false);
+          }}
           disabled={disabled}
         >
           <Slider.Control
@@ -85,7 +116,7 @@ const DurationInput = ({
               })}
             >
               <Slider.Indicator className="rounded-l bg-surface-gray-3 select-none" />
-              {sliderVal === timeToFloat(maxDuration) * 60 && (
+              {sliderVal === maxDurationInMinutes && (
                 <div className="absolute top-0 translate-y-1/2 right-1 rounded w-0.75 h-1/2 bg-[#00000017] pointer-events-none" />
               )}
               {isDragging &&
@@ -108,13 +139,23 @@ const DurationInput = ({
           placeholder="00:00"
           value={inputVal}
           disabled={disabled}
+          onFocus={() => {
+            setDraftValue(value);
+          }}
           onChange={(e) => {
             const filtered = e.target.value.replace(/[^0-9:]/g, "");
-            setInputVal(filtered);
+            setDraftValue(filtered);
           }}
-          onBlur={() => {
-            onChange(inputVal);
-            setSliderVal(timeToFloat(inputVal) * 60);
+          onBlur={commitInputValue}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.currentTarget.blur();
+            }
+
+            if (e.key === "Escape") {
+              setDraftValue(null);
+              e.currentTarget.blur();
+            }
           }}
         />
       </div>
