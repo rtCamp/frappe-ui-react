@@ -88,6 +88,7 @@ export const Filter: React.FC<FilterProps> = ({
     <div className={cn("inline-flex items-center", className)}>
       <Popover.Root open={isOpen} onOpenChange={handleOpenChange}>
         <Popover.Trigger
+          nativeButton={false}
           render={
             <span>
               <Button
@@ -154,7 +155,7 @@ export const Filter: React.FC<FilterProps> = ({
                 <button
                   onClick={handleAddFilter}
                   className={cn(
-                    "flex items-center gap-1.5 text-sm text-ink-gray-5 px-2 py-1.5",
+                    "flex items-center gap-1.5 text-base text-ink-gray-5 px-2 py-1.5",
                     "hover:text-ink-gray-7 mt-2 py-1 transition-colors"
                   )}
                 >
