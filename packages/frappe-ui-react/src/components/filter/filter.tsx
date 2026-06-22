@@ -88,6 +88,7 @@ export const Filter: React.FC<FilterProps> = ({
     <div className={cn("inline-flex items-center", className)}>
       <Popover.Root open={isOpen} onOpenChange={handleOpenChange}>
         <Popover.Trigger
+          nativeButton={false}
           render={
             <span>
               <Button
