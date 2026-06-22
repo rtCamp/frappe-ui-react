@@ -123,7 +123,7 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
               "w-full bg-surface-gray-2 border-none rounded",
               selectedOption && getIcon(selectedOption) ? "pl-8" : "pl-2",
               "pr-6 py-1 min-h-7 text-base",
-              "placeholder-ink-gray-4 text-ink-gray-8",
+              "placeholder-ink-gray-4 text-ink-gray-7",
               "outline-none focus:ring-2 focus:ring-outline-gray-3",
               "transition-colors cursor-pointer",
               "disabled:bg-surface-gray-1 disabled:text-ink-gray-5"
