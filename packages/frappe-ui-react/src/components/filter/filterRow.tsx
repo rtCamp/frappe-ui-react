@@ -141,7 +141,7 @@ export const FilterRow: React.FC<FilterRowProps> = ({
   return (
     <div className="flex gap-2 items-center py-1">
       {/* Where / And label */}
-      <span className="w-12 text-sm text-ink-gray-7 shrink-0 px-2 py-1.5">
+      <span className="w-12 text-base text-ink-gray-7 shrink-0 px-2 py-1.5">
         {isFirst ? "Where" : "And"}
       </span>
 
