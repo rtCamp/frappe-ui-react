@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import TextEditor from "./textEditor";
+import StaticTextEditor from "./staticTextEditor";
 
 const meta: Meta<typeof TextEditor> = {
   title: "Components/TextEditor",
@@ -88,8 +89,22 @@ export const Basic: Story = {
   },
   render: function BasicRender(args) {
     return (
-      <div className="m-2 w-[550px]">
+      <div className="m-2 w-137.5">
         <TextEditor {...args} />
+      </div>
+    );
+  },
+};
+
+export const StaticRenderer: StoryObj<typeof StaticTextEditor> = {
+  args: {
+    content: CONTENT,
+    editorClass: "prose-sm min-h-[4rem] border rounded-lg p-2",
+  },
+  render: (args) => {
+    return (
+      <div className="m-2 w-137.5 flex flex-col">
+        <StaticTextEditor {...args} />
       </div>
     );
   },
