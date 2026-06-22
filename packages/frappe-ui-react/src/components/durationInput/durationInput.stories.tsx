@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import DurationInput, { type DurationInputProps } from "./index";
+import DurationInput, { type DurationInputProps } from "./durationInput";
 
 export default {
   title: "Components/DurationInput",
