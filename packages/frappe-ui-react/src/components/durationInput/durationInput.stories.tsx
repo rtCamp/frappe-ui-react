@@ -67,7 +67,7 @@ const Template: StoryObj<DurationInputProps> = {
     const [value, setValue] = useState(args.value ?? "00:00");
 
     return (
-      <div className="w-[192px]">
+      <div className="w-48">
         <DurationInput
           {...args}
           value={value}
