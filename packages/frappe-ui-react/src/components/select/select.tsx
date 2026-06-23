@@ -37,6 +37,7 @@ const Select: React.FC<SelectProps> = ({
   option,
   onChange,
   className,
+  placeholderClassName,
 }) => {
   const Prefix = prefix ?? DefaultPrefix;
   const Suffix = suffix ?? DefaultSuffix;
@@ -64,7 +65,7 @@ const Select: React.FC<SelectProps> = ({
           <Prefix />
           <BaseSelect.Value
             placeholder={placeholder}
-            className="truncate text-left"
+            className={cn("truncate text-left", placeholderClassName)}
           />
         </span>
         <BaseSelect.Icon className="shrink-0">
