@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { cn } from "../../utils";
 import { Button } from "../button";
 import type { DialogActionButtonProps } from "./types";
 
@@ -25,7 +26,7 @@ export const DialogActionButton = ({
   return (
     <Button
       {...action}
-      className="w-full"
+      className={cn("w-full", action.className)}
       disabled={action.disabled || loading}
       loading={loading}
       onClick={handleClick}
