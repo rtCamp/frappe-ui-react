@@ -18,6 +18,7 @@ export const Filter: React.FC<FilterProps> = ({
   showCount = true,
   defaultOpen = false,
   align = "center",
+  triggerClassName,
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -103,9 +104,13 @@ export const Filter: React.FC<FilterProps> = ({
                       )
                     : undefined
                 }
-                className={cn("gap-2", {
-                  "rounded-r-none border-r-0": hasFilters,
-                })}
+                className={cn(
+                  "gap-2",
+                  {
+                    "rounded-r-none border-r-0": hasFilters,
+                  },
+                  triggerClassName
+                )}
               >
                 Filter
                 {showCount && hasFilters && (
