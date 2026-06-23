@@ -35,6 +35,7 @@ export type SidebarProps = {
   onCollapseChange?: (collapsed: boolean) => void;
   children?: React.ReactNode;
   className?: string;
+  activeItemClassName?: string;
 };
 const Sidebar: React.FC<SidebarProps> = ({
   header,
@@ -43,6 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onCollapseChange,
   children,
   className = "",
+  activeItemClassName,
 }) => {
   // Responsive behavior - auto-collapse on small screens
   const isMobile = useMediaQuery("(max-width: 640px)");
@@ -94,7 +96,11 @@ const Sidebar: React.FC<SidebarProps> = ({
       )}
       {sections.map((section, index) => (
         <React.Fragment key={`section-${index}`}>
-          <SidebarSection sidebarCollapsed={shouldCollapse} {...section} />
+          <SidebarSection
+            sidebarCollapsed={shouldCollapse}
+            activeItemClassName={activeItemClassName}
+            {...section}
+          />
           {index !== sections.length - 1 && <Divider className="h-1 mt-2" />}
         </React.Fragment>
       ))}
