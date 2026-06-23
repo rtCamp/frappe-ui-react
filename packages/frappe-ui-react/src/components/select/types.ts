@@ -18,6 +18,7 @@ export interface SelectProps {
   value?: string;
   options: SelectOption[];
   className?: string;
+  placeholderClassName?: string;
   prefix?: () => ReactNode;
   suffix?: () => ReactNode;
   option?: ({ option }: { option: SelectOption }) => ReactNode;
