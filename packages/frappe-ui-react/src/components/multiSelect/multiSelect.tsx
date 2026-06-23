@@ -23,6 +23,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   options,
   placeholder = "Select option",
   triggerLabel,
+  triggerClassName,
   hideSearch = false,
   open,
   loading = false,
@@ -94,7 +95,8 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           <Button
             className={cn(
               "w-full justify-between!",
-              !triggerLabel && value.length === 0 && "text-ink-gray-4!"
+              !triggerLabel && value.length === 0 && "text-ink-gray-4!",
+              triggerClassName
             )}
             iconRight={() => <ChevronDown className="w-4 h-4 shrink-0" />}
             aria-label="Select options"

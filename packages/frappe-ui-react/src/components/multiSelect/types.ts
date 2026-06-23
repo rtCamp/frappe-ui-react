@@ -17,6 +17,8 @@ export interface MultiSelectProps {
   placeholder?: string;
   /** Fixed label always shown in the trigger button, overriding the selected values summary */
   triggerLabel?: string;
+  /** Additional class names for the trigger button */
+  triggerClassName?: string;
   /** Hide the search input in the dropdown */
   hideSearch?: boolean;
   /** Controlled open state for the popup */
