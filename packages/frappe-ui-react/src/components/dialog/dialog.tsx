@@ -1,12 +1,49 @@
+/**
+ * External dependencies.
+ */
 import { useMemo } from "react";
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
-import { X } from "lucide-react";
-import clsx from "clsx";
+import { cva } from "class-variance-authority";
+
+/**
+ * Internal dependencies.
+ */
+import { cn } from "../../utils";
 import { Button } from "../button";
 import FeatherIcon, { type FeatherIconProps } from "../featherIcon";
 import { DialogActionButton } from "./dialogActionButton";
+import { Close } from "../../icons";
 import "./dialog.css";
 import type { DialogProps } from "./types";
+
+const iconWrapperVariants = cva(
+  "flex h-7 w-7 shrink-0 items-center justify-center rounded-full",
+  {
+    variants: {
+      appearance: {
+        default: "bg-surface-gray-2",
+        info: "bg-surface-gray-2",
+        warning: "bg-surface-amber-2",
+        danger: "bg-surface-red-2",
+        success: "bg-surface-green-2",
+      },
+    },
+    defaultVariants: { appearance: "default" },
+  }
+);
+
+const iconVariants = cva("size-4", {
+  variants: {
+    appearance: {
+      default: "text-ink-gray-5",
+      info: "text-ink-blue-3",
+      warning: "text-ink-amber-3",
+      danger: "text-ink-red-4",
+      success: "text-ink-green-3",
+    },
+  },
+  defaultVariants: { appearance: "default" },
+});
 
 const Dialog = ({
   open,
@@ -16,6 +53,8 @@ const Dialog = ({
   onAfterLeave,
   children,
   actions: customActions,
+  className,
+  classNames = {},
 }: DialogProps) => {
   const {
     title,
@@ -41,54 +80,6 @@ const Dialog = ({
     [position]
   );
 
-  const dialogIconBgClasses = useMemo(() => {
-    if (!icon?.appearance) {
-      return "bg-surface-gray-2";
-    }
-
-    if (icon.appearance === "warning") {
-      return "bg-surface-amber-2";
-    }
-
-    if (icon.appearance === "info") {
-      return "bg-surface-gray-2";
-    }
-
-    if (icon.appearance === "danger") {
-      return "bg-surface-red-2";
-    }
-
-    if (icon.appearance === "success") {
-      return "bg-surface-green-2";
-    }
-
-    return "";
-  }, [icon]);
-
-  const dialogIconClasses = useMemo(() => {
-    if (!icon?.appearance) {
-      return "text-ink-gray-5";
-    }
-
-    if (icon.appearance === "warning") {
-      return "text-ink-amber-3";
-    }
-
-    if (icon.appearance === "info") {
-      return "text-ink-blue-3";
-    }
-
-    if (icon.appearance === "danger") {
-      return "text-ink-red-4";
-    }
-
-    if (icon.appearance === "success") {
-      return "text-ink-green-3";
-    }
-
-    return "";
-  }, [icon]);
-
   return (
     <BaseDialog.Root
       open={open}
@@ -97,18 +88,22 @@ const Dialog = ({
     >
       <BaseDialog.Portal>
         <BaseDialog.Backdrop
-          className="dialog-backdrop fixed inset-0 bg-black-overlay-200 backdrop-filter backdrop-blur-[12px] overflow-y-auto z-[11]"
-          data-dialog={"dialog"}
+          className={cn(
+            "dialog-backdrop fixed inset-0 bg-black-overlay-200 backdrop-filter backdrop-blur-md overflow-y-auto z-11",
+            classNames.backdrop
+          )}
+          data-dialog="dialog"
           onAnimationEnd={() => !open && onAfterLeave?.()}
         >
           <BaseDialog.Viewport
-            className={clsx(
+            className={cn(
               "flex min-h-screen flex-col items-center px-4 py-4 text-center",
-              dialogPositionClasses
+              dialogPositionClasses,
+              classNames.viewport
             )}
           >
             <BaseDialog.Popup
-              className={clsx(
+              className={cn(
                 "dialog-content my-8 inline-block w-full transform overflow-hidden rounded-xl bg-surface-modal text-left align-middle shadow-xl",
                 {
                   "max-w-7xl": size === "7xl",
@@ -122,24 +117,47 @@ const Dialog = ({
                   "max-w-md": size === "md",
                   "max-w-sm": size === "sm",
                   "max-w-xs": size === "xs",
-                }
+                },
+                className
               )}
             >
-              <div className="bg-surface-modal px-4 pb-6 pt-5 sm:px-6">
+              <div
+                className={cn(
+                  "bg-surface-modal px-4 pb-6 pt-5 sm:px-6",
+                  classNames.content
+                )}
+              >
                 <div className="flex">
                   <div className="w-full flex-1">
-                    <div className="mb-6 flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
+                    <div
+                      className={cn(
+                        "mb-6 flex items-center justify-between",
+                        classNames.header
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "flex items-center space-x-2",
+                          classNames.titleWrapper
+                        )}
+                      >
                         {icon && (
                           <div
-                            className={clsx(
-                              "flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full",
-                              dialogIconBgClasses
+                            className={cn(
+                              iconWrapperVariants({
+                                appearance: icon.appearance ?? "default",
+                              }),
+                              classNames.iconWrapper
                             )}
                           >
                             <FeatherIcon
                               name={icon.name as FeatherIconProps["name"]}
-                              className={clsx("h-4 w-4", dialogIconClasses)}
+                              className={cn(
+                                iconVariants({
+                                  appearance: icon.appearance ?? "default",
+                                }),
+                                classNames.icon
+                              )}
                               aria-hidden="true"
                             />
                           </div>
@@ -148,7 +166,10 @@ const Dialog = ({
                           render={
                             typeof title === "string" || !title ? (
                               <h3
-                                className="text-2xl font-semibold leading-6 text-ink-gray-9"
+                                className={cn(
+                                  "text-2xl font-semibold leading-6 text-ink-gray-9",
+                                  classNames.title
+                                )}
                                 data-testid="dialog-title"
                               >
                                 {title || "Untitled"}
@@ -164,9 +185,15 @@ const Dialog = ({
                           <Button
                             variant="ghost"
                             onClick={closeDialog}
+                            className={classNames.closeButton}
                             data-testid="dialog-close"
                           >
-                            <X className="h-4 w-4 text-ink-gray-9" />
+                            <Close
+                              className={cn(
+                                "size-4 text-ink-gray-9",
+                                classNames.closeIcon
+                              )}
+                            />
                           </Button>
                         }
                         nativeButton={true}
@@ -179,7 +206,10 @@ const Dialog = ({
                           <BaseDialog.Description
                             render={
                               <p
-                                className="text-p-base text-ink-gray-7"
+                                className={cn(
+                                  "text-p-base text-ink-gray-7",
+                                  classNames.description
+                                )}
                                 data-testid="dialog-description"
                               >
                                 {message}
@@ -192,11 +222,13 @@ const Dialog = ({
               </div>
 
               {(actions.length > 0 || customActions) && (
-                <div className="px-4 pb-7 pt-4 sm:px-6">
+                <div
+                  className={cn("px-4 pb-7 pt-4 sm:px-6", classNames.footer)}
+                >
                   {customActions ? (
                     customActions
                   ) : (
-                    <div className="space-y-2">
+                    <div className={cn("space-y-2", classNames.actions)}>
                       {actions.map((action) => (
                         <DialogActionButton
                           key={action.label}
