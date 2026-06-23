@@ -20,7 +20,7 @@ export const TabList = ({ tabs, className }: TabListProps) => {
         <BaseTabs.Tab
           key={tab.label}
           className={cn(
-            "flex cursor-pointer items-center justify-center border-0 py-3 text-base tracking-wide whitespace-nowrap text-ink-gray-5 outline-outline-gray-4 select-none hover:text-ink-gray-8 data-selected:text-ink-gray-8 duration-300 ease-in-out",
+            "flex cursor-pointer items-center justify-center border-0 py-3 text-base tracking-wide whitespace-nowrap text-ink-gray-5 outline-outline-gray-4 select-none hover:text-ink-gray-8 data-active:text-ink-gray-8 data-selected:text-ink-gray-8 duration-300 ease-in-out",
             "data-[orientation=vertical]:justify-start data-[orientation=vertical]:px-4 data-[orientation=vertical]:py-2"
           )}
           value={tab.label}
