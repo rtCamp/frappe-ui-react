@@ -88,6 +88,8 @@ export interface FilterProps {
   defaultOpen?: boolean;
   /** Popover alignment relative to the trigger */
   align?: "start" | "center" | "end";
+  /** Custom class for the trigger button */
+  triggerClassName?: string;
 }
 
 /** Props for FilterRow component (internal) */
