@@ -42,7 +42,7 @@ export const useDurationSlider = ({
     const totalSteps = Math.floor(maxDuration / sliderStepInMins);
     return Array.from(
       { length: totalSteps - 1 },
-      (_, i) => ((i + 1) / totalSteps) * 100
+      (_, i) => ((i + 1) / totalSteps) * 100 - 0.5 // Adjust for visual alignment
     );
   }, [maxDuration, sliderStepInMins]);
 
