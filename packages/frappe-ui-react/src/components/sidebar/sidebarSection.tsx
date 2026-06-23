@@ -17,6 +17,7 @@ export type SidebarSectionProps = {
   }[];
   collapsible?: boolean;
   sidebarCollapsed: boolean;
+  activeItemClassName?: string;
 };
 
 const SidebarSection: React.FC<SidebarSectionProps> = ({
@@ -24,6 +25,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
   items,
   collapsible,
   sidebarCollapsed,
+  activeItemClassName,
 }) => {
   const [collapsed, setCollapsed] = useState(
     items.some((item) => item.isActive)
@@ -40,7 +42,8 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
             "!bg-surface-selected shadow-sm": item.isActive,
             "hover:bg-surface-gray-2": !item.isActive,
             "px-2": sidebarCollapsed,
-          }
+          },
+          item.isActive && activeItemClassName
         )}
         variant="ghost"
         iconLeft={() => (
@@ -123,7 +126,8 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
                 "!bg-surface-selected shadow-sm": item.isActive,
                 "hover:bg-surface-gray-2": !item.isActive,
                 "px-2": sidebarCollapsed,
-              }
+              },
+              item.isActive && activeItemClassName
             )}
             variant="ghost"
             iconLeft={() => (
