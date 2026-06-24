@@ -11,11 +11,13 @@ import { Slider } from "@base-ui/react/slider";
 import {
   clampHours,
   floatToTime,
-  formatSliderMinutes,
+  formatHoursBalance,
   getPreviewMinutes,
+  getSliderHours,
   getSliderMinutes,
   normalizeCommittedHours,
   SLIDER_STEP_MINUTES,
+  sanitizeHoursInput,
   timeToFloat,
 } from "./utils";
 import type { DurationInputProps } from "./types";
@@ -153,9 +155,9 @@ const durationSpinnerVariants = cva(
 const DurationInput = ({
   label,
   inlineLabel,
-  maxDuration = "08:00",
-  hoursLeft = "08:00",
-  value = "00:00",
+  maxDuration = 8,
+  hoursLeft = 8,
+  value = 0,
   snap = "step",
   size = "sm",
   variant = "subtle",
@@ -171,11 +173,11 @@ const DurationInput = ({
   const [draftValue, setDraftValue] = useState<string | null>(null);
   const [dragValue, setDragValue] = useState<number | null>(null);
 
-  const maxDurationInHours = timeToFloat(maxDuration);
+  const maxDurationInHours = Math.max(maxDuration, 0);
   const maxDurationInMinutes = maxDurationInHours * 60;
-  const hoursLeftValue = timeToFloat(hoursLeft);
+  const hoursLeftValue = hoursLeft;
   const committedHours = normalizeCommittedHours(
-    timeToFloat(value),
+    value,
     maxDurationInHours,
     allowOverflow
   );
@@ -187,7 +189,8 @@ const DurationInput = ({
   const previewHours =
     dragValue !== null ? previewMinutes / 60 : committedHours;
   const inputVal =
-    draftValue ?? (dragValue !== null ? floatToTime(previewHours) : value);
+    draftValue ??
+    (dragValue !== null ? floatToTime(previewHours) : floatToTime(value));
   const hoursBalance = hoursLeftValue - previewHours;
   const isOverHours = hoursBalance < 0;
   const accessibleLabel =
@@ -207,14 +210,14 @@ const DurationInput = ({
         return;
       }
 
-      onChange(floatToTime(nextMinutes / 60));
+      onChange(nextMinutes / 60);
     },
     [isDragging, isSmoothSnap, onChange]
   );
 
   const commitSliderValue = useCallback(
     (minutes: number) => {
-      const nextValue = formatSliderMinutes(minutes, snap, maxDurationInHours);
+      const nextValue = getSliderHours(minutes, snap, maxDurationInHours);
 
       setDragValue(null);
 
@@ -226,12 +229,10 @@ const DurationInput = ({
   );
 
   const commitInputValue = useCallback(() => {
-    const nextValue = floatToTime(
-      normalizeCommittedHours(
-        timeToFloat(draftValue ?? value),
-        maxDurationInHours,
-        allowOverflow
-      )
+    const nextValue = normalizeCommittedHours(
+      timeToFloat(draftValue ?? floatToTime(value)),
+      maxDurationInHours,
+      allowOverflow
     );
 
     setDraftValue(null);
@@ -284,8 +285,8 @@ const DurationInput = ({
             )}
           >
             {isOverHours
-              ? `${Math.abs(hoursBalance)}h over`
-              : `${hoursBalance}h left`}
+              ? `${formatHoursBalance(Math.abs(hoursBalance))} over`
+              : `${formatHoursBalance(hoursBalance)} left`}
           </p>
         </div>
       ) : null}
@@ -354,6 +355,7 @@ const DurationInput = ({
         <input
           type="text"
           id={sliderId}
+          inputMode="numeric"
           className={cn(
             durationInputVariants({ size, disabled, error }),
             classNames.input
@@ -362,12 +364,11 @@ const DurationInput = ({
           value={inputVal}
           disabled={disabled}
           onFocus={() => {
-            setDraftValue(value);
+            setDraftValue(floatToTime(value));
             setDragValue(null);
           }}
           onChange={(e) => {
-            const filtered = e.target.value.replace(/[^0-9:]/g, "");
-            setDraftValue(filtered);
+            setDraftValue(sanitizeHoursInput(e.target.value));
           }}
           onBlur={commitInputValue}
           onKeyDown={(e) => {

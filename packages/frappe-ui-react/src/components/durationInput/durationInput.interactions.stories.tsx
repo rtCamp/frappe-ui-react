@@ -23,12 +23,13 @@ const meta: Meta<typeof DurationInput> = {
       description: "Visual style of the duration input",
     },
     value: {
-      control: "text",
-      description: "Current duration value in HH:MM format",
+      control: "number",
+      description: "Current duration value in hours",
     },
     hoursLeft: {
-      control: "text",
-      description: "Remaining time used to calculate left or over state",
+      control: "number",
+      description:
+        "Remaining time used to calculate left or over state, in hours",
     },
     snap: {
       control: "select",
@@ -37,8 +38,8 @@ const meta: Meta<typeof DurationInput> = {
         "Controls whether the slider snaps continuously or moves smoothly",
     },
     maxDuration: {
-      control: "text",
-      description: "Maximum allowed duration in HH:MM format",
+      control: "number",
+      description: "Maximum allowed duration in hours",
     },
     disabled: {
       control: "boolean",
@@ -76,9 +77,9 @@ export default meta;
 type Story = StoryObj<typeof DurationInput>;
 
 function ControlledDurationInput(args: ComponentProps<typeof DurationInput>) {
-  const [value, setValue] = useState(args.value ?? "00:00");
+  const [value, setValue] = useState(args.value ?? 0);
 
-  const handleChange = (nextValue: string) => {
+  const handleChange = (nextValue: number) => {
     setValue(nextValue);
     args.onChange?.(nextValue);
   };
@@ -89,9 +90,9 @@ function ControlledDurationInput(args: ComponentProps<typeof DurationInput>) {
 export const Input: Story = {
   args: {
     label: "Duration",
-    value: "00:00",
-    hoursLeft: "08:00",
-    maxDuration: "08:00",
+    value: 0,
+    hoursLeft: 8,
+    maxDuration: 8,
     snap: "step",
     onChange: fn(),
   },
@@ -110,7 +111,7 @@ export const Input: Story = {
     await userEvent.tab();
 
     await waitFor(() => {
-      expect(args.onChange).toHaveBeenCalledWith("01:00");
+      expect(args.onChange).toHaveBeenCalledWith(1);
       expect(input).toHaveValue("01:00");
     });
 
@@ -130,9 +131,9 @@ export const Input: Story = {
 export const Slider: Story = {
   args: {
     label: "Duration",
-    value: "03:30",
-    hoursLeft: "04:00",
-    maxDuration: "08:00",
+    value: 3.5,
+    hoursLeft: 4,
+    maxDuration: 8,
     snap: "step",
     onChange: fn(),
   },
@@ -149,7 +150,7 @@ export const Slider: Story = {
     await userEvent.keyboard("{ArrowRight}{ArrowRight}");
 
     await waitFor(() => {
-      expect(args.onChange).toHaveBeenLastCalledWith("04:30");
+      expect(args.onChange).toHaveBeenLastCalledWith(4.5);
       expect(canvas.getByRole("textbox")).toHaveValue("04:30");
       expect(canvas.getByText("0.5h over")).toHaveClass("text-ink-red-4");
     });

@@ -16,6 +16,7 @@ export default {
     error: false,
     disabled: false,
     allowOverflow: false,
+    value: 0.5,
   },
   argTypes: {
     label: {
@@ -28,13 +29,13 @@ export default {
       },
     },
     maxDuration: {
-      control: "text",
-      description: "Maximum allowed duration in HH:MM",
+      control: "number",
+      description: "Maximum allowed duration in hours",
     },
     hoursLeft: {
-      control: "text",
+      control: "number",
       description:
-        "Remaining time available in HH:MM format (used to calculate 'X h left' or 'X h over')",
+        "Remaining time available in hours (used to calculate 'X h left' or 'X h over')",
     },
     snap: {
       control: "select",
@@ -43,8 +44,8 @@ export default {
         "Controls whether the slider snaps continuously or moves smoothly",
     },
     value: {
-      control: "text",
-      description: "Current duration value in HH:MM format",
+      control: "number",
+      description: "Current duration value in hours",
     },
     size: {
       control: "select",
@@ -83,15 +84,14 @@ export default {
     },
     onChange: {
       action: "changed",
-      description:
-        "Callback fired with the new duration value as a string (e.g. 'HH:MM')",
+      description: "Callback fired with the new duration value in hours",
     },
   },
 } as Meta<typeof DurationInput>;
 
 const Template: StoryObj<DurationInputProps> = {
   render: (args) => {
-    const [value, setValue] = useState(args.value ?? "00:00");
+    const [value, setValue] = useState(args.value ?? 0.5);
 
     return (
       <div className="w-48">
@@ -114,9 +114,9 @@ export const Default: StoryObj<DurationInputProps> = {
     size: "sm",
     variant: "subtle",
     snap: "step",
-    maxDuration: "08:00",
-    hoursLeft: "08:00",
-    value: "00:00",
+    maxDuration: 8,
+    hoursLeft: 8,
+    value: 0.5,
   },
 };
 
@@ -127,9 +127,9 @@ export const WithInitialValue: StoryObj<DurationInputProps> = {
     size: "sm",
     variant: "subtle",
     snap: "step",
-    maxDuration: "08:00",
-    hoursLeft: "05:30",
-    value: "02:30",
+    maxDuration: 8,
+    hoursLeft: 5.5,
+    value: 2.5,
   },
 };
 
@@ -140,9 +140,9 @@ export const OverHours: StoryObj<DurationInputProps> = {
     size: "sm",
     variant: "subtle",
     snap: "step",
-    maxDuration: "08:00",
-    hoursLeft: "01:00",
-    value: "06:00",
+    maxDuration: 8,
+    hoursLeft: 1,
+    value: 6,
   },
 };
 
@@ -153,9 +153,9 @@ export const CustomMax: StoryObj<DurationInputProps> = {
     size: "sm",
     variant: "subtle",
     snap: "step",
-    maxDuration: "12:00",
-    hoursLeft: "12:00",
-    value: "00:00",
+    maxDuration: 10,
+    hoursLeft: 10,
+    value: 0.5,
   },
 };
 
@@ -166,9 +166,9 @@ export const Disabled: StoryObj<DurationInputProps> = {
     size: "sm",
     variant: "subtle",
     snap: "step",
-    maxDuration: "08:00",
-    hoursLeft: "05:00",
-    value: "00:00",
+    maxDuration: 8,
+    hoursLeft: 5,
+    value: 0.5,
     disabled: true,
   },
 };
@@ -180,9 +180,9 @@ export const Outline: StoryObj<DurationInputProps> = {
     size: "sm",
     variant: "outline",
     snap: "step",
-    maxDuration: "08:00",
-    hoursLeft: "08:00",
-    value: "02:00",
+    maxDuration: 8,
+    hoursLeft: 8,
+    value: 2,
   },
 };
 
@@ -194,9 +194,9 @@ export const Loading: StoryObj<DurationInputProps> = {
     variant: "subtle",
     snap: "step",
     loading: true,
-    maxDuration: "08:00",
-    hoursLeft: "08:00",
-    value: "02:00",
+    maxDuration: 8,
+    hoursLeft: 8,
+    value: 2,
   },
 };
 
@@ -208,8 +208,8 @@ export const Error: StoryObj<DurationInputProps> = {
     variant: "subtle",
     snap: "step",
     error: true,
-    maxDuration: "08:00",
-    hoursLeft: "08:00",
-    value: "02:00",
+    maxDuration: 8,
+    hoursLeft: 8,
+    value: 2,
   },
 };
