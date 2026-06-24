@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import DurationInput, { type DurationInputProps } from "./durationInput";
+import DurationInput from "./durationInput";
+import type { DurationInputProps } from "./types";
 
 export default {
   title: "Components/DurationInput",
@@ -10,6 +11,7 @@ export default {
   args: {
     size: "sm",
     variant: "subtle",
+    snap: "step",
     loading: false,
     error: false,
     disabled: false,
@@ -27,6 +29,12 @@ export default {
       control: "text",
       description:
         "Remaining time available in HH:MM format (used to calculate 'X h left' or 'X h over')",
+    },
+    snap: {
+      control: "select",
+      options: ["step", "smooth"],
+      description:
+        "Controls whether the slider snaps continuously or moves smoothly",
     },
     value: {
       control: "text",
@@ -86,6 +94,7 @@ export const Default: StoryObj<DurationInputProps> = {
     label: "Duration",
     size: "sm",
     variant: "subtle",
+    snap: "step",
     maxDuration: "08:00",
     hoursLeft: "08:00",
     value: "00:00",
@@ -98,6 +107,7 @@ export const WithInitialValue: StoryObj<DurationInputProps> = {
     label: "Duration",
     size: "sm",
     variant: "subtle",
+    snap: "step",
     maxDuration: "08:00",
     hoursLeft: "05:30",
     value: "02:30",
@@ -110,6 +120,7 @@ export const OverHours: StoryObj<DurationInputProps> = {
     label: "Duration",
     size: "sm",
     variant: "subtle",
+    snap: "step",
     maxDuration: "08:00",
     hoursLeft: "01:00",
     value: "06:00",
@@ -122,6 +133,7 @@ export const CustomMax: StoryObj<DurationInputProps> = {
     label: "Sprint Duration",
     size: "sm",
     variant: "subtle",
+    snap: "step",
     maxDuration: "12:00",
     hoursLeft: "12:00",
     value: "00:00",
@@ -134,6 +146,7 @@ export const Disabled: StoryObj<DurationInputProps> = {
     label: "Duration",
     size: "sm",
     variant: "subtle",
+    snap: "step",
     maxDuration: "08:00",
     hoursLeft: "05:00",
     value: "00:00",
@@ -147,6 +160,7 @@ export const Outline: StoryObj<DurationInputProps> = {
     label: "Duration",
     size: "sm",
     variant: "outline",
+    snap: "step",
     maxDuration: "08:00",
     hoursLeft: "08:00",
     value: "02:00",
@@ -159,6 +173,7 @@ export const Loading: StoryObj<DurationInputProps> = {
     label: "Duration",
     size: "sm",
     variant: "subtle",
+    snap: "step",
     loading: true,
     maxDuration: "08:00",
     hoursLeft: "08:00",
@@ -172,6 +187,7 @@ export const Error: StoryObj<DurationInputProps> = {
     label: "Duration",
     size: "sm",
     variant: "subtle",
+    snap: "step",
     error: true,
     maxDuration: "08:00",
     hoursLeft: "08:00",

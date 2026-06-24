@@ -1,4 +1,5 @@
 export const SLIDER_STEP_MINUTES = 30;
+import type { DurationInputSnapMode } from "./types";
 
 /**
  * Converts a decimal number (representing hours as a float) to a HH:MM time format string.
@@ -69,6 +70,54 @@ export const timeToFloat = (value: string): number => {
  */
 export const snapToSliderStep = (minutes: number): number => {
   return Math.round(minutes / SLIDER_STEP_MINUTES) * SLIDER_STEP_MINUTES;
+};
+
+/**
+ * Returns the numeric slider value from a Slider primitive payload.
+ *
+ * @param sliderValue - Scalar or array slider value emitted by the slider
+ * @returns Minutes value for the current slider position
+ */
+export const getSliderMinutes = (
+  sliderValue: number | readonly number[]
+): number => {
+  if (typeof sliderValue === "number") {
+    return sliderValue;
+  }
+
+  return sliderValue[0] ?? 0;
+};
+
+/**
+ * Returns the snapped preview value shown during smooth dragging.
+ *
+ * @param minutes - Raw slider minutes
+ * @param snap - Slider snap mode
+ * @returns Preview minutes shown in the UI
+ */
+export const getPreviewMinutes = (
+  minutes: number,
+  snap: DurationInputSnapMode
+): number => {
+  return snap === "smooth" ? snapToSliderStep(minutes) : minutes;
+};
+
+/**
+ * Formats slider minutes into the controlled HH:MM value, applying snap/clamp rules.
+ *
+ * @param minutes - Raw slider minutes
+ * @param snap - Slider snap mode
+ * @param maxDurationInHours - Maximum allowed duration in hours
+ * @returns Normalized duration string in HH:MM format
+ */
+export const formatSliderMinutes = (
+  minutes: number,
+  snap: DurationInputSnapMode,
+  maxDurationInHours: number
+): string => {
+  return floatToTime(
+    clampHours(getPreviewMinutes(minutes, snap) / 60, maxDurationInHours)
+  );
 };
 
 /**
