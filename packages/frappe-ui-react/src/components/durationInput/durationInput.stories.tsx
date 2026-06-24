@@ -15,6 +15,7 @@ export default {
     loading: false,
     error: false,
     disabled: false,
+    allowOverflow: false,
   },
   argTypes: {
     label: {
@@ -66,6 +67,11 @@ export default {
     error: {
       control: "boolean",
       description: "If true, applies error styling",
+    },
+    allowOverflow: {
+      control: "boolean",
+      description:
+        "Allows manual text input to exceed maxDuration while keeping the slider capped",
     },
     className: {
       control: "text",

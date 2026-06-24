@@ -52,6 +52,11 @@ const meta: Meta<typeof DurationInput> = {
       control: "boolean",
       description: "Applies error styling",
     },
+    allowOverflow: {
+      control: "boolean",
+      description:
+        "Allows manual text input to exceed maxDuration while keeping the slider capped",
+    },
     className: {
       control: "text",
       description: "Class applied to the root wrapper",

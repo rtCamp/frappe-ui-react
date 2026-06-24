@@ -14,6 +14,7 @@ import {
   formatSliderMinutes,
   getPreviewMinutes,
   getSliderMinutes,
+  normalizeCommittedHours,
   SLIDER_STEP_MINUTES,
   timeToFloat,
 } from "./utils";
@@ -161,6 +162,7 @@ const DurationInput = ({
   disabled = false,
   loading = false,
   error = false,
+  allowOverflow = false,
   className,
   classNames = {},
   onChange,
@@ -172,15 +174,21 @@ const DurationInput = ({
   const maxDurationInHours = timeToFloat(maxDuration);
   const maxDurationInMinutes = maxDurationInHours * 60;
   const hoursLeftValue = timeToFloat(hoursLeft);
-  const committedHours = clampHours(timeToFloat(value), maxDurationInHours);
-  const committedMinutes = committedHours * 60;
+  const committedHours = normalizeCommittedHours(
+    timeToFloat(value),
+    maxDurationInHours,
+    allowOverflow
+  );
+  const sliderHours = clampHours(committedHours, maxDurationInHours);
+  const committedMinutes = sliderHours * 60;
   const isSmoothSnap = snap === "smooth";
   const sliderVal = dragValue ?? committedMinutes;
   const previewMinutes = getPreviewMinutes(sliderVal, snap);
+  const previewHours =
+    dragValue !== null ? previewMinutes / 60 : committedHours;
   const inputVal =
-    draftValue ??
-    (dragValue !== null ? floatToTime(previewMinutes / 60) : value);
-  const hoursBalance = hoursLeftValue - previewMinutes / 60;
+    draftValue ?? (dragValue !== null ? floatToTime(previewHours) : value);
+  const hoursBalance = hoursLeftValue - previewHours;
   const isOverHours = hoursBalance < 0;
   const accessibleLabel =
     (typeof label === "string" && label) || inlineLabel || "Duration";
@@ -219,7 +227,11 @@ const DurationInput = ({
 
   const commitInputValue = useCallback(() => {
     const nextValue = floatToTime(
-      clampHours(timeToFloat(draftValue ?? value), maxDurationInHours)
+      normalizeCommittedHours(
+        timeToFloat(draftValue ?? value),
+        maxDurationInHours,
+        allowOverflow
+      )
     );
 
     setDraftValue(null);
@@ -228,7 +240,7 @@ const DurationInput = ({
     if (nextValue !== value) {
       onChange(nextValue);
     }
-  }, [draftValue, value, maxDurationInHours, onChange]);
+  }, [allowOverflow, draftValue, value, maxDurationInHours, onChange]);
 
   const resetInputDraft = useCallback(() => {
     setDraftValue(null);
