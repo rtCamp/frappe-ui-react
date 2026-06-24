@@ -321,13 +321,20 @@ const DurationInput = ({
                 durationIndicatorVariants({ disabled, error, variant }),
                 classNames.indicator
               )}
-            />
+            >
+              <span
+                className={cn(
+                  "pointer-events-none absolute top-1/2 -translate-y-1/2 w-0.5 h-3 rounded transition-colors bg-surface-gray-7/9",
+                  previewMinutes <= SLIDER_STEP_MINUTES ? "right-1" : "right-2",
+                  isDragging && "bg-surface-gray-7/36",
+                  previewMinutes === 0 && "invisible",
+                  error && "bg-surface-red-4",
+                  classNames.thumb
+                )}
+              />
+            </Slider.Indicator>
             <Slider.Thumb
-              className={cn(
-                "rounded w-0.5 h-3 transition-colors bg-surface-gray-7/9 data-dragging:bg-surface-gray-7/36 -ml-1.25 cursor-grab data-dragging:cursor-grabbing",
-                error && "bg-surface-red-4 data-dragging:bg-surface-red-4",
-                classNames.thumb
-              )}
+              className="size-0 opacity-0"
               aria-label={accessibleLabel}
             />
             {inlineLabel ? (
