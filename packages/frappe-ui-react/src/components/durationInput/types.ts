@@ -28,18 +28,34 @@ export interface DurationInputClassNames {
 }
 
 export interface DurationInputProps {
+  /** Label displayed above the input. */
   label?: string | false;
+  /** Label displayed inside the input. */
   inlineLabel?: string;
+  /** Maximum allowed duration in HH:MM. */
   maxDuration?: string;
+  /** Remaining time used to calculate left or over state. */
   hoursLeft?: string;
+  /** Controls whether the slider snaps continuously or moves smoothly. */
   snap?: DurationInputSnapMode;
+  /** Height of the duration input. */
   size?: DurationInputSize;
+  /** Visual style of the duration input. */
   variant?: DurationInputVariant;
+  /** If true, disables the slider and text input. */
   disabled?: boolean;
+  /** If true, shows a spinner before the input value. */
   loading?: boolean;
+  /** If true, applies error styling. */
   error?: boolean;
+  /** Allows manual text input to exceed maxDuration while keeping the slider capped. */
+  allowOverflow?: boolean;
+  /** Class applied to the root wrapper. */
   className?: string;
+  /** Per-slot class overrides for the duration input internals. */
   classNames?: DurationInputClassNames;
+  /** Current duration value in HH:MM format. */
   value: string;
+  /** Callback fired with the new duration value as a string (e.g. "HH:MM"). */
   onChange: (value: string) => void;
 }

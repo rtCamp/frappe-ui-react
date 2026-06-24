@@ -122,6 +122,27 @@ export const formatSliderMinutes = (
 };
 
 /**
+ * Normalizes committed hours for the duration input.
+ * When overflow is allowed, only the lower bound is enforced.
+ *
+ * @param hours - Duration in hours
+ * @param maxDurationInHours - Maximum allowed duration in hours
+ * @param allowOverflow - Whether text input may exceed the slider maximum
+ * @returns Normalized duration in hours
+ */
+export const normalizeCommittedHours = (
+  hours: number,
+  maxDurationInHours: number,
+  allowOverflow: boolean
+): number => {
+  if (allowOverflow) {
+    return Math.max(hours, 0);
+  }
+
+  return clampHours(hours, maxDurationInHours);
+};
+
+/**
  * Clamps a hours value between 0 and a maximum duration.
  *
  * @param hours - Duration in hours
