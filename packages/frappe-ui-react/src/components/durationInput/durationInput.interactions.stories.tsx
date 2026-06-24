@@ -30,6 +30,12 @@ const meta: Meta<typeof DurationInput> = {
       control: "text",
       description: "Remaining time used to calculate left or over state",
     },
+    snap: {
+      control: "select",
+      options: ["step", "smooth"],
+      description:
+        "Controls whether the slider snaps continuously or moves smoothly",
+    },
     maxDuration: {
       control: "text",
       description: "Maximum allowed duration in HH:MM format",
@@ -73,6 +79,7 @@ export const Input: Story = {
     value: "00:00",
     hoursLeft: "08:00",
     maxDuration: "08:00",
+    snap: "step",
     onChange: fn(),
   },
   render: (args) => (
@@ -113,6 +120,7 @@ export const Slider: Story = {
     value: "03:30",
     hoursLeft: "04:00",
     maxDuration: "08:00",
+    snap: "step",
     onChange: fn(),
   },
   render: (args) => (

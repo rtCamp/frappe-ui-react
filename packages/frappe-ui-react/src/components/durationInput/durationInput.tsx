@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { Slider } from "@base-ui/react/slider";
 
 /**
@@ -10,9 +10,13 @@ import { Slider } from "@base-ui/react/slider";
 import {
   clampHours,
   floatToTime,
+  formatSliderMinutes,
+  getPreviewMinutes,
+  getSliderMinutes,
   SLIDER_STEP_MINUTES,
   timeToFloat,
 } from "./utils";
+import type { DurationInputProps } from "./types";
 import { cn } from "../../utils";
 import { useDurationSlider } from "./useDurationSlider";
 import { useCallback, useId, useState } from "react";
@@ -21,7 +25,7 @@ import { Spinner } from "../spinner";
 type SliderValue = number | readonly number[];
 
 const durationControlVariants = cva(
-  "flex items-center rounded relative overflow-hidden has-focus-visible:border-outline-gray-4 has-focus-visible:shadow-sm has-focus-visible:ring-2",
+  "flex items-center rounded relative overflow-hidden has-focus-visible:border-outline-gray-4 has-focus-visible:shadow-sm has-focus-visible:ring-2 cursor-pointer data-dragging:cursor-grabbing data-disabled:cursor-not-allowed",
   {
     variants: {
       variant: {
@@ -81,26 +85,29 @@ const durationTrackVariants = cva("w-full rounded transition-colors", {
   },
 });
 
-const durationIndicatorVariants = cva("rounded-l rounded-r select-none", {
-  variants: {
-    disabled: {
-      true: "bg-surface-gray-3",
-      false: "",
+const durationIndicatorVariants = cva(
+  "rounded-l rounded-r select-none cursor-grab",
+  {
+    variants: {
+      disabled: {
+        true: "bg-surface-gray-3",
+        false: "",
+      },
+      variant: {
+        subtle: "bg-surface-gray-4",
+        outline: "bg-surface-gray-3",
+      },
+      error: {
+        true: "bg-surface-red-3",
+        false: "",
+      },
     },
-    variant: {
-      subtle: "bg-surface-gray-4",
-      outline: "bg-surface-gray-3",
+    defaultVariants: {
+      disabled: false,
+      error: false,
     },
-    error: {
-      true: "bg-surface-red-3",
-      false: "",
-    },
-  },
-  defaultVariants: {
-    disabled: false,
-    error: false,
-  },
-});
+  }
+);
 
 const durationInputVariants = cva(
   "absolute -translate-y-1/2 top-1/2 right-2.5 w-10 flex items-center justify-center tabular-nums rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1",
@@ -142,28 +149,13 @@ const durationSpinnerVariants = cva(
   }
 );
 
-type DurationInputStyleProps = VariantProps<typeof durationTrackVariants>;
-
-export interface DurationInputProps {
-  label?: string;
-  inlineLabel?: string;
-  maxDuration?: string;
-  hoursLeft?: string;
-  size?: DurationInputStyleProps["size"];
-  variant?: DurationInputStyleProps["variant"];
-  disabled?: boolean;
-  loading?: boolean;
-  error?: boolean;
-  value: string;
-  onChange: (value: string) => void;
-}
-
 const DurationInput = ({
   label,
   inlineLabel,
   maxDuration = "08:00",
   hoursLeft = "08:00",
   value = "00:00",
+  snap = "step",
   size = "sm",
   variant = "subtle",
   disabled = false,
@@ -173,15 +165,20 @@ const DurationInput = ({
 }: DurationInputProps) => {
   const sliderId = useId();
   const [draftValue, setDraftValue] = useState<string | null>(null);
+  const [dragValue, setDragValue] = useState<number | null>(null);
 
   const maxDurationInHours = timeToFloat(maxDuration);
   const maxDurationInMinutes = maxDurationInHours * 60;
   const hoursLeftValue = timeToFloat(hoursLeft);
   const committedHours = clampHours(timeToFloat(value), maxDurationInHours);
   const committedMinutes = committedHours * 60;
-  const sliderVal = committedMinutes;
-  const inputVal = draftValue ?? value;
-  const hoursBalance = hoursLeftValue - sliderVal / 60;
+  const isSmoothSnap = snap === "smooth";
+  const sliderVal = dragValue ?? committedMinutes;
+  const previewMinutes = getPreviewMinutes(sliderVal, snap);
+  const inputVal =
+    draftValue ??
+    (dragValue !== null ? floatToTime(previewMinutes / 60) : value);
+  const hoursBalance = hoursLeftValue - previewMinutes / 60;
   const isOverHours = hoursBalance < 0;
 
   const { isDragging, setIsDragging, notchOffsets } = useDurationSlider({
@@ -189,17 +186,31 @@ const DurationInput = ({
     sliderStepInMins: SLIDER_STEP_MINUTES,
   });
 
-  const getSliderMinutes = useCallback(
-    (sliderValue: SliderValue) =>
-      Array.isArray(sliderValue) ? (sliderValue[0] ?? 0) : sliderValue,
-    []
-  );
-
   const handleSliderChange = useCallback(
     (nextValue: SliderValue) => {
-      onChange(floatToTime(getSliderMinutes(nextValue) / 60));
+      const nextMinutes = getSliderMinutes(nextValue);
+
+      if (isSmoothSnap && isDragging) {
+        setDragValue(nextMinutes);
+        return;
+      }
+
+      onChange(floatToTime(nextMinutes / 60));
     },
-    [getSliderMinutes, onChange]
+    [isDragging, isSmoothSnap, onChange]
+  );
+
+  const commitSliderValue = useCallback(
+    (minutes: number) => {
+      const nextValue = formatSliderMinutes(minutes, snap, maxDurationInHours);
+
+      setDragValue(null);
+
+      if (nextValue !== value) {
+        onChange(nextValue);
+      }
+    },
+    [maxDurationInHours, onChange, snap, value]
   );
 
   const commitInputValue = useCallback(() => {
@@ -208,20 +219,30 @@ const DurationInput = ({
     );
 
     setDraftValue(null);
+    setDragValue(null);
 
     if (nextValue !== value) {
       onChange(nextValue);
     }
   }, [draftValue, value, maxDurationInHours, onChange]);
 
+  const resetInputDraft = useCallback(() => {
+    setDraftValue(null);
+    setDragValue(null);
+  }, []);
+
   return (
     <Slider.Root
       min={0}
       max={maxDurationInMinutes}
-      step={SLIDER_STEP_MINUTES}
+      step={isSmoothSnap && isDragging ? 1 : SLIDER_STEP_MINUTES}
       value={sliderVal}
       onValueChange={handleSliderChange}
       onValueCommitted={() => {
+        if (isSmoothSnap && dragValue !== null) {
+          commitSliderValue(dragValue);
+        }
+
         setIsDragging(false);
       }}
       disabled={disabled}
@@ -267,7 +288,7 @@ const DurationInput = ({
             />
             <Slider.Thumb
               className={cn(
-                "rounded w-0.5 h-3 transition-colors bg-surface-gray-7/9 data-dragging:bg-surface-gray-7/36 -ml-1.25",
+                "rounded w-0.5 h-3 transition-colors bg-surface-gray-7/9 data-dragging:bg-surface-gray-7/36 -ml-1.25 cursor-grab data-dragging:cursor-grabbing",
                 error && "bg-surface-red-4 data-dragging:bg-surface-red-4"
               )}
               aria-label="Duration"
@@ -297,6 +318,7 @@ const DurationInput = ({
           disabled={disabled}
           onFocus={() => {
             setDraftValue(value);
+            setDragValue(null);
           }}
           onChange={(e) => {
             const filtered = e.target.value.replace(/[^0-9:]/g, "");
@@ -309,8 +331,8 @@ const DurationInput = ({
             }
 
             if (e.key === "Escape") {
-              setDraftValue(null);
-              e.currentTarget.blur();
+              e.preventDefault();
+              resetInputDraft();
             }
           }}
         />
