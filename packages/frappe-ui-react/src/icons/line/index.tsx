@@ -458,3 +458,4 @@ export { default as Youtube } from "./youtube.svg?react";
 export { default as Zap } from "./zap.svg?react";
 export { default as TimeOff } from "./time-off.svg?react";
 export { default as Clock } from "./clock.svg?react";
+export { default as PendingReview } from "./pending-review.svg?react";
