@@ -14,6 +14,7 @@ export * from "./datePicker";
 export * from "./dialog";
 export * from "./divider";
 export * from "./dropdown";
+export * from "./durationInput";
 export * from "./errorMessage";
 export * from "./fileUploader";
 export * from "./filter";
