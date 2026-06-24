@@ -40,7 +40,11 @@ const TooltipComponent: React.FC<TooltipProps> = ({
         <Tooltip.Trigger render={children as React.ReactElement} />
         <Tooltip.Portal>
           {tooltipContent && (
-            <Tooltip.Positioner side={placement} sideOffset={4}>
+            <Tooltip.Positioner
+              side={placement}
+              sideOffset={4}
+              className="z-[100]"
+            >
               <Tooltip.Popup
                 data-testid="tooltip-popup"
                 className="z-[100] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade select-none rounded-lg shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] will-change-[transform,opacity]"
