@@ -1,6 +1,7 @@
 /**
  * External dependencies.
  */
+import { useCallback, useId, useState } from "react";
 import { cva } from "class-variance-authority";
 import { Slider } from "@base-ui/react/slider";
 
@@ -19,7 +20,6 @@ import {
 import type { DurationInputProps } from "./types";
 import { cn } from "../../utils";
 import { useDurationSlider } from "./useDurationSlider";
-import { useCallback, useId, useState } from "react";
 import { Spinner } from "../spinner";
 
 type SliderValue = number | readonly number[];
@@ -161,6 +161,8 @@ const DurationInput = ({
   disabled = false,
   loading = false,
   error = false,
+  className,
+  classNames = {},
   onChange,
 }: DurationInputProps) => {
   const sliderId = useId();
@@ -180,6 +182,8 @@ const DurationInput = ({
     (dragValue !== null ? floatToTime(previewMinutes / 60) : value);
   const hoursBalance = hoursLeftValue - previewMinutes / 60;
   const isOverHours = hoursBalance < 0;
+  const accessibleLabel =
+    (typeof label === "string" && label) || inlineLabel || "Duration";
 
   const { isDragging, setIsDragging, notchOffsets } = useDurationSlider({
     maxDuration: maxDurationInMinutes,
@@ -248,13 +252,25 @@ const DurationInput = ({
       disabled={disabled}
       className={cn(
         "space-y-1.5 relative",
-        disabled && "opacity-90 pointer-events-none"
+        disabled && "opacity-90 pointer-events-none",
+        className,
+        classNames.root
       )}
     >
       {label ? (
-        <div className="w-full flex justify-between text-sm font-normal text-ink-gray-5">
-          <Slider.Label>{label}</Slider.Label>
-          <p className={isOverHours ? "text-ink-red-4" : undefined}>
+        <div
+          className={cn(
+            "w-full flex justify-between text-sm font-normal text-ink-gray-5",
+            classNames.header
+          )}
+        >
+          <Slider.Label className={cn(classNames.label)}>{label}</Slider.Label>
+          <p
+            className={cn(
+              isOverHours && "text-ink-red-4",
+              classNames.hoursLeft
+            )}
+          >
             {isOverHours
               ? `${Math.abs(hoursBalance)}h over`
               : `${hoursBalance}h left`}
@@ -263,11 +279,17 @@ const DurationInput = ({
       ) : null}
       <div className="relative">
         <Slider.Control
-          className={cn(durationControlVariants({ variant, error }))}
+          className={cn(
+            durationControlVariants({ variant, error }),
+            classNames.control
+          )}
           onPointerDown={() => setIsDragging(true)}
         >
           <Slider.Track
-            className={cn(durationTrackVariants({ size, variant, error }))}
+            className={cn(
+              durationTrackVariants({ size, variant, error }),
+              classNames.track
+            )}
           >
             {!disabled &&
               isDragging &&
@@ -283,22 +305,25 @@ const DurationInput = ({
               ))}
             <Slider.Indicator
               className={cn(
-                durationIndicatorVariants({ disabled, error, variant })
+                durationIndicatorVariants({ disabled, error, variant }),
+                classNames.indicator
               )}
             />
             <Slider.Thumb
               className={cn(
                 "rounded w-0.5 h-3 transition-colors bg-surface-gray-7/9 data-dragging:bg-surface-gray-7/36 -ml-1.25 cursor-grab data-dragging:cursor-grabbing",
-                error && "bg-surface-red-4 data-dragging:bg-surface-red-4"
+                error && "bg-surface-red-4 data-dragging:bg-surface-red-4",
+                classNames.thumb
               )}
-              aria-label="Duration"
+              aria-label={accessibleLabel}
             />
             {inlineLabel ? (
               <label
                 htmlFor={sliderId}
                 className={cn(
                   "absolute -translate-y-1/2 top-1/2 left-2.5 text-sm flex items-center justify-center tabular-nums rounded-sm",
-                  disabled ? "text-ink-gray-5" : "text-ink-gray-8"
+                  disabled ? "text-ink-gray-5" : "text-ink-gray-8",
+                  classNames.inlineLabel
                 )}
               >
                 {inlineLabel}
@@ -307,12 +332,20 @@ const DurationInput = ({
           </Slider.Track>
         </Slider.Control>
         {loading ? (
-          <Spinner className={cn(durationSpinnerVariants({ size }))} />
+          <Spinner
+            className={cn(
+              durationSpinnerVariants({ size }),
+              classNames.spinner
+            )}
+          />
         ) : null}
         <input
           type="text"
           id={sliderId}
-          className={cn(durationInputVariants({ size, disabled, error }))}
+          className={cn(
+            durationInputVariants({ size, disabled, error }),
+            classNames.input
+          )}
           placeholder="00:00"
           value={inputVal}
           disabled={disabled}
