@@ -3,15 +3,12 @@ import type { DurationInputSnapMode } from "./types";
 export const SLIDER_STEP_MINUTES = 30;
 
 /**
- * Converts a decimal number (representing hours as a float) to a HH:MM time format string.
+ * Converts decimal hours to `HH:MM`.
  *
- * @param float - The decimal hours value (e.g., 1.5 for 1 hour 30 minutes)
- * @param hourPadding - Number of digits to pad hours to (default: 1)
- * @param minutePadding - Number of digits to pad minutes to (default: 2)
- * @returns Formatted time string in HH:MM format
- *
- * @example
- * floatToTime(1.5) // Returns "01:30"
+ * @param float - Duration in hours.
+ * @param hourPadding - Number of digits to pad hours to.
+ * @param minutePadding - Number of digits to pad minutes to.
+ * @returns Duration formatted as `HH:MM`.
  */
 export function floatToTime(
   float: number,
@@ -29,55 +26,69 @@ export function floatToTime(
 }
 
 /**
- * Converts a duration string in various formats and returns the value in hours.
- * Accepts both decimal numbers and HH:MM format.
+ * Converts a duration string to decimal hours.
+ * Accepts either decimal input or `HH:MM`.
  *
- * @param value - Duration string in format "HH:MM"
- * @returns Number of hours, or 0 if the format is invalid
- *
- * @example
- * timeToFloat("1:30") // Returns 1.5
+ * @param value - Duration string to parse.
+ * @returns Duration in hours.
  */
 export const timeToFloat = (value: string): number => {
   const trimmedValue = value.trim();
+
   if (/^\d+(\.\d+)?$/.test(trimmedValue)) {
     return Number(trimmedValue);
   }
 
   const hhmmMatch = /^([0-9]{1,2}):([0-9]{2})$/.exec(trimmedValue);
+
   if (!hhmmMatch) {
     return 0;
   }
 
   const hours = Number(hhmmMatch[1]);
-  const mins = Number(hhmmMatch[2]);
+  const minutes = Number(hhmmMatch[2]);
 
-  if (Number.isNaN(hours) || Number.isNaN(mins) || mins < 0 || mins > 59) {
+  if (
+    Number.isNaN(hours) ||
+    Number.isNaN(minutes) ||
+    minutes < 0 ||
+    minutes > 59
+  ) {
     return 0;
   }
 
-  return hours + mins / 60;
+  return hours + minutes / 60;
 };
 
 /**
- * Rounds a value in minutes to the nearest slider step.
- * Uses SLIDER_STEP_MINUTES as the rounding interval.
+ * Clamps hours between `0` and the configured maximum.
  *
- * @param minutes - Duration in minutes
- * @returns Snapped value in minutes, rounded to nearest step
+ * @param hours - Duration in hours.
+ * @param maxDurationInHours - Maximum allowed duration in hours.
+ * @returns Clamped duration in hours.
+ */
+export const clampHours = (
+  hours: number,
+  maxDurationInHours: number
+): number => {
+  return Math.min(Math.max(hours, 0), maxDurationInHours);
+};
+
+/**
+ * Rounds slider minutes to the nearest slider step.
  *
- * @example
- * snapToSliderStep(35) // Returns 30 (SLIDER_STEP_MINUTES = 30)
+ * @param minutes - Slider value in minutes.
+ * @returns Snapped slider value in minutes.
  */
 export const snapToSliderStep = (minutes: number): number => {
   return Math.round(minutes / SLIDER_STEP_MINUTES) * SLIDER_STEP_MINUTES;
 };
 
 /**
- * Returns the numeric slider value from a Slider primitive payload.
+ * Extracts the numeric slider value from the slider payload.
  *
- * @param sliderValue - Scalar or array slider value emitted by the slider
- * @returns Minutes value for the current slider position
+ * @param sliderValue - Scalar or array slider payload.
+ * @returns Slider value in minutes.
  */
 export const getSliderMinutes = (
   sliderValue: number | readonly number[]
@@ -90,11 +101,11 @@ export const getSliderMinutes = (
 };
 
 /**
- * Returns the snapped preview value shown during smooth dragging.
+ * Returns the slider preview value in minutes.
  *
- * @param minutes - Raw slider minutes
- * @param snap - Slider snap mode
- * @returns Preview minutes shown in the UI
+ * @param minutes - Raw slider minutes.
+ * @param snap - Slider snap mode.
+ * @returns Preview minutes for the current slider position.
  */
 export const getPreviewMinutes = (
   minutes: number,
@@ -104,31 +115,28 @@ export const getPreviewMinutes = (
 };
 
 /**
- * Formats slider minutes into the controlled HH:MM value, applying snap/clamp rules.
+ * Converts slider minutes into normalized hours.
  *
- * @param minutes - Raw slider minutes
- * @param snap - Slider snap mode
- * @param maxDurationInHours - Maximum allowed duration in hours
- * @returns Normalized duration string in HH:MM format
+ * @param minutes - Raw slider minutes.
+ * @param snap - Slider snap mode.
+ * @param maxDurationInHours - Maximum allowed duration in hours.
+ * @returns Normalized slider value in hours.
  */
-export const formatSliderMinutes = (
+export const getSliderHours = (
   minutes: number,
   snap: DurationInputSnapMode,
   maxDurationInHours: number
-): string => {
-  return floatToTime(
-    clampHours(getPreviewMinutes(minutes, snap) / 60, maxDurationInHours)
-  );
+): number => {
+  return clampHours(getPreviewMinutes(minutes, snap) / 60, maxDurationInHours);
 };
 
 /**
- * Normalizes committed hours for the duration input.
- * When overflow is allowed, only the lower bound is enforced.
+ * Normalizes committed hours based on overflow behavior.
  *
- * @param hours - Duration in hours
- * @param maxDurationInHours - Maximum allowed duration in hours
- * @param allowOverflow - Whether text input may exceed the slider maximum
- * @returns Normalized duration in hours
+ * @param hours - Duration in hours.
+ * @param maxDurationInHours - Maximum allowed duration in hours.
+ * @param allowOverflow - Whether manual input can exceed the slider maximum.
+ * @returns Normalized duration in hours.
  */
 export const normalizeCommittedHours = (
   hours: number,
@@ -143,18 +151,21 @@ export const normalizeCommittedHours = (
 };
 
 /**
- * Clamps a hours value between 0 and a maximum duration.
+ * Filters text input down to characters valid for `HH:MM`.
  *
- * @param hours - Duration in hours
- * @param maxDurationInHours - Maximum allowed duration in hours
- * @returns Clamped value between 0 and maxDurationInHours
- *
- * @example
- * clampHours(2, 5) // Returns 2
+ * @param value - Raw input value.
+ * @returns Sanitized input string.
  */
-export const clampHours = (
-  hours: number,
-  maxDurationInHours: number
-): number => {
-  return Math.min(Math.max(hours, 0), maxDurationInHours);
+export const sanitizeHoursInput = (value: string): string => {
+  return value.replace(/[^0-9:]/g, "");
+};
+
+/**
+ * Formats the balance text shown above the control.
+ *
+ * @param value - Balance in hours.
+ * @returns Balance text with the `h` suffix.
+ */
+export const formatHoursBalance = (value: number): string => {
+  return `${Number(value.toFixed(2)).toString()}h`;
 };
