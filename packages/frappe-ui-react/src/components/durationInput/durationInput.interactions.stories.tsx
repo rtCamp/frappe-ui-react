@@ -52,6 +52,14 @@ const meta: Meta<typeof DurationInput> = {
       control: "boolean",
       description: "Applies error styling",
     },
+    className: {
+      control: "text",
+      description: "Class applied to the root wrapper",
+    },
+    classNames: {
+      control: "object",
+      description: "Per-slot class overrides for the duration input internals",
+    },
     onChange: {
       action: "changed",
       description: "Callback fired when the value changes",

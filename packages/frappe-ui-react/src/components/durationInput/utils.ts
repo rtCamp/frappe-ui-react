@@ -1,5 +1,6 @@
-export const SLIDER_STEP_MINUTES = 30;
 import type { DurationInputSnapMode } from "./types";
+
+export const SLIDER_STEP_MINUTES = 30;
 
 /**
  * Converts a decimal number (representing hours as a float) to a HH:MM time format string.

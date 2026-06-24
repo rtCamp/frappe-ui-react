@@ -20,6 +20,11 @@ export default {
     label: {
       control: "text",
       description: "Label displayed above the input",
+      table: {
+        type: {
+          summary: "string | false",
+        },
+      },
     },
     maxDuration: {
       control: "text",
@@ -61,6 +66,14 @@ export default {
     error: {
       control: "boolean",
       description: "If true, applies error styling",
+    },
+    className: {
+      control: "text",
+      description: "Class applied to the root wrapper",
+    },
+    classNames: {
+      control: "object",
+      description: "Per-slot class overrides for the duration input internals",
     },
     onChange: {
       action: "changed",
