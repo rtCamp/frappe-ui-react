@@ -185,14 +185,60 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
     : from && to
       ? `${from} to ${to}`
       : from || "";
+  const openPicker = () => {
+    if (!disabled) {
+      setOpen(true);
+    }
+  };
+  const closePicker = () => setOpen(false);
+  const togglePicker = () => {
+    if (!disabled) {
+      setOpen((prevOpen) => !prevOpen);
+    }
+  };
+  const handleTriggerKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (disabled) {
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openPicker();
+    }
+  };
+  const handleChildTriggerKeyDown = (
+    event: React.KeyboardEvent<HTMLElement>
+  ) => {
+    if (disabled) {
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openPicker();
+    }
+  };
 
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
       <Popover.Trigger
         disabled={disabled}
+        nativeButton={false}
         render={
           children ? (
-            <span>{children({ isOpen: open, displayValue, disabled })}</span>
+            <span>
+              {children({
+                isOpen: open,
+                displayValue,
+                disabled,
+                openPicker,
+                closePicker,
+                togglePicker,
+                onTriggerKeyDown: handleChildTriggerKeyDown,
+              })}
+            </span>
           ) : (
             <div className="flex w-full flex-col space-y-1.5">
               {label && (
@@ -203,6 +249,8 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 placeholder={placeholder}
                 value={displayValue}
                 disabled={disabled}
+                readOnly
+                onKeyDown={handleTriggerKeyDown}
                 suffix={() => (
                   <FeatherIcon name="chevron-down" className="w-4 h-4" />
                 )}
