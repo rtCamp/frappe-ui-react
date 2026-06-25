@@ -30,6 +30,7 @@ type DateRangePickerStory = StoryObj<typeof DateRangePicker>;
 const commonArgs = {
   label: "Label",
   placeholder: "Placeholder",
+  disabled: false,
 };
 
 export const Date: DatePickerStory = {
