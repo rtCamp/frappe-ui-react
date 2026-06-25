@@ -460,3 +460,4 @@ export { default as TimeOff } from "./time-off.svg?react";
 export { default as Clock } from "./clock.svg?react";
 export { default as PendingReview } from "./pending-review.svg?react";
 export { default as LoadingAlt } from "./loading-alt.svg?react";
+export { default as StarCrossed } from "./star-crossed.svg?react";
