@@ -67,19 +67,19 @@ const inputVariants = cva(
         disabled: true,
         variant: "outline",
         className:
-          "border border-outline-gray-2 bg-surface-gray-1 placeholder-ink-gray-3 pointer-events-none",
+          "border border-outline-gray-2 bg-surface-gray-1 text-ink-gray-5 placeholder-ink-gray-3 pointer-events-none",
       },
       {
         disabled: true,
         variant: "subtle",
         className:
-          "border border-transparent bg-surface-gray-1 placeholder-ink-gray-3 pointer-events-none",
+          "border border-transparent bg-surface-gray-1 text-ink-gray-5 placeholder-ink-gray-3 pointer-events-none",
       },
       {
         disabled: true,
         variant: "ghost",
         className:
-          "border border-transparent bg-surface-gray-1 placeholder-ink-gray-3 pointer-events-none",
+          "border border-transparent bg-surface-gray-1 text-ink-gray-5 placeholder-ink-gray-3 pointer-events-none",
       },
     ],
     defaultVariants: {
@@ -104,6 +104,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       debounce: debounceTime,
       prefix,
       suffix,
+      inputClassName,
       ...rest
     },
     ref
@@ -181,13 +182,16 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           required={rest.required}
           onChange={handleChange}
           data-testid="text-input"
-          className={inputVariants({
-            size,
-            variant,
-            disabled,
-            hasPrefix: !!prefix,
-            hasSuffix: !!suffix,
-          })}
+          className={cn(
+            inputVariants({
+              size,
+              variant,
+              disabled,
+              hasPrefix: !!prefix,
+              hasSuffix: !!suffix,
+            }),
+            inputClassName
+          )}
         />
         {suffix && (
           <div

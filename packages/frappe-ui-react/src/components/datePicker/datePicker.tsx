@@ -10,6 +10,7 @@ import { cn } from "../../utils";
 export const DatePicker: React.FC<DatePickerProps> = ({
   value,
   placeholder,
+  disabled,
   formatter,
   placement,
   label,
@@ -55,10 +56,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
       <Popover.Trigger
+        disabled={disabled}
         render={
           children ? (
             <span className="!mb-0">
-              {children({ isOpen: open, displayValue })}
+              {children({ isOpen: open, displayValue, disabled })}
             </span>
           ) : (
             <div className="flex w-full flex-col space-y-1.5">
@@ -69,6 +71,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 type="text"
                 placeholder={placeholder}
                 value={displayValue}
+                disabled={disabled}
                 suffix={() => (
                   <FeatherIcon name="chevron-down" className="w-4 h-4" />
                 )}
