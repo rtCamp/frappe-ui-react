@@ -77,11 +77,55 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     : displayValue;
 
   const { side, align } = parsePlacement(placement);
+  const openPicker = () => {
+    if (!disabled) {
+      setOpen(true);
+    }
+  };
+  const closePicker = () => setOpen(false);
+  const togglePicker = () => {
+    if (!disabled) {
+      setOpen((prevOpen) => !prevOpen);
+    }
+  };
+  const handleTriggerKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (disabled) {
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openPicker();
+    }
+  };
+  const handleChildTriggerKeyDown = (
+    event: React.KeyboardEvent<HTMLElement>
+  ) => {
+    if (disabled) {
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openPicker();
+    }
+  };
+  const handleTimeTriggerKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      setTimeDropdownOpen(true);
+    }
+  };
 
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
       <Popover.Trigger
         disabled={disabled}
+        nativeButton={false}
         render={
           children ? (
             <span>
@@ -89,6 +133,10 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                 isOpen: open,
                 displayValue: formattedDisplayValue,
                 disabled,
+                openPicker,
+                closePicker,
+                togglePicker,
+                onTriggerKeyDown: handleChildTriggerKeyDown,
               })}
             </span>
           ) : (
@@ -101,6 +149,8 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                 placeholder={placeholder}
                 value={formattedDisplayValue}
                 disabled={disabled}
+                readOnly
+                onKeyDown={handleTriggerKeyDown}
                 suffix={() => (
                   <FeatherIcon name="chevron-down" className="w-4 h-4" />
                 )}
@@ -275,12 +325,15 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                 onOpenChange={setTimeDropdownOpen}
               >
                 <Popover.Trigger
+                  nativeButton={false}
                   render={
                     <div className="w-full">
                       <TextInput
                         type="text"
                         placeholder="Select Time"
                         value={timeValue}
+                        readOnly
+                        onKeyDown={handleTimeTriggerKeyDown}
                         suffix={() => (
                           <FeatherIcon
                             name="chevron-down"

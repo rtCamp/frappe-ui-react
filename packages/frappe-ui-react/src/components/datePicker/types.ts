@@ -1,4 +1,4 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps, KeyboardEventHandler } from "react";
 import { Popover } from "@base-ui/react/popover";
 
 type PopoverSideOffset = ComponentProps<
@@ -9,6 +9,10 @@ export interface DatePickerChildrenProps {
   isOpen: boolean;
   displayValue: string;
   disabled?: boolean;
+  openPicker: () => void;
+  closePicker: () => void;
+  togglePicker: () => void;
+  onTriggerKeyDown: KeyboardEventHandler<HTMLElement>;
 }
 
 export interface DatePickerProps {
