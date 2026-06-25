@@ -133,6 +133,7 @@ function useDateRangePicker({
 export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   value,
   placeholder,
+  disabled,
   formatter,
   placement,
   sideOffset = 4,
@@ -188,9 +189,10 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
       <Popover.Trigger
+        disabled={disabled}
         render={
           children ? (
-            <span>{children({ isOpen: open, displayValue })}</span>
+            <span>{children({ isOpen: open, displayValue, disabled })}</span>
           ) : (
             <div className="flex w-full flex-col space-y-1.5">
               {label && (
@@ -200,6 +202,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 type="text"
                 placeholder={placeholder}
                 value={displayValue}
+                disabled={disabled}
                 suffix={() => (
                   <FeatherIcon name="chevron-down" className="w-4 h-4" />
                 )}

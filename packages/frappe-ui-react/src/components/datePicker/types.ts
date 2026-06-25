@@ -8,12 +8,14 @@ type PopoverSideOffset = ComponentProps<
 export interface DatePickerChildrenProps {
   isOpen: boolean;
   displayValue: string;
+  disabled?: boolean;
 }
 
 export interface DatePickerProps {
   value?: string | string[];
   modelValue?: string | string[];
   placeholder?: string;
+  disabled?: boolean;
   sideOffset?: PopoverSideOffset;
   formatter?: (date: string) => string;
   readonly?: boolean;
@@ -41,6 +43,7 @@ export interface DatePickerProps {
 export interface DateTimePickerProps {
   value?: string;
   placeholder?: string;
+  disabled?: boolean;
   formatter?: (date: string) => string;
   placement?:
     | "top-start"
@@ -64,6 +67,7 @@ export interface DateTimePickerProps {
 export interface DateRangePickerProps {
   value?: string[];
   placeholder?: string;
+  disabled?: boolean;
   sideOffset?: PopoverSideOffset;
   formatter?: (from: string, to: string) => string;
   placement?:

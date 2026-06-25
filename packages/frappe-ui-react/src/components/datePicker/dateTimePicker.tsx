@@ -11,6 +11,7 @@ import { cn } from "../../utils";
 export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   value,
   placeholder,
+  disabled,
   formatter,
   placement,
   label,
@@ -80,12 +81,14 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
       <Popover.Trigger
+        disabled={disabled}
         render={
           children ? (
             <span>
               {children({
                 isOpen: open,
                 displayValue: formattedDisplayValue,
+                disabled,
               })}
             </span>
           ) : (
@@ -97,6 +100,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                 type="text"
                 placeholder={placeholder}
                 value={formattedDisplayValue}
+                disabled={disabled}
                 suffix={() => (
                   <FeatherIcon name="chevron-down" className="w-4 h-4" />
                 )}

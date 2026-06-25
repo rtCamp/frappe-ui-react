@@ -17,5 +17,6 @@ export interface TextInputProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   suffix?: (args?: any) => ReactNode;
   className?: string;
+  inputClassName?: string;
   style?: Record<string, string | number | boolean>;
 }
