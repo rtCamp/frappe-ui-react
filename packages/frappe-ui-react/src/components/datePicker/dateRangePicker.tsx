@@ -38,6 +38,8 @@ function useDateRangePicker({
     resetView,
     months,
     today,
+    syncCalendarToValue,
+    resetCalendarToToday,
   } = useDatePicker({
     value: fromDate,
     onChange: () => {},
@@ -48,6 +50,7 @@ function useDateRangePicker({
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
     const v = getDateValue(d);
+    syncCalendarToValue(v);
     if (fromDate && toDate) {
       setFromDate(v);
       setToDate("");
@@ -79,12 +82,15 @@ function useDateRangePicker({
     const d = new Date(today);
     d.setHours(0, 0, 0, 0);
     const todayStr = getDateValue(d);
+    syncCalendarToValue(todayStr);
     setFromDate(todayStr);
     setToDate(todayStr);
     onChange?.([todayStr, todayStr]);
   }
 
   function clearDates() {
+    syncCalendarToValue("");
+    resetCalendarToToday();
     setFromDate("");
     setToDate("");
     onChange?.(["", ""]);
@@ -341,9 +347,10 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                           fromDate && getDateValue(date) === fromDate;
 
                         return (
-                          <div
+                          <button
+                            type="button"
                             key={val}
-                            className={`flex h-8 w-8 cursor-pointer items-center justify-center text-sm rounded hover:bg-surface-gray-2 ${
+                            className={`flex h-8 w-8 cursor-pointer items-center justify-center text-sm rounded hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
                               date.getMonth() !== currentMonth - 1
                                 ? "text-ink-gray-3"
                                 : "text-ink-gray-8"
@@ -364,9 +371,10 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                                     isToDate
                                       ? "rounded-r-md rounded-l-none  bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
                                       : ""
-                                  } `
+                                    } `
                             }
                             `}
+                            aria-pressed={Boolean(isFromDate || isToDate)}
                             onClick={() => {
                               if (handleDateClick(date)) {
                                 setOpen(false);
@@ -374,7 +382,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                             }}
                           >
                             {date.getDate()}
-                          </div>
+                          </button>
                         );
                       })}
                     </div>

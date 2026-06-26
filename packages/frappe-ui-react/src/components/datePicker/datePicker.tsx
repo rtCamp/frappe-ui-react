@@ -25,6 +25,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     setOpen,
     dateValue,
     selectDate,
+    clearValue,
     formattedMonth,
     datesAsWeeks,
     currentMonth,
@@ -321,10 +322,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                   </Button>
                 </div>
                 <Button
-                  onClick={() => {
-                    onChange?.("");
-                    setOpen(false);
-                  }}
+                  onClick={clearValue}
                   variant="outline"
                 >
                   Clear
