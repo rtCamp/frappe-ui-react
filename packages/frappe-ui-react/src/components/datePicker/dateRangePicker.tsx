@@ -226,6 +226,19 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
       openPicker();
     }
   };
+  const toggleViewLabel = "Toggle calendar view";
+  const prevLabel =
+    view === "date"
+      ? "Previous month"
+      : view === "month"
+        ? "Previous year"
+        : "Previous years";
+  const nextLabel =
+    view === "date"
+      ? "Next month"
+      : view === "month"
+        ? "Next year"
+        : "Next years";
 
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
@@ -285,6 +298,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 size="sm"
                 className="text-sm font-medium text-ink-gray-7"
                 variant="ghost"
+                aria-label={toggleViewLabel}
                 onClick={cycleView}
               >
                 {view === "date" && formattedMonth}
@@ -296,6 +310,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 <Button
                   className="h-7 w-7"
                   icon="chevron-left"
+                  aria-label={prevLabel}
                   onClick={prev}
                   variant="ghost"
                 />
@@ -312,6 +327,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 <Button
                   className="h-7 w-7"
                   icon="chevron-right"
+                  aria-label={nextLabel}
                   onClick={next}
                   variant="ghost"
                 />
@@ -320,7 +336,11 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             {/* Calendar / Month Grid / Year Grid */}
             <div className="p-2">
               {view === "date" && (
-                <div className="flex flex-col items-center justify-center text-ink-gray-8">
+                <div
+                  className="flex flex-col items-center justify-center text-ink-gray-8"
+                  role="grid"
+                  aria-label="Calendar dates"
+                >
                   <div className="flex items-center text-xs font-medium uppercase text-ink-gray-4 mb-1">
                     {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
                       <div
@@ -332,7 +352,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                     ))}
                   </div>
                   {datesAsWeeks.map((week, i) => (
-                    <div key={i} className="flex items-center">
+                    <div key={i} className="flex items-center" role="row">
                       {week.map((date) => {
                         const val = getDateValue(date);
                         const today = getDate();
@@ -371,9 +391,10 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                                     isToDate
                                       ? "rounded-r-md rounded-l-none  bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
                                       : ""
-                                    } `
+                                  } `
                             }
                             `}
+                            role="gridcell"
                             aria-pressed={Boolean(isFromDate || isToDate)}
                             onClick={() => {
                               if (handleDateClick(date)) {
