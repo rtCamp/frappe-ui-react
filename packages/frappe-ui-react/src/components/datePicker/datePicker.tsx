@@ -88,6 +88,19 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       openPicker();
     }
   };
+  const toggleViewLabel = "Toggle calendar view";
+  const prevLabel =
+    view === "date"
+      ? "Previous month"
+      : view === "month"
+        ? "Previous year"
+        : "Previous years";
+  const nextLabel =
+    view === "date"
+      ? "Next month"
+      : view === "month"
+        ? "Next year"
+        : "Next years";
 
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
@@ -148,6 +161,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 size="sm"
                 className="text-sm font-medium text-ink-gray-7"
                 variant="ghost"
+                aria-label={toggleViewLabel}
                 onClick={cycleView}
               >
                 {view === "date" && formattedMonth}
@@ -159,6 +173,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 <Button
                   className="w-7 h-7"
                   icon="chevron-left"
+                  aria-label={prevLabel}
                   onClick={prev}
                   variant="ghost"
                 />
@@ -179,6 +194,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 <Button
                   className="w-7 h-7"
                   icon="chevron-right"
+                  aria-label={nextLabel}
                   onClick={next}
                   variant="ghost"
                 />
@@ -321,10 +337,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                     Tomorrow
                   </Button>
                 </div>
-                <Button
-                  onClick={clearValue}
-                  variant="outline"
-                >
+                <Button onClick={clearValue} variant="outline">
                   Clear
                 </Button>
               </div>

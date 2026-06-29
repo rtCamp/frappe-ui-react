@@ -120,6 +120,19 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       setTimeDropdownOpen(true);
     }
   };
+  const toggleViewLabel = "Toggle calendar view";
+  const prevLabel =
+    view === "date"
+      ? "Previous month"
+      : view === "month"
+        ? "Previous year"
+        : "Previous years";
+  const nextLabel =
+    view === "date"
+      ? "Next month"
+      : view === "month"
+        ? "Next year"
+        : "Next years";
 
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
@@ -179,6 +192,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                 size="sm"
                 className="text-sm font-medium text-ink-gray-7"
                 variant="ghost"
+                aria-label={toggleViewLabel}
                 onClick={cycleView}
               >
                 {view === "date" && formattedMonth}
@@ -190,6 +204,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                 <Button
                   className="w-7 h-7"
                   icon="chevron-left"
+                  aria-label={prevLabel}
                   onClick={prev}
                   variant="ghost"
                 />
@@ -205,6 +220,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                 <Button
                   className="w-7 h-7"
                   icon="chevron-right"
+                  aria-label={nextLabel}
                   onClick={next}
                   variant="ghost"
                 />
