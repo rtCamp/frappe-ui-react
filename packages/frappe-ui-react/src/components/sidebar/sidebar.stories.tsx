@@ -11,7 +11,7 @@ import {
   Reports,
   Folder,
   Time,
-  People
+  People,
 } from "../../icons";
 
 const meta: Meta<typeof Sidebar> = {
@@ -163,6 +163,61 @@ export const SidebarExample: Story = {
             ...crmSidebar.header,
           }}
           sections={crmSidebar.sections}
+        />
+      </div>
+    );
+  },
+};
+
+/**
+ * A sidebar item can opt into a custom `render` prop (powered by base-ui's
+ * `useRender`) to replace the default button element. The item's internal
+ * props (`className` with active styling, `onClick`) and `state`
+ * (`active` / `collapsed`) are merged into whatever element you render.
+ */
+export const CustomItemRender: Story = {
+  render: () => {
+    return (
+      <div
+        className="flex h-screen w-full flex-col bg-surface-white shadow"
+        id="sidebar-container"
+      >
+        <Sidebar
+          header={{ ...crmSidebar.header }}
+          sections={[
+            {
+              label: "Navigation",
+              items: [
+                { label: "Home", icon: Home, to: "/", isActive: true },
+                {
+                  // `render` element — useRender merges className/onClick in.
+                  label: "Docs",
+                  icon: Folder,
+                  to: "/docs",
+                  render: (
+                    <a
+                      href="https://frappe.io"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Docs ↗
+                    </a>
+                  ),
+                },
+                {
+                  // `render` callback — receives merged props and item state.
+                  label: "Reports",
+                  icon: Reports,
+                  to: "/reports",
+                  render: (props, state) => (
+                    <a {...props} href="/reports">
+                      Reports {state.active ? "(active)" : ""}
+                    </a>
+                  ),
+                },
+              ],
+            },
+          ]}
         />
       </div>
     );
