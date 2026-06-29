@@ -38,6 +38,8 @@ function useDateRangePicker({
     resetView,
     months,
     today,
+    syncCalendarToValue,
+    resetCalendarToToday,
   } = useDatePicker({
     value: fromDate,
     onChange: () => {},
@@ -48,6 +50,7 @@ function useDateRangePicker({
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
     const v = getDateValue(d);
+    syncCalendarToValue(v);
     if (fromDate && toDate) {
       setFromDate(v);
       setToDate("");
@@ -79,12 +82,15 @@ function useDateRangePicker({
     const d = new Date(today);
     d.setHours(0, 0, 0, 0);
     const todayStr = getDateValue(d);
+    syncCalendarToValue(todayStr);
     setFromDate(todayStr);
     setToDate(todayStr);
     onChange?.([todayStr, todayStr]);
   }
 
   function clearDates() {
+    syncCalendarToValue("");
+    resetCalendarToToday();
     setFromDate("");
     setToDate("");
     onChange?.(["", ""]);
@@ -185,14 +191,73 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
     : from && to
       ? `${from} to ${to}`
       : from || "";
+  const openPicker = () => {
+    if (!disabled) {
+      setOpen(true);
+    }
+  };
+  const closePicker = () => setOpen(false);
+  const togglePicker = () => {
+    if (!disabled) {
+      setOpen((prevOpen) => !prevOpen);
+    }
+  };
+  const handleTriggerKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (disabled) {
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openPicker();
+    }
+  };
+  const handleChildTriggerKeyDown = (
+    event: React.KeyboardEvent<HTMLElement>
+  ) => {
+    if (disabled) {
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openPicker();
+    }
+  };
+  const toggleViewLabel = "Toggle calendar view";
+  const prevLabel =
+    view === "date"
+      ? "Previous month"
+      : view === "month"
+        ? "Previous year"
+        : "Previous years";
+  const nextLabel =
+    view === "date"
+      ? "Next month"
+      : view === "month"
+        ? "Next year"
+        : "Next years";
 
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
       <Popover.Trigger
         disabled={disabled}
+        nativeButton={false}
         render={
           children ? (
-            <span>{children({ isOpen: open, displayValue, disabled })}</span>
+            <span>
+              {children({
+                isOpen: open,
+                displayValue,
+                disabled,
+                openPicker,
+                closePicker,
+                togglePicker,
+                onTriggerKeyDown: handleChildTriggerKeyDown,
+              })}
+            </span>
           ) : (
             <div className="flex w-full flex-col space-y-1.5">
               {label && (
@@ -203,6 +268,8 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 placeholder={placeholder}
                 value={displayValue}
                 disabled={disabled}
+                readOnly
+                onKeyDown={handleTriggerKeyDown}
                 suffix={() => (
                   <FeatherIcon name="chevron-down" className="w-4 h-4" />
                 )}
@@ -231,6 +298,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 size="sm"
                 className="text-sm font-medium text-ink-gray-7"
                 variant="ghost"
+                aria-label={toggleViewLabel}
                 onClick={cycleView}
               >
                 {view === "date" && formattedMonth}
@@ -242,6 +310,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 <Button
                   className="h-7 w-7"
                   icon="chevron-left"
+                  aria-label={prevLabel}
                   onClick={prev}
                   variant="ghost"
                 />
@@ -258,6 +327,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 <Button
                   className="h-7 w-7"
                   icon="chevron-right"
+                  aria-label={nextLabel}
                   onClick={next}
                   variant="ghost"
                 />
@@ -266,7 +336,11 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             {/* Calendar / Month Grid / Year Grid */}
             <div className="p-2">
               {view === "date" && (
-                <div className="flex flex-col items-center justify-center text-ink-gray-8">
+                <div
+                  className="flex flex-col items-center justify-center text-ink-gray-8"
+                  role="grid"
+                  aria-label="Calendar dates"
+                >
                   <div className="flex items-center text-xs font-medium uppercase text-ink-gray-4 mb-1">
                     {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
                       <div
@@ -278,7 +352,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                     ))}
                   </div>
                   {datesAsWeeks.map((week, i) => (
-                    <div key={i} className="flex items-center">
+                    <div key={i} className="flex items-center" role="row">
                       {week.map((date) => {
                         const val = getDateValue(date);
                         const today = getDate();
@@ -293,9 +367,10 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                           fromDate && getDateValue(date) === fromDate;
 
                         return (
-                          <div
+                          <button
+                            type="button"
                             key={val}
-                            className={`flex h-8 w-8 cursor-pointer items-center justify-center text-sm rounded hover:bg-surface-gray-2 ${
+                            className={`flex h-8 w-8 cursor-pointer items-center justify-center text-sm rounded hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
                               date.getMonth() !== currentMonth - 1
                                 ? "text-ink-gray-3"
                                 : "text-ink-gray-8"
@@ -319,6 +394,8 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                                   } `
                             }
                             `}
+                            role="gridcell"
+                            aria-pressed={Boolean(isFromDate || isToDate)}
                             onClick={() => {
                               if (handleDateClick(date)) {
                                 setOpen(false);
@@ -326,7 +403,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                             }}
                           >
                             {date.getDate()}
-                          </div>
+                          </button>
                         );
                       })}
                     </div>
