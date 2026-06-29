@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { KeyboardEventHandler, ReactNode } from "react";
 import type { TextInputTypes } from "../../common/types";
 
 export interface TextInputProps {
@@ -11,7 +11,9 @@ export interface TextInputProps {
   value?: string | number;
   debounce?: number;
   required?: boolean;
+  readOnly?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   prefix?: (args?: any) => ReactNode;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

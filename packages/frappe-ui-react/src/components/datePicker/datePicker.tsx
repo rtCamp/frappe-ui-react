@@ -25,6 +25,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     setOpen,
     dateValue,
     selectDate,
+    clearValue,
     formattedMonth,
     datesAsWeeks,
     currentMonth,
@@ -52,15 +53,72 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     dateValue && formatter ? formatter(dateValue) : dateValue;
 
   const { side, align } = parsePlacement(placement);
+  const openPicker = () => {
+    if (!disabled) {
+      setOpen(true);
+    }
+  };
+  const closePicker = () => setOpen(false);
+  const togglePicker = () => {
+    if (!disabled) {
+      setOpen((prevOpen) => !prevOpen);
+    }
+  };
+  const handleTriggerKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (disabled) {
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openPicker();
+    }
+  };
+  const handleChildTriggerKeyDown = (
+    event: React.KeyboardEvent<HTMLElement>
+  ) => {
+    if (disabled) {
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openPicker();
+    }
+  };
+  const toggleViewLabel = "Toggle calendar view";
+  const prevLabel =
+    view === "date"
+      ? "Previous month"
+      : view === "month"
+        ? "Previous year"
+        : "Previous years";
+  const nextLabel =
+    view === "date"
+      ? "Next month"
+      : view === "month"
+        ? "Next year"
+        : "Next years";
 
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
       <Popover.Trigger
         disabled={disabled}
+        nativeButton={false}
         render={
           children ? (
             <span className="!mb-0">
-              {children({ isOpen: open, displayValue, disabled })}
+              {children({
+                isOpen: open,
+                displayValue,
+                disabled,
+                openPicker,
+                closePicker,
+                togglePicker,
+                onTriggerKeyDown: handleChildTriggerKeyDown,
+              })}
             </span>
           ) : (
             <div className="flex w-full flex-col space-y-1.5">
@@ -72,6 +130,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 placeholder={placeholder}
                 value={displayValue}
                 disabled={disabled}
+                readOnly
+                onKeyDown={handleTriggerKeyDown}
                 suffix={() => (
                   <FeatherIcon name="chevron-down" className="w-4 h-4" />
                 )}
@@ -101,6 +161,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 size="sm"
                 className="text-sm font-medium text-ink-gray-7"
                 variant="ghost"
+                aria-label={toggleViewLabel}
                 onClick={cycleView}
               >
                 {view === "date" && formattedMonth}
@@ -112,6 +173,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 <Button
                   className="w-7 h-7"
                   icon="chevron-left"
+                  aria-label={prevLabel}
                   onClick={prev}
                   variant="ghost"
                 />
@@ -132,6 +194,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 <Button
                   className="w-7 h-7"
                   icon="chevron-right"
+                  aria-label={nextLabel}
                   onClick={next}
                   variant="ghost"
                 />
@@ -274,13 +337,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                     Tomorrow
                   </Button>
                 </div>
-                <Button
-                  onClick={() => {
-                    onChange?.("");
-                    setOpen(false);
-                  }}
-                  variant="outline"
-                >
+                <Button onClick={clearValue} variant="outline">
                   Clear
                 </Button>
               </div>

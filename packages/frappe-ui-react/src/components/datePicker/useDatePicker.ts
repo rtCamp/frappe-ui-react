@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   getDate,
   getDatesAfter,
@@ -71,6 +71,29 @@ export function useDatePicker({
   const [currentMonth, setCurrentMonth] = useState<number>(
     today.getMonth() + 1
   );
+  const selectedDateValueRef = useRef<string>("");
+
+  const resetCalendarToToday = useCallback(() => {
+    setCurrentYear(today.getFullYear());
+    setCurrentMonth(today.getMonth() + 1);
+  }, [today]);
+
+  const syncCalendarToDate = useCallback((date: Date) => {
+    setCurrentYear(date.getFullYear());
+    setCurrentMonth(date.getMonth() + 1);
+  }, []);
+
+  const syncCalendarToValue = useCallback(
+    (nextDateValue: string) => {
+      selectedDateValueRef.current = nextDateValue;
+      if (!nextDateValue) return;
+      const selectedDate = getDate(nextDateValue);
+      if (!isNaN(selectedDate.getTime())) {
+        syncCalendarToDate(selectedDate);
+      }
+    },
+    [syncCalendarToDate]
+  );
 
   useEffect(() => {
     if (typeof value === "string" && value) {
@@ -78,6 +101,8 @@ export function useDatePicker({
         const parts = value.split(" ");
         const datePart = parts[0] || "";
         setDateValue(datePart);
+        selectedDateValueRef.current = datePart;
+        syncCalendarToValue(datePart);
 
         if (parts.length >= 2) {
           const timePart = parts.slice(1).join(" ");
@@ -90,12 +115,15 @@ export function useDatePicker({
         }
       } else {
         setDateValue(value);
+        selectedDateValueRef.current = value;
+        syncCalendarToValue(value);
       }
     } else {
       setDateValue("");
       setTimeValue("");
+      selectedDateValueRef.current = "";
     }
-  }, [value, withTime]);
+  }, [value, withTime, syncCalendarToValue]);
 
   const dates = useMemo(() => {
     if (!(currentYear && currentMonth)) return [];
@@ -160,7 +188,9 @@ export function useDatePicker({
   const selectDate = useCallback(
     (d: Date, close = false) => {
       const v = getDateValue(d);
+      selectedDateValueRef.current = v;
       setDateValue(v);
+      syncCalendarToDate(d);
       if (withTime) {
         const { hours, minutes } = parseTimeValue(timeValue);
         const newDate = getDate(v);
@@ -171,7 +201,7 @@ export function useDatePicker({
       }
       if (close) setOpen(false);
     },
-    [onChange, withTime, timeValue]
+    [onChange, withTime, timeValue, syncCalendarToDate]
   );
 
   const selectToday = useCallback(() => {
@@ -196,7 +226,9 @@ export function useDatePicker({
   const selectNow = useCallback(() => {
     const now = getDate();
     const v = getDateValue(now);
+    selectedDateValueRef.current = v;
     setDateValue(v);
+    syncCalendarToDate(now);
     if (withTime) {
       const time = formatTime12h(now.getHours(), now.getMinutes());
       setTimeValue(time);
@@ -205,13 +237,15 @@ export function useDatePicker({
       onChange?.(v);
     }
     setOpen(false);
-  }, [onChange, withTime]);
+  }, [onChange, withTime, syncCalendarToDate]);
 
   const selectTomorrow = useCallback(() => {
     const tomorrow = getDate();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const v = getDateValue(tomorrow);
+    selectedDateValueRef.current = v;
     setDateValue(v);
+    syncCalendarToDate(tomorrow);
 
     if (withTime) {
       const time =
@@ -225,14 +259,16 @@ export function useDatePicker({
       tomorrow.setHours(0, 0, 0, 0);
       onChange?.(v);
     }
-  }, [onChange, withTime, timeValue]);
+  }, [onChange, withTime, timeValue, syncCalendarToDate]);
 
   const clearValue = useCallback(() => {
+    selectedDateValueRef.current = "";
     setDateValue("");
     setTimeValue("");
+    resetCalendarToToday();
     onChange?.("");
     setOpen(false);
-  }, [onChange]);
+  }, [onChange, resetCalendarToToday]);
 
   const displayValue = useMemo(() => {
     if (!dateValue) return "";
@@ -307,14 +343,12 @@ export function useDatePicker({
 
   const resetView = useCallback(() => {
     setView("date");
-    if (dateValue) {
-      const selectedDate = getDate(dateValue);
-      if (!isNaN(selectedDate.getTime())) {
-        setCurrentYear(selectedDate.getFullYear());
-        setCurrentMonth(selectedDate.getMonth() + 1);
-      }
+    if (selectedDateValueRef.current) {
+      syncCalendarToValue(selectedDateValueRef.current);
+      return;
     }
-  }, [dateValue]);
+    resetCalendarToToday();
+  }, [syncCalendarToValue, resetCalendarToToday]);
 
   return {
     open,
@@ -343,6 +377,9 @@ export function useDatePicker({
     prev,
     next,
     resetView,
+    resetCalendarToToday,
+    syncCalendarToDate,
+    syncCalendarToValue,
     months: MONTHS,
     timeValue,
     setTimeValue,
