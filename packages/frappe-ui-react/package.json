@@ -63,7 +63,7 @@
     "@tiptap/starter-kit": "^3.17.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "dayjs": "^1.11.19",
+    "dayjs": "^1.11.21",
     "dompurify": "^3.4.10",
     "echarts": "^6.0.0",
     "feather-icons": "^4.29.2",
