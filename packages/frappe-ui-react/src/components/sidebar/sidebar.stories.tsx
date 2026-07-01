@@ -169,12 +169,6 @@ export const SidebarExample: Story = {
   },
 };
 
-/**
- * A sidebar item can opt into a custom `render` prop (powered by base-ui's
- * `useRender`) to replace the default button element. The item's internal
- * props (`className` with active styling, `onClick`) and `state`
- * (`active` / `collapsed`) are merged into whatever element you render.
- */
 export const CustomItemRender: Story = {
   render: () => {
     return (
