@@ -3,18 +3,13 @@ import { LucideChevronDown } from "lucide-react";
 import { Collapsible } from "@base-ui/react/collapsible";
 
 import { cn } from "../../utils";
-import { Button } from "../button";
-import { Tooltip } from "../tooltip";
+import SidebarSectionItem, { type SidebarItem } from "./sidebarSectionItem";
+
+export type { SidebarItem, SidebarItemState } from "./sidebarSectionItem";
 
 export type SidebarSectionProps = {
   label: string;
-  items: {
-    label: string;
-    icon: React.ComponentType<{ className?: string }>;
-    to: string;
-    isActive: boolean;
-    onClick?: () => void;
-  }[];
+  items: SidebarItem[];
   collapsible?: boolean;
   sidebarCollapsed: boolean;
   activeItemClassName?: string;
@@ -33,39 +28,13 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
 
   if (!collapsible) {
     return items.map((item) => (
-      <Button
+      <SidebarSectionItem
         key={item.label}
-        onClick={item.onClick}
-        className={cn(
-          "w-full transition-all ease-in-out justify-start py-1 px-4 text-ink-gray-6",
-          {
-            "!bg-surface-selected shadow-sm": item.isActive,
-            "hover:bg-surface-gray-2": !item.isActive,
-            "px-2": sidebarCollapsed,
-          },
-          item.isActive && activeItemClassName
-        )}
-        variant="ghost"
-        iconLeft={() => (
-          <Tooltip
-            text={item.label}
-            placement="right"
-            disabled={!sidebarCollapsed}
-          >
-            <item.icon className="min-w-4 w-4 text-ink-gray-6" />
-          </Tooltip>
-        )}
-      >
-        {!sidebarCollapsed && (
-          <Tooltip text={item.label} placement="right" hoverDelay={1.5}>
-            <span
-              className={`flex-1 flex-shrink-0 truncate text-sm transition-all ease-in-out`}
-            >
-              {item.label}
-            </span>
-          </Tooltip>
-        )}
-      </Button>
+        item={item}
+        sidebarCollapsed={sidebarCollapsed}
+        activeItemClassName={activeItemClassName}
+        indentClassName="px-2"
+      />
     ));
   }
 
@@ -116,40 +85,14 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
           "space-y-0.5 flex flex-col align-start justify-between transition-all duration-150"
         )}
       >
-        {items.map((item: any) => (
-          <Button
+        {items.map((item) => (
+          <SidebarSectionItem
             key={item.label}
-            onClick={item.onClick}
-            className={cn(
-              "w-full transition-all ease-in-out justify-start py-1 pl-6 text-ink-gray-6",
-              {
-                "!bg-surface-selected shadow-sm": item.isActive,
-                "hover:bg-surface-gray-2": !item.isActive,
-                "px-2": sidebarCollapsed,
-              },
-              item.isActive && activeItemClassName
-            )}
-            variant="ghost"
-            iconLeft={() => (
-              <Tooltip
-                text={item.label}
-                placement="right"
-                disabled={!sidebarCollapsed}
-              >
-                <item.icon className="min-w-4 w-4 text-ink-gray-6" />
-              </Tooltip>
-            )}
-          >
-            {!sidebarCollapsed && (
-              <Tooltip text={item.label} placement="right" hoverDelay={1.5}>
-                <span
-                  className={`flex-1 flex-shrink-0 truncate text-sm transition-all ease-in-out`}
-                >
-                  {item.label}
-                </span>
-              </Tooltip>
-            )}
-          </Button>
+            item={item}
+            sidebarCollapsed={sidebarCollapsed}
+            activeItemClassName={activeItemClassName}
+            indentClassName="pl-6 pr-2"
+          />
         ))}
       </Collapsible.Panel>
     </Collapsible.Root>

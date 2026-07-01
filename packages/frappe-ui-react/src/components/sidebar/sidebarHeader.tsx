@@ -1,13 +1,14 @@
 import React from "react";
 import Dropdown from "../dropdown/dropdown";
 import FeatherIcon from "../featherIcon";
+import type { DropdownOptions } from "../dropdown";
 
 export type SidebarHeaderProps = {
   isCollapsed: boolean;
   title: string;
   subtitle?: string;
   logo?: React.ReactNode | string;
-  menuItems?: any[];
+  menuItems?: DropdownOptions;
   children?: React.ReactNode;
 };
 
