@@ -65,7 +65,7 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
     "dompurify": "^3.4.10",
-    "echarts": "^6.0.0",
+    "echarts": "^6.1.0",
     "feather-icons": "^4.29.2",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.539.0",
