@@ -61,6 +61,9 @@ export const Filter: React.FC<FilterProps> = ({
     (index: number) => {
       const newFilters = value.filter((_, i) => i !== index);
       onChange?.(newFilters);
+      if (newFilters.length === 0) {
+        setIsOpen(false);
+      }
     },
     [value, onChange]
   );
@@ -70,6 +73,7 @@ export const Filter: React.FC<FilterProps> = ({
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
       onChange?.([]);
+      setIsOpen(false);
     },
     [onChange]
   );
