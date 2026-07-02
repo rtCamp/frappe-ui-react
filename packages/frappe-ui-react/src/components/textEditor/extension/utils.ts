@@ -1,4 +1,5 @@
 import type { Editor } from "@tiptap/react";
+import type { Node } from "@tiptap/pm/model";
 
 export function lineStartsBetween(
   text: string,
@@ -35,3 +36,42 @@ export function getCodeBlockCtx(state: Editor["state"]) {
 }
 
 export const INDENT = " ".repeat(4);
+
+type FoundListItem = { pos: number; node: Node };
+
+export const findListItemById = (
+  editor: Editor,
+  id: string
+): FoundListItem | null => {
+  let found: FoundListItem | null = null;
+  editor.state.doc.descendants((node: Node, pos: number) => {
+    if (node.type.name === "listItem" && node.attrs.itemId === id) {
+      found = { pos, node };
+    }
+  });
+  return found;
+};
+
+export const findIdentifiedBulletListEnd = (editor: Editor) => {
+  let endPos: number | null = null;
+  editor.state.doc.descendants((node: Node, pos: number) => {
+    if (node.type.name !== "bulletList") return;
+    let hasIdentifiedItem = false;
+    node.forEach((child: Node) => {
+      if (child.attrs.itemId) hasIdentifiedItem = true;
+    });
+    if (hasIdentifiedItem) {
+      endPos = pos + node.nodeSize - 1;
+    }
+  });
+  return endPos;
+};
+
+export const isDocEmpty = (editor: Editor) => {
+  const { doc } = editor.state;
+  return (
+    doc.childCount === 1 &&
+    doc.firstChild?.type.name === "paragraph" &&
+    doc.firstChild.content.size === 0
+  );
+};
