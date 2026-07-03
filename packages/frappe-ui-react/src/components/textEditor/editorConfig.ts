@@ -16,6 +16,7 @@ import { TableKit } from "@tiptap/extension-table";
 import "./extension/codeBlock.css";
 import type { TextEditorProps } from "./types";
 import { ExtendedCodeBlock } from "./extension/codeBlock";
+import { IdentifiedListItem } from "./extension/identifiedListItem";
 
 export const DEFAULT_EDITOR_CLASS =
   "ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-outline-gray-2 prose-th:border-outline-gray-2 prose-td:relative prose-th:relative prose-th:bg-surface-gray-2 border-outline-gray-1";
@@ -37,6 +38,7 @@ export const getTextEditorExtensions = ({
 }: EditorExtensionOptions): Extensions => [
   StarterKit.configure({
     codeBlock: false,
+    listItem: false,
     horizontalRule: {
       HTMLAttributes: {
         class: "not-prose border-outline-gray-1 m-0",
@@ -59,5 +61,6 @@ export const getTextEditorExtensions = ({
   Highlight.configure({ multicolor: true }),
   TableKit,
   ExtendedCodeBlock,
+  IdentifiedListItem,
   ...extensions,
 ];
