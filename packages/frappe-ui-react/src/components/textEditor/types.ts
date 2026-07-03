@@ -44,3 +44,8 @@ export interface EditorCommand {
     }) => React.ReactNode;
   }>;
 }
+
+export interface TextEditorHandle {
+  addListItem: (id: string, text: string) => void;
+  removeListItem: (id: string) => void;
+}

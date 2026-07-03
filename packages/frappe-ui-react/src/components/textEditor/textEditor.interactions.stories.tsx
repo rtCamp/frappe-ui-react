@@ -1,6 +1,8 @@
+import { useRef } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { screen, userEvent, expect, within } from "storybook/test";
 import TextEditor from "./textEditor";
+import type { TextEditorHandle } from "./types";
 
 const meta: Meta<typeof TextEditor> = {
   title: "Components/TextEditor/Interactions",
@@ -253,5 +255,87 @@ export const EditorFontColor: Story = {
     expect(newText).toHaveStyle("color: rgb(204, 41, 41)");
     expect(newText.tagName).toBe("MARK");
     expect(newText).toHaveStyle("background-color: #ffe7e7");
+  },
+};
+
+export const EditorListItemHandle: Story = {
+  args: {
+    editorClass: "prose-sm min-h-[4rem] border rounded-b-lg border-t-0 p-2",
+  },
+  render: function ListItemHandleRender(args) {
+    const ref = useRef<TextEditorHandle>(null);
+    return (
+      <div className="m-2 w-[550px]">
+        <TextEditor {...args} ref={ref} />
+        <div className="mt-2 flex gap-2">
+          <button
+            type="button"
+            onClick={() => ref.current?.addListItem("item-1", "First item")}
+          >
+            Add Item 1
+          </button>
+          <button
+            type="button"
+            onClick={() => ref.current?.addListItem("item-2", "Second item")}
+          >
+            Add Item 2
+          </button>
+          <button
+            type="button"
+            onClick={() => ref.current?.removeListItem("item-1")}
+          >
+            Remove Item 1
+          </button>
+          <button
+            type="button"
+            onClick={() => ref.current?.removeListItem("item-2")}
+          >
+            Remove Item 2
+          </button>
+        </div>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Adding the first item on a blank editor should create a new list,
+    // replacing the placeholder paragraph instead of appending after it.
+    await userEvent.click(canvas.getByRole("button", { name: "Add Item 1" }));
+
+    let item1 = canvasElement.querySelector('li[data-item-id="item-1"]');
+    expect(item1).not.toBeNull();
+    expect(item1?.textContent).toBe("First item");
+    expect(canvasElement.querySelectorAll("ul").length).toBe(1);
+
+    // Adding a second item should append to the existing tagged list.
+    await userEvent.click(canvas.getByRole("button", { name: "Add Item 2" }));
+
+    expect(canvasElement.querySelectorAll("ul").length).toBe(1);
+    expect(canvasElement.querySelectorAll("li").length).toBe(2);
+
+    const item2 = canvasElement.querySelector('li[data-item-id="item-2"]');
+    expect(item2).not.toBeNull();
+    expect(item2?.textContent).toBe("Second item");
+
+    // Removing one of two items should only delete that item, leaving the
+    // wrapping list intact.
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Remove Item 1" })
+    );
+
+    item1 = canvasElement.querySelector('li[data-item-id="item-1"]');
+    expect(item1).toBeNull();
+    expect(canvasElement.querySelectorAll("li").length).toBe(1);
+    expect(canvasElement.querySelectorAll("ul").length).toBe(1);
+
+    // Removing the last remaining item should also remove the now-empty
+    // wrapping list, leaving no leftover empty list behind.
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Remove Item 2" })
+    );
+
+    expect(canvasElement.querySelectorAll("li").length).toBe(0);
+    expect(canvasElement.querySelectorAll("ul").length).toBe(0);
   },
 };
