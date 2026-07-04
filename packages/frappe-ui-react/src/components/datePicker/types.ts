@@ -88,8 +88,20 @@ export interface DateRangePickerProps {
     | "right"
     | "right-end";
   label?: string;
+  footer?: (props: DateRangeFooterProps) => React.ReactNode;
   onChange?: (value: string[]) => void;
   children?: (props: DatePickerChildrenProps) => React.ReactNode;
+}
+
+export interface DateRangeFooterProps {
+  from: string;
+  to: string;
+  // Apply a [from, to] selection (syncs the calendar and fires onChange).
+  setRange: (from: string, to: string) => void;
+  // Reset the current selection (keeps the popup open).
+  clear: () => void;
+  // Close the popup.
+  close: () => void;
 }
 
 export type DatePickerEmits = {

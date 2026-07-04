@@ -101,6 +101,13 @@ function useDateRangePicker({
     setOpen(false);
   }
 
+  function applyRange(from: string, to: string) {
+    syncCalendarToValue(from);
+    setFromDate(from);
+    setToDate(to);
+    onChange?.([from, to]);
+  }
+
   function isInRange(date: Date) {
     if (!fromDate || !toDate) return false;
     return date >= getDate(fromDate) && date <= getDate(toDate);
@@ -132,6 +139,7 @@ function useDateRangePicker({
     handleDateClick,
     clearDates,
     selectDates,
+    applyRange,
     isInRange,
   };
 }
@@ -144,6 +152,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   placement,
   sideOffset = 4,
   label,
+  footer,
   onChange,
   children,
 }) => {
@@ -169,6 +178,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
     handleToday,
     handleDateClick,
     clearDates,
+    applyRange,
     isInRange,
   } = useDateRangePicker({
     value: Array.isArray(value) ? value : undefined,
@@ -467,18 +477,31 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             </div>
 
             {/* Actions */}
-            {fromDate && toDate && (
-              <div className="flex justify-end p-2 gap-1 border-t border-gray-200">
-                <Button
-                  onClick={() => {
-                    clearDates();
-                    setOpen(false);
-                  }}
-                  variant="outline"
-                >
-                  Clear
-                </Button>
+            {footer ? (
+              <div className="border-t border-gray-200 p-2">
+                {footer({
+                  from: fromDate,
+                  to: toDate,
+                  setRange: applyRange,
+                  clear: clearDates,
+                  close: () => setOpen(false),
+                })}
               </div>
+            ) : (
+              fromDate &&
+              toDate && (
+                <div className="flex justify-end p-2 gap-1 border-t border-gray-200">
+                  <Button
+                    onClick={() => {
+                      clearDates();
+                      setOpen(false);
+                    }}
+                    variant="outline"
+                  >
+                    Clear
+                  </Button>
+                </div>
+              )
             )}
           </Popover.Popup>
         </Popover.Positioner>
