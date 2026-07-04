@@ -164,3 +164,63 @@ export const QuickActions: Story = {
     expect(resetToggleButton).toHaveTextContent(monthLabel);
   },
 };
+
+export const FooterSlot: Story = {
+  args: {
+    label: "Date range",
+    placeholder: "Select date range",
+    onChange: fn(),
+    footer: ({ setRange, clear, close }) => (
+      <div>
+        <button
+          type="button"
+          onClick={() => {
+            setRange("2024-01-01", "2024-01-07");
+            close();
+          }}
+        >
+          First Week
+        </button>
+        <button type="button" onClick={clear}>
+          Reset
+        </button>
+      </div>
+    ),
+  },
+  render: (args) => <ControlledDateRangePickerStory {...args} />,
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("textbox");
+
+    // Applying a preset from the footer fills the range and closes the popup.
+    await userEvent.click(input);
+    await userEvent.click(
+      await screen.findByRole("button", { name: "First Week" })
+    );
+
+    await waitFor(() => {
+      expect(input).toHaveValue("2024-01-01 to 2024-01-07");
+      expect(args.onChange).toHaveBeenLastCalledWith([
+        "2024-01-01",
+        "2024-01-07",
+      ]);
+    });
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("button", { name: "First Week" })
+      ).not.toBeInTheDocument();
+    });
+
+    // Clearing from the footer resets the value but keeps the popup open.
+    await userEvent.click(input);
+    await userEvent.click(await screen.findByRole("button", { name: "Reset" }));
+
+    await waitFor(() => {
+      expect(input).toHaveValue("");
+      expect(args.onChange).toHaveBeenLastCalledWith(["", ""]);
+    });
+
+    expect(screen.getByRole("button", { name: "Reset" })).toBeInTheDocument();
+  },
+};

@@ -143,3 +143,75 @@ export const DateRange: DateRangePickerStory = {
     },
   },
 };
+
+const DATE_RANGE_PRESETS: { label: string; range: [string, string] }[] = [
+  { label: "First Week", range: ["2024-01-01", "2024-01-07"] },
+  { label: "First Month", range: ["2024-01-01", "2024-01-31"] },
+];
+
+export const DateRangeWithFooter: DateRangePickerStory = {
+  args: {
+    ...commonArgs,
+    value: ["", ""],
+  },
+  render: (args) => {
+    const [dateRangeValue, setDateRangeValue] = useState<string[]>(["", ""]);
+    return (
+      <div className="w-[300px]">
+        <DateRangePicker
+          {...args}
+          value={dateRangeValue}
+          onChange={(val) =>
+            setDateRangeValue(Array.isArray(val) ? val : [val, ""])
+          }
+          footer={({ setRange, clear, close }) => (
+            <div className="flex flex-wrap items-center gap-1">
+              {DATE_RANGE_PRESETS.map((preset) => (
+                <button
+                  key={preset.label}
+                  type="button"
+                  className="rounded px-2 py-1 text-sm text-ink-gray-7 hover:bg-surface-gray-2"
+                  onClick={() => {
+                    setRange(preset.range[0], preset.range[1]);
+                    close();
+                  }}
+                >
+                  {preset.label}
+                </button>
+              ))}
+              <button
+                type="button"
+                className="rounded px-2 py-1 text-sm text-ink-gray-5 hover:bg-surface-gray-2"
+                onClick={clear}
+              >
+                Reset
+              </button>
+            </div>
+          )}
+        />
+      </div>
+    );
+  },
+  argTypes: {
+    value: {
+      control: false,
+      description:
+        "The selected date range value as [start, end] (controlled).",
+    },
+    onChange: {
+      action: "onChange",
+      description:
+        "Callback when date range changes. Receives a string or string[].",
+    },
+    footer: {
+      control: false,
+      description:
+        "Render-prop slot for the popup footer. Receives { from, to, setRange, clear, close } so callers can add presets or custom actions.",
+    },
+    label: { control: "text", description: "Label for the input field." },
+    placeholder: {
+      control: "text",
+      description: "Placeholder text for the input field.",
+    },
+  },
+};
