@@ -19,6 +19,7 @@ export const Filter: React.FC<FilterProps> = ({
   defaultOpen = false,
   align = "center",
   triggerClassName,
+  renderLinkValue,
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -154,6 +155,7 @@ export const Filter: React.FC<FilterProps> = ({
                     fields={fields}
                     onChange={(updated) => handleFilterChange(index, updated)}
                     onRemove={() => handleRemoveFilter(index)}
+                    renderLinkValue={renderLinkValue}
                     isFirst={index === 0}
                   />
                 ))}

@@ -38,6 +38,16 @@ export interface FilterOperatorOption {
   hideValue?: boolean;
 }
 
+/** Configuration for a Link-type filter field. */
+export interface FilterLinkConfig {
+  /** Target doctype to fetch documents from. */
+  doctype: string;
+  /** Field on the target doctype to use as the option label. */
+  labelField?: string;
+  /** Field on the target doctype whose value is stored as the filter value. */
+  valueField?: string;
+}
+
 /** Field definition for what can be filtered */
 export interface FilterField {
   /** The category of the field being filtered */
@@ -47,13 +57,34 @@ export interface FilterField {
   /** Display label */
   label: string;
   /** Field type determines available operators and value input */
-  type?: "string" | "number" | "date" | "daterange" | "select" | "multiselect";
+  type?:
+    | "string"
+    | "number"
+    | "date"
+    | "daterange"
+    | "select"
+    | "multiselect"
+    | "link";
   /** Available operators for this field (defaults based on type) */
   operators?: FilterOperatorOption[];
   /** Options for select/multiselect type fields */
   options?: FilterOptionType[];
+  /** Link configuration for fields with `type: "link"`. */
+  link?: FilterLinkConfig;
   /** Custom icon for the field */
   icon?: ReactNode;
+}
+
+/** Props supplied to `renderLinkValue` when a link-type field renders its value cell. */
+export interface FilterLinkValueRenderProps {
+  /** The field definition */
+  field: FilterField;
+  /** Current value (the linked document name). */
+  value: string | null;
+  /** Callback to update the value. */
+  onChange: (value: string | null) => void;
+  /** Whether the value input should be disabled. */
+  disabled?: boolean;
 }
 
 /** A single filter condition */
@@ -90,6 +121,8 @@ export interface FilterProps {
   align?: "start" | "center" | "end";
   /** Custom class for the trigger button */
   triggerClassName?: string;
+  /** Render-prop for the value cell of `type: "link"` fields. */
+  renderLinkValue?: (props: FilterLinkValueRenderProps) => ReactNode;
 }
 
 /** Props for FilterRow component (internal) */
@@ -102,6 +135,8 @@ export interface FilterRowProps {
   onChange: (filter: FilterCondition) => void;
   /** Callback when filter is removed */
   onRemove: () => void;
+  /** Render-prop for the value cell of `type: "link"` fields. */
+  renderLinkValue?: (props: FilterLinkValueRenderProps) => ReactNode;
   /** Whether this is the first row */
   isFirst?: boolean;
 }
