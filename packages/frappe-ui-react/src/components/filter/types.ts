@@ -90,6 +90,10 @@ export interface FilterProps {
   align?: "start" | "center" | "end";
   /** Custom class for the trigger button */
   triggerClassName?: string;
+  /** Count of filters managed outside this component */
+  externalFilterCount?: number;
+  /** Called when the user clicks "Clear all" */
+  onClearAll?: () => void;
 }
 
 /** Props for FilterRow component (internal) */
