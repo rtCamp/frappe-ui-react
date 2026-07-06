@@ -20,11 +20,17 @@ export const Filter: React.FC<FilterProps> = ({
   align = "center",
   triggerClassName,
   renderLinkValue,
+  externalFilterCount = 0,
+  onClearAll,
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   // Get the active filter count
-  const filterCount = value.length;
+  const safeExternalFilterCount =
+    Number.isFinite(externalFilterCount) && externalFilterCount > 0
+      ? externalFilterCount
+      : 0;
+  const filterCount = value.length + safeExternalFilterCount;
   const hasFilters = filterCount > 0;
 
   // Create a new empty filter
@@ -75,8 +81,9 @@ export const Filter: React.FC<FilterProps> = ({
       e.stopPropagation();
       onChange?.([]);
       setIsOpen(false);
+      onClearAll?.();
     },
-    [onChange]
+    [onChange, onClearAll]
   );
 
   // Handle popover open - add initial filter if empty

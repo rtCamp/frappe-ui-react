@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Filter } from "./index";
 import type { FilterCondition, FilterField } from "./types";
+import { TextInput } from "../textInput";
 
 const meta: Meta<typeof Filter> = {
   title: "Components/Filter",
@@ -39,6 +40,16 @@ const meta: Meta<typeof Filter> = {
     defaultOpen: {
       control: "boolean",
       description: "Whether the filter panel is open by default",
+    },
+    externalFilterCount: {
+      control: "number",
+      description:
+        "Count of filters managed outside this component (e.g. standalone quick filters) — folded into the active-filter count so 'Clear all' shows even when `value` is empty",
+    },
+    onClearAll: {
+      action: "cleared-all",
+      description:
+        "Called when the user clicks 'Clear all', in addition to onChange([]) — use to reset any externally-managed filters. Not called for row-by-row removal.",
     },
   },
 };
@@ -230,5 +241,42 @@ export const DefaultOpen: Story = {
   args: {
     fields: sampleFields,
     defaultOpen: true,
+  },
+};
+
+const WithExternalFilterState = (args: React.ComponentProps<typeof Filter>) => {
+  const [search, setSearch] = React.useState("");
+  const [filters, setFilters] = React.useState<FilterCondition[]>(
+    args.value || []
+  );
+
+  return (
+    <div className="flex items-center gap-2">
+      <TextInput
+        placeholder="Search"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+      <Filter
+        {...args}
+        value={filters}
+        onChange={(newFilters) => {
+          setFilters(newFilters);
+          args.onChange?.(newFilters);
+        }}
+        externalFilterCount={search ? 1 : 0}
+        onClearAll={() => {
+          setSearch("");
+          args.onClearAll?.();
+        }}
+      />
+    </div>
+  );
+};
+
+export const WithExternalFilters: Story = {
+  render: (args) => <WithExternalFilterState {...args} />,
+  args: {
+    fields: sampleFields,
   },
 };

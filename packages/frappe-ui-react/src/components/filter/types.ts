@@ -123,6 +123,10 @@ export interface FilterProps {
   triggerClassName?: string;
   /** Render-prop for the value cell of `type: "link"` fields. */
   renderLinkValue?: (props: FilterLinkValueRenderProps) => ReactNode;
+  /** Count of filters managed outside this component */
+  externalFilterCount?: number;
+  /** Called when the user clicks "Clear all" */
+  onClearAll?: () => void;
 }
 
 /** Props for FilterRow component (internal) */
