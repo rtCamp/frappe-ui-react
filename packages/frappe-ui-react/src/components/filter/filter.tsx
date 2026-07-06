@@ -125,7 +125,7 @@ export const Filter: React.FC<FilterProps> = ({
               >
                 Filter
                 {showCount && hasFilters && (
-                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-white rounded-sm shadow-sm">
+                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-surface-white rounded-sm shadow-sm">
                     {filterCount}
                   </span>
                 )}

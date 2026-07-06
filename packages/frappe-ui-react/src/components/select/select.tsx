@@ -75,7 +75,6 @@ const Select: React.FC<SelectProps> = ({
       <BaseSelect.Portal>
         <BaseSelect.Positioner className="z-60">
           <BaseSelect.Popup className="p-1 m-0 bg-surface-modal ring-1 ring-outline-gray-1 ring-opacity-5 rounded-lg shadow-2xl will-change-[opacity,transform] overflow-hidden origin-center data-[state=open]:animate-[fadeInScale_100ms] data-[state=closed]:animate-[fadeOutScale_100ms]">
-            <BaseSelect.ScrollUpArrow className="variants" />
             <BaseSelect.List className="max-h-60 overflow-auto">
               {options.map((option) => (
                 <BaseSelect.Item
@@ -93,7 +92,6 @@ const Select: React.FC<SelectProps> = ({
                 </BaseSelect.Item>
               ))}
             </BaseSelect.List>
-            <BaseSelect.ScrollDownArrow className="max-h-60 overflow-auto" />
           </BaseSelect.Popup>
         </BaseSelect.Positioner>
       </BaseSelect.Portal>
