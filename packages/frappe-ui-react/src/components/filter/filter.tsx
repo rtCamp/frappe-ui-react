@@ -25,7 +25,11 @@ export const Filter: React.FC<FilterProps> = ({
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   // Get the active filter count
-  const filterCount = value.length + externalFilterCount;
+  const safeExternalFilterCount =
+    Number.isFinite(externalFilterCount) && externalFilterCount > 0
+      ? externalFilterCount
+      : 0;
+  const filterCount = value.length + safeExternalFilterCount;
   const hasFilters = filterCount > 0;
 
   // Create a new empty filter
