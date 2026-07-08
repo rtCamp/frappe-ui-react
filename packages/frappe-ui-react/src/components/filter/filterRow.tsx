@@ -43,6 +43,8 @@ const DEFAULT_OPERATORS: Record<string, FilterOperatorOption[]> = {
   link: [
     { label: "Equals", value: "=" },
     { label: "Not Equals", value: "!=" },
+    { label: "Like", value: "like" },
+    { label: "Not Like", value: "not like" },
   ],
   default: [
     { label: "is", value: "is" },
