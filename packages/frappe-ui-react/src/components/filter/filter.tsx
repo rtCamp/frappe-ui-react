@@ -126,7 +126,7 @@ export const Filter: React.FC<FilterProps> = ({
               >
                 Filter
                 {showCount && hasFilters && (
-                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-white rounded-sm shadow-sm">
+                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-surface-white rounded-sm shadow-sm">
                     {filterCount}
                   </span>
                 )}
@@ -149,6 +149,7 @@ export const Filter: React.FC<FilterProps> = ({
         <Popover.Portal>
           <Popover.Positioner sideOffset={4} align={align}>
             <Popover.Popup
+              initialFocus={false}
               className={cn(
                 "rounded-lg border shadow-xl bg-surface-modal border-outline-gray-1",
                 "p-1 min-w-100 max-w-150 animate-fade-in z-100"

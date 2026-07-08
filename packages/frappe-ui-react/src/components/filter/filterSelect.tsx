@@ -109,6 +109,7 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
       value={value ?? ""}
       onChange={handleChange}
       disabled={disabled}
+      immediate
     >
       <div className={cn("relative", className)} style={style}>
         <div className="relative w-full">
