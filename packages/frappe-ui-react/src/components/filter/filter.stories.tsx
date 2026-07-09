@@ -2,7 +2,12 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Filter } from "./index";
-import type { FilterCondition, FilterField } from "./types";
+import { Combobox } from "../combobox";
+import type {
+  FilterCondition,
+  FilterField,
+  FilterLinkValueRenderProps,
+} from "./types";
 import { TextInput } from "../textInput";
 
 const meta: Meta<typeof Filter> = {
@@ -111,6 +116,12 @@ const sampleFields: FilterField[] = [
     label: "Assignee",
     type: "select",
     options: assigneeOptions,
+  },
+  {
+    name: "customer_link",
+    label: "Customer (Link)",
+    type: "link",
+    link: { doctype: "User", labelField: "full_name" },
   },
   {
     name: "title",
@@ -279,4 +290,52 @@ export const WithExternalFilters: Story = {
   args: {
     fields: sampleFields,
   },
+};
+
+export const LinkField: Story = {
+  render: (args) => <FilterWithState {...args} />,
+  args: {
+    fields: sampleFields,
+    renderLinkValue: (props) => <MockLinkValue {...props} />,
+  },
+};
+
+const mockLinkRecords: Record<string, Record<string, string>[]> = {
+  User: [
+    { name: "john", full_name: "John Doe" },
+    { name: "jane", full_name: "Jane Smith" },
+    { name: "bob", full_name: "Bob Wilson" },
+    { name: "alice", full_name: "Alice Johnson" },
+  ],
+};
+
+const MockLinkValue: React.FC<FilterLinkValueRenderProps> = ({
+  field,
+  value,
+  onChange,
+  disabled,
+}) => {
+  const link = field.link!;
+  const labelField = link.labelField ?? "name";
+  const valueField = link.valueField ?? "name";
+
+  const options = React.useMemo(() => {
+    const records = mockLinkRecords[link.doctype] ?? [];
+    return records.map((r) => ({
+      label: r[labelField] ?? r[valueField],
+      value: r[valueField],
+    }));
+  }, [link.doctype, labelField, valueField]);
+
+  return (
+    <Combobox
+      options={options}
+      value={value}
+      openOnFocus
+      disabled={disabled}
+      placeholder="Value"
+      onChange={(val) => onChange(val)}
+      className="w-auto"
+    />
+  );
 };

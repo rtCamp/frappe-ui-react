@@ -8,6 +8,7 @@ import type {
   FilterRowProps,
   FilterOperatorOption,
   FilterSelectOption,
+  FilterLinkValueRenderProps,
 } from "./types";
 
 const DEFAULT_OPERATORS: Record<string, FilterOperatorOption[]> = {
@@ -39,6 +40,13 @@ const DEFAULT_OPERATORS: Record<string, FilterOperatorOption[]> = {
     { label: "is not empty", value: "is_not_empty", hideValue: true },
   ],
   daterange: [{ label: "Between", value: "between" }],
+  link: [
+    { label: "Equals", value: "=" },
+    { label: "Not Equals", value: "!=" },
+    { label: "Like", value: "like" },
+    { label: "Not Like", value: "not like" },
+    { label: "is", value: "is" },
+  ],
   default: [
     { label: "is", value: "is" },
     { label: "is not", value: "is_not" },
@@ -50,6 +58,7 @@ export const FilterRow: React.FC<FilterRowProps> = ({
   fields,
   onChange,
   onRemove,
+  renderLinkValue,
   isFirst = false,
 }) => {
   // Get the selected field
@@ -207,6 +216,29 @@ export const FilterRow: React.FC<FilterRowProps> = ({
               )}
             </DateRangePicker>
           );
+        } else if (selectedField?.type === "link" && filter.operator === "is") {
+          const setOptions: FilterSelectOption[] = [
+            { label: "Set", value: "is_set" },
+            { label: "Not set", value: "is_not_set" },
+          ];
+          return (
+            <FilterSelect
+              value={typeof filter.value === "string" ? filter.value : null}
+              options={setOptions}
+              onChange={handleValueChange}
+              placeholder="Value"
+              minWidth={140}
+              disabled={!filter.operator}
+            />
+          );
+        } else if (selectedField?.type === "link" && renderLinkValue) {
+          const linkValueProps: FilterLinkValueRenderProps = {
+            field: selectedField,
+            value: typeof filter.value === "string" ? filter.value : null,
+            onChange: (v) => handleValueChange(v),
+            disabled: !filter.operator,
+          };
+          return renderLinkValue(linkValueProps);
         } else if (valueOptions.length > 0) {
           return (
             <FilterSelect
