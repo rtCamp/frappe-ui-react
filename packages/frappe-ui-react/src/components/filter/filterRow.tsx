@@ -45,6 +45,7 @@ const DEFAULT_OPERATORS: Record<string, FilterOperatorOption[]> = {
     { label: "Not Equals", value: "!=" },
     { label: "Like", value: "like" },
     { label: "Not Like", value: "not like" },
+    { label: "is", value: "is" },
   ],
   default: [
     { label: "is", value: "is" },
@@ -214,6 +215,21 @@ export const FilterRow: React.FC<FilterRowProps> = ({
                 />
               )}
             </DateRangePicker>
+          );
+        } else if (selectedField?.type === "link" && filter.operator === "is") {
+          const setOptions: FilterSelectOption[] = [
+            { label: "Set", value: "is_set" },
+            { label: "Not set", value: "is_not_set" },
+          ];
+          return (
+            <FilterSelect
+              value={typeof filter.value === "string" ? filter.value : null}
+              options={setOptions}
+              onChange={handleValueChange}
+              placeholder="Value"
+              minWidth={140}
+              disabled={!filter.operator}
+            />
           );
         } else if (selectedField?.type === "link" && renderLinkValue) {
           const linkValueProps: FilterLinkValueRenderProps = {
