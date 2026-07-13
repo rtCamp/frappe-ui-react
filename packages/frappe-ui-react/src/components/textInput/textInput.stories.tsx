@@ -85,7 +85,7 @@ export default {
 } as Meta<typeof TextInput>;
 
 const Template: StoryObj<TextInputProps> = {
-  render: (args) => {
+  render: (args: TextInputProps) => {
     const [value, setValue] = useState(args.value || "");
 
     return (
