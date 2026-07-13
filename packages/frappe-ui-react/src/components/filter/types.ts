@@ -46,6 +46,15 @@ export interface FilterLinkConfig {
   labelField?: string;
   /** Field on the target doctype whose value is stored as the filter value. */
   valueField?: string;
+  /** Server-side filters applied to the lookup request. */
+  filters?: Array<Array<unknown>>;
+  /** Custom API method configuration for the lookup. */
+  customMethod?: {
+    /** Whitelisted API method. */
+    method: string;
+    /** Arguments passed to the custom method. */
+    args?: Record<string, unknown>;
+  };
 }
 
 /** Field definition for what can be filtered */
