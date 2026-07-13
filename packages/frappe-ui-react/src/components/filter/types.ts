@@ -53,7 +53,7 @@ export interface FilterLinkConfig {
     /** Whitelisted API method. */
     method: string;
     /** Arguments passed to the custom method. */
-    args?: unknown;
+    args?: Record<string, unknown>;
   };
 }
 
