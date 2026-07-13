@@ -52,8 +52,8 @@ export interface FilterLinkConfig {
   customMethod?: {
     /** Whitelisted API method. */
     method: string;
-    /** Role names to restrict lookup results to. */
-    roles?: string[];
+    /** Arguments passed to the custom method. */
+    args?: unknown;
   };
 }
 
