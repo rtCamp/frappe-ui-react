@@ -45,6 +45,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
   onChange,
   className,
   inputClassName,
+  popupClassName,
 }) => {
   const [open, setOpen] = useState(false);
   const [internalQuery, setInternalQuery] = useState("");
@@ -221,7 +222,8 @@ export const Combobox: React.FC<ComboboxProps> = ({
             >
               <BaseCombobox.Popup
                 className={cn(
-                  "min-w-[160px] w-(--anchor-width) rounded-lg border border-surface-gray-2 bg-surface-modal px-1.5 py-1.5 shadow-xl animate-fade-in"
+                  "min-w-[160px] w-(--anchor-width) rounded-lg border border-surface-gray-2 bg-surface-modal px-1.5 py-1.5 shadow-xl animate-fade-in",
+                  popupClassName
                 )}
                 aria-label="Options"
               >
@@ -265,7 +267,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
                                   </span>
                                 </div>
                               ) : (
-                                <span className="flex-1">
+                                <span className="flex-1 w-full truncate">
                                   {getLabel(option)}
                                 </span>
                               )}
@@ -305,7 +307,9 @@ export const Combobox: React.FC<ComboboxProps> = ({
                                 </span>
                               </div>
                             ) : (
-                              <span className="flex-1">{getLabel(opt)}</span>
+                              <span className="flex-1 w-full truncate">
+                                {getLabel(opt)}
+                              </span>
                             )}
                             <BaseCombobox.ItemIndicator className="absolute right-2 inline-flex items-center justify-center text-ink-gray-5">
                               <Check className="size-4" />

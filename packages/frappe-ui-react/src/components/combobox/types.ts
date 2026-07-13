@@ -27,4 +27,5 @@ export interface ComboboxProps {
   ) => void;
   className?: string;
   inputClassName?: string;
+  popupClassName?: string;
 }
