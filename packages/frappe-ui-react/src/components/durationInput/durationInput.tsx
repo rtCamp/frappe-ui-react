@@ -362,7 +362,7 @@ const DurationInput = ({
         <input
           type="text"
           id={sliderId}
-          inputMode="numeric"
+          inputMode="decimal"
           className={cn(
             durationInputVariants({ size, disabled, error }),
             classNames.input
@@ -370,9 +370,10 @@ const DurationInput = ({
           placeholder="00:00"
           value={inputVal}
           disabled={disabled}
-          onFocus={() => {
+          onFocus={(e) => {
             setDraftValue(floatToTime(value));
             setDragValue(null);
+            e.currentTarget.select();
           }}
           onChange={(e) => {
             setDraftValue(sanitizeHoursInput(e.target.value));
