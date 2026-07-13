@@ -151,13 +151,13 @@ export const normalizeCommittedHours = (
 };
 
 /**
- * Filters text input down to characters valid for `HH:MM`.
+ * Filters text input down to characters valid for decimal hours or `HH:MM`.
  *
  * @param value - Raw input value.
  * @returns Sanitized input string.
  */
 export const sanitizeHoursInput = (value: string): string => {
-  return value.replace(/[^0-9:]/g, "");
+  return value.replace(/[^0-9:.]/g, "");
 };
 
 /**

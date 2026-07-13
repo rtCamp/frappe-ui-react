@@ -106,7 +106,6 @@ export const Input: Story = {
     const input = canvas.getByRole("textbox");
 
     await userEvent.click(input);
-    await userEvent.clear(input);
     await userEvent.type(input, "1");
     await userEvent.tab();
 
@@ -116,7 +115,6 @@ export const Input: Story = {
     });
 
     await userEvent.click(input);
-    await userEvent.clear(input);
     await userEvent.type(input, "7");
     await userEvent.keyboard("{Escape}");
 
@@ -125,6 +123,20 @@ export const Input: Story = {
     });
 
     expect(args.onChange).toHaveBeenCalledTimes(1);
+
+    await userEvent.click(input);
+    await userEvent.type(input, "1.5");
+
+    await waitFor(() => {
+      expect(input).toHaveValue("1.5");
+    });
+
+    await userEvent.tab();
+
+    await waitFor(() => {
+      expect(args.onChange).toHaveBeenCalledWith(1.5);
+      expect(input).toHaveValue("01:30");
+    });
   },
 };
 
