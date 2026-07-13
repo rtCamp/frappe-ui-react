@@ -27,7 +27,7 @@ export function floatToTime(
 
 /**
  * Converts a duration string to decimal hours.
- * Accepts either decimal input or `HH:MM`.
+ * Accepts decimal hours or `HH:MM`-style duration input.
  *
  * @param value - Duration string to parse.
  * @returns Duration in hours.
@@ -35,25 +35,20 @@ export function floatToTime(
 export const timeToFloat = (value: string): number => {
   const trimmedValue = value.trim();
 
-  if (/^\d+(\.\d+)?$/.test(trimmedValue)) {
+  if (/^(\d+(\.\d*)?|\.\d+)$/.test(trimmedValue)) {
     return Number(trimmedValue);
   }
 
-  const hhmmMatch = /^([0-9]{1,2}):([0-9]{2})$/.exec(trimmedValue);
+  const hhmmMatch = /^([0-9]*):([0-9]*)$/.exec(trimmedValue);
 
-  if (!hhmmMatch) {
+  if (!hhmmMatch || (!hhmmMatch[1] && !hhmmMatch[2])) {
     return 0;
   }
 
-  const hours = Number(hhmmMatch[1]);
-  const minutes = Number(hhmmMatch[2]);
+  const hours = Number(hhmmMatch[1] || 0);
+  const minutes = Number(hhmmMatch[2] || 0);
 
-  if (
-    Number.isNaN(hours) ||
-    Number.isNaN(minutes) ||
-    minutes < 0 ||
-    minutes > 59
-  ) {
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) {
     return 0;
   }
 
@@ -151,13 +146,30 @@ export const normalizeCommittedHours = (
 };
 
 /**
- * Filters text input down to characters valid for `HH:MM`.
+ * Filters text input down to characters valid for decimal hours or `HH:MM`.
  *
  * @param value - Raw input value.
  * @returns Sanitized input string.
  */
 export const sanitizeHoursInput = (value: string): string => {
-  return value.replace(/[^0-9:]/g, "");
+  const sanitizedValue = value.replace(/[^0-9:.]/g, "");
+
+  // If the input contains a colon, treat it as `HH:MM` and remove any periods.
+  if (sanitizedValue.includes(":")) {
+    const [hours = "", ...minuteParts] = sanitizedValue
+      .replace(/\./g, "")
+      .split(":");
+
+    return `${hours}:${minuteParts.join("")}`;
+  }
+
+  const [hours = "", ...decimalParts] = sanitizedValue.split(".");
+
+  if (decimalParts.length === 0) {
+    return hours;
+  }
+
+  return `${hours}.${decimalParts.join("")}`;
 };
 
 /**

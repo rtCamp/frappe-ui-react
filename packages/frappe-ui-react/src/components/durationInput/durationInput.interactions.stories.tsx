@@ -104,16 +104,28 @@ export const Input: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByRole("textbox");
+    const enterDuration = async (
+      duration: string,
+      expectedChange: number,
+      expectedValue: string
+    ) => {
+      await userEvent.click(input);
+      await userEvent.clear(input);
+      await userEvent.type(input, duration);
 
-    await userEvent.click(input);
-    await userEvent.clear(input);
-    await userEvent.type(input, "1");
-    await userEvent.tab();
+      await waitFor(() => {
+        expect(input).toHaveValue(duration);
+      });
 
-    await waitFor(() => {
-      expect(args.onChange).toHaveBeenCalledWith(1);
-      expect(input).toHaveValue("01:00");
-    });
+      await userEvent.tab();
+
+      await waitFor(() => {
+        expect(args.onChange).toHaveBeenCalledWith(expectedChange);
+        expect(input).toHaveValue(expectedValue);
+      });
+    };
+
+    await enterDuration("1", 1, "01:00");
 
     await userEvent.click(input);
     await userEvent.clear(input);
@@ -125,6 +137,13 @@ export const Input: Story = {
     });
 
     expect(args.onChange).toHaveBeenCalledTimes(1);
+
+    await enterDuration("1.5", 1.5, "01:30");
+    await enterDuration("5:3", 5.05, "05:03");
+    await enterDuration(".5", 0.5, "00:30");
+    await enterDuration(":30", 0.5, "00:30");
+    await enterDuration("5:", 5, "05:00");
+    await enterDuration("1:75", 2.25, "02:15");
   },
 };
 
