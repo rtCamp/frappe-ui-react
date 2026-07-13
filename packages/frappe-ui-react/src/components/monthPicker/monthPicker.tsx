@@ -80,6 +80,7 @@ const MonthPicker = ({
 
       if (viewMode === "month") {
         month = String(v);
+        year = currentYear;
       } else {
         year = Number(v);
         setCurrentYear(year);
