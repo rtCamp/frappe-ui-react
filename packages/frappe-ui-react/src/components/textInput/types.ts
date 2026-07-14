@@ -1,8 +1,13 @@
 import type { KeyboardEventHandler, ReactNode } from "react";
 import type { TextInputTypes } from "../../common/types";
 
-export interface TextInputProps {
-  type?: TextInputTypes;
+// Only these input types honor min/max/step per the HTML spec.
+type SteppableInputTypes = Extract<
+  TextInputTypes,
+  "number" | "range" | "date" | "month" | "week" | "time" | "datetime-local"
+>;
+
+export interface TextInputBaseProps {
   size?: "sm" | "md" | "lg" | "xl";
   variant?: "subtle" | "outline" | "ghost";
   placeholder?: string;
@@ -22,3 +27,14 @@ export interface TextInputProps {
   inputClassName?: string;
   style?: Record<string, string | number | boolean>;
 }
+
+type TextInputTypeProps =
+  | {
+      type: SteppableInputTypes;
+      min?: string | number;
+      max?: string | number;
+      step?: string | number;
+    }
+  | { type?: Exclude<TextInputTypes, SteppableInputTypes> };
+
+export type TextInputProps = TextInputBaseProps & TextInputTypeProps;
