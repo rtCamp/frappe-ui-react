@@ -90,8 +90,10 @@ export interface FilterLinkValueRenderProps {
   field: FilterField;
   /** Current value (the linked document name). */
   value: string | null;
+  /** Display label for the current value. */
+  displayLabel?: string;
   /** Callback to update the value. */
-  onChange: (value: string | null) => void;
+  onChange: (value: string | null, displayLabel?: string | null) => void;
   /** Whether the value input should be disabled. */
   disabled?: boolean;
 }
@@ -108,6 +110,8 @@ export interface FilterCondition {
   operator: string;
   /** The value(s) to filter by */
   value?: string | string[] | number | null;
+  /** Human-friendly label for link values. */
+  displayLabel?: string;
 }
 
 /** Props for Filter component */
