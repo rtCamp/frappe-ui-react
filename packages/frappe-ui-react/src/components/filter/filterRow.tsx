@@ -124,6 +124,7 @@ export const FilterRow: React.FC<FilterRowProps> = ({
       field: value,
       operator: firstOperator,
       value: null,
+      displayLabel: undefined,
       fieldCategory: newField?.fieldCategory,
     });
   };
@@ -137,13 +138,18 @@ export const FilterRow: React.FC<FilterRowProps> = ({
       operator: value,
       // Clear value if new operator hides it
       value: newOperator?.hideValue ? null : filter.value,
+      displayLabel: newOperator?.hideValue ? undefined : filter.displayLabel,
     });
   };
 
-  const handleValueChange = (value: string | string[] | null) => {
+  const handleValueChange = (
+    value: string | string[] | null,
+    displayLabel?: string | null
+  ) => {
     onChange({
       ...filter,
       value,
+      displayLabel: displayLabel ?? undefined,
     });
   };
 
@@ -235,7 +241,8 @@ export const FilterRow: React.FC<FilterRowProps> = ({
           const linkValueProps: FilterLinkValueRenderProps = {
             field: selectedField,
             value: typeof filter.value === "string" ? filter.value : null,
-            onChange: (v) => handleValueChange(v),
+            displayLabel: filter.displayLabel,
+            onChange: handleValueChange,
             disabled: !filter.operator,
           };
           return renderLinkValue(linkValueProps);
