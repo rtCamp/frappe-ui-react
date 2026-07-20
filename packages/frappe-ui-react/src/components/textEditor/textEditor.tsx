@@ -60,6 +60,8 @@ const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
           attributes: {
             class: cn(DEFAULT_EDITOR_CLASS, editorClass),
           },
+          clipboardTextSerializer: (slice) =>
+            slice.content.textBetween(0, slice.content.size, "\n"),
         },
         extensions: editorExtensions,
         onUpdate: ({ editor }) => {
