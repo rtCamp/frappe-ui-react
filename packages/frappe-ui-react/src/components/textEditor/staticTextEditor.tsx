@@ -1,10 +1,11 @@
 /**
  * External dependencies.
  */
-import { generateJSON } from "@tiptap/react";
+import { generateJSON, getSchema } from "@tiptap/react";
+import { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import { renderToReactElement } from "@tiptap/static-renderer/pm/react";
 import DOMPurify from "dompurify";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 /**
  * Internal dependencies.
@@ -33,6 +34,34 @@ const StaticTextEditor = ({
     [extensions, starterkitOptions, placeholder]
   );
 
+  /**
+   * Handle copy event to copy both plain text and HTML content.
+   *
+   * Remove extra line breaks and spaces from the plain text copied content.
+   */
+  const handleCopy = useCallback(
+    (event: React.ClipboardEvent<HTMLDivElement>) => {
+      const selection = window.getSelection();
+      if (!selection || selection.isCollapsed) return;
+
+      const container = document.createElement("div");
+      container.appendChild(selection.getRangeAt(0).cloneContents());
+      const html = container.innerHTML;
+      const doc = ProseMirrorNode.fromJSON(
+        getSchema(editorExtensions),
+        generateJSON(html, editorExtensions)
+      );
+
+      event.clipboardData.setData(
+        "text/plain",
+        doc.textBetween(0, doc.content.size, "\n")
+      );
+      event.clipboardData.setData("text/html", html);
+      event.preventDefault();
+    },
+    [editorExtensions]
+  );
+
   const staticContent = useMemo(
     () =>
       renderToReactElement({
@@ -51,7 +80,9 @@ const StaticTextEditor = ({
   );
 
   return (
-    <div className={cn(DEFAULT_EDITOR_CLASS, editorClass)}>{staticContent}</div>
+    <div className={cn(DEFAULT_EDITOR_CLASS, editorClass)} onCopy={handleCopy}>
+      {staticContent}
+    </div>
   );
 };
 
