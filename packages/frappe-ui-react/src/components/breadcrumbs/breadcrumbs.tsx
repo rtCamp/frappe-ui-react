@@ -19,18 +19,11 @@ const dropdownStateAttributesMapping = {
   item: () => null,
 };
 
-const BreadcrumbDropdown = ({
-  item,
-  render,
-  children,
-}: {
-  item: BreadcrumbItem;
-  render?: BreadcrumbsProps["renderDropdown"];
-  children: React.ReactNode;
-}) => {
+const BreadcrumbDropdown = ({ item, children }: { item: BreadcrumbItem; children: React.ReactNode }) => {
   const state: BreadcrumbDropdownState = useMemo(() => ({ item }), [item]);
+  const { renderDropdown, ...dropdownProps } = item.dropdown ?? { options: [] };
   return useRender({
-    render: render ?? <Dropdown {...(item.dropdown ?? { options: [] })} />,
+    render: renderDropdown ?? <Dropdown {...dropdownProps} />,
     state,
     stateAttributesMapping: dropdownStateAttributesMapping,
     props: { children },
@@ -48,7 +41,6 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   separatorClassName,
   renderPrefix,
   renderSuffix,
-  renderDropdown,
 }) => {
   const { width } = useWindowSize();
 
@@ -141,13 +133,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
 
           return (
             <React.Fragment key={item.id || item.label}>
-              {item.dropdown ? (
-                <BreadcrumbDropdown item={item} render={renderDropdown}>
-                  {crumbContent}
-                </BreadcrumbDropdown>
-              ) : (
-                crumbContent
-              )}
+              {item.dropdown ? <BreadcrumbDropdown item={item}>{crumbContent}</BreadcrumbDropdown> : crumbContent}
               {!isLast && (
                 <span
                   className={cn(
