@@ -4,6 +4,7 @@ import { action } from "storybook/actions";
 import { useState } from "react";
 import Dropdown from "./dropdown";
 import { Button } from "../button";
+import { Calendar, Delete, DotHorizontal, Duplicate, Edit, Kanban, List } from "../../icons";
 import type { DropdownOptions } from "./types";
 
 export default {
@@ -12,17 +13,19 @@ export default {
   argTypes: {
     options: {
       control: "object",
-      description:
-        "An array of dropdown options, which can be individual items or groups.",
+      description: "An array of dropdown options, which can be individual items or groups.",
     },
     placement: {
       control: { type: "select", options: ["left", "right", "center"] },
       description: "Placement of the dropdown content relative to the trigger.",
     },
+    side: {
+      control: { type: "select", options: ["top", "bottom", "left", "right"] },
+      description: "Which side of the trigger the dropdown opens on.",
+    },
     button: {
       control: "object",
-      description:
-        "Props for the default button trigger if no children are provided.",
+      description: "Props for the default button trigger if no children are provided.",
     },
     children: {
       control: "text",
@@ -38,18 +41,20 @@ export default {
     },
     renderItems: {
       control: false,
+      description: "Function to render custom dropdown items, receives options as argument.",
+    },
+    renderMenuItem: {
+      control: false,
       description:
-        "Function to render custom dropdown items, receives options as argument.",
+        "Overrides the rendering of plain menu items. Receives the default item props (className, children with icon + label) and `{ item }` as state.",
     },
     selectedKey: {
       control: "text",
-      description:
-        "Key of the currently selected dropdown item, used for highlighting.",
+      description: "Key of the currently selected dropdown item, used for highlighting.",
     },
     selectedGroupKey: {
       control: "text",
-      description:
-        "Key of the currently selected dropdown group, used for highlighting.",
+      description: "Key of the currently selected dropdown group, used for highlighting.",
     },
   },
   parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
@@ -334,5 +339,94 @@ export const WithNestedSubmenus: StoryObj<typeof Dropdown> = {
   args: {
     options: groupedActions,
     button: { label: "Nested Submenus" },
+  },
+};
+
+export const OpensToTheRight: StoryObj<typeof Dropdown> = {
+  ...DropdownTemplate,
+  args: {
+    options: actions,
+    side: "right",
+    button: { label: "Opens Right" },
+  },
+};
+
+const views: DropdownOptions = [
+  {
+    label: "List",
+    key: "list",
+    icon: <List className="mr-2 h-4 w-4" />,
+    onClick: () => action("List clicked")(),
+  },
+  {
+    label: "Kanban",
+    key: "kanban",
+    icon: <Kanban className="mr-2 h-4 w-4" />,
+    onClick: () => action("Kanban clicked")(),
+  },
+  {
+    label: "Calendar",
+    key: "calendar",
+    icon: <Calendar className="mr-2 h-4 w-4" />,
+    onClick: () => action("Calendar clicked")(),
+  },
+];
+
+const viewActions: DropdownOptions = [
+  {
+    group: "",
+    key: "view-actions",
+    items: [
+      {
+        label: "Duplicate",
+        icon: <Duplicate className="mr-2 h-4 w-4" />,
+        onClick: () => action("Duplicate clicked")(),
+      },
+      {
+        label: "Edit",
+        icon: <Edit className="mr-2 h-4 w-4" />,
+        onClick: () => action("Edit clicked")(),
+      },
+    ],
+  },
+  {
+    group: "",
+    key: "view-danger-actions",
+    items: [
+      {
+        label: "Delete",
+        icon: <Delete className="mr-2 h-4 w-4" />,
+        theme: "red",
+        onClick: () => action("Delete clicked")(),
+      },
+    ],
+  },
+];
+
+export const WithRenderMenuItem: StoryObj<typeof Dropdown> = {
+  ...DropdownTemplate,
+  args: {
+    options: views,
+    selectedKey: "list",
+    button: { label: "Views" },
+    renderMenuItem: (props, state) =>
+      state.item.key === "list" ? (
+        <button {...props} />
+      ) : (
+        <div {...props}>
+          {props.children}
+          <div className="ml-auto" onClick={(event) => event.stopPropagation()}>
+            <Dropdown options={viewActions} side="right">
+              <button
+                type="button"
+                aria-label={`Actions for ${state.item.label}`}
+                className="flex rounded p-0.5 text-ink-gray-6 hover:bg-surface-gray-4"
+              >
+                <DotHorizontal className="h-4 w-4" />
+              </button>
+            </Dropdown>
+          </div>
+        </div>
+      ),
   },
 };
