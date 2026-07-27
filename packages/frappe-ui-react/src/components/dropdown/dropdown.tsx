@@ -26,7 +26,7 @@ const cssClasses = {
     "min-w-40 divide-y divide-outline-gray-modals rounded-lg bg-surface-modal shadow-2xl ring-black focus:outline-none dropdown-content border border-outline-gray-1",
   groupContainer: "p-1.5",
   groupLabel: "flex h-7 items-center px-2 text-sm font-medium text-ink-gray-7",
-  itemLabel: "whitespace-nowrap",
+  itemLabel: "truncate",
   itemIcon: "mr-2 h-4 w-4 flex-shrink-0",
   chevronIcon: "ml-auto h-4 w-4 flex-shrink-0",
   itemButton: "group flex h-7 w-full items-center rounded px-2 text-base focus:outline-none",

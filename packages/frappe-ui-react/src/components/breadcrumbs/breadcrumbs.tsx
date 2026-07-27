@@ -109,6 +109,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               onClick={handleClick}
               disabled={item?.interactive === false}
               className={cn(
+                "min-w-0",
                 crumbVariants({
                   size,
                   highlightItem: (isLast && highlightLastItem) || highlightAllItems,
@@ -122,7 +123,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               ) : item?.prefixIcon ? (
                 <span className="mr-1">{item.prefixIcon}</span>
               ) : null}
-              <span>{item.label}</span>
+              <span className="truncate">{item.label}</span>
               {renderSuffix ? (
                 renderSuffix(item)
               ) : item?.suffixIcon ? (
