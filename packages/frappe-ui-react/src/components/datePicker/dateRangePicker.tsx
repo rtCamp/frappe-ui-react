@@ -122,6 +122,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
       <Popover.Trigger
         disabled={disabled}
         nativeButton={false}
+        className="focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
         render={
           children ? (
             <span>
