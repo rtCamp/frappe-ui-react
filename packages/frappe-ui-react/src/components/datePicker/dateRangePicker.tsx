@@ -16,9 +16,15 @@ function useDateRangePicker({
   value?: string[];
   onChange?: (v: string[]) => void;
 }) {
-  // Internal selection state
-  const [fromDate, setFromDate] = useState<string>(value?.[0] || "");
-  const [toDate, setToDate] = useState<string>(value?.[1] || "");
+  // Selection state, used only when the range is not driven by `value`.
+  const [internalFrom, setInternalFrom] = useState<string>(value?.[0] || "");
+  const [internalTo, setInternalTo] = useState<string>(value?.[1] || "");
+  // Whether the next date click extends the current range instead of starting a new one.
+  const [isExtendingRange, setIsExtendingRange] = useState(false);
+
+  const isControlled = Array.isArray(value);
+  const fromDate = isControlled ? (value?.[0] ?? "") : internalFrom;
+  const toDate = isControlled ? (value?.[1] ?? "") : internalTo;
 
   const {
     open,
@@ -45,37 +51,30 @@ function useDateRangePicker({
     onChange: () => {},
   });
 
+  function commitRange(from: string, to: string) {
+    setInternalFrom(from);
+    setInternalTo(to);
+    onChange?.([from, to]);
+  }
+
   function handleDateClick(date: Date): boolean {
     // Zero out time for date
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
     const v = getDateValue(d);
     syncCalendarToValue(v);
-    if (fromDate && toDate) {
-      setFromDate(v);
-      setToDate("");
-    } else if (fromDate && !toDate) {
-      setToDate(v);
-      swapDatesIfNecessary(fromDate, v);
-      onChange?.([fromDate, v]);
-      return true;
-    } else {
-      setFromDate(v);
-    }
-    return false;
-  }
 
-  function swapDatesIfNecessary(a: string, b: string) {
-    if (!a || !b) return;
-    const from = getDate(a);
-    from.setHours(0, 0, 0, 0);
-    const to = getDate(b);
-    to.setHours(0, 0, 0, 0);
-
-    if (from > to) {
-      setFromDate(getDateValue(to));
-      setToDate(getDateValue(from));
+    // Commit the start as a single-day range so the value never lags behind the calendar.
+    if (!isExtendingRange || !fromDate) {
+      setIsExtendingRange(true);
+      commitRange(v, v);
+      return false;
     }
+
+    const isReversed = fromDate > v;
+    setIsExtendingRange(false);
+    commitRange(isReversed ? v : fromDate, isReversed ? fromDate : v);
+    return true;
   }
 
   function handleToday() {
@@ -83,17 +82,15 @@ function useDateRangePicker({
     d.setHours(0, 0, 0, 0);
     const todayStr = getDateValue(d);
     syncCalendarToValue(todayStr);
-    setFromDate(todayStr);
-    setToDate(todayStr);
-    onChange?.([todayStr, todayStr]);
+    setIsExtendingRange(false);
+    commitRange(todayStr, todayStr);
   }
 
   function clearDates() {
     syncCalendarToValue("");
     resetCalendarToToday();
-    setFromDate("");
-    setToDate("");
-    onChange?.(["", ""]);
+    setIsExtendingRange(false);
+    commitRange("", "");
   }
 
   function selectDates() {
@@ -103,9 +100,8 @@ function useDateRangePicker({
 
   function applyRange(from: string, to: string) {
     syncCalendarToValue(from);
-    setFromDate(from);
-    setToDate(to);
-    onChange?.([from, to]);
+    setIsExtendingRange(false);
+    commitRange(from, to);
   }
 
   function isInRange(date: Date) {
@@ -117,9 +113,7 @@ function useDateRangePicker({
     open,
     setOpen,
     fromDate,
-    setFromDate,
     toDate,
-    setToDate,
     formattedMonth,
     datesAsWeeks,
     currentMonth,
