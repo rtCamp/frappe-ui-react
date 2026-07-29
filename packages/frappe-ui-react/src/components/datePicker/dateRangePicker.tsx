@@ -1,142 +1,19 @@
-import { useState } from "react";
+/**
+ * External dependencies.
+ */
+import { useCallback } from "react";
 import { Popover } from "@base-ui/react/popover";
 
+/**
+ * Internal dependencies.
+ */
 import type { DateRangePickerProps } from "./types";
-import { useDatePicker } from "./useDatePicker";
+import { useDateRangePicker } from "./useDateRangePicker";
 import { getDate, getDateValue, parsePlacement } from "./utils";
 import { Button } from "../button";
 import { TextInput } from "../textInput";
 import FeatherIcon from "../featherIcon";
 import { cn } from "../../utils";
-
-function useDateRangePicker({
-  value,
-  onChange,
-}: {
-  value?: string[];
-  onChange?: (v: string[]) => void;
-}) {
-  // Selection state, used only when the range is not driven by `value`.
-  const [internalFrom, setInternalFrom] = useState<string>(value?.[0] || "");
-  const [internalTo, setInternalTo] = useState<string>(value?.[1] || "");
-  // Whether the next date click extends the current range instead of starting a new one.
-  const [isExtendingRange, setIsExtendingRange] = useState(false);
-
-  const isControlled = Array.isArray(value);
-  const fromDate = isControlled ? (value?.[0] ?? "") : internalFrom;
-  const toDate = isControlled ? (value?.[1] ?? "") : internalTo;
-
-  const {
-    open,
-    setOpen,
-    formattedMonth,
-    datesAsWeeks,
-    currentMonth,
-    currentYear,
-    view,
-    cycleView,
-    selectMonth,
-    selectYear,
-    yearRangeStart,
-    yearRange,
-    prev,
-    next,
-    resetView,
-    months,
-    today,
-    syncCalendarToValue,
-    resetCalendarToToday,
-  } = useDatePicker({
-    value: fromDate,
-    onChange: () => {},
-  });
-
-  function commitRange(from: string, to: string) {
-    setInternalFrom(from);
-    setInternalTo(to);
-    onChange?.([from, to]);
-  }
-
-  function handleDateClick(date: Date): boolean {
-    // Zero out time for date
-    const d = new Date(date);
-    d.setHours(0, 0, 0, 0);
-    const v = getDateValue(d);
-    syncCalendarToValue(v);
-
-    // Commit the start as a single-day range so the value never lags behind the calendar.
-    if (!isExtendingRange || !fromDate) {
-      setIsExtendingRange(true);
-      commitRange(v, v);
-      return false;
-    }
-
-    const isReversed = fromDate > v;
-    setIsExtendingRange(false);
-    commitRange(isReversed ? v : fromDate, isReversed ? fromDate : v);
-    return true;
-  }
-
-  function handleToday() {
-    const d = new Date(today);
-    d.setHours(0, 0, 0, 0);
-    const todayStr = getDateValue(d);
-    syncCalendarToValue(todayStr);
-    setIsExtendingRange(false);
-    commitRange(todayStr, todayStr);
-  }
-
-  function clearDates() {
-    syncCalendarToValue("");
-    resetCalendarToToday();
-    setIsExtendingRange(false);
-    commitRange("", "");
-  }
-
-  function selectDates() {
-    onChange?.([fromDate, toDate]);
-    setOpen(false);
-  }
-
-  function applyRange(from: string, to: string) {
-    syncCalendarToValue(from);
-    setIsExtendingRange(false);
-    commitRange(from, to);
-  }
-
-  function isInRange(date: Date) {
-    if (!fromDate || !toDate) return false;
-    return date >= getDate(fromDate) && date <= getDate(toDate);
-  }
-
-  return {
-    open,
-    setOpen,
-    fromDate,
-    toDate,
-    formattedMonth,
-    datesAsWeeks,
-    currentMonth,
-    currentYear,
-    view,
-    cycleView,
-    selectMonth,
-    selectYear,
-    yearRangeStart,
-    yearRange,
-    prev,
-    next,
-    resetView,
-    months,
-    today,
-    handleToday,
-    handleDateClick,
-    clearDates,
-    selectDates,
-    applyRange,
-    isInRange,
-  };
-}
 
 export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   value,
@@ -179,12 +56,43 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
     onChange,
   });
 
-  const handleOpenChange = (isOpen: boolean) => {
-    setOpen(isOpen);
-    if (!isOpen) {
-      resetView();
+  const handleOpenChange = useCallback(
+    (isOpen: boolean) => {
+      setOpen(isOpen);
+      if (!isOpen) {
+        resetView();
+      }
+    },
+    [resetView, setOpen]
+  );
+
+  const openPicker = useCallback(() => {
+    if (!disabled) {
+      setOpen(true);
     }
-  };
+  }, [disabled, setOpen]);
+
+  const closePicker = useCallback(() => setOpen(false), [setOpen]);
+
+  const togglePicker = useCallback(() => {
+    if (!disabled) {
+      setOpen((prevOpen) => !prevOpen);
+    }
+  }, [disabled, setOpen]);
+
+  const handleTriggerKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLElement>) => {
+      if (disabled) {
+        return;
+      }
+
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openPicker();
+      }
+    },
+    [disabled, openPicker]
+  );
 
   const { side, align } = parsePlacement(placement);
 
@@ -195,41 +103,6 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
     : from && to
       ? `${from} to ${to}`
       : from || "";
-  const openPicker = () => {
-    if (!disabled) {
-      setOpen(true);
-    }
-  };
-  const closePicker = () => setOpen(false);
-  const togglePicker = () => {
-    if (!disabled) {
-      setOpen((prevOpen) => !prevOpen);
-    }
-  };
-  const handleTriggerKeyDown = (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (disabled) {
-      return;
-    }
-
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      openPicker();
-    }
-  };
-  const handleChildTriggerKeyDown = (
-    event: React.KeyboardEvent<HTMLElement>
-  ) => {
-    if (disabled) {
-      return;
-    }
-
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      openPicker();
-    }
-  };
   const toggleViewLabel = "Toggle calendar view";
   const prevLabel =
     view === "date"
@@ -259,7 +132,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 openPicker,
                 closePicker,
                 togglePicker,
-                onTriggerKeyDown: handleChildTriggerKeyDown,
+                onTriggerKeyDown: handleTriggerKeyDown,
               })}
             </span>
           ) : (
