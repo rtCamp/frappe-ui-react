@@ -415,12 +415,13 @@ export const WithRenderMenuItem: StoryObj<typeof Dropdown> = {
       ) : (
         <div {...props}>
           {props.children}
-          <div className="ml-auto" onClick={(event) => event.stopPropagation()}>
+          <div className="ml-auto">
             <Dropdown options={viewActions} side="right">
               <button
                 type="button"
                 aria-label={`Actions for ${state.item.label}`}
                 className="flex rounded p-0.5 text-ink-gray-6 hover:bg-surface-gray-4"
+                onClick={(event) => event.stopPropagation()}
               >
                 <DotHorizontal className="h-4 w-4" />
               </button>
