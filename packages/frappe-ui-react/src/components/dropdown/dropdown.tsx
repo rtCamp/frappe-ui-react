@@ -255,7 +255,11 @@ const Dropdown: React.FC<DropdownProps> = ({
                     {submenuGroup.items.map((subItem) => (
                       <Menu.Item
                         key={subItem.label}
-                        onClick={() => subItem.onClick?.()}
+                        onClick={(event) => {
+                          if (event.currentTarget.contains(event.target as Node)) {
+                            subItem.onClick?.();
+                          }
+                        }}
                         render={renderDropdownItem(subItem)}
                         nativeButton={!subItem.switch && !subItem.submenu && !subItem.component && !renderMenuItem}
                       />
@@ -340,7 +344,15 @@ const Dropdown: React.FC<DropdownProps> = ({
                       <div data-testid="dropdown-item" key={item.label}>
                         <Menu.Item
                           closeOnClick={!item.switch}
-                          onClick={() => !item.switch && item.onClick?.()}
+                          onClick={(event) => {
+                            // Clicks bubbling out of menus nested via renderMenuItem
+                            // reach this handler through the React tree but originate
+                            // outside the item's DOM — they must close the menu
+                            // without triggering the item's own action.
+                            if (!item.switch && event.currentTarget.contains(event.target as Node)) {
+                              item.onClick?.();
+                            }
+                          }}
                           render={renderDropdownItem({
                             ...item,
                             groupKey: group.groupKey,
