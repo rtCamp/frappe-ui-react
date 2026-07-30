@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { useRender } from "@base-ui/react/use-render";
 import type { DropdownProps } from "../dropdown";
 
 export interface BreadcrumbItem {
@@ -7,9 +8,25 @@ export interface BreadcrumbItem {
   onClick?: () => void;
   prefixIcon?: ReactNode;
   suffixIcon?: ReactNode;
-  dropdown?: DropdownProps;
+  dropdown?: BreadcrumbDropdownProps;
   interactive?: boolean;
 }
+
+export type BreadcrumbDropdownState = {
+  item: BreadcrumbItem;
+};
+
+export type BreadcrumbRenderDropdown =
+  useRender.RenderProp<BreadcrumbDropdownState>;
+
+export type BreadcrumbDropdownProps = DropdownProps & {
+  /**
+   * Replace the default `<Dropdown>` wrapper of this crumb. Accepts a React
+   * element or a render function that receives the merged props (`children`
+   * is the crumb trigger) and the crumb's `state`.
+   */
+  renderDropdown?: BreadcrumbRenderDropdown;
+};
 
 export interface BreadcrumbsProps {
   items: BreadcrumbItem[];
