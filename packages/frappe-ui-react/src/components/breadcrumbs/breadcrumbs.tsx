@@ -2,21 +2,33 @@
  * External dependencies.
  */
 import React, { useMemo } from "react";
+import { useRender } from "@base-ui/react/use-render";
 
 /**
  * Internal dependencies.
  */
 import useWindowSize from "../hooks/useWindowSize";
-import {
-  Dropdown,
-  type DropdownOption,
-  type DropdownOptions,
-} from "../dropdown";
+import { Dropdown, type DropdownOption, type DropdownOptions } from "../dropdown";
 import { Button } from "../button";
-import type { BreadcrumbsProps, BreadcrumbItem } from "./types";
+import type { BreadcrumbsProps, BreadcrumbItem, BreadcrumbDropdownState } from "./types";
 import { cn } from "../../utils";
 import { crumbVariants, separatorVariants } from "./variants";
 import { ThreeDotsIcon } from "./threeDotsIcon";
+
+const dropdownStateAttributesMapping = {
+  item: () => null,
+};
+
+const BreadcrumbDropdown = ({ item, children }: { item: BreadcrumbItem; children: React.ReactNode }) => {
+  const state: BreadcrumbDropdownState = useMemo(() => ({ item }), [item]);
+  const { renderDropdown, ...dropdownProps } = item.dropdown ?? { options: [] };
+  return useRender({
+    render: renderDropdown ?? <Dropdown {...dropdownProps} />,
+    state,
+    stateAttributesMapping: dropdownStateAttributesMapping,
+    props: { children },
+  });
+};
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   items,
@@ -80,18 +92,11 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
         </div>
       )}
 
-      <div
-        className={cn(
-          "flex min-w-0 items-center text-ellipsis whitespace-nowrap",
-          className
-        )}
-      >
+      <div className={cn("flex min-w-0 items-center text-ellipsis whitespace-nowrap", className)}>
         {crumbs.map((item, i) => {
           const isLast = i === crumbs.length - 1;
 
-          const handleClick = (
-            e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>
-          ) => {
+          const handleClick = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
             e.preventDefault();
             if (item.onClick && item?.interactive !== false) {
               item.onClick();
@@ -104,10 +109,10 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               onClick={handleClick}
               disabled={item?.interactive === false}
               className={cn(
+                "min-w-0",
                 crumbVariants({
                   size,
-                  highlightItem:
-                    (isLast && highlightLastItem) || highlightAllItems,
+                  highlightItem: (isLast && highlightLastItem) || highlightAllItems,
                   interactive: item?.interactive !== false,
                 }),
                 crumbClassName
@@ -118,7 +123,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               ) : item?.prefixIcon ? (
                 <span className="mr-1">{item.prefixIcon}</span>
               ) : null}
-              <span>{item.label}</span>
+              <span className="truncate">{item.label}</span>
               {renderSuffix ? (
                 renderSuffix(item)
               ) : item?.suffixIcon ? (
@@ -129,11 +134,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
 
           return (
             <React.Fragment key={item.id || item.label}>
-              {item.dropdown ? (
-                <Dropdown {...item.dropdown}>{crumbContent}</Dropdown>
-              ) : (
-                crumbContent
-              )}
+              {item.dropdown ? <BreadcrumbDropdown item={item}>{crumbContent}</BreadcrumbDropdown> : crumbContent}
               {!isLast && (
                 <span
                   className={cn(
