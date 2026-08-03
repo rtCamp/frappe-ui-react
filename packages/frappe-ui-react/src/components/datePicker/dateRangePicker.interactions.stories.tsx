@@ -78,6 +78,12 @@ export const KeyboardNavigation: Story = {
 
     await userEvent.keyboard("{Enter}");
 
+    // Selecting only the start date emits it with a pending, empty end date.
+    expect(args.onChange).toHaveBeenLastCalledWith([
+      expect.stringMatching(/.+/),
+      "",
+    ]);
+
     let secondFocusedDate: HTMLElement | null = null;
     for (let i = 0; i < 6; i++) {
       await userEvent.tab();

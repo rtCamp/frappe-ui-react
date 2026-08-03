@@ -1,148 +1,19 @@
-import { useState } from "react";
+/**
+ * External dependencies.
+ */
+import { useCallback } from "react";
 import { Popover } from "@base-ui/react/popover";
 
+/**
+ * Internal dependencies.
+ */
 import type { DateRangePickerProps } from "./types";
-import { useDatePicker } from "./useDatePicker";
+import { useDateRangePicker } from "./useDateRangePicker";
 import { getDate, getDateValue, parsePlacement } from "./utils";
 import { Button } from "../button";
 import { TextInput } from "../textInput";
 import FeatherIcon from "../featherIcon";
 import { cn } from "../../utils";
-
-function useDateRangePicker({
-  value,
-  onChange,
-}: {
-  value?: string[];
-  onChange?: (v: string[]) => void;
-}) {
-  // Internal selection state
-  const [fromDate, setFromDate] = useState<string>(value?.[0] || "");
-  const [toDate, setToDate] = useState<string>(value?.[1] || "");
-
-  const {
-    open,
-    setOpen,
-    formattedMonth,
-    datesAsWeeks,
-    currentMonth,
-    currentYear,
-    view,
-    cycleView,
-    selectMonth,
-    selectYear,
-    yearRangeStart,
-    yearRange,
-    prev,
-    next,
-    resetView,
-    months,
-    today,
-    syncCalendarToValue,
-    resetCalendarToToday,
-  } = useDatePicker({
-    value: fromDate,
-    onChange: () => {},
-  });
-
-  function handleDateClick(date: Date): boolean {
-    // Zero out time for date
-    const d = new Date(date);
-    d.setHours(0, 0, 0, 0);
-    const v = getDateValue(d);
-    syncCalendarToValue(v);
-    if (fromDate && toDate) {
-      setFromDate(v);
-      setToDate("");
-    } else if (fromDate && !toDate) {
-      setToDate(v);
-      swapDatesIfNecessary(fromDate, v);
-      onChange?.([fromDate, v]);
-      return true;
-    } else {
-      setFromDate(v);
-    }
-    return false;
-  }
-
-  function swapDatesIfNecessary(a: string, b: string) {
-    if (!a || !b) return;
-    const from = getDate(a);
-    from.setHours(0, 0, 0, 0);
-    const to = getDate(b);
-    to.setHours(0, 0, 0, 0);
-
-    if (from > to) {
-      setFromDate(getDateValue(to));
-      setToDate(getDateValue(from));
-    }
-  }
-
-  function handleToday() {
-    const d = new Date(today);
-    d.setHours(0, 0, 0, 0);
-    const todayStr = getDateValue(d);
-    syncCalendarToValue(todayStr);
-    setFromDate(todayStr);
-    setToDate(todayStr);
-    onChange?.([todayStr, todayStr]);
-  }
-
-  function clearDates() {
-    syncCalendarToValue("");
-    resetCalendarToToday();
-    setFromDate("");
-    setToDate("");
-    onChange?.(["", ""]);
-  }
-
-  function selectDates() {
-    onChange?.([fromDate, toDate]);
-    setOpen(false);
-  }
-
-  function applyRange(from: string, to: string) {
-    syncCalendarToValue(from);
-    setFromDate(from);
-    setToDate(to);
-    onChange?.([from, to]);
-  }
-
-  function isInRange(date: Date) {
-    if (!fromDate || !toDate) return false;
-    return date >= getDate(fromDate) && date <= getDate(toDate);
-  }
-
-  return {
-    open,
-    setOpen,
-    fromDate,
-    setFromDate,
-    toDate,
-    setToDate,
-    formattedMonth,
-    datesAsWeeks,
-    currentMonth,
-    currentYear,
-    view,
-    cycleView,
-    selectMonth,
-    selectYear,
-    yearRangeStart,
-    yearRange,
-    prev,
-    next,
-    resetView,
-    months,
-    today,
-    handleToday,
-    handleDateClick,
-    clearDates,
-    selectDates,
-    applyRange,
-    isInRange,
-  };
-}
 
 export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   value,
@@ -185,12 +56,43 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
     onChange,
   });
 
-  const handleOpenChange = (isOpen: boolean) => {
-    setOpen(isOpen);
-    if (!isOpen) {
-      resetView();
+  const handleOpenChange = useCallback(
+    (isOpen: boolean) => {
+      setOpen(isOpen);
+      if (!isOpen) {
+        resetView();
+      }
+    },
+    [resetView, setOpen]
+  );
+
+  const openPicker = useCallback(() => {
+    if (!disabled) {
+      setOpen(true);
     }
-  };
+  }, [disabled, setOpen]);
+
+  const closePicker = useCallback(() => setOpen(false), [setOpen]);
+
+  const togglePicker = useCallback(() => {
+    if (!disabled) {
+      setOpen((prevOpen) => !prevOpen);
+    }
+  }, [disabled, setOpen]);
+
+  const handleTriggerKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLElement>) => {
+      if (disabled) {
+        return;
+      }
+
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openPicker();
+      }
+    },
+    [disabled, openPicker]
+  );
 
   const { side, align } = parsePlacement(placement);
 
@@ -201,41 +103,6 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
     : from && to
       ? `${from} to ${to}`
       : from || "";
-  const openPicker = () => {
-    if (!disabled) {
-      setOpen(true);
-    }
-  };
-  const closePicker = () => setOpen(false);
-  const togglePicker = () => {
-    if (!disabled) {
-      setOpen((prevOpen) => !prevOpen);
-    }
-  };
-  const handleTriggerKeyDown = (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (disabled) {
-      return;
-    }
-
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      openPicker();
-    }
-  };
-  const handleChildTriggerKeyDown = (
-    event: React.KeyboardEvent<HTMLElement>
-  ) => {
-    if (disabled) {
-      return;
-    }
-
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      openPicker();
-    }
-  };
   const toggleViewLabel = "Toggle calendar view";
   const prevLabel =
     view === "date"
@@ -255,6 +122,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
       <Popover.Trigger
         disabled={disabled}
         nativeButton={false}
+        className="focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
         render={
           children ? (
             <span>
@@ -265,7 +133,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 openPicker,
                 closePicker,
                 togglePicker,
-                onTriggerKeyDown: handleChildTriggerKeyDown,
+                onTriggerKeyDown: handleTriggerKeyDown,
               })}
             </span>
           ) : (
