@@ -15,6 +15,7 @@ import type { StaticTextEditorProps } from "./types";
 import { cn } from "../../utils";
 import {
   DEFAULT_EDITOR_CLASS,
+  EMPTY_EXTENSION_OPTIONS,
   EMPTY_EXTENSIONS,
   EMPTY_STARTERKIT_OPTIONS,
   getTextEditorExtensions,
@@ -27,6 +28,7 @@ const StaticTextEditor = ({
   extensions = EMPTY_EXTENSIONS,
   starterkitOptions = EMPTY_STARTERKIT_OPTIONS,
   placeholder = "",
+  extensionOptions = EMPTY_EXTENSION_OPTIONS,
 }: StaticTextEditorProps) => {
   const editorExtensions = useMemo(
     () =>
@@ -34,9 +36,12 @@ const StaticTextEditor = ({
         extensions,
         starterkitOptions,
         placeholder,
-        staticRender: true,
+        extensionOptions: {
+          ...extensionOptions,
+          taskItem: { staticCheckbox: true, ...extensionOptions.taskItem },
+        },
       }),
-    [extensions, starterkitOptions, placeholder]
+    [extensions, starterkitOptions, placeholder, extensionOptions]
   );
 
   /**

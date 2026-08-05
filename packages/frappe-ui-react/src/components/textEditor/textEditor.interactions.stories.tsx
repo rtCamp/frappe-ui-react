@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { screen, userEvent, expect, within } from "storybook/test";
+import { screen, userEvent, expect, fn, waitFor, within } from "storybook/test";
 import TextEditor from "./textEditor";
+import StaticTextEditor from "./staticTextEditor";
 import type { TextEditorHandle } from "./types";
 
 const meta: Meta<typeof TextEditor> = {
@@ -78,6 +79,21 @@ const value = ref(true);</code></pre>
     </ul>
 </div>
 `;
+
+const TASK_LIST_CONTENT: string = `
+<p>Task list paragraph</p>
+<ul data-type="taskList">
+    <li data-checked="true" data-type="taskItem"><label><input type="checkbox" checked><span></span></label><div><p>Done item</p></div></li>
+    <li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>Pending item</p></div></li>
+</ul>
+`;
+
+const getTaskCheckboxes = (canvasElement: HTMLElement) =>
+  Array.from(
+    canvasElement.querySelectorAll<HTMLInputElement>(
+      'ul[data-type="taskList"] input[type="checkbox"]'
+    )
+  );
 
 export default meta;
 type Story = StoryObj<typeof TextEditor>;
@@ -255,6 +271,85 @@ export const EditorFontColor: Story = {
     expect(newText).toHaveStyle("color: rgb(204, 41, 41)");
     expect(newText.tagName).toBe("MARK");
     expect(newText).toHaveStyle("background-color: #ffe7e7");
+  },
+};
+
+export const StaticTaskList: StoryObj<typeof StaticTextEditor> = {
+  args: {
+    content: TASK_LIST_CONTENT,
+    editorClass: "prose-sm min-h-[4rem] border rounded-lg p-2",
+  },
+  render: function StaticTaskListRender(args) {
+    return (
+      <div className="m-2 w-[550px]">
+        <StaticTextEditor {...args} />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const [doneBox, pendingBox] = getTaskCheckboxes(canvasElement);
+
+    expect(doneBox.checked).toBe(true);
+    expect(pendingBox.checked).toBe(false);
+
+    // Out of the tab order, and the label swallows pointer events.
+    expect(pendingBox.tabIndex).toBe(-1);
+    expect(
+      getComputedStyle(pendingBox.closest("label") as HTMLElement).pointerEvents
+    ).toBe("none");
+
+    // Forced past the pointer-events guard, a click still changes nothing.
+    const user = userEvent.setup({ pointerEventsCheck: 0 });
+    await user.click(pendingBox);
+    await user.click(doneBox);
+
+    expect(pendingBox.checked).toBe(false);
+    expect(doneBox.checked).toBe(true);
+  },
+};
+
+export const ReadOnlyTaskList: Story = {
+  args: {
+    content: TASK_LIST_CONTENT,
+    editable: false,
+    editorClass: "prose-sm min-h-[4rem] border rounded-lg p-2",
+    extensionOptions: { taskItem: { toggleWhenReadOnly: true } },
+    onChange: fn(),
+  },
+  render: function ReadOnlyTaskListRender(args) {
+    return (
+      <div className="m-2 w-[550px]">
+        <TextEditor {...args} />
+      </div>
+    );
+  },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    const [doneBox, pendingBox] = getTaskCheckboxes(canvasElement);
+
+    await userEvent.click(pendingBox);
+
+    await waitFor(() => expect(pendingBox.checked).toBe(true));
+    expect(args.onChange).toHaveBeenLastCalledWith(
+      expect.stringMatching(/data-checked="true"[\s\S]*data-checked="true"/)
+    );
+
+    await userEvent.click(doneBox);
+
+    await waitFor(() => expect(doneBox.checked).toBe(false));
+    expect(args.onChange).toHaveBeenLastCalledWith(
+      expect.not.stringMatching(/data-checked="true"[\s\S]*data-checked="true"/)
+    );
+
+    // Everything else stays read-only.
+    const editorContent = canvasElement.querySelector(".ProseMirror");
+    expect(editorContent).toHaveAttribute("contenteditable", "false");
+
+    const paragraph = canvas.getByText("Task list paragraph");
+    await userEvent.click(paragraph);
+    await userEvent.keyboard("typed");
+
+    expect(paragraph.textContent).toBe("Task list paragraph");
   },
 };
 

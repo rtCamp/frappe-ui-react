@@ -39,6 +39,10 @@ const meta: Meta<typeof TextEditor> = {
       control: "object",
       description: "Configuration for StarterKit extension",
     },
+    extensionOptions: {
+      control: "object",
+      description: "Options to configure the registered extensions",
+    },
     fixedMenu: {
       control: "boolean",
       description: "Show fixed menu toolbar",
