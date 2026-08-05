@@ -59,6 +59,10 @@ const meta: Meta<typeof TextEditor> = {
       control: false,
       description: "Callback on editor transaction",
     },
+    mentions: {
+      control: false,
+      description: "Async callback returning mention suggestions for a query; typing @ opens the suggestion list",
+    },
   },
 };
 
@@ -88,6 +92,28 @@ export const Basic: Story = {
     fixedMenu: true,
   },
   render: function BasicRender(args) {
+    return (
+      <div className="m-2 w-137.5">
+        <TextEditor {...args} />
+      </div>
+    );
+  },
+};
+
+const MENTION_USERS = [
+  { id: "alice@example.com", label: "Alice Anderson" },
+  { id: "bob@example.com", label: "Bob Brown" },
+  { id: "carol@example.com", label: "Carol Clark" },
+  { id: "dave@example.com", label: "Dave Davis" },
+];
+
+export const Mentions: Story = {
+  args: {
+    placeholder: "Type @ to mention someone",
+    editorClass: "prose-sm min-h-[4rem] border rounded-lg p-2",
+    mentions: async (query) => MENTION_USERS.filter((user) => user.label.toLowerCase().includes(query.toLowerCase())),
+  },
+  render: function MentionsRender(args) {
     return (
       <div className="m-2 w-137.5">
         <TextEditor {...args} />
