@@ -17,6 +17,7 @@ import "./extension/codeBlock.css";
 import type { TextEditorProps } from "./types";
 import { ExtendedCodeBlock } from "./extension/codeBlock";
 import { IdentifiedListItem } from "./extension/identifiedListItem";
+import { StaticTaskItem } from "./extension/staticTaskItem";
 
 export const DEFAULT_EDITOR_CLASS =
   "ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-outline-gray-2 prose-th:border-outline-gray-2 prose-td:relative prose-th:relative prose-th:bg-surface-gray-2 border-outline-gray-1";
@@ -29,12 +30,13 @@ export const EMPTY_STARTERKIT_OPTIONS: NonNullable<
 type EditorExtensionOptions = Pick<
   TextEditorProps,
   "extensions" | "starterkitOptions" | "placeholder"
->;
+> & { staticRender?: boolean };
 
 export const getTextEditorExtensions = ({
   extensions = EMPTY_EXTENSIONS,
   starterkitOptions = EMPTY_STARTERKIT_OPTIONS,
   placeholder = "",
+  staticRender = false,
 }: EditorExtensionOptions): Extensions => [
   StarterKit.configure({
     codeBlock: false,
@@ -51,7 +53,7 @@ export const getTextEditorExtensions = ({
       typeof placeholder === "function" ? placeholder() : placeholder,
   }),
   TaskList,
-  TaskItem.configure({
+  (staticRender ? StaticTaskItem : TaskItem).configure({
     nested: true,
   }),
   TextAlign.configure({
