@@ -15,6 +15,7 @@ import { cn } from "../../utils";
 import {
   DEFAULT_EDITOR_CLASS,
   EMPTY_EXTENSIONS,
+  EMPTY_EXTENSION_OPTIONS,
   EMPTY_STARTERKIT_OPTIONS,
   getTextEditorExtensions,
 } from "./editorConfig";
@@ -34,6 +35,7 @@ const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
       autofocus = false,
       extensions = EMPTY_EXTENSIONS,
       starterkitOptions = EMPTY_STARTERKIT_OPTIONS,
+      extensionOptions = EMPTY_EXTENSION_OPTIONS,
       fixedMenu = false,
       onChange,
       onFocus,
@@ -47,8 +49,13 @@ const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
   ) {
     const editorExtensions = useMemo(
       () =>
-        getTextEditorExtensions({ extensions, starterkitOptions, placeholder }),
-      [extensions, starterkitOptions, placeholder]
+        getTextEditorExtensions({
+          extensions,
+          starterkitOptions,
+          placeholder,
+          extensionOptions,
+        }),
+      [extensions, starterkitOptions, placeholder, extensionOptions]
     );
 
     const editor = useEditor(
