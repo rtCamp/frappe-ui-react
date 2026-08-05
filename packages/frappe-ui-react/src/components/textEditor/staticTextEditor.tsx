@@ -30,7 +30,12 @@ const StaticTextEditor = ({
 }: StaticTextEditorProps) => {
   const editorExtensions = useMemo(
     () =>
-      getTextEditorExtensions({ extensions, starterkitOptions, placeholder }),
+      getTextEditorExtensions({
+        extensions,
+        starterkitOptions,
+        placeholder,
+        staticRender: true,
+      }),
     [extensions, starterkitOptions, placeholder]
   );
 
