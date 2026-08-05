@@ -5,6 +5,11 @@ import { Editor, type Extension } from "@tiptap/react";
 import type { StarterKitOptions } from "@tiptap/starter-kit";
 import type { FC } from "react";
 
+export interface MentionItem {
+  id: string;
+  label: string;
+}
+
 export interface TextEditorProps {
   // Props
   content?: string | null;
@@ -15,6 +20,7 @@ export interface TextEditorProps {
   extensions?: Extension[];
   starterkitOptions?: Partial<StarterKitOptions>;
   fixedMenu?: boolean;
+  mentions?: (query: string) => Promise<MentionItem[]>;
   // Events
   onChange?: (content: string) => void;
   onFocus?: (event: FocusEvent) => void;
