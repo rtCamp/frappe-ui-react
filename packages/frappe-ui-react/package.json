@@ -1,10 +1,10 @@
 {
   "name": "@rtcamp/frappe-ui-react",
   "version": "1.1.0",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist-types/index.d.ts",
+  "private": false,
   "description": "Package for Frappe UI Components created in react.",
+  "homepage": "https://rtcamp.github.io/frappe-ui-react",
+  "license": "MIT",
   "author": {
     "name": "rtCamp"
   },
@@ -14,11 +14,10 @@
     "package.json",
     "README.md"
   ],
-  "license": "MIT",
-  "private": false,
   "sideEffects": false,
-  "readme": "https://github.com/rtCamp/frappe-ui-react/blob/main/packages/frappe-ui-react/README.md",
-  "homepage": "https://rtcamp.github.io/frappe-ui-react",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist-types/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -48,21 +47,22 @@
     "@headlessui/react": "^2.2.9",
     "@popperjs/core": "^2.11.8",
     "@tailwindcss/typography": "^0.5.19",
-    "@tiptap/extension-blockquote": "^3.27.1",
-    "@tiptap/extension-code-block-lowlight": "^3.27.1",
-    "@tiptap/extension-highlight": "^3.27.1",
-    "@tiptap/extension-horizontal-rule": "^3.27.1",
-    "@tiptap/extension-list": "^3.27.1",
-    "@tiptap/extension-placeholder": "^3.27.1",
-    "@tiptap/extension-strike": "^3.27.1",
-    "@tiptap/extension-table": "^3.27.1",
-    "@tiptap/extension-task-list": "^3.27.1",
-    "@tiptap/extension-text-align": "^3.27.1",
-    "@tiptap/extension-text-style": "^3.27.1",
-    "@tiptap/pm": "^3.27.1",
-    "@tiptap/react": "^3.27.1",
-    "@tiptap/starter-kit": "^3.27.1",
-    "@tiptap/static-renderer": "^3.27.1",
+    "@tiptap/extension-blockquote": "^3.29.2",
+    "@tiptap/extension-code-block-lowlight": "^3.29.2",
+    "@tiptap/extension-highlight": "^3.29.2",
+    "@tiptap/extension-horizontal-rule": "^3.29.2",
+    "@tiptap/extension-list": "^3.29.2",
+    "@tiptap/extension-mention": "^3.29.2",
+    "@tiptap/extension-placeholder": "^3.29.2",
+    "@tiptap/extension-strike": "^3.29.2",
+    "@tiptap/extension-table": "^3.29.2",
+    "@tiptap/extension-task-list": "^3.29.2",
+    "@tiptap/extension-text-align": "^3.29.2",
+    "@tiptap/extension-text-style": "^3.29.2",
+    "@tiptap/pm": "^3.29.2",
+    "@tiptap/react": "^3.29.2",
+    "@tiptap/starter-kit": "^3.29.2",
+    "@tiptap/static-renderer": "^3.29.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
@@ -73,14 +73,14 @@
     "lucide-react": "^0.539.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-grid-layout": "^1.5.3",
+    "react-grid-layout": "^2.2.4",
     "react-resizable": "^3.1.3",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@types/feather-icons": "^4.29.4",
-    "@types/node": "^24.10.9",
-    "@types/react-grid-layout": "^1.3.6"
-  }
+    "@types/node": "^24.10.9"
+  },
+  "readme": "https://github.com/rtCamp/frappe-ui-react/blob/main/packages/frappe-ui-react/README.md"
 }
