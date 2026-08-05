@@ -60,6 +60,10 @@ const meta: Meta<typeof TextEditor> = {
       control: false,
       description: "Callback on editor transaction",
     },
+    mentions: {
+      control: false,
+      description: "Async callback returning mention suggestions for a query; typing @ opens the suggestion list",
+    },
   },
 };
 
@@ -258,6 +262,52 @@ export const EditorFontColor: Story = {
   },
 };
 
+const MENTION_USERS = [
+  { id: "alice@example.com", label: "Alice Anderson" },
+  { id: "bob@example.com", label: "Bob Brown" },
+  { id: "carol@example.com", label: "Carol Clark" },
+];
+
+export const EditorMentions: Story = {
+  args: {
+    editorClass: "prose-sm min-h-[4rem] border rounded-lg p-2",
+    autofocus: true,
+    mentions: async (query) => MENTION_USERS.filter((user) => user.label.toLowerCase().includes(query.toLowerCase())),
+  },
+  render: function MentionsRender(args) {
+    return (
+      <div className="m-2 w-[550px]">
+        <TextEditor {...args} />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    // Typing the trigger character should open the suggestion list with all
+    // users. The popup is appended to document.body, outside the canvas.
+    await userEvent.keyboard("@");
+
+    await screen.findByRole("button", { name: "Alice Anderson" });
+    await screen.findByRole("button", { name: "Bob Brown" });
+    await screen.findByRole("button", { name: "Carol Clark" });
+
+    // Typing a query should filter the list down to matching users.
+    await userEvent.keyboard("bob");
+
+    await screen.findByRole("button", { name: "Bob Brown" });
+    expect(screen.queryByRole("button", { name: "Alice Anderson" })).toBeNull();
+
+    // Enter should insert the highlighted suggestion as a mention node and
+    // close the popup.
+    await userEvent.keyboard("{Enter}");
+
+    const mention = canvasElement.querySelector(".mention");
+    expect(mention).not.toBeNull();
+    expect(mention?.textContent).toBe("@Bob Brown");
+    expect(mention?.getAttribute("data-id")).toBe("bob@example.com");
+    expect(screen.queryByRole("button", { name: "Bob Brown" })).toBeNull();
+  },
+};
+
 export const EditorListItemHandle: Story = {
   args: {
     editorClass: "prose-sm min-h-[4rem] border rounded-b-lg border-t-0 p-2",
@@ -268,28 +318,16 @@ export const EditorListItemHandle: Story = {
       <div className="m-2 w-[550px]">
         <TextEditor {...args} ref={ref} />
         <div className="mt-2 flex gap-2">
-          <button
-            type="button"
-            onClick={() => ref.current?.addListItem("item-1", "First item")}
-          >
+          <button type="button" onClick={() => ref.current?.addListItem("item-1", "First item")}>
             Add Item 1
           </button>
-          <button
-            type="button"
-            onClick={() => ref.current?.addListItem("item-2", "Second item")}
-          >
+          <button type="button" onClick={() => ref.current?.addListItem("item-2", "Second item")}>
             Add Item 2
           </button>
-          <button
-            type="button"
-            onClick={() => ref.current?.removeListItem("item-1")}
-          >
+          <button type="button" onClick={() => ref.current?.removeListItem("item-1")}>
             Remove Item 1
           </button>
-          <button
-            type="button"
-            onClick={() => ref.current?.removeListItem("item-2")}
-          >
+          <button type="button" onClick={() => ref.current?.removeListItem("item-2")}>
             Remove Item 2
           </button>
         </div>
@@ -320,9 +358,7 @@ export const EditorListItemHandle: Story = {
 
     // Removing one of two items should only delete that item, leaving the
     // wrapping list intact.
-    await userEvent.click(
-      canvas.getByRole("button", { name: "Remove Item 1" })
-    );
+    await userEvent.click(canvas.getByRole("button", { name: "Remove Item 1" }));
 
     item1 = canvasElement.querySelector('li[data-item-id="item-1"]');
     expect(item1).toBeNull();
@@ -331,9 +367,7 @@ export const EditorListItemHandle: Story = {
 
     // Removing the last remaining item should also remove the now-empty
     // wrapping list, leaving no leftover empty list behind.
-    await userEvent.click(
-      canvas.getByRole("button", { name: "Remove Item 2" })
-    );
+    await userEvent.click(canvas.getByRole("button", { name: "Remove Item 2" }));
 
     expect(canvasElement.querySelectorAll("li").length).toBe(0);
     expect(canvasElement.querySelectorAll("ul").length).toBe(0);
