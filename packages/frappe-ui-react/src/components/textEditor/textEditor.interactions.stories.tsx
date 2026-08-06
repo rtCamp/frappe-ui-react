@@ -318,7 +318,6 @@ const pendingMentionRequests: PendingMentionRequest[] = [];
 export const EditorMentionsSlowRequest: Story = {
   args: {
     editorClass: "prose-sm min-h-[4rem] border rounded-lg p-2",
-    autofocus: true,
     // Mocked user lookup that never resolves on its own — the play function
     // resolves each captured request manually to simulate slow responses.
     mentions: (query) =>
@@ -335,6 +334,13 @@ export const EditorMentionsSlowRequest: Story = {
   },
   play: async ({ canvasElement }) => {
     pendingMentionRequests.length = 0;
+
+    const editorEl = await waitFor(() => {
+      const el = canvasElement.querySelector<HTMLElement>("[contenteditable='true']");
+      expect(el).not.toBeNull();
+      return el as HTMLElement;
+    });
+    await userEvent.click(editorEl);
 
     // Typing the trigger should show the loading row while the request is
     // still in flight.
@@ -374,6 +380,43 @@ export const EditorMentionsSlowRequest: Story = {
     expect(mention).not.toBeNull();
     expect(mention?.textContent).toBe("@Bob Brown");
     expect(mention?.getAttribute("data-id")).toBe("bob@example.com");
+  },
+};
+
+export const EditorMentionsScrollContainer: Story = {
+  args: {
+    content: CONTENT,
+    editorClass: "prose-sm border rounded-lg p-2",
+    mentions: async (query) => MENTION_USERS.filter((user) => user.label.toLowerCase().includes(query.toLowerCase())),
+  },
+  render: function MentionsScrollRender(args) {
+    return (
+      <div data-testid="scroll-container" className="m-2 h-40 w-[550px] overflow-y-auto">
+        <TextEditor {...args} />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const scrollContainer = canvas.getByTestId("scroll-container");
+
+    // Place the caret inside a visible line and trigger the suggestion
+    // after a space.
+    await userEvent.click(canvas.getByText("Item 1"));
+    await userEvent.keyboard(" @");
+
+    const item = await screen.findByRole("button", { name: "Alice Anderson" });
+    const popup = item.parentElement as HTMLElement;
+    const before = popup.getBoundingClientRect();
+
+    // Scrolling the container must keep the list anchored to the caret
+    // instead of leaving it at its original viewport position.
+    scrollContainer.scrollTop += 40;
+
+    await waitFor(() => {
+      const after = popup.getBoundingClientRect();
+      expect(Math.abs(after.top - (before.top - 40))).toBeLessThanOrEqual(2);
+    });
   },
 };
 
