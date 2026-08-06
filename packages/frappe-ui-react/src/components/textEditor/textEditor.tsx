@@ -31,6 +31,7 @@ const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(function TextEd
     starterkitOptions = EMPTY_STARTERKIT_OPTIONS,
     fixedMenu = false,
     mentions,
+    mentionsItemRenderer,
     onChange,
     onFocus,
     onBlur,
@@ -46,10 +47,26 @@ const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(function TextEd
     mentionsRef.current = mentions;
   }, [mentions]);
 
-  // Read `mentions` through a ref so an inline callback prop doesn't
-  // invalidate the extensions array and recreate the editor on every
-  // parent render.
+  const mentionsItemRendererRef = useRef(mentionsItemRenderer);
+  useEffect(() => {
+    mentionsItemRendererRef.current = mentionsItemRenderer;
+  }, [mentionsItemRenderer]);
+
+  // Read `mentions` and `mentionsItemRenderer` through refs so inline
+  // callback props don't invalidate the extensions array and recreate the
+  // editor on every parent render.
   const hasMentions = Boolean(mentions);
+  const hasMentionsItemRenderer = Boolean(mentionsItemRenderer);
+  const StableMentionsItemRenderer = useMemo<TextEditorProps["mentionsItemRenderer"]>(
+    () =>
+      hasMentionsItemRenderer
+        ? function StableMentionsItemRenderer(props) {
+            const ItemRenderer = mentionsItemRendererRef.current;
+            return ItemRenderer ? <ItemRenderer {...props} /> : null;
+          }
+        : undefined,
+    [hasMentionsItemRenderer]
+  );
   const editorExtensions = useMemo(
     () =>
       getTextEditorExtensions({
@@ -57,8 +74,9 @@ const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(function TextEd
         starterkitOptions,
         placeholder,
         mentions: hasMentions ? (query) => mentionsRef.current?.(query) ?? Promise.resolve([]) : undefined,
+        mentionsItemRenderer: StableMentionsItemRenderer,
       }),
-    [extensions, starterkitOptions, placeholder, hasMentions]
+    [extensions, starterkitOptions, placeholder, hasMentions, StableMentionsItemRenderer]
   );
 
   const editor = useEditor(

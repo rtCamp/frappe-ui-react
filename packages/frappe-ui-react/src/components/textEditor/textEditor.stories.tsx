@@ -63,6 +63,11 @@ const meta: Meta<typeof TextEditor> = {
       control: false,
       description: "Async callback returning mention suggestions for a query; typing @ opens the suggestion list",
     },
+    mentionsItemRenderer: {
+      control: false,
+      description:
+        "Custom component rendering each row of the mention suggestion list; receives the item and its selected state",
+    },
   },
 };
 
@@ -114,6 +119,32 @@ export const Mentions: Story = {
     mentions: async (query) => MENTION_USERS.filter((user) => user.label.toLowerCase().includes(query.toLowerCase())),
   },
   render: function MentionsRender(args) {
+    return (
+      <div className="m-2 w-137.5">
+        <TextEditor {...args} />
+      </div>
+    );
+  },
+};
+
+export const MentionsCustomRenderer: Story = {
+  args: {
+    placeholder: "Type @ to mention someone",
+    editorClass: "prose-sm min-h-[4rem] border rounded-lg p-2",
+    mentions: async (query) => MENTION_USERS.filter((user) => user.label.toLowerCase().includes(query.toLowerCase())),
+    mentionsItemRenderer: ({ item }) => (
+      <span className="flex items-center gap-2 px-2 py-1.5">
+        <span className="flex size-5 items-center justify-center rounded-full bg-surface-gray-4 text-xs text-ink-gray-7">
+          {item.label.charAt(0)}
+        </span>
+        <span className="flex flex-col items-start">
+          <span className="text-base text-ink-gray-8 whitespace-nowrap truncate">{item.label}</span>
+          <span className="text-sm text-ink-gray-5 whitespace-nowrap truncate">{item.id}</span>
+        </span>
+      </span>
+    ),
+  },
+  render: function MentionsCustomRendererRender(args) {
     return (
       <div className="m-2 w-137.5">
         <TextEditor {...args} />

@@ -16,7 +16,11 @@ import MentionList, {
   type MentionListHandle,
   type MentionListProps,
 } from "./mentionList";
-import type { MentionItem, TextEditorProps } from "../types";
+import type {
+  MentionItem,
+  MentionItemRenderer,
+  TextEditorProps,
+} from "../types";
 
 type MentionSuggestion = MentionOptions<
   MentionItem,
@@ -47,7 +51,8 @@ const updatePosition = (
 };
 
 export const createMentionSuggestion = (
-  mentions: NonNullable<TextEditorProps["mentions"]>
+  mentions: NonNullable<TextEditorProps["mentions"]>,
+  ItemRenderer?: MentionItemRenderer
 ): MentionSuggestion => ({
   items: ({ query }) => mentions(query),
   render: () => {
@@ -56,7 +61,7 @@ export const createMentionSuggestion = (
     return {
       onStart: (props) => {
         component = new ReactRenderer(MentionList, {
-          props,
+          props: { ...props, ItemRenderer },
           editor: props.editor,
         });
 
