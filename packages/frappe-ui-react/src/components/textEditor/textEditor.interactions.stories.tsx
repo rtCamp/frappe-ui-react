@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { screen, userEvent, expect, within } from "storybook/test";
+import { screen, userEvent, expect, waitFor, within } from "storybook/test";
 import TextEditor from "./textEditor";
-import type { TextEditorHandle } from "./types";
+import type { MentionItem, TextEditorHandle } from "./types";
 
 const meta: Meta<typeof TextEditor> = {
   title: "Components/TextEditor/Interactions",
@@ -305,6 +305,75 @@ export const EditorMentions: Story = {
     expect(mention?.textContent).toBe("@Bob Brown");
     expect(mention?.getAttribute("data-id")).toBe("bob@example.com");
     expect(screen.queryByRole("button", { name: "Bob Brown" })).toBeNull();
+  },
+};
+
+type PendingMentionRequest = {
+  query: string;
+  resolve: (items: MentionItem[]) => void;
+};
+
+const pendingMentionRequests: PendingMentionRequest[] = [];
+
+export const EditorMentionsSlowRequest: Story = {
+  args: {
+    editorClass: "prose-sm min-h-[4rem] border rounded-lg p-2",
+    autofocus: true,
+    // Mocked user lookup that never resolves on its own — the play function
+    // resolves each captured request manually to simulate slow responses.
+    mentions: (query) =>
+      new Promise((resolve) => {
+        pendingMentionRequests.push({ query, resolve });
+      }),
+  },
+  render: function MentionsSlowRequestRender(args) {
+    return (
+      <div className="m-2 w-[550px]">
+        <TextEditor {...args} />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    pendingMentionRequests.length = 0;
+
+    // Typing the trigger should show the loading row while the request is
+    // still in flight.
+    await userEvent.keyboard("@");
+
+    await screen.findByText("Loading...");
+    await waitFor(() => expect(pendingMentionRequests.length).toBe(1));
+
+    // Each keystroke fires a new lookup while the previous ones are still
+    // pending.
+    await userEvent.keyboard("bo");
+    await waitFor(() => expect(pendingMentionRequests.length).toBe(3));
+
+    const [first, second, latest] = pendingMentionRequests;
+    expect(latest.query).toBe("bo");
+
+    // Resolving the latest request replaces the loading row with the users.
+    latest.resolve([MENTION_USERS[1]]);
+
+    await screen.findByRole("button", { name: "Bob Brown" });
+    expect(screen.queryByText("Loading...")).toBeNull();
+
+    // Superseded requests resolving late must not overwrite the current
+    // list with stale results.
+    first.resolve(MENTION_USERS);
+    second.resolve(MENTION_USERS);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    expect(screen.queryByRole("button", { name: "Alice Anderson" })).toBeNull();
+    await screen.findByRole("button", { name: "Bob Brown" });
+
+    // Selecting a result fetched by the slow request still inserts the
+    // mention node.
+    await userEvent.keyboard("{Enter}");
+
+    const mention = canvasElement.querySelector(".mention");
+    expect(mention).not.toBeNull();
+    expect(mention?.textContent).toBe("@Bob Brown");
+    expect(mention?.getAttribute("data-id")).toBe("bob@example.com");
   },
 };
 
