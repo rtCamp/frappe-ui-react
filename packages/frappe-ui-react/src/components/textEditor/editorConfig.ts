@@ -28,7 +28,7 @@ export const EMPTY_STARTERKIT_OPTIONS: NonNullable<
   TextEditorProps["starterkitOptions"]
 > = {};
 
-type EditorExtensionOptions = Pick<
+export type EditorExtensionOptions = Pick<
   TextEditorProps,
   | "extensions"
   | "starterkitOptions"
