@@ -3,7 +3,7 @@
  */
 import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
 import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import { forwardRef, useImperativeHandle } from "react";
 
 /**
  * Internal dependencies.
@@ -12,12 +12,8 @@ import "./textEditor.css";
 import type { TextEditorHandle, TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
 import { cn } from "../../utils";
-import {
-  DEFAULT_EDITOR_CLASS,
-  EMPTY_EXTENSIONS,
-  EMPTY_STARTERKIT_OPTIONS,
-  getTextEditorExtensions,
-} from "./editorConfig";
+import { DEFAULT_EDITOR_CLASS, EMPTY_EXTENSIONS, EMPTY_STARTERKIT_OPTIONS } from "./editorConfig";
+import { useTextEditorExtensions } from "./useTextEditorExtensions";
 import { findIdentifiedBulletListEnd, findListItemById, isDocEmpty } from "./extension/utils";
 
 const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(function TextEditor(
@@ -42,42 +38,13 @@ const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(function TextEd
   },
   ref
 ) {
-  const mentionsRef = useRef(mentions);
-  useEffect(() => {
-    mentionsRef.current = mentions;
-  }, [mentions]);
-
-  const mentionsItemRendererRef = useRef(mentionsItemRenderer);
-  useEffect(() => {
-    mentionsItemRendererRef.current = mentionsItemRenderer;
-  }, [mentionsItemRenderer]);
-
-  // Read `mentions` and `mentionsItemRenderer` through refs so inline
-  // callback props don't invalidate the extensions array and recreate the
-  // editor on every parent render.
-  const hasMentions = Boolean(mentions);
-  const hasMentionsItemRenderer = Boolean(mentionsItemRenderer);
-  const StableMentionsItemRenderer = useMemo<TextEditorProps["mentionsItemRenderer"]>(
-    () =>
-      hasMentionsItemRenderer
-        ? function StableMentionsItemRenderer(props) {
-            const ItemRenderer = mentionsItemRendererRef.current;
-            return ItemRenderer ? <ItemRenderer {...props} /> : null;
-          }
-        : undefined,
-    [hasMentionsItemRenderer]
-  );
-  const editorExtensions = useMemo(
-    () =>
-      getTextEditorExtensions({
-        extensions,
-        starterkitOptions,
-        placeholder,
-        mentions: hasMentions ? (query) => mentionsRef.current?.(query) ?? Promise.resolve([]) : undefined,
-        mentionsItemRenderer: StableMentionsItemRenderer,
-      }),
-    [extensions, starterkitOptions, placeholder, hasMentions, StableMentionsItemRenderer]
-  );
+  const editorExtensions = useTextEditorExtensions({
+    extensions,
+    starterkitOptions,
+    placeholder,
+    mentions,
+    mentionsItemRenderer,
+  });
 
   const editor = useEditor(
     {
