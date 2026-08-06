@@ -30,7 +30,11 @@ export const EMPTY_STARTERKIT_OPTIONS: NonNullable<
 
 type EditorExtensionOptions = Pick<
   TextEditorProps,
-  "extensions" | "starterkitOptions" | "placeholder" | "mentions"
+  | "extensions"
+  | "starterkitOptions"
+  | "placeholder"
+  | "mentions"
+  | "mentionsItemRenderer"
 >;
 
 export const getTextEditorExtensions = ({
@@ -38,6 +42,7 @@ export const getTextEditorExtensions = ({
   starterkitOptions = EMPTY_STARTERKIT_OPTIONS,
   placeholder = "",
   mentions,
+  mentionsItemRenderer,
 }: EditorExtensionOptions): Extensions => [
   StarterKit.configure({
     codeBlock: false,
@@ -71,7 +76,7 @@ export const getTextEditorExtensions = ({
           HTMLAttributes: {
             class: "mention",
           },
-          suggestion: createMentionSuggestion(mentions),
+          suggestion: createMentionSuggestion(mentions, mentionsItemRenderer),
         }),
       ]
     : []),

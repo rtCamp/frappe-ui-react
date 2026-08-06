@@ -10,6 +10,11 @@ export interface MentionItem {
   label: string;
 }
 
+export type MentionItemRenderer = FC<{
+  item: MentionItem;
+  selected: boolean;
+}>;
+
 export interface TextEditorProps {
   // Props
   content?: string | null;
@@ -21,6 +26,7 @@ export interface TextEditorProps {
   starterkitOptions?: Partial<StarterKitOptions>;
   fixedMenu?: boolean;
   mentions?: (query: string) => Promise<MentionItem[]>;
+  mentionsItemRenderer?: MentionItemRenderer;
   // Events
   onChange?: (content: string) => void;
   onFocus?: (event: FocusEvent) => void;
