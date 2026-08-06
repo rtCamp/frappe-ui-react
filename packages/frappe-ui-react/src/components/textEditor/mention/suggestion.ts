@@ -2,7 +2,13 @@
  * External dependencies.
  */
 import { ReactRenderer } from "@tiptap/react";
-import { computePosition, flip, offset, shift } from "@floating-ui/react";
+import {
+  autoUpdate,
+  computePosition,
+  flip,
+  offset,
+  shift,
+} from "@floating-ui/react";
 import type {
   MentionNodeAttrs,
   MentionOptions,
@@ -57,6 +63,8 @@ export const createMentionSuggestion = (
   items: ({ query }) => mentions(query),
   render: () => {
     let component: ReactRenderer<MentionListHandle, MentionListProps>;
+    let clientRect: SuggestionProps["clientRect"];
+    let stopAutoUpdate: (() => void) | undefined;
 
     return {
       onStart: (props) => {
@@ -67,15 +75,26 @@ export const createMentionSuggestion = (
 
         if (!props.clientRect) return;
 
+        clientRect = props.clientRect;
         const element = component.element as HTMLElement;
         element.style.position = "absolute";
         element.style.zIndex = "100";
         document.body.appendChild(element);
-        updatePosition(element, props.clientRect);
+        // Re-anchor on scroll/resize of the editor's ancestors so the list
+        // doesn't detach when the editor is inside a scrollable container.
+        stopAutoUpdate = autoUpdate(
+          {
+            getBoundingClientRect: () => clientRect?.() ?? new DOMRect(),
+            contextElement: props.editor.view.dom,
+          },
+          element,
+          () => updatePosition(element, clientRect)
+        );
       },
       onUpdate: (props) => {
         component.updateProps(props);
-        updatePosition(component.element as HTMLElement, props.clientRect);
+        clientRect = props.clientRect;
+        updatePosition(component.element as HTMLElement, clientRect);
       },
       onKeyDown: (props) => {
         if (props.event.key === "Escape") {
@@ -85,6 +104,8 @@ export const createMentionSuggestion = (
         return component.ref?.onKeyDown(props) ?? false;
       },
       onExit: () => {
+        stopAutoUpdate?.();
+        stopAutoUpdate = undefined;
         component.element.remove();
         component.destroy();
       },
