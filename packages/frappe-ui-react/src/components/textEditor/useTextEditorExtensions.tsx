@@ -7,7 +7,10 @@ import type { Extensions } from "@tiptap/react";
 /**
  * Internal dependencies.
  */
-import { getTextEditorExtensions, type EditorExtensionOptions } from "./editorConfig";
+import {
+  getTextEditorExtensions,
+  type GetExtensionsArgs,
+} from "./editorConfig";
 import type { TextEditorProps } from "./types";
 
 // Read `mentions` and `mentionsItemRenderer` through refs so inline callback
@@ -17,9 +20,10 @@ export const useTextEditorExtensions = ({
   extensions,
   starterkitOptions,
   placeholder,
+  extensionOptions,
   mentions,
   mentionsItemRenderer,
-}: EditorExtensionOptions): Extensions => {
+}: GetExtensionsArgs): Extensions => {
   const mentionsRef = useRef(mentions);
   useEffect(() => {
     mentionsRef.current = mentions;
@@ -33,7 +37,9 @@ export const useTextEditorExtensions = ({
   const hasMentions = Boolean(mentions);
   const hasMentionsItemRenderer = Boolean(mentionsItemRenderer);
 
-  const StableMentionsItemRenderer = useMemo<TextEditorProps["mentionsItemRenderer"]>(
+  const StableMentionsItemRenderer = useMemo<
+    TextEditorProps["mentionsItemRenderer"]
+  >(
     () =>
       hasMentionsItemRenderer
         ? function StableMentionsItemRenderer(props) {
@@ -56,9 +62,18 @@ export const useTextEditorExtensions = ({
         extensions,
         starterkitOptions,
         placeholder,
+        extensionOptions,
         mentions: hasMentions ? stableMentions : undefined,
         mentionsItemRenderer: StableMentionsItemRenderer,
       }),
-    [extensions, starterkitOptions, placeholder, hasMentions, stableMentions, StableMentionsItemRenderer]
+    [
+      extensions,
+      starterkitOptions,
+      placeholder,
+      hasMentions,
+      stableMentions,
+      StableMentionsItemRenderer,
+      extensionOptions,
+    ]
   );
 };
