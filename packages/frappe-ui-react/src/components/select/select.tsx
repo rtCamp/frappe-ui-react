@@ -38,6 +38,7 @@ const Select: React.FC<SelectProps> = ({
   onChange,
   className,
   placeholderClassName,
+  matchTriggerWidth = false,
 }) => {
   const Prefix = prefix ?? DefaultPrefix;
   const Suffix = suffix ?? DefaultSuffix;
@@ -74,19 +75,24 @@ const Select: React.FC<SelectProps> = ({
       </BaseSelect.Trigger>
       <BaseSelect.Portal>
         <BaseSelect.Positioner className="z-60">
-          <BaseSelect.Popup className="p-1 m-0 bg-surface-modal ring-1 ring-outline-gray-1 ring-opacity-5 rounded-lg shadow-2xl will-change-[opacity,transform] overflow-hidden origin-center data-[state=open]:animate-[fadeInScale_100ms] data-[state=closed]:animate-[fadeOutScale_100ms]">
+          <BaseSelect.Popup
+            className={cn(
+              "p-1 m-0 bg-surface-modal ring-1 ring-outline-gray-1 ring-opacity-5 rounded-lg shadow-2xl will-change-[opacity,transform] overflow-hidden origin-center data-[state=open]:animate-[fadeInScale_100ms] data-[state=closed]:animate-[fadeOutScale_100ms]",
+              matchTriggerWidth && "w-(--anchor-width)"
+            )}
+          >
             <BaseSelect.List className="max-h-60 overflow-auto">
               {options.map((option) => (
                 <BaseSelect.Item
                   key={option.value}
                   value={option.value}
                   disabled={option.disabled}
-                  className="focus:outline-none rounded min-h-7 px-2 text-base text-ink-gray-9 flex items-center data-highlighted:bg-surface-gray-2 border-0 data-selected:bg-surface-gray-2 data-disabled:text-ink-gray-4 select-none"
+                  className="focus:outline-none rounded min-h-7 px-2 py-1 text-base text-ink-gray-9 flex items-start data-highlighted:bg-surface-gray-2 border-0 data-selected:bg-surface-gray-2 data-disabled:text-ink-gray-4 select-none"
                 >
-                  <BaseSelect.ItemText className="truncate">
+                  <BaseSelect.ItemText className="wrap-break-word min-w-0 flex-1">
                     <Option option={option} />
                   </BaseSelect.ItemText>
-                  <BaseSelect.ItemIndicator className="ml-auto pl-1 inline-flex items-center justify-center">
+                  <BaseSelect.ItemIndicator className="ml-auto pl-1 inline-flex items-center justify-center shrink-0">
                     <Check className="h-4 w-4" />
                   </BaseSelect.ItemIndicator>
                 </BaseSelect.Item>
