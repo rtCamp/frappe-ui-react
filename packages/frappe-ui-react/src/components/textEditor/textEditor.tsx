@@ -3,7 +3,7 @@
  */
 import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
 import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
-import { forwardRef, useImperativeHandle, useMemo } from "react";
+import { forwardRef, useImperativeHandle } from "react";
 
 /**
  * Internal dependencies.
@@ -17,8 +17,8 @@ import {
   EMPTY_EXTENSIONS,
   EMPTY_EXTENSION_OPTIONS,
   EMPTY_STARTERKIT_OPTIONS,
-  getTextEditorExtensions,
 } from "./editorConfig";
+import { useTextEditorExtensions } from "./useTextEditorExtensions";
 import {
   findIdentifiedBulletListEnd,
   findListItemById,
@@ -37,6 +37,8 @@ const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
       starterkitOptions = EMPTY_STARTERKIT_OPTIONS,
       extensionOptions = EMPTY_EXTENSION_OPTIONS,
       fixedMenu = false,
+      mentions,
+      mentionsItemRenderer,
       onChange,
       onFocus,
       onBlur,
@@ -47,16 +49,14 @@ const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
     },
     ref
   ) {
-    const editorExtensions = useMemo(
-      () =>
-        getTextEditorExtensions({
-          extensions,
-          starterkitOptions,
-          placeholder,
-          extensionOptions,
-        }),
-      [extensions, starterkitOptions, placeholder, extensionOptions]
-    );
+    const editorExtensions = useTextEditorExtensions({
+      extensions,
+      starterkitOptions,
+      placeholder,
+      extensionOptions,
+      mentions,
+      mentionsItemRenderer,
+    });
 
     const editor = useEditor(
       {

@@ -18,8 +18,8 @@ import {
   EMPTY_EXTENSION_OPTIONS,
   EMPTY_EXTENSIONS,
   EMPTY_STARTERKIT_OPTIONS,
-  getTextEditorExtensions,
 } from "./editorConfig";
+import { useTextEditorExtensions } from "./useTextEditorExtensions";
 import { renderStaticCodeBlock } from "./extension/staticCodeBlock";
 
 const StaticTextEditor = ({
@@ -30,19 +30,15 @@ const StaticTextEditor = ({
   placeholder = "",
   extensionOptions = EMPTY_EXTENSION_OPTIONS,
 }: StaticTextEditorProps) => {
-  const editorExtensions = useMemo(
-    () =>
-      getTextEditorExtensions({
-        extensions,
-        starterkitOptions,
-        placeholder,
-        extensionOptions: {
-          ...extensionOptions,
-          taskItem: { staticCheckbox: true, ...extensionOptions.taskItem },
-        },
-      }),
-    [extensions, starterkitOptions, placeholder, extensionOptions]
-  );
+  const editorExtensions = useTextEditorExtensions({
+    extensions,
+    starterkitOptions,
+    placeholder,
+    extensionOptions: {
+      ...extensionOptions,
+      taskItem: { staticCheckbox: true, ...extensionOptions.taskItem },
+    },
+  });
 
   /**
    * Handle copy event to copy both plain text and HTML content.
