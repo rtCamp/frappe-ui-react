@@ -9,6 +9,7 @@ import Highlight from "@tiptap/extension-highlight";
 import { TextStyleKit } from "@tiptap/extension-text-style";
 import Placeholder from "@tiptap/extension-placeholder";
 import { TableKit } from "@tiptap/extension-table";
+import Mention from "@tiptap/extension-mention";
 
 /**
  * Internal dependencies.
@@ -18,6 +19,7 @@ import type { TextEditorProps } from "./types";
 import { ExtendedCodeBlock } from "./extension/codeBlock";
 import { IdentifiedListItem } from "./extension/identifiedListItem";
 import { ExtendedTaskItem } from "./extension/taskItem";
+import { createMentionSuggestion } from "./mention/suggestion";
 
 export const DEFAULT_EDITOR_CLASS =
   "ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-outline-gray-2 prose-th:border-outline-gray-2 prose-td:relative prose-th:relative prose-th:bg-surface-gray-2 border-outline-gray-1";
@@ -30,15 +32,22 @@ export const EMPTY_EXTENSION_OPTIONS: NonNullable<
   TextEditorProps["extensionOptions"]
 > = {};
 
-type GetExtensionsArgs = Pick<
+export type GetExtensionsArgs = Pick<
   TextEditorProps,
-  "extensions" | "starterkitOptions" | "placeholder" | "extensionOptions"
+  | "extensions"
+  | "starterkitOptions"
+  | "placeholder"
+  | "extensionOptions"
+  | "mentions"
+  | "mentionsItemRenderer"
 >;
 
 export const getTextEditorExtensions = ({
   extensions = EMPTY_EXTENSIONS,
   starterkitOptions = EMPTY_STARTERKIT_OPTIONS,
   placeholder = "",
+  mentions,
+  mentionsItemRenderer,
   extensionOptions = EMPTY_EXTENSION_OPTIONS,
 }: GetExtensionsArgs): Extensions => [
   StarterKit.configure({
@@ -70,5 +79,15 @@ export const getTextEditorExtensions = ({
   TableKit.configure({ ...extensionOptions.table }),
   ExtendedCodeBlock,
   IdentifiedListItem,
+  ...(mentions
+    ? [
+        Mention.configure({
+          HTMLAttributes: {
+            class: "mention",
+          },
+          suggestion: createMentionSuggestion(mentions, mentionsItemRenderer),
+        }),
+      ]
+    : []),
   ...extensions,
 ];

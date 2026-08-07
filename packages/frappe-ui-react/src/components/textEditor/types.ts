@@ -24,6 +24,16 @@ export interface EditorExtensionOptions {
   table?: Partial<TableKitOptions>;
 }
 
+export interface MentionItem {
+  id: string;
+  label: string;
+}
+
+export type MentionItemRenderer = FC<{
+  item: MentionItem;
+  selected: boolean;
+}>;
+
 export interface TextEditorProps {
   // Props
   content?: string | null;
@@ -35,6 +45,8 @@ export interface TextEditorProps {
   starterkitOptions?: Partial<StarterKitOptions>;
   extensionOptions?: EditorExtensionOptions;
   fixedMenu?: boolean;
+  mentions?: (query: string) => Promise<MentionItem[]>;
+  mentionsItemRenderer?: MentionItemRenderer;
   // Events
   onChange?: (content: string) => void;
   onFocus?: (event: FocusEvent) => void;
