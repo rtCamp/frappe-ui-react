@@ -47,6 +47,11 @@ export default {
       action: "changed",
       description: "Callback function when the selected value changes",
     },
+    matchTriggerWidth: {
+      control: "boolean",
+      description:
+        "If true, constrains the dropdown width to match the trigger width",
+    },
   },
 } as Meta<typeof Select>;
 
@@ -127,6 +132,27 @@ export const WithSuffix: StoryObj<SelectProps> = {
     options: OPTIONS,
     placeholder: "Select option",
     suffix: () => <User size={16} className="text-ink-gray-9" />,
+  },
+  render: (args) => {
+    const [value, setValue] = useState(args.value || "");
+
+    return (
+      <Select
+        {...args}
+        value={value}
+        onChange={(value) => setValue(value ?? "")}
+      />
+    );
+  },
+};
+
+export const WithMatchTriggerWidth: StoryObj<SelectProps> = {
+  args: {
+    value: "",
+    options: OPTIONS,
+    placeholder: "Select option",
+    matchTriggerWidth: true,
+    className: "w-40",
   },
   render: (args) => {
     const [value, setValue] = useState(args.value || "");
