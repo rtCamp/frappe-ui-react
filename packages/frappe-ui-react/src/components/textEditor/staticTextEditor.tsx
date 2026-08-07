@@ -13,12 +13,8 @@ import { useCallback, useMemo } from "react";
 import "./textEditor.css";
 import type { StaticTextEditorProps } from "./types";
 import { cn } from "../../utils";
-import {
-  DEFAULT_EDITOR_CLASS,
-  EMPTY_EXTENSIONS,
-  EMPTY_STARTERKIT_OPTIONS,
-  getTextEditorExtensions,
-} from "./editorConfig";
+import { DEFAULT_EDITOR_CLASS, EMPTY_EXTENSIONS, EMPTY_STARTERKIT_OPTIONS } from "./editorConfig";
+import { useTextEditorExtensions } from "./useTextEditorExtensions";
 import { renderStaticCodeBlock } from "./extension/staticCodeBlock";
 
 const StaticTextEditor = ({
@@ -28,11 +24,11 @@ const StaticTextEditor = ({
   starterkitOptions = EMPTY_STARTERKIT_OPTIONS,
   placeholder = "",
 }: StaticTextEditorProps) => {
-  const editorExtensions = useMemo(
-    () =>
-      getTextEditorExtensions({ extensions, starterkitOptions, placeholder }),
-    [extensions, starterkitOptions, placeholder]
-  );
+  const editorExtensions = useTextEditorExtensions({
+    extensions,
+    starterkitOptions,
+    placeholder,
+  });
 
   /**
    * Handle copy event to copy both plain text and HTML content.
@@ -47,15 +43,9 @@ const StaticTextEditor = ({
       const container = document.createElement("div");
       container.appendChild(selection.getRangeAt(0).cloneContents());
       const html = container.innerHTML;
-      const doc = ProseMirrorNode.fromJSON(
-        getSchema(editorExtensions),
-        generateJSON(html, editorExtensions)
-      );
+      const doc = ProseMirrorNode.fromJSON(getSchema(editorExtensions), generateJSON(html, editorExtensions));
 
-      event.clipboardData.setData(
-        "text/plain",
-        doc.textBetween(0, doc.content.size, "\n")
-      );
+      event.clipboardData.setData("text/plain", doc.textBetween(0, doc.content.size, "\n"));
       event.clipboardData.setData("text/html", html);
       event.preventDefault();
     },
@@ -65,10 +55,7 @@ const StaticTextEditor = ({
   const staticContent = useMemo(
     () =>
       renderToReactElement({
-        content: generateJSON(
-          DOMPurify.sanitize(content ?? ""),
-          editorExtensions
-        ),
+        content: generateJSON(DOMPurify.sanitize(content ?? ""), editorExtensions),
         extensions: editorExtensions,
         options: {
           nodeMapping: {
