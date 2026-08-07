@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { screen, userEvent, expect, within } from "storybook/test";
+import { screen, userEvent, expect, waitFor, within } from "storybook/test";
 import TextEditor from "./textEditor";
-import type { TextEditorHandle } from "./types";
+import type { MentionItem, TextEditorHandle } from "./types";
 
 const meta: Meta<typeof TextEditor> = {
   title: "Components/TextEditor/Interactions",
@@ -59,6 +59,10 @@ const meta: Meta<typeof TextEditor> = {
     onTransaction: {
       control: false,
       description: "Callback on editor transaction",
+    },
+    mentions: {
+      control: false,
+      description: "Async callback returning mention suggestions for a query; typing @ opens the suggestion list",
     },
   },
 };
@@ -258,6 +262,164 @@ export const EditorFontColor: Story = {
   },
 };
 
+const MENTION_USERS = [
+  { id: "alice@example.com", label: "Alice Anderson" },
+  { id: "bob@example.com", label: "Bob Brown" },
+  { id: "carol@example.com", label: "Carol Clark" },
+];
+
+export const EditorMentions: Story = {
+  args: {
+    editorClass: "prose-sm min-h-[4rem] border rounded-lg p-2",
+    autofocus: true,
+    mentions: async (query) => MENTION_USERS.filter((user) => user.label.toLowerCase().includes(query.toLowerCase())),
+  },
+  render: function MentionsRender(args) {
+    return (
+      <div className="m-2 w-[550px]">
+        <TextEditor {...args} />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    // Typing the trigger character should open the suggestion list with all
+    // users. The popup is appended to document.body, outside the canvas.
+    await userEvent.keyboard("@");
+
+    await screen.findByRole("button", { name: "Alice Anderson" });
+    await screen.findByRole("button", { name: "Bob Brown" });
+    await screen.findByRole("button", { name: "Carol Clark" });
+
+    // Typing a query should filter the list down to matching users.
+    await userEvent.keyboard("bob");
+
+    await screen.findByRole("button", { name: "Bob Brown" });
+    expect(screen.queryByRole("button", { name: "Alice Anderson" })).toBeNull();
+
+    // Enter should insert the highlighted suggestion as a mention node and
+    // close the popup.
+    await userEvent.keyboard("{Enter}");
+
+    const mention = canvasElement.querySelector(".mention");
+    expect(mention).not.toBeNull();
+    expect(mention?.textContent).toBe("@Bob Brown");
+    expect(mention?.getAttribute("data-id")).toBe("bob@example.com");
+    expect(screen.queryByRole("button", { name: "Bob Brown" })).toBeNull();
+  },
+};
+
+type PendingMentionRequest = {
+  query: string;
+  resolve: (items: MentionItem[]) => void;
+};
+
+const pendingMentionRequests: PendingMentionRequest[] = [];
+
+export const EditorMentionsSlowRequest: Story = {
+  args: {
+    editorClass: "prose-sm min-h-[4rem] border rounded-lg p-2",
+    // Mocked user lookup that never resolves on its own — the play function
+    // resolves each captured request manually to simulate slow responses.
+    mentions: (query) =>
+      new Promise((resolve) => {
+        pendingMentionRequests.push({ query, resolve });
+      }),
+  },
+  render: function MentionsSlowRequestRender(args) {
+    return (
+      <div className="m-2 w-[550px]">
+        <TextEditor {...args} />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    pendingMentionRequests.length = 0;
+
+    const editorEl = await waitFor(() => {
+      const el = canvasElement.querySelector<HTMLElement>("[contenteditable='true']");
+      expect(el).not.toBeNull();
+      return el as HTMLElement;
+    });
+    await userEvent.click(editorEl);
+
+    // Typing the trigger should show the loading row while the request is
+    // still in flight.
+    await userEvent.keyboard("@");
+
+    await screen.findByText("Loading...");
+    await waitFor(() => expect(pendingMentionRequests.length).toBe(1));
+
+    // Each keystroke fires a new lookup while the previous ones are still
+    // pending.
+    await userEvent.keyboard("bo");
+    await waitFor(() => expect(pendingMentionRequests.length).toBe(3));
+
+    const [first, second, latest] = pendingMentionRequests;
+    expect(latest.query).toBe("bo");
+
+    // Resolving the latest request replaces the loading row with the users.
+    latest.resolve([MENTION_USERS[1]]);
+
+    await screen.findByRole("button", { name: "Bob Brown" });
+    expect(screen.queryByText("Loading...")).toBeNull();
+
+    // Superseded requests resolving late must not overwrite the current
+    // list with stale results.
+    first.resolve(MENTION_USERS);
+    second.resolve(MENTION_USERS);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    expect(screen.queryByRole("button", { name: "Alice Anderson" })).toBeNull();
+    await screen.findByRole("button", { name: "Bob Brown" });
+
+    // Selecting a result fetched by the slow request still inserts the
+    // mention node.
+    await userEvent.keyboard("{Enter}");
+
+    const mention = canvasElement.querySelector(".mention");
+    expect(mention).not.toBeNull();
+    expect(mention?.textContent).toBe("@Bob Brown");
+    expect(mention?.getAttribute("data-id")).toBe("bob@example.com");
+  },
+};
+
+export const EditorMentionsScrollContainer: Story = {
+  args: {
+    content: CONTENT,
+    editorClass: "prose-sm border rounded-lg p-2",
+    mentions: async (query) => MENTION_USERS.filter((user) => user.label.toLowerCase().includes(query.toLowerCase())),
+  },
+  render: function MentionsScrollRender(args) {
+    return (
+      <div data-testid="scroll-container" className="m-2 h-40 w-[550px] overflow-y-auto">
+        <TextEditor {...args} />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const scrollContainer = canvas.getByTestId("scroll-container");
+
+    // Place the caret inside a visible line and trigger the suggestion
+    // after a space.
+    await userEvent.click(canvas.getByText("Item 1"));
+    await userEvent.keyboard(" @");
+
+    const item = await screen.findByRole("button", { name: "Alice Anderson" });
+    const popup = item.parentElement as HTMLElement;
+    const before = popup.getBoundingClientRect();
+
+    // Scrolling the container must keep the list anchored to the caret
+    // instead of leaving it at its original viewport position.
+    scrollContainer.scrollTop += 40;
+
+    await waitFor(() => {
+      const after = popup.getBoundingClientRect();
+      expect(Math.abs(after.top - (before.top - 40))).toBeLessThanOrEqual(2);
+    });
+  },
+};
+
 export const EditorListItemHandle: Story = {
   args: {
     editorClass: "prose-sm min-h-[4rem] border rounded-b-lg border-t-0 p-2",
@@ -268,28 +430,16 @@ export const EditorListItemHandle: Story = {
       <div className="m-2 w-[550px]">
         <TextEditor {...args} ref={ref} />
         <div className="mt-2 flex gap-2">
-          <button
-            type="button"
-            onClick={() => ref.current?.addListItem("item-1", "First item")}
-          >
+          <button type="button" onClick={() => ref.current?.addListItem("item-1", "First item")}>
             Add Item 1
           </button>
-          <button
-            type="button"
-            onClick={() => ref.current?.addListItem("item-2", "Second item")}
-          >
+          <button type="button" onClick={() => ref.current?.addListItem("item-2", "Second item")}>
             Add Item 2
           </button>
-          <button
-            type="button"
-            onClick={() => ref.current?.removeListItem("item-1")}
-          >
+          <button type="button" onClick={() => ref.current?.removeListItem("item-1")}>
             Remove Item 1
           </button>
-          <button
-            type="button"
-            onClick={() => ref.current?.removeListItem("item-2")}
-          >
+          <button type="button" onClick={() => ref.current?.removeListItem("item-2")}>
             Remove Item 2
           </button>
         </div>
@@ -320,9 +470,7 @@ export const EditorListItemHandle: Story = {
 
     // Removing one of two items should only delete that item, leaving the
     // wrapping list intact.
-    await userEvent.click(
-      canvas.getByRole("button", { name: "Remove Item 1" })
-    );
+    await userEvent.click(canvas.getByRole("button", { name: "Remove Item 1" }));
 
     item1 = canvasElement.querySelector('li[data-item-id="item-1"]');
     expect(item1).toBeNull();
@@ -331,9 +479,7 @@ export const EditorListItemHandle: Story = {
 
     // Removing the last remaining item should also remove the now-empty
     // wrapping list, leaving no leftover empty list behind.
-    await userEvent.click(
-      canvas.getByRole("button", { name: "Remove Item 2" })
-    );
+    await userEvent.click(canvas.getByRole("button", { name: "Remove Item 2" }));
 
     expect(canvasElement.querySelectorAll("li").length).toBe(0);
     expect(canvasElement.querySelectorAll("ul").length).toBe(0);

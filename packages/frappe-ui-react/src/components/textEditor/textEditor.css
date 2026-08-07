@@ -220,3 +220,13 @@ img.ProseMirror-selectednode {
 .tag-suggestion-active {
   background-color: var(--color-surface-gray-2, #f3f3f3);
 }
+
+/* Mention node */
+.ProseMirror .mention {
+  background-color: var(--color-surface-gray-2, #f3f3f3);
+  color: var(--color-ink-gray-8);
+  padding: 0px 2px;
+  border-radius: 4px;
+  font-weight: 500;
+  white-space: nowrap;
+}
