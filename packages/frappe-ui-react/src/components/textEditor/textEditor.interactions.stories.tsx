@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { screen, userEvent, expect, waitFor, within } from "storybook/test";
+import { screen, userEvent, expect, fn, waitFor, within } from "storybook/test";
 import TextEditor from "./textEditor";
+import StaticTextEditor from "./staticTextEditor";
 import type { MentionItem, TextEditorHandle } from "./types";
 
 const meta: Meta<typeof TextEditor> = {
@@ -62,7 +63,8 @@ const meta: Meta<typeof TextEditor> = {
     },
     mentions: {
       control: false,
-      description: "Async callback returning mention suggestions for a query; typing @ opens the suggestion list",
+      description:
+        "Async callback returning mention suggestions for a query; typing @ opens the suggestion list",
     },
   },
 };
@@ -82,6 +84,21 @@ const value = ref(true);</code></pre>
     </ul>
 </div>
 `;
+
+const TASK_LIST_CONTENT: string = `
+<p>Task list paragraph</p>
+<ul data-type="taskList">
+    <li data-checked="true" data-type="taskItem"><label><input type="checkbox" checked><span></span></label><div><p>Done item</p></div></li>
+    <li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>Pending item</p></div></li>
+</ul>
+`;
+
+const getTaskCheckboxes = (canvasElement: HTMLElement) =>
+  Array.from(
+    canvasElement.querySelectorAll<HTMLInputElement>(
+      'ul[data-type="taskList"] input[type="checkbox"]'
+    )
+  );
 
 export default meta;
 type Story = StoryObj<typeof TextEditor>;
@@ -262,6 +279,85 @@ export const EditorFontColor: Story = {
   },
 };
 
+export const StaticTaskList: StoryObj<typeof StaticTextEditor> = {
+  args: {
+    content: TASK_LIST_CONTENT,
+    editorClass: "prose-sm min-h-[4rem] border rounded-lg p-2",
+  },
+  render: function StaticTaskListRender(args) {
+    return (
+      <div className="m-2 w-[550px]">
+        <StaticTextEditor {...args} />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const [doneBox, pendingBox] = getTaskCheckboxes(canvasElement);
+
+    expect(doneBox.checked).toBe(true);
+    expect(pendingBox.checked).toBe(false);
+
+    // Out of the tab order, and the label swallows pointer events.
+    expect(pendingBox.tabIndex).toBe(-1);
+    expect(
+      getComputedStyle(pendingBox.closest("label") as HTMLElement).pointerEvents
+    ).toBe("none");
+
+    // Forced past the pointer-events guard, a click still changes nothing.
+    const user = userEvent.setup({ pointerEventsCheck: 0 });
+    await user.click(pendingBox);
+    await user.click(doneBox);
+
+    expect(pendingBox.checked).toBe(false);
+    expect(doneBox.checked).toBe(true);
+  },
+};
+
+export const ReadOnlyTaskList: Story = {
+  args: {
+    content: TASK_LIST_CONTENT,
+    editable: false,
+    editorClass: "prose-sm min-h-[4rem] border rounded-lg p-2",
+    extensionOptions: { taskItem: { toggleWhenReadOnly: true } },
+    onChange: fn(),
+  },
+  render: function ReadOnlyTaskListRender(args) {
+    return (
+      <div className="m-2 w-[550px]">
+        <TextEditor {...args} />
+      </div>
+    );
+  },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    const [doneBox, pendingBox] = getTaskCheckboxes(canvasElement);
+
+    await userEvent.click(pendingBox);
+
+    await waitFor(() => expect(pendingBox.checked).toBe(true));
+    expect(args.onChange).toHaveBeenLastCalledWith(
+      expect.stringMatching(/data-checked="true"[\s\S]*data-checked="true"/)
+    );
+
+    await userEvent.click(doneBox);
+
+    await waitFor(() => expect(doneBox.checked).toBe(false));
+    expect(args.onChange).toHaveBeenLastCalledWith(
+      expect.not.stringMatching(/data-checked="true"[\s\S]*data-checked="true"/)
+    );
+
+    // Everything else stays read-only.
+    const editorContent = canvasElement.querySelector(".ProseMirror");
+    expect(editorContent).toHaveAttribute("contenteditable", "false");
+
+    const paragraph = canvas.getByText("Task list paragraph");
+    await userEvent.click(paragraph);
+    await userEvent.keyboard("typed");
+
+    expect(paragraph.textContent).toBe("Task list paragraph");
+  },
+};
+
 const MENTION_USERS = [
   { id: "alice@example.com", label: "Alice Anderson" },
   { id: "bob@example.com", label: "Bob Brown" },
@@ -272,7 +368,10 @@ export const EditorMentions: Story = {
   args: {
     editorClass: "prose-sm min-h-[4rem] border rounded-lg p-2",
     autofocus: true,
-    mentions: async (query) => MENTION_USERS.filter((user) => user.label.toLowerCase().includes(query.toLowerCase())),
+    mentions: async (query) =>
+      MENTION_USERS.filter((user) =>
+        user.label.toLowerCase().includes(query.toLowerCase())
+      ),
   },
   render: function MentionsRender(args) {
     return (
@@ -336,7 +435,9 @@ export const EditorMentionsSlowRequest: Story = {
     pendingMentionRequests.length = 0;
 
     const editorEl = await waitFor(() => {
-      const el = canvasElement.querySelector<HTMLElement>("[contenteditable='true']");
+      const el = canvasElement.querySelector<HTMLElement>(
+        "[contenteditable='true']"
+      );
       expect(el).not.toBeNull();
       return el as HTMLElement;
     });
@@ -387,11 +488,17 @@ export const EditorMentionsScrollContainer: Story = {
   args: {
     content: CONTENT,
     editorClass: "prose-sm border rounded-lg p-2",
-    mentions: async (query) => MENTION_USERS.filter((user) => user.label.toLowerCase().includes(query.toLowerCase())),
+    mentions: async (query) =>
+      MENTION_USERS.filter((user) =>
+        user.label.toLowerCase().includes(query.toLowerCase())
+      ),
   },
   render: function MentionsScrollRender(args) {
     return (
-      <div data-testid="scroll-container" className="m-2 h-40 w-[550px] overflow-y-auto">
+      <div
+        data-testid="scroll-container"
+        className="m-2 h-40 w-[550px] overflow-y-auto"
+      >
         <TextEditor {...args} />
       </div>
     );
@@ -430,16 +537,28 @@ export const EditorListItemHandle: Story = {
       <div className="m-2 w-[550px]">
         <TextEditor {...args} ref={ref} />
         <div className="mt-2 flex gap-2">
-          <button type="button" onClick={() => ref.current?.addListItem("item-1", "First item")}>
+          <button
+            type="button"
+            onClick={() => ref.current?.addListItem("item-1", "First item")}
+          >
             Add Item 1
           </button>
-          <button type="button" onClick={() => ref.current?.addListItem("item-2", "Second item")}>
+          <button
+            type="button"
+            onClick={() => ref.current?.addListItem("item-2", "Second item")}
+          >
             Add Item 2
           </button>
-          <button type="button" onClick={() => ref.current?.removeListItem("item-1")}>
+          <button
+            type="button"
+            onClick={() => ref.current?.removeListItem("item-1")}
+          >
             Remove Item 1
           </button>
-          <button type="button" onClick={() => ref.current?.removeListItem("item-2")}>
+          <button
+            type="button"
+            onClick={() => ref.current?.removeListItem("item-2")}
+          >
             Remove Item 2
           </button>
         </div>
@@ -470,7 +589,9 @@ export const EditorListItemHandle: Story = {
 
     // Removing one of two items should only delete that item, leaving the
     // wrapping list intact.
-    await userEvent.click(canvas.getByRole("button", { name: "Remove Item 1" }));
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Remove Item 1" })
+    );
 
     item1 = canvasElement.querySelector('li[data-item-id="item-1"]');
     expect(item1).toBeNull();
@@ -479,7 +600,9 @@ export const EditorListItemHandle: Story = {
 
     // Removing the last remaining item should also remove the now-empty
     // wrapping list, leaving no leftover empty list behind.
-    await userEvent.click(canvas.getByRole("button", { name: "Remove Item 2" }));
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Remove Item 2" })
+    );
 
     expect(canvasElement.querySelectorAll("li").length).toBe(0);
     expect(canvasElement.querySelectorAll("ul").length).toBe(0);
