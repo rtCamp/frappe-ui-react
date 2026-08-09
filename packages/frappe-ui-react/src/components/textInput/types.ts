@@ -1,4 +1,4 @@
-import type { KeyboardEventHandler, ReactNode } from "react";
+import type { KeyboardEventHandler, MouseEventHandler, ReactNode } from "react";
 import type { TextInputTypes } from "../../common/types";
 
 // Only these input types honor min/max/step per the HTML spec.
@@ -17,8 +17,10 @@ export interface TextInputBaseProps {
   debounce?: number;
   required?: boolean;
   readOnly?: boolean;
+  tabIndex?: number;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+  onMouseDown?: MouseEventHandler<HTMLInputElement>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   prefix?: (args?: any) => ReactNode;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

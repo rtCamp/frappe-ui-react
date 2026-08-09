@@ -119,12 +119,12 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
-      <Popover.Trigger
-        disabled={disabled}
-        nativeButton={false}
-        className="focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
-        render={
-          children ? (
+      {children ? (
+        <Popover.Trigger
+          disabled={disabled}
+          nativeButton={false}
+          className="block rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
+          render={
             <span>
               {children({
                 isOpen: open,
@@ -136,26 +136,37 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 onTriggerKeyDown: handleTriggerKeyDown,
               })}
             </span>
-          ) : (
-            <div className="flex w-full flex-col space-y-1.5">
-              {label && (
-                <label className="block text-xs text-ink-gray-5">{label}</label>
-              )}
-              <TextInput
-                type="text"
-                placeholder={placeholder}
-                value={displayValue}
-                disabled={disabled}
-                readOnly
-                onKeyDown={handleTriggerKeyDown}
-                suffix={() => (
-                  <FeatherIcon name="chevron-down" className="w-4 h-4" />
-                )}
-              />
-            </div>
-          )
-        }
-      />
+          }
+        />
+      ) : (
+        <div className="flex w-full flex-col space-y-1.5">
+          {label && (
+            <label className="block text-xs text-ink-gray-5">{label}</label>
+          )}
+          <Popover.Trigger
+            disabled={disabled}
+            nativeButton={false}
+            className="block rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
+            render={
+              <div>
+                <TextInput
+                  type="text"
+                  placeholder={placeholder}
+                  value={displayValue}
+                  disabled={disabled}
+                  readOnly
+                  tabIndex={-1}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onKeyDown={handleTriggerKeyDown}
+                  suffix={() => (
+                    <FeatherIcon name="chevron-down" className="w-4 h-4" />
+                  )}
+                />
+              </div>
+            }
+          />
+        </div>
+      )}
 
       <Popover.Portal>
         <Popover.Positioner
