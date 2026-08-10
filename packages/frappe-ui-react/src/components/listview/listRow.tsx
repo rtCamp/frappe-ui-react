@@ -6,7 +6,7 @@ import ListRowItem from "./listRowItem";
 import { alignmentMap, getGridTemplateColumns } from "./utils";
 import { cn } from "../../utils";
 
-interface ListRowProps {
+interface ListRowProps extends React.HTMLAttributes<HTMLDivElement> {
   row: any;
   isLastRow?: boolean;
   children?: React.ReactNode;
@@ -18,6 +18,7 @@ const ListRow: React.FC<ListRowProps> = ({
   isLastRow = false,
   children,
   className,
+  ...attrs
 }) => {
   const { options: list } = useContext(ListContext);
 
@@ -89,18 +90,20 @@ const ListRow: React.FC<ListRowProps> = ({
 
   return (
     <div
-      className={`flex flex-col transition-all duration-300 ease-in-out ${roundedClass} ${
-        isSelected || isActive ? "bg-surface-gray-2" : ""
-      } ${isHoverable ? "cursor-pointer" : ""} ${
-        isHoverable
-          ? isSelected || isActive
+      {...attrs}
+      className={cn(
+        "flex flex-col transition-all duration-300 ease-in-out",
+        roundedClass,
+        (isSelected || isActive) && "bg-surface-gray-2",
+        isHoverable && "cursor-pointer",
+        isHoverable &&
+          (isSelected || isActive
             ? "hover:bg-surface-gray-3"
-            : "hover:bg-surface-menu-bar"
-          : ""
-      }`}
+            : "hover:bg-surface-menu-bar")
+      )}
       {...clickableProps}
     >
-      <button className="[all:unset] hover:[all:unset]">
+      <div>
         <div
           className={cn("grid items-center px-2 gap-2", className)}
           style={{
@@ -130,9 +133,10 @@ const ListRow: React.FC<ListRowProps> = ({
             : list.columns.map((column: any, i: number) => (
                 <div
                   key={column.key}
-                  className={`${
-                    alignmentMap[column.align as keyof typeof alignmentMap]
-                  } ${i === 0 ? "ml-4 text-ink-gray-9" : "text-ink-gray-7"}`}
+                  className={cn(
+                    alignmentMap[column.align as keyof typeof alignmentMap],
+                    i === 0 ? "ml-4 text-ink-gray-9" : "text-ink-gray-7"
+                  )}
                 >
                   {list.slots?.cell ? (
                     <list.slots.cell
@@ -154,14 +158,15 @@ const ListRow: React.FC<ListRowProps> = ({
         </div>
         {!isLastRow && (
           <div
-            className={`h-px border-t ${
+            className={cn(
+              "h-px border-t",
               roundedClass === "rounded" || roundedClass.includes("rounded-b")
                 ? "mx-2 border-outline-gray-1"
                 : "border-t-[--surface-gray-2]"
-            }`}
+            )}
           />
         )}
-      </button>
+      </div>
     </div>
   );
 };
