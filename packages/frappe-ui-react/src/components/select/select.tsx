@@ -77,7 +77,7 @@ const Select: React.FC<SelectProps> = ({
         <BaseSelect.Positioner className="z-60">
           <BaseSelect.Popup
             className={cn(
-              "p-1 m-0 bg-surface-modal ring-1 ring-outline-gray-1 ring-opacity-5 rounded-lg shadow-2xl will-change-[opacity,transform] overflow-hidden origin-center data-[state=open]:animate-[fadeInScale_100ms] data-[state=closed]:animate-[fadeOutScale_100ms]",
+              "p-1 m-0 bg-surface-modal ring-1 ring-outline-gray-1/5 rounded-lg shadow-2xl will-change-[opacity,transform] overflow-hidden origin-center data-[state=open]:animate-[fadeInScale_100ms] data-[state=closed]:animate-[fadeOutScale_100ms]",
               matchTriggerWidth && "w-(--anchor-width)"
             )}
           >
