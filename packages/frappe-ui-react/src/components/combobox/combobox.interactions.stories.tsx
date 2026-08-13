@@ -194,3 +194,44 @@ export const ControlledSearchLoading: Story = {
     expect(page.queryByText("John Doe")).not.toBeInTheDocument();
   },
 };
+
+export const Clearable: Story = {
+  args: {
+    options: simpleOptions,
+    value: "cherry",
+    placeholder: "Select an item",
+    clearable: true,
+    onChange: fn(),
+  },
+  render: function Render(args) {
+    const [value, setValue] = React.useState<string | null>("cherry");
+
+    return (
+      <div className="w-80">
+        <Combobox
+          {...args}
+          value={value}
+          onChange={(nextValue, selectedOption) => {
+            setValue(nextValue);
+            args.onChange?.(nextValue, selectedOption);
+          }}
+        />
+      </div>
+    );
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox");
+    const clearButton = canvas.getByRole("button", {
+      name: "Clear selection",
+    });
+
+    await userEvent.click(clearButton);
+
+    await expect(args.onChange).toHaveBeenCalledWith(null, null);
+
+    await waitFor(() => {
+      expect(input).toHaveValue("");
+    });
+  },
+};
