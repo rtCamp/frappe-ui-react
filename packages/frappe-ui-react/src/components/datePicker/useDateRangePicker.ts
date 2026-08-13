@@ -12,9 +12,11 @@ import { getDate, getDateValue } from "./utils";
 export function useDateRangePicker({
   value,
   onChange,
+  disallowAfter,
 }: {
   value?: string[];
   onChange?: (v: string[]) => void;
+  disallowAfter?: string;
 }) {
   // Selection state, used only when the range is not driven by `value`.
   const [internalFrom, setInternalFrom] = useState<string>(value?.[0] || "");
@@ -58,8 +60,20 @@ export function useDateRangePicker({
     [onChange]
   );
 
+  const isDateDisallowed = useCallback(
+    (date: Date) => {
+      if (!disallowAfter) return false;
+      return getDateValue(date).slice(0, 10) > disallowAfter.slice(0, 10);
+    },
+    [disallowAfter]
+  );
+
   const handleDateClick = useCallback(
     (date: Date): boolean => {
+      if (isDateDisallowed(date)) {
+        return false;
+      }
+
       // Zero out time for date
       const d = new Date(date);
       d.setHours(0, 0, 0, 0);
@@ -76,7 +90,7 @@ export function useDateRangePicker({
       commitRange(isReversed ? v : fromDate, isReversed ? fromDate : v);
       return true;
     },
-    [commitRange, fromDate, syncCalendarToValue, toDate]
+    [commitRange, fromDate, isDateDisallowed, syncCalendarToValue, toDate]
   );
 
   const handleToday = useCallback(() => {
@@ -140,5 +154,6 @@ export function useDateRangePicker({
     selectDates,
     applyRange,
     isInRange,
+    isDateDisallowed,
   };
 }

@@ -72,6 +72,8 @@ export interface DateRangePickerProps {
   value?: string[];
   placeholder?: string;
   disabled?: boolean;
+  // Dates strictly after this YYYY-MM-DD value are grayed out and unselectable.
+  disallowAfter?: string;
   sideOffset?: PopoverSideOffset;
   formatter?: (from: string, to: string) => string;
   placement?:
