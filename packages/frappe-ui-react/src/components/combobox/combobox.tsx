@@ -216,8 +216,9 @@ export const Combobox: React.FC<ComboboxProps> = ({
           {showClear && (
             <button
               type="button"
+              disabled={disabled}
               aria-label="Clear selection"
-              className="absolute inset-y-0 right-8 flex items-center text-ink-gray-4 transition-colors hover:text-ink-gray-7"
+              className="absolute inset-y-0 right-8 flex items-center text-ink-gray-4 transition-colors hover:text-ink-gray-7 disabled:pointer-events-none disabled:text-ink-gray-5"
               onClick={() => handleChange(null)}
             >
               <SmallClose className="size-4" />
