@@ -1,5 +1,6 @@
 import type { ComponentProps, KeyboardEventHandler } from "react";
 import { Popover } from "@base-ui/react/popover";
+import type { useRender } from "@base-ui/react/use-render";
 
 type PopoverSideOffset = ComponentProps<
   typeof Popover.Positioner
@@ -40,9 +41,23 @@ export interface DatePickerProps {
     | "right-end";
   label?: string;
   clearable?: boolean;
+  footer?: DatePickerFooterRender;
   onChange?: (value: string | string[]) => void;
   children?: (props: DatePickerChildrenProps) => React.ReactNode;
 }
+
+export type DatePickerFooterState = {
+  value: string;
+  // Apply a yyyy-mm-dd value (syncs the calendar and fires onChange).
+  setValue: (value: string) => void;
+  // Reset the current selection and close the popup.
+  clear: () => void;
+  // Close the popup.
+  close: () => void;
+};
+
+export type DatePickerFooterRender =
+  useRender.RenderProp<DatePickerFooterState>;
 
 export interface DateTimePickerProps {
   value?: string;
