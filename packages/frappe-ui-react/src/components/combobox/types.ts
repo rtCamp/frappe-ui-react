@@ -16,6 +16,7 @@ export interface ComboboxProps {
   value?: string | null;
   placeholder?: string;
   disabled?: boolean;
+  clearable?: boolean;
   openOnFocus?: boolean;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
