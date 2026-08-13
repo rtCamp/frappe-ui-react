@@ -9,9 +9,10 @@ import React, {
 
 import { ListContext } from "./listContext";
 import { alignmentMap } from "./utils";
-import { debounce } from "../../utils";
+import { cn, debounce } from "../../utils";
 
-interface ListHeaderItemProps {
+interface ListHeaderItemProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "prefix"> {
   item: any;
   debounce?: number;
   onColumnWidthUpdated?: (width: number) => void;
@@ -29,6 +30,7 @@ const ListHeaderItem: React.FC<ListHeaderItemProps> = ({
   children,
   prefix,
   suffix,
+  ...attrs
 }) => {
   const { options: list } = useContext(ListContext);
 
@@ -97,22 +99,21 @@ const ListHeaderItem: React.FC<ListHeaderItemProps> = ({
   }, [item.label, children]);
 
   const rootClasses = useMemo(() => {
-    return [
-      "group relative flex items-center",
+    return cn(
+      "group relative flex min-w-0 items-center",
       item.align
         ? alignmentMap[item.align as keyof typeof alignmentMap]
-        : "justify-between",
-    ]
-      .filter(Boolean)
-      .join(" ");
+        : "justify-between"
+    );
   }, [item.align]);
 
   return (
-    <div ref={columnRef} className={rootClasses}>
+    <div {...attrs} ref={columnRef} className={rootClasses}>
       <div
-        className={`flex items-center space-x-2 truncate text-sm text-ink-gray-5 ${
-          isResizing ? "cursor-col-resize" : ""
-        }`}
+        className={cn(
+          "flex min-w-0 items-center space-x-2 text-sm text-ink-gray-5",
+          isResizing && "cursor-col-resize"
+        )}
       >
         {prefix}
         {headerContent}
@@ -120,15 +121,17 @@ const ListHeaderItem: React.FC<ListHeaderItemProps> = ({
       </div>
       {list.options.resizeColumn && !lastItem && (
         <div
-          className={`flex h-4 absolute right-0 w-0.5 cursor-col-resize justify-center bg-outline-gray-3 hover:bg-outline-gray-5 ${
-            isResizing ? "bg-outline-gray-5" : ""
-          }`}
+          className={cn(
+            "flex h-4 absolute right-0 w-0.5 cursor-col-resize justify-center bg-outline-gray-3 hover:bg-outline-gray-5",
+            isResizing && "bg-outline-gray-5"
+          )}
           onMouseDown={startResizing}
         >
           <div
-            className={`h-full w-[2px] rounded-full transition-all duration-300 ease-in-out group-hover:bg-gray-400 ${
-              isResizing ? "bg-gray-400" : ""
-            }`}
+            className={cn(
+              "h-full w-0.5 rounded-full transition-all duration-300 ease-in-out group-hover:bg-gray-400",
+              isResizing && "bg-gray-400"
+            )}
           />
         </div>
       )}
