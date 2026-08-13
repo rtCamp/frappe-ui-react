@@ -1,11 +1,27 @@
 import { Popover } from "@base-ui/react/popover";
-import type { DatePickerProps } from "./types";
+import { useRender } from "@base-ui/react/use-render";
+import type { DatePickerProps, DatePickerFooterRender, DatePickerFooterState } from "./types";
 import { useDatePicker } from "./useDatePicker";
 import { getDate, getDateValue, parsePlacement } from "./utils";
 import { Button } from "../button";
 import { TextInput } from "../textInput";
 import FeatherIcon from "../featherIcon";
 import { cn } from "../../utils";
+
+const footerStateAttributesMapping = {
+  value: () => null,
+  setValue: () => null,
+  clear: () => null,
+  close: () => null,
+};
+
+const DatePickerFooter = ({ render, state }: { render: DatePickerFooterRender; state: DatePickerFooterState }) => {
+  return useRender({
+    render,
+    state,
+    stateAttributesMapping: footerStateAttributesMapping,
+  });
+};
 
 export const DatePicker: React.FC<DatePickerProps> = ({
   value,
@@ -17,6 +33,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   clearable = true,
   variant = "subtle",
   sideOffset = 4,
+  footer,
   onChange,
   children,
 }) => {
@@ -49,8 +66,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     }
   };
 
-  const displayValue =
-    dateValue && formatter ? formatter(dateValue) : dateValue;
+  const displayValue = dateValue && formatter ? formatter(dateValue) : dateValue;
 
   const { side, align } = parsePlacement(placement);
   const openPicker = () => {
@@ -64,9 +80,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       setOpen((prevOpen) => !prevOpen);
     }
   };
-  const handleTriggerKeyDown = (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
+  const handleTriggerKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (disabled) {
       return;
     }
@@ -76,9 +90,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       openPicker();
     }
   };
-  const handleChildTriggerKeyDown = (
-    event: React.KeyboardEvent<HTMLElement>
-  ) => {
+  const handleChildTriggerKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (disabled) {
       return;
     }
@@ -89,18 +101,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     }
   };
   const toggleViewLabel = "Toggle calendar view";
-  const prevLabel =
-    view === "date"
-      ? "Previous month"
-      : view === "month"
-        ? "Previous year"
-        : "Previous years";
-  const nextLabel =
-    view === "date"
-      ? "Next month"
-      : view === "month"
-        ? "Next year"
-        : "Next years";
+  const prevLabel = view === "date" ? "Previous month" : view === "month" ? "Previous year" : "Previous years";
+  const nextLabel = view === "date" ? "Next month" : view === "month" ? "Next year" : "Next years";
 
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
@@ -122,9 +124,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             </span>
           ) : (
             <div className="flex w-full flex-col space-y-1.5">
-              {label && (
-                <label className="block text-xs text-ink-gray-5">{label}</label>
-              )}
+              {label && <label className="block text-xs text-ink-gray-5">{label}</label>}
               <TextInput
                 type="text"
                 placeholder={placeholder}
@@ -132,9 +132,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 disabled={disabled}
                 readOnly
                 onKeyDown={handleTriggerKeyDown}
-                suffix={() => (
-                  <FeatherIcon name="chevron-down" className="w-4 h-4" />
-                )}
+                suffix={() => <FeatherIcon name="chevron-down" className="w-4 h-4" />}
                 variant={variant}
               />
             </div>
@@ -143,12 +141,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       />
 
       <Popover.Portal>
-        <Popover.Positioner
-          side={side}
-          align={align}
-          sideOffset={sideOffset}
-          className="z-100"
-        >
+        <Popover.Positioner side={side} align={align} sideOffset={sideOffset} className="z-100">
           <Popover.Popup
             className={cn(
               "text-base select-none min-w-60 w-fit text-ink-gray-9 relative",
@@ -166,17 +159,10 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               >
                 {view === "date" && formattedMonth}
                 {view === "month" && currentYear}
-                {view === "year" &&
-                  `${yearRangeStart} - ${yearRangeStart + 11}`}
+                {view === "year" && `${yearRangeStart} - ${yearRangeStart + 11}`}
               </Button>
               <div className="flex items-center">
-                <Button
-                  className="w-7 h-7"
-                  icon="chevron-left"
-                  aria-label={prevLabel}
-                  onClick={prev}
-                  variant="ghost"
-                />
+                <Button className="w-7 h-7" icon="chevron-left" aria-label={prevLabel} onClick={prev} variant="ghost" />
                 {!clearable && (
                   <Button
                     className="text-xs"
@@ -206,10 +192,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 <div role="grid" aria-label="Calendar dates">
                   <div className="flex items-center mb-1 text-xs font-medium uppercase text-ink-gray-4">
                     {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
-                      <div
-                        key={i}
-                        className="flex justify-center items-center w-8 h-6"
-                      >
+                      <div key={i} className="flex justify-center items-center w-8 h-6">
                         {d}
                       </div>
                     ))}
@@ -232,9 +215,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                             type="button"
                             className={`flex h-8 w-8 items-center justify-center rounded cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
                               inMonth ? "text-ink-gray-8" : "text-ink-gray-3"
-                            } ${
-                              isToday ? "font-extrabold text-ink-gray-9" : ""
-                            } ${
+                            } ${isToday ? "font-extrabold text-ink-gray-9" : ""} ${
                               isSelected
                                 ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
                                 : "hover:bg-surface-gray-2"
@@ -256,11 +237,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               )}
 
               {view === "month" && (
-                <div
-                  className="grid grid-cols-3 gap-1"
-                  role="grid"
-                  aria-label="Select month"
-                >
+                <div className="grid grid-cols-3 gap-1" role="grid" aria-label="Select month">
                   {months.map((m, i) => {
                     const isSelected = i === currentMonth - 1;
                     return (
@@ -268,9 +245,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                         type="button"
                         key={m}
                         className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
-                          isSelected
-                            ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
-                            : ""
+                          isSelected ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6" : ""
                         }`}
                         aria-selected={isSelected}
                         onClick={() => selectMonth(i)}
@@ -283,11 +258,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               )}
 
               {view === "year" && (
-                <div
-                  className="grid grid-cols-3 gap-1"
-                  role="grid"
-                  aria-label="Select year"
-                >
+                <div className="grid grid-cols-3 gap-1" role="grid" aria-label="Select year">
                   {yearRange.map((y) => {
                     const isSelected = y === currentYear;
                     return (
@@ -295,9 +266,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                         type="button"
                         key={y}
                         className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
-                          isSelected
-                            ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
-                            : ""
+                          isSelected ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6" : ""
                         }`}
                         aria-selected={isSelected}
                         onClick={() => selectYear(y)}
@@ -310,36 +279,50 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               )}
             </div>
             {/* Actions */}
-            {clearable && (
-              <div className="flex gap-1 justify-between p-2 border-t border-gray-200">
-                <div className="flex gap-1">
-                  <Button
-                    onClick={() => {
-                      const today = getDate();
-                      today.setHours(0, 0, 0, 0);
-                      selectDate(today, true);
-                      setOpen(false);
-                    }}
-                    variant="outline"
-                  >
-                    Today
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      const today = getDate();
-                      today.setDate(today.getDate() + 1);
-                      today.setHours(0, 0, 0, 0);
-                      selectDate(today, true);
-                      setOpen(false);
-                    }}
-                    variant="outline"
-                  >
-                    Tomorrow
-                  </Button>
-                </div>
-                <Button onClick={clearValue} variant="outline">
-                  Clear
-                </Button>
+            {(footer || clearable) && (
+              <div className="p-2 border-t border-gray-200">
+                <DatePickerFooter
+                  render={
+                    footer ?? (
+                      <div className="flex gap-1 justify-between">
+                        <div className="flex gap-1">
+                          <Button
+                            onClick={() => {
+                              const today = getDate();
+                              today.setHours(0, 0, 0, 0);
+                              selectDate(today, true);
+                              setOpen(false);
+                            }}
+                            variant="outline"
+                          >
+                            Today
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              const today = getDate();
+                              today.setDate(today.getDate() + 1);
+                              today.setHours(0, 0, 0, 0);
+                              selectDate(today, true);
+                              setOpen(false);
+                            }}
+                            variant="outline"
+                          >
+                            Tomorrow
+                          </Button>
+                        </div>
+                        <Button onClick={clearValue} variant="outline">
+                          Clear
+                        </Button>
+                      </div>
+                    )
+                  }
+                  state={{
+                    value: dateValue,
+                    setValue: (v) => selectDate(getDate(v)),
+                    clear: clearValue,
+                    close: closePicker,
+                  }}
+                />
               </div>
             )}
           </Popover.Popup>
