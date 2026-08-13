@@ -30,13 +30,14 @@ import {
   isGroupedOption,
 } from "./utils";
 import { cn } from "../../utils";
-import { Check, SmallDown } from "../../icons";
+import { Check, SmallClose, SmallDown } from "../../icons";
 
 export const Combobox: React.FC<ComboboxProps> = ({
   options,
   value,
   placeholder,
   disabled,
+  clearable = false,
   openOnFocus = false,
   searchValue,
   onSearchChange,
@@ -160,6 +161,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
   const showOptionsPanel = filteredOptions.length > 0 || showEmptyState;
 
   const hasSelectedIcon = Boolean(selectedOption && getIcon(selectedOption));
+  const showClear = clearable && Boolean(value);
 
   const isSameOption = useCallback(
     (option: SimpleOption | null, candidate: SimpleOption | null) => {
@@ -198,13 +200,29 @@ export const Combobox: React.FC<ComboboxProps> = ({
             className={cn(
               "min-h-6 w-full rounded border border-surface-gray-2 bg-surface-gray-2 py-1 text-base text-ink-gray-8 transition-colors placeholder-ink-gray-4 outline-none focus:border-outline-gray-4 focus:ring-2 focus:ring-outline-gray-3 disabled:bg-surface-gray-1 disabled:text-ink-gray-5",
               hasSelectedIcon ? "pl-8" : "pl-2",
-              loading ? "pr-12" : "pr-8",
+              showClear
+                ? loading
+                  ? "pr-16"
+                  : "pr-12"
+                : loading
+                  ? "pr-12"
+                  : "pr-8",
               inputClassName
             )}
             placeholder={placeholder}
             onFocus={handleFocus}
             autoComplete="off"
           />
+          {showClear && (
+            <button
+              type="button"
+              aria-label="Clear selection"
+              className="absolute inset-y-0 right-8 flex items-center text-ink-gray-4 transition-colors hover:text-ink-gray-7"
+              onClick={() => handleChange(null)}
+            >
+              <SmallClose className="size-4" />
+            </button>
+          )}
           <BaseCombobox.Trigger
             aria-label="Toggle options"
             className="absolute inset-y-0 right-0 flex items-center gap-1 pr-2 text-ink-gray-4"
