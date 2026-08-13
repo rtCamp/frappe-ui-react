@@ -318,7 +318,10 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                   }
                   state={{
                     value: dateValue,
-                    setValue: (v) => selectDate(getDate(v)),
+                    setValue: (v) => {
+                      const [year, month, day] = v.split("-").map(Number);
+                      selectDate(getDate(year, month - 1, day));
+                    },
                     clear: clearValue,
                     close: closePicker,
                   }}
