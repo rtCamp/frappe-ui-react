@@ -8,6 +8,7 @@ import { useState } from "react";
  * Internal dependencies.
  */
 import { DatePicker, DateTimePicker, DateRangePicker } from "./index";
+import { dayjs } from "../../utils/dayjs";
 
 const meta: Meta = {
   title: "Components/DatePicker",
@@ -45,9 +46,7 @@ export const Date: DatePickerStory = {
         <DatePicker
           {...args}
           value={dateValue}
-          onChange={(val) =>
-            setDateValue(Array.isArray(val) ? val[0] || "" : val)
-          }
+          onChange={(val) => setDateValue(Array.isArray(val) ? val[0] || "" : val)}
         />
       </div>
     );
@@ -81,9 +80,7 @@ export const DateTime: DateTimePickerStory = {
         <DateTimePicker
           {...args}
           value={dateTimeValue}
-          onChange={(val) =>
-            setDateTimeValue(Array.isArray(val) ? val[0] || "" : val)
-          }
+          onChange={(val) => setDateTimeValue(Array.isArray(val) ? val[0] || "" : val)}
         />
       </div>
     );
@@ -95,8 +92,7 @@ export const DateTime: DateTimePickerStory = {
     },
     onChange: {
       action: "onChange",
-      description:
-        "Callback when date/time changes. Receives a string or string[].",
+      description: "Callback when date/time changes. Receives a string or string[].",
     },
     label: { control: "text", description: "Label for the input field." },
     placeholder: {
@@ -118,9 +114,7 @@ export const DateRange: DateRangePickerStory = {
         <DateRangePicker
           {...args}
           value={dateRangeValue}
-          onChange={(val) =>
-            setDateRangeValue(Array.isArray(val) ? val : [val, ""])
-          }
+          onChange={(val) => setDateRangeValue(Array.isArray(val) ? val : [val, ""])}
         />
       </div>
     );
@@ -128,13 +122,52 @@ export const DateRange: DateRangePickerStory = {
   argTypes: {
     value: {
       control: false,
-      description:
-        "The selected date range value as [start, end] (controlled).",
+      description: "The selected date range value as [start, end] (controlled).",
     },
     onChange: {
       action: "onChange",
-      description:
-        "Callback when date range changes. Receives a string or string[].",
+      description: "Callback when date range changes. Receives a string or string[].",
+    },
+    label: { control: "text", description: "Label for the input field." },
+    placeholder: {
+      control: "text",
+      description: "Placeholder text for the input field.",
+    },
+  },
+};
+
+const TODAY = dayjs().format("YYYY-MM-DD");
+
+export const DateRangeWithDisallowAfter: DateRangePickerStory = {
+  args: {
+    ...commonArgs,
+    value: ["", ""],
+    disallowAfter: TODAY,
+  },
+  render: (args) => {
+    const [dateRangeValue, setDateRangeValue] = useState<string[]>(["", ""]);
+    return (
+      <div className="w-[300px]">
+        <DateRangePicker
+          {...args}
+          value={dateRangeValue}
+          onChange={(val) => setDateRangeValue(Array.isArray(val) ? val : [val, ""])}
+        />
+      </div>
+    );
+  },
+  argTypes: {
+    value: {
+      control: false,
+      description: "The selected date range value as [start, end] (controlled).",
+    },
+    disallowAfter: {
+      control: "text",
+      description: "Dates strictly after this YYYY-MM-DD value are grayed out and unselectable. This story uses today.",
+    },
+    onChange: {
+      action: "onChange",
+      description: "Callback when date range changes. Receives a string or string[].",
     },
     label: { control: "text", description: "Label for the input field." },
     placeholder: {
@@ -161,9 +194,7 @@ export const DateRangeWithFooter: DateRangePickerStory = {
         <DateRangePicker
           {...args}
           value={dateRangeValue}
-          onChange={(val) =>
-            setDateRangeValue(Array.isArray(val) ? val : [val, ""])
-          }
+          onChange={(val) => setDateRangeValue(Array.isArray(val) ? val : [val, ""])}
           footer={({ setRange, clear, close }) => (
             <div className="flex flex-wrap items-center gap-1">
               {DATE_RANGE_PRESETS.map((preset) => (
@@ -195,13 +226,11 @@ export const DateRangeWithFooter: DateRangePickerStory = {
   argTypes: {
     value: {
       control: false,
-      description:
-        "The selected date range value as [start, end] (controlled).",
+      description: "The selected date range value as [start, end] (controlled).",
     },
     onChange: {
       action: "onChange",
-      description:
-        "Callback when date range changes. Receives a string or string[].",
+      description: "Callback when date range changes. Receives a string or string[].",
     },
     footer: {
       control: false,

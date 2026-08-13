@@ -25,9 +25,7 @@ export default meta;
 type Story = StoryObj<DateRangePickerProps>;
 
 function ControlledDateRangePickerStory(args: DateRangePickerProps) {
-  const [value, setValue] = useState<string[]>(
-    Array.isArray(args.value) ? args.value : ["", ""]
-  );
+  const [value, setValue] = useState<string[]>(Array.isArray(args.value) ? args.value : ["", ""]);
 
   const handleChange = (nextValue: string[]) => {
     setValue(nextValue);
@@ -79,10 +77,7 @@ export const KeyboardNavigation: Story = {
     await userEvent.keyboard("{Enter}");
 
     // Selecting only the start date emits it with a pending, empty end date.
-    expect(args.onChange).toHaveBeenLastCalledWith([
-      expect.stringMatching(/.+/),
-      "",
-    ]);
+    expect(args.onChange).toHaveBeenLastCalledWith([expect.stringMatching(/.+/), ""]);
 
     let secondFocusedDate: HTMLElement | null = null;
     for (let i = 0; i < 6; i++) {
@@ -117,17 +112,16 @@ export const QuickActions: Story = {
     const canvas = within(canvasElement);
     const input = canvas.getByRole("textbox");
     const today = new Date();
-    const formattedToday = `${today.getFullYear()}-${String(
-      today.getMonth() + 1
-    ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    const formattedToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(today.getDate()).padStart(2, "0")}`;
     const monthLabel = `${today.toLocaleString("en-US", {
       month: "short",
     })} ${today.getFullYear()}`;
 
     await userEvent.click(input);
-    await userEvent.click(
-      await screen.findByRole("button", { name: "Previous month" })
-    );
+    await userEvent.click(await screen.findByRole("button", { name: "Previous month" }));
 
     const previousMonthDate = screen
       .getAllByRole("gridcell")
@@ -139,10 +133,7 @@ export const QuickActions: Story = {
 
     await waitFor(() => {
       expect(input).toHaveValue(`${formattedToday} to ${formattedToday}`);
-      expect(args.onChange).toHaveBeenLastCalledWith([
-        formattedToday,
-        formattedToday,
-      ]);
+      expect(args.onChange).toHaveBeenLastCalledWith([formattedToday, formattedToday]);
     });
 
     await userEvent.click(input);
@@ -168,6 +159,50 @@ export const QuickActions: Story = {
       name: "Toggle calendar view",
     });
     expect(resetToggleButton).toHaveTextContent(monthLabel);
+  },
+};
+
+export const DisallowAfter: Story = {
+  args: {
+    label: "Date range",
+    placeholder: "Select date range",
+    value: ["2024-01-10", "2024-01-12"],
+    disallowAfter: "2024-01-15",
+    onChange: fn(),
+  },
+  render: (args) => <ControlledDateRangePickerStory {...args} />,
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("textbox");
+
+    await userEvent.click(input);
+    await screen.findByRole("grid", { name: "Calendar dates" });
+
+    const findGridCell = (day: string) =>
+      screen.getAllByRole("gridcell").find((cell) => cell.textContent === day) as HTMLElement;
+
+    // Dates after the disallowAfter boundary are grayed out and unselectable.
+    const disallowedDate = findGridCell("20");
+    expect(disallowedDate).toBeDisabled();
+    expect(disallowedDate.className).toContain("cursor-not-allowed");
+    expect(disallowedDate.className).toContain("text-ink-gray-3");
+
+    await userEvent.click(disallowedDate);
+    expect(args.onChange).not.toHaveBeenCalled();
+
+    // The boundary date itself stays selectable.
+    const boundaryDate = findGridCell("15");
+    expect(boundaryDate).toBeEnabled();
+
+    await userEvent.click(findGridCell("14"));
+    expect(args.onChange).toHaveBeenLastCalledWith(["2024-01-14", ""]);
+
+    await userEvent.click(boundaryDate);
+
+    await waitFor(() => {
+      expect(input).toHaveValue("2024-01-14 to 2024-01-15");
+      expect(args.onChange).toHaveBeenLastCalledWith(["2024-01-14", "2024-01-15"]);
+    });
   },
 };
 
@@ -200,22 +235,15 @@ export const FooterSlot: Story = {
 
     // Applying a preset from the footer fills the range and closes the popup.
     await userEvent.click(input);
-    await userEvent.click(
-      await screen.findByRole("button", { name: "First Week" })
-    );
+    await userEvent.click(await screen.findByRole("button", { name: "First Week" }));
 
     await waitFor(() => {
       expect(input).toHaveValue("2024-01-01 to 2024-01-07");
-      expect(args.onChange).toHaveBeenLastCalledWith([
-        "2024-01-01",
-        "2024-01-07",
-      ]);
+      expect(args.onChange).toHaveBeenLastCalledWith(["2024-01-01", "2024-01-07"]);
     });
 
     await waitFor(() => {
-      expect(
-        screen.queryByRole("button", { name: "First Week" })
-      ).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: "First Week" })).not.toBeInTheDocument();
     });
 
     // Clearing from the footer resets the value but keeps the popup open.
