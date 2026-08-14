@@ -259,7 +259,9 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                             type="button"
                             className={`flex h-8 w-8 items-center justify-center rounded cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
                               inMonth ? "text-ink-gray-8" : "text-ink-gray-3"
-                            } ${isToday ? "font-extrabold text-ink-gray-9" : ""} ${
+                            } ${
+                              isToday ? "font-extrabold text-ink-gray-9" : ""
+                            } ${
                               isSelected
                                 ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
                                 : "hover:bg-surface-gray-2"
