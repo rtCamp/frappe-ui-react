@@ -19,6 +19,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   value,
   placeholder,
   disabled,
+  disallowAfter,
   formatter,
   placement,
   sideOffset = 4,
@@ -51,9 +52,11 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
     clearDates,
     applyRange,
     isInRange,
+    isDateDisallowed,
   } = useDateRangePicker({
     value: Array.isArray(value) ? value : undefined,
     onChange,
+    disallowAfter,
   });
 
   const handleOpenChange = useCallback(
@@ -243,18 +246,23 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                           toDate && getDateValue(date) === toDate;
                         const isFromDate =
                           fromDate && getDateValue(date) === fromDate;
+                        const isDisallowed = isDateDisallowed(date);
 
                         return (
                           <button
                             type="button"
                             key={val}
-                            className={`flex h-8 w-8 cursor-pointer items-center justify-center text-sm rounded hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                            disabled={isDisallowed}
+                            className={`flex h-8 w-8 items-center justify-center text-sm rounded focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                              isDisallowed
+                                ? "cursor-not-allowed"
+                                : "cursor-pointer hover:bg-surface-gray-2"
+                            } ${
+                              isDisallowed ||
                               date.getMonth() !== currentMonth - 1
                                 ? "text-ink-gray-3"
                                 : "text-ink-gray-8"
-                            } ${
-                              isToday ? "font-extrabold text-ink-gray-9" : ""
-                            } ${
+                            } ${isToday ? "font-extrabold text-ink-gray-9" : ""} ${
                               isInRange(date) && !isFromDate && !isToDate
                                 ? "rounded-none bg-surface-gray-3"
                                 : ""
