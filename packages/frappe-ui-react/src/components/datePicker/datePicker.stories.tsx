@@ -45,7 +45,9 @@ export const Date: DatePickerStory = {
         <DatePicker
           {...args}
           value={dateValue}
-          onChange={(val) => setDateValue(Array.isArray(val) ? val[0] || "" : val)}
+          onChange={(val) =>
+            setDateValue(Array.isArray(val) ? val[0] || "" : val)
+          }
         />
       </div>
     );
@@ -84,7 +86,9 @@ export const DateWithFooter: DatePickerStory = {
         <DatePicker
           {...args}
           value={dateValue}
-          onChange={(val) => setDateValue(Array.isArray(val) ? val[0] || "" : val)}
+          onChange={(val) =>
+            setDateValue(Array.isArray(val) ? val[0] || "" : val)
+          }
           footer={(props, { setValue, clear, close }) => (
             <div {...props} className="flex flex-wrap items-center gap-1">
               {DATE_PRESETS.map((preset) => (
@@ -147,7 +151,9 @@ export const DateTime: DateTimePickerStory = {
         <DateTimePicker
           {...args}
           value={dateTimeValue}
-          onChange={(val) => setDateTimeValue(Array.isArray(val) ? val[0] || "" : val)}
+          onChange={(val) =>
+            setDateTimeValue(Array.isArray(val) ? val[0] || "" : val)
+          }
         />
       </div>
     );
@@ -159,7 +165,8 @@ export const DateTime: DateTimePickerStory = {
     },
     onChange: {
       action: "onChange",
-      description: "Callback when date/time changes. Receives a string or string[].",
+      description:
+        "Callback when date/time changes. Receives a string or string[].",
     },
     label: { control: "text", description: "Label for the input field." },
     placeholder: {
@@ -181,7 +188,9 @@ export const DateRange: DateRangePickerStory = {
         <DateRangePicker
           {...args}
           value={dateRangeValue}
-          onChange={(val) => setDateRangeValue(Array.isArray(val) ? val : [val, ""])}
+          onChange={(val) =>
+            setDateRangeValue(Array.isArray(val) ? val : [val, ""])
+          }
         />
       </div>
     );
@@ -189,11 +198,13 @@ export const DateRange: DateRangePickerStory = {
   argTypes: {
     value: {
       control: false,
-      description: "The selected date range value as [start, end] (controlled).",
+      description:
+        "The selected date range value as [start, end] (controlled).",
     },
     onChange: {
       action: "onChange",
-      description: "Callback when date range changes. Receives a string or string[].",
+      description:
+        "Callback when date range changes. Receives a string or string[].",
     },
     label: { control: "text", description: "Label for the input field." },
     placeholder: {
@@ -220,7 +231,9 @@ export const DateRangeWithFooter: DateRangePickerStory = {
         <DateRangePicker
           {...args}
           value={dateRangeValue}
-          onChange={(val) => setDateRangeValue(Array.isArray(val) ? val : [val, ""])}
+          onChange={(val) =>
+            setDateRangeValue(Array.isArray(val) ? val : [val, ""])
+          }
           footer={({ setRange, clear, close }) => (
             <div className="flex flex-wrap items-center gap-1">
               {DATE_RANGE_PRESETS.map((preset) => (
@@ -252,11 +265,13 @@ export const DateRangeWithFooter: DateRangePickerStory = {
   argTypes: {
     value: {
       control: false,
-      description: "The selected date range value as [start, end] (controlled).",
+      description:
+        "The selected date range value as [start, end] (controlled).",
     },
     onChange: {
       action: "onChange",
-      description: "Callback when date range changes. Receives a string or string[].",
+      description:
+        "Callback when date range changes. Receives a string or string[].",
     },
     footer: {
       control: false,
