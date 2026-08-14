@@ -101,10 +101,24 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
   const from = fromDate ? fromDate.slice(0, 10) : "";
   const to = toDate ? toDate.slice(0, 10) : "";
-  const displayValue = formatter ? formatter(from, to) : from && to ? `${from} to ${to}` : from || "";
+  const displayValue = formatter
+    ? formatter(from, to)
+    : from && to
+      ? `${from} to ${to}`
+      : from || "";
   const toggleViewLabel = "Toggle calendar view";
-  const prevLabel = view === "date" ? "Previous month" : view === "month" ? "Previous year" : "Previous years";
-  const nextLabel = view === "date" ? "Next month" : view === "month" ? "Next year" : "Next years";
+  const prevLabel =
+    view === "date"
+      ? "Previous month"
+      : view === "month"
+        ? "Previous year"
+        : "Previous years";
+  const nextLabel =
+    view === "date"
+      ? "Next month"
+      : view === "month"
+        ? "Next year"
+        : "Next years";
 
   return (
     <Popover.Root open={open} onOpenChange={handleOpenChange}>
@@ -127,7 +141,9 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             </span>
           ) : (
             <div className="flex w-full flex-col space-y-1.5">
-              {label && <label className="block text-xs text-ink-gray-5">{label}</label>}
+              {label && (
+                <label className="block text-xs text-ink-gray-5">{label}</label>
+              )}
               <TextInput
                 type="text"
                 placeholder={placeholder}
@@ -135,7 +151,9 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 disabled={disabled}
                 readOnly
                 onKeyDown={handleTriggerKeyDown}
-                suffix={() => <FeatherIcon name="chevron-down" className="w-4 h-4" />}
+                suffix={() => (
+                  <FeatherIcon name="chevron-down" className="w-4 h-4" />
+                )}
               />
             </div>
           )
@@ -143,7 +161,12 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
       />
 
       <Popover.Portal>
-        <Popover.Positioner side={side} align={align} sideOffset={sideOffset} className="z-100">
+        <Popover.Positioner
+          side={side}
+          align={align}
+          sideOffset={sideOffset}
+          className="z-100"
+        >
           <Popover.Popup
             className={cn(
               "min-w-60 w-fit select-none text-base text-ink-gray-9",
@@ -161,10 +184,17 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
               >
                 {view === "date" && formattedMonth}
                 {view === "month" && currentYear}
-                {view === "year" && `${yearRangeStart} - ${yearRangeStart + 11}`}
+                {view === "year" &&
+                  `${yearRangeStart} - ${yearRangeStart + 11}`}
               </Button>
               <div className="flex items-center">
-                <Button className="h-7 w-7" icon="chevron-left" aria-label={prevLabel} onClick={prev} variant="ghost" />
+                <Button
+                  className="h-7 w-7"
+                  icon="chevron-left"
+                  aria-label={prevLabel}
+                  onClick={prev}
+                  variant="ghost"
+                />
                 <Button
                   className="text-xs"
                   variant="ghost"
@@ -194,7 +224,10 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 >
                   <div className="flex items-center text-xs font-medium uppercase text-ink-gray-4 mb-1">
                     {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
-                      <div key={i} className="flex h-6 w-8 items-center justify-center">
+                      <div
+                        key={i}
+                        className="flex h-6 w-8 items-center justify-center"
+                      >
                         {d}
                       </div>
                     ))}
@@ -209,8 +242,10 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                           date.getMonth() === today.getMonth() &&
                           date.getFullYear() === today.getFullYear() &&
                           date.getMonth() === currentMonth - 1;
-                        const isToDate = toDate && getDateValue(date) === toDate;
-                        const isFromDate = fromDate && getDateValue(date) === fromDate;
+                        const isToDate =
+                          toDate && getDateValue(date) === toDate;
+                        const isFromDate =
+                          fromDate && getDateValue(date) === fromDate;
                         const isDisallowed = isDateDisallowed(date);
 
                         return (
@@ -219,13 +254,18 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                             key={val}
                             disabled={isDisallowed}
                             className={`flex h-8 w-8 items-center justify-center text-sm rounded focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
-                              isDisallowed ? "cursor-not-allowed" : "cursor-pointer hover:bg-surface-gray-2"
+                              isDisallowed
+                                ? "cursor-not-allowed"
+                                : "cursor-pointer hover:bg-surface-gray-2"
                             } ${
-                              isDisallowed || date.getMonth() !== currentMonth - 1
+                              isDisallowed ||
+                              date.getMonth() !== currentMonth - 1
                                 ? "text-ink-gray-3"
                                 : "text-ink-gray-8"
                             } ${isToday ? "font-extrabold text-ink-gray-9" : ""} ${
-                              isInRange(date) && !isFromDate && !isToDate ? "rounded-none bg-surface-gray-3" : ""
+                              isInRange(date) && !isFromDate && !isToDate
+                                ? "rounded-none bg-surface-gray-3"
+                                : ""
                             } ${
                               (isFromDate || isToDate) && fromDate === toDate
                                 ? "rounded bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
@@ -258,7 +298,11 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
               )}
 
               {view === "month" && (
-                <div className="grid grid-cols-3 gap-1" role="grid" aria-label="Select month">
+                <div
+                  className="grid grid-cols-3 gap-1"
+                  role="grid"
+                  aria-label="Select month"
+                >
                   {months.map((m, i) => {
                     const isSelected = i === currentMonth - 1;
                     return (
@@ -266,7 +310,9 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                         type="button"
                         key={m}
                         className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
-                          isSelected ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6" : ""
+                          isSelected
+                            ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                            : ""
                         }`}
                         aria-selected={isSelected}
                         onClick={() => selectMonth(i)}
@@ -279,7 +325,11 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
               )}
 
               {view === "year" && (
-                <div className="grid grid-cols-3 gap-1" role="grid" aria-label="Select year">
+                <div
+                  className="grid grid-cols-3 gap-1"
+                  role="grid"
+                  aria-label="Select year"
+                >
                   {yearRange.map((y) => {
                     const isSelected = y === currentYear;
                     return (
@@ -287,7 +337,9 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                         type="button"
                         key={y}
                         className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
-                          isSelected ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6" : ""
+                          isSelected
+                            ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
+                            : ""
                         }`}
                         aria-selected={isSelected}
                         onClick={() => selectYear(y)}
