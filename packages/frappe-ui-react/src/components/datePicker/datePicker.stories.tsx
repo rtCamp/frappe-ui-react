@@ -8,6 +8,7 @@ import { useState } from "react";
  * Internal dependencies.
  */
 import { DatePicker, DateTimePicker, DateRangePicker } from "./index";
+import { dayjs } from "../../utils/dayjs";
 
 const meta: Meta = {
   title: "Components/DatePicker",
@@ -200,6 +201,52 @@ export const DateRange: DateRangePickerStory = {
       control: false,
       description:
         "The selected date range value as [start, end] (controlled).",
+    },
+    onChange: {
+      action: "onChange",
+      description:
+        "Callback when date range changes. Receives a string or string[].",
+    },
+    label: { control: "text", description: "Label for the input field." },
+    placeholder: {
+      control: "text",
+      description: "Placeholder text for the input field.",
+    },
+  },
+};
+
+const TODAY = dayjs().format("YYYY-MM-DD");
+
+export const DateRangeWithDisallowAfter: DateRangePickerStory = {
+  args: {
+    ...commonArgs,
+    value: ["", ""],
+    disallowAfter: TODAY,
+  },
+  render: (args) => {
+    const [dateRangeValue, setDateRangeValue] = useState<string[]>(["", ""]);
+    return (
+      <div className="w-[300px]">
+        <DateRangePicker
+          {...args}
+          value={dateRangeValue}
+          onChange={(val) =>
+            setDateRangeValue(Array.isArray(val) ? val : [val, ""])
+          }
+        />
+      </div>
+    );
+  },
+  argTypes: {
+    value: {
+      control: false,
+      description:
+        "The selected date range value as [start, end] (controlled).",
+    },
+    disallowAfter: {
+      control: "text",
+      description:
+        "Dates strictly after this YYYY-MM-DD value are grayed out and unselectable. This story uses today.",
     },
     onChange: {
       action: "onChange",

@@ -171,6 +171,55 @@ export const QuickActions: Story = {
   },
 };
 
+export const DisallowAfter: Story = {
+  args: {
+    label: "Date range",
+    placeholder: "Select date range",
+    value: ["2024-01-10", "2024-01-12"],
+    disallowAfter: "2024-01-15",
+    onChange: fn(),
+  },
+  render: (args) => <ControlledDateRangePickerStory {...args} />,
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("textbox");
+
+    await userEvent.click(input);
+    await screen.findByRole("grid", { name: "Calendar dates" });
+
+    const findGridCell = (day: string) =>
+      screen
+        .getAllByRole("gridcell")
+        .find((cell) => cell.textContent === day) as HTMLElement;
+
+    // Dates after the disallowAfter boundary are grayed out and unselectable.
+    const disallowedDate = findGridCell("20");
+    expect(disallowedDate).toBeDisabled();
+    expect(disallowedDate.className).toContain("cursor-not-allowed");
+    expect(disallowedDate.className).toContain("text-ink-gray-3");
+
+    await userEvent.click(disallowedDate);
+    expect(args.onChange).not.toHaveBeenCalled();
+
+    // The boundary date itself stays selectable.
+    const boundaryDate = findGridCell("15");
+    expect(boundaryDate).toBeEnabled();
+
+    await userEvent.click(findGridCell("14"));
+    expect(args.onChange).toHaveBeenLastCalledWith(["2024-01-14", ""]);
+
+    await userEvent.click(boundaryDate);
+
+    await waitFor(() => {
+      expect(input).toHaveValue("2024-01-14 to 2024-01-15");
+      expect(args.onChange).toHaveBeenLastCalledWith([
+        "2024-01-14",
+        "2024-01-15",
+      ]);
+    });
+  },
+};
+
 export const FooterSlot: Story = {
   args: {
     label: "Date range",
