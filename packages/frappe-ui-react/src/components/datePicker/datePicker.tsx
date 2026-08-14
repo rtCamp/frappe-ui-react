@@ -1,11 +1,37 @@
 import { Popover } from "@base-ui/react/popover";
-import type { DatePickerProps } from "./types";
+import { useRender } from "@base-ui/react/use-render";
+import type {
+  DatePickerProps,
+  DatePickerFooterRender,
+  DatePickerFooterState,
+} from "./types";
 import { useDatePicker } from "./useDatePicker";
 import { getDate, getDateValue, parsePlacement } from "./utils";
 import { Button } from "../button";
 import { TextInput } from "../textInput";
 import FeatherIcon from "../featherIcon";
 import { cn } from "../../utils";
+
+const footerStateAttributesMapping = {
+  value: () => null,
+  setValue: () => null,
+  clear: () => null,
+  close: () => null,
+};
+
+const DatePickerFooter = ({
+  render,
+  state,
+}: {
+  render: DatePickerFooterRender;
+  state: DatePickerFooterState;
+}) => {
+  return useRender({
+    render,
+    state,
+    stateAttributesMapping: footerStateAttributesMapping,
+  });
+};
 
 export const DatePicker: React.FC<DatePickerProps> = ({
   value,
@@ -17,6 +43,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   clearable = true,
   variant = "subtle",
   sideOffset = 4,
+  footer,
   onChange,
   children,
 }) => {
@@ -310,36 +337,53 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               )}
             </div>
             {/* Actions */}
-            {clearable && (
-              <div className="flex gap-1 justify-between p-2 border-t border-gray-200">
-                <div className="flex gap-1">
-                  <Button
-                    onClick={() => {
-                      const today = getDate();
-                      today.setHours(0, 0, 0, 0);
-                      selectDate(today, true);
-                      setOpen(false);
-                    }}
-                    variant="outline"
-                  >
-                    Today
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      const today = getDate();
-                      today.setDate(today.getDate() + 1);
-                      today.setHours(0, 0, 0, 0);
-                      selectDate(today, true);
-                      setOpen(false);
-                    }}
-                    variant="outline"
-                  >
-                    Tomorrow
-                  </Button>
-                </div>
-                <Button onClick={clearValue} variant="outline">
-                  Clear
-                </Button>
+            {(footer || clearable) && (
+              <div className="p-2 border-t border-gray-200">
+                <DatePickerFooter
+                  render={
+                    footer ?? (
+                      <div className="flex gap-1 justify-between">
+                        <div className="flex gap-1">
+                          <Button
+                            onClick={() => {
+                              const today = getDate();
+                              today.setHours(0, 0, 0, 0);
+                              selectDate(today, true);
+                              setOpen(false);
+                            }}
+                            variant="outline"
+                          >
+                            Today
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              const today = getDate();
+                              today.setDate(today.getDate() + 1);
+                              today.setHours(0, 0, 0, 0);
+                              selectDate(today, true);
+                              setOpen(false);
+                            }}
+                            variant="outline"
+                          >
+                            Tomorrow
+                          </Button>
+                        </div>
+                        <Button onClick={clearValue} variant="outline">
+                          Clear
+                        </Button>
+                      </div>
+                    )
+                  }
+                  state={{
+                    value: dateValue,
+                    setValue: (v) => {
+                      const [year, month, day] = v.split("-").map(Number);
+                      selectDate(getDate(year, month - 1, day));
+                    },
+                    clear: clearValue,
+                    close: closePicker,
+                  }}
+                />
               </div>
             )}
           </Popover.Popup>

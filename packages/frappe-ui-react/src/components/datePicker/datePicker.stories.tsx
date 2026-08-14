@@ -69,6 +69,76 @@ export const Date: DatePickerStory = {
   },
 };
 
+const DATE_PRESETS: { label: string; value: string }[] = [
+  { label: "New Year", value: "2024-01-01" },
+  { label: "Christmas", value: "2024-12-25" },
+];
+
+export const DateWithFooter: DatePickerStory = {
+  args: {
+    ...commonArgs,
+    value: "",
+  },
+  render: (args) => {
+    const [dateValue, setDateValue] = useState("");
+    return (
+      <div className="w-[300px]">
+        <DatePicker
+          {...args}
+          value={dateValue}
+          onChange={(val) =>
+            setDateValue(Array.isArray(val) ? val[0] || "" : val)
+          }
+          footer={(props, { setValue, clear, close }) => (
+            <div {...props} className="flex flex-wrap items-center gap-1">
+              {DATE_PRESETS.map((preset) => (
+                <button
+                  key={preset.label}
+                  type="button"
+                  className="rounded px-2 py-1 text-sm text-ink-gray-7 hover:bg-surface-gray-2"
+                  onClick={() => {
+                    setValue(preset.value);
+                    close();
+                  }}
+                >
+                  {preset.label}
+                </button>
+              ))}
+              <button
+                type="button"
+                className="rounded px-2 py-1 text-sm text-ink-gray-5 hover:bg-surface-gray-2"
+                onClick={clear}
+              >
+                Reset
+              </button>
+            </div>
+          )}
+        />
+      </div>
+    );
+  },
+  argTypes: {
+    value: {
+      control: false,
+      description: "The selected date value (controlled).",
+    },
+    onChange: {
+      action: "onChange",
+      description: "Callback when date changes. Receives a string or string[].",
+    },
+    footer: {
+      control: false,
+      description:
+        "base-ui useRender slot for the popup footer. Accepts a ReactElement or a render function (props, state) where state is { value, setValue, clear, close }. Replaces the default Today / Tomorrow / Clear actions.",
+    },
+    label: { control: "text", description: "Label for the input field." },
+    placeholder: {
+      control: "text",
+      description: "Placeholder text for the input field.",
+    },
+  },
+};
+
 export const DateTime: DateTimePickerStory = {
   args: {
     ...commonArgs,
