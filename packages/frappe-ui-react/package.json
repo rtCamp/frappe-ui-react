@@ -42,7 +42,7 @@
     "publish:remote": "pnpm publish"
   },
   "dependencies": {
-    "@base-ui/react": "^1.1.0",
+    "@base-ui/react": "^1.6.0",
     "@floating-ui/react": "^0.27.16",
     "@headlessui/react": "^2.2.9",
     "@popperjs/core": "^2.11.8",
