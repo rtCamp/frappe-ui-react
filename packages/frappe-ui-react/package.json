@@ -60,7 +60,7 @@
     "@tiptap/extension-text-style": "^3.17.1",
     "@tiptap/pm": "^3.17.1",
     "@tiptap/react": "^3.17.1",
-    "@tiptap/starter-kit": "^3.17.1",
+    "@tiptap/starter-kit": "^3.27.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
