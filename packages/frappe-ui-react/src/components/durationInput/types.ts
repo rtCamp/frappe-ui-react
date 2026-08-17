@@ -30,6 +30,8 @@ export interface DurationInputClassNames {
 export interface DurationInputProps {
   /** Label displayed above the input. */
   label?: string | false;
+  /** If true, appends a required-field asterisk to the label. */
+  required?: boolean;
   /** Label displayed inside the input. */
   inlineLabel?: string;
   /** Maximum allowed duration in hours. */
