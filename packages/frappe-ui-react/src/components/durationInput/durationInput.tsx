@@ -154,6 +154,7 @@ const durationSpinnerVariants = cva(
 
 const DurationInput = ({
   label,
+  required = false,
   inlineLabel,
   maxDuration = 8,
   hoursLeft = 8,
@@ -277,7 +278,18 @@ const DurationInput = ({
             classNames.header
           )}
         >
-          <Slider.Label className={cn(classNames.label)}>{label}</Slider.Label>
+          <Slider.Label className={cn(classNames.label)}>
+            {label}
+            {required && (
+              <>
+                <span className="text-ink-red-3 select-none" aria-hidden="true">
+                  {" "}
+                  *
+                </span>
+                <span className="sr-only">(required)</span>
+              </>
+            )}
+          </Slider.Label>
           <p
             className={cn(
               isOverHours && "text-ink-red-4",
