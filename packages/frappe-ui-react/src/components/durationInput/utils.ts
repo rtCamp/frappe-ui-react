@@ -176,8 +176,24 @@ export const sanitizeHoursInput = (value: string): string => {
  * Formats the balance text shown above the control.
  *
  * @param value - Balance in hours.
- * @returns Balance text with the `h` suffix.
+ * @returns Balance text in `Xh Ym` form (e.g. `10m`, `1h 30m`, `8h`).
  */
 export const formatHoursBalance = (value: number): string => {
-  return `${Number(value.toFixed(2)).toString()}h`;
+  const totalMinutes = Math.round(value * 60);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (totalMinutes === 0) {
+    return "0h";
+  }
+
+  if (hours === 0) {
+    return `${minutes}m`;
+  }
+
+  if (minutes === 0) {
+    return `${hours}h`;
+  }
+
+  return `${hours}h ${minutes}m`;
 };
