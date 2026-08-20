@@ -171,7 +171,7 @@ export const Slider: Story = {
     await waitFor(() => {
       expect(args.onChange).toHaveBeenLastCalledWith(4.5);
       expect(canvas.getByRole("textbox")).toHaveValue("04:30");
-      expect(canvas.getByText("0.5h over")).toHaveClass("text-ink-red-4");
+      expect(canvas.getByText("30m over")).toHaveClass("text-ink-red-4");
     });
   },
 };

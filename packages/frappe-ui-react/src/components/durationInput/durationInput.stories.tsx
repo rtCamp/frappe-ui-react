@@ -35,7 +35,7 @@ export default {
     hoursLeft: {
       control: "number",
       description:
-        "Remaining time available in hours (used to calculate 'X h left' or 'X h over')",
+        "Remaining time available in hours (used to calculate 'Xh Ym left' or 'Xh Ym over')",
     },
     snap: {
       control: "select",
