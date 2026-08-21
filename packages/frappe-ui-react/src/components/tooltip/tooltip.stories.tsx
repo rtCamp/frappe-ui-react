@@ -37,6 +37,17 @@ const meta: Meta<typeof Tooltip> = {
       control: "text",
       description: "Custom CSS classes for the tooltip arrow",
     },
+    showWhen: {
+      control: "select",
+      options: ["always", "truncated"],
+      description:
+        "Determines when the tooltip should be shown. 'always' shows the tooltip on hover, 'truncated' shows it only when the text is truncated.",
+    },
+    truncationRef: {
+      control: false,
+      description:
+        "A ref to the element that should be checked for truncation. If not provided, the trigger element will be used.",
+    },
   },
   args: {
     placement: "top",
