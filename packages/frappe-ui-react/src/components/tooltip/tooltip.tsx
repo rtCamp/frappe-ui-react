@@ -1,7 +1,15 @@
-import React, { useMemo } from "react";
-import type { TooltipProps } from "./types";
+/**
+ * External dependencies.
+ */
+import React, { useCallback, useMemo, useRef } from "react";
 import { Tooltip } from "@base-ui/react/tooltip";
 import clsx from "clsx";
+
+/**
+ * Internal dependencies.
+ */
+import type { TooltipProps } from "./types";
+import { isTextTruncated } from "./utils";
 
 const TooltipComponent: React.FC<TooltipProps> = ({
   children,
@@ -11,8 +19,26 @@ const TooltipComponent: React.FC<TooltipProps> = ({
   hoverDelay = 0.5,
   arrowClass = "fill-surface-gray-7",
   disabled = false,
+  showWhen = "always",
+  truncationRef,
 }) => {
   const delayDuration = useMemo(() => hoverDelay * 1000, [hoverDelay]);
+  const triggerRef = useRef<HTMLElement | null>(null);
+
+  const setTriggerRef = useCallback((node: HTMLElement | null) => {
+    triggerRef.current = node;
+  }, []);
+
+  const handleOpenChange = useCallback(
+    (open: boolean, eventDetails: Tooltip.Root.ChangeEventDetails) => {
+      const target = truncationRef?.current ?? triggerRef.current;
+
+      if (open && !isTextTruncated(target)) {
+        eventDetails.cancel();
+      }
+    },
+    [truncationRef]
+  );
 
   const tooltipContent = useMemo(() => {
     if (body) {
@@ -36,8 +62,13 @@ const TooltipComponent: React.FC<TooltipProps> = ({
 
   return (
     <Tooltip.Provider delay={delayDuration}>
-      <Tooltip.Root>
-        <Tooltip.Trigger render={children as React.ReactElement} />
+      <Tooltip.Root
+        onOpenChange={showWhen === "truncated" ? handleOpenChange : undefined}
+      >
+        <Tooltip.Trigger
+          ref={setTriggerRef}
+          render={children as React.ReactElement}
+        />
         <Tooltip.Portal>
           {tooltipContent && (
             <Tooltip.Positioner
