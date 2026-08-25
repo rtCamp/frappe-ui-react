@@ -269,7 +269,7 @@ export const FilterRow: React.FC<FilterRowProps> = ({
                 "rounded border-none min-w-35 bg-surface-gray-2",
                 "px-2 py-1 text-base min-h-7",
                 "placeholder-ink-gray-4 text-ink-gray-8",
-                "outline-none focus:ring-2 focus:ring-outline-gray-3",
+                "focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3",
                 "transition-colors",
                 "disabled:bg-surface-gray-1 disabled:text-ink-gray-5"
               )}
@@ -309,7 +309,7 @@ const DatePickerTrigger: React.FC<DatePickerTriggerProps> = ({
       className={cn(
         "w-full rounded border-none bg-surface-gray-2",
         "py-1 pr-6 pl-2 text-base text-left min-h-7",
-        "outline-none focus:ring-2 focus:ring-outline-gray-3",
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3",
         "transition-colors cursor-pointer",
         "truncate disabled:bg-surface-gray-1 disabled:text-ink-gray-5",
         displayValue ? "text-ink-gray-8" : "text-ink-gray-4"
