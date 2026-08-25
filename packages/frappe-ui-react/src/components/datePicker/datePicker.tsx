@@ -136,7 +136,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         nativeButton={false}
         render={
           children ? (
-            <span className="!mb-0">
+            <span className="mb-0! rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3">
               {children({
                 isOpen: open,
                 displayValue,
