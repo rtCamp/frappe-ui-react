@@ -153,6 +153,7 @@ const durationSpinnerVariants = cva(
 );
 
 const DurationInput = ({
+  id,
   label,
   required = false,
   inlineLabel,
@@ -170,7 +171,8 @@ const DurationInput = ({
   classNames = {},
   onChange,
 }: DurationInputProps) => {
-  const sliderId = useId();
+  const generatedId = useId();
+  const sliderId = id ?? generatedId;
   const [draftValue, setDraftValue] = useState<string | null>(null);
   const [dragValue, setDragValue] = useState<number | null>(null);
 
