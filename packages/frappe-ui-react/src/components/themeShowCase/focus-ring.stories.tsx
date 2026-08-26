@@ -4,11 +4,6 @@ import { Button } from "../button";
 import { Checkbox } from "../checkbox";
 import { TextInput } from "../textInput";
 
-// Literal `var(--focus-outline-*)` strings on purpose, applied via inline
-// style rather than a `focus-ring-<color>` utility class — Tailwind's JIT
-// only emits classes it can see literally in source, and there is no such
-// utility registered here (see theme.css: the ring is applied globally via
-// `:focus-visible`, themed variants override `outline` directly).
 const FOCUS_RINGS = [
   { label: "--focus-outline-default", variable: "--focus-outline-default" },
   { label: "--focus-outline-red", variable: "--focus-outline-red" },

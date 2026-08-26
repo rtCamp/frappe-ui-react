@@ -778,8 +778,8 @@ input {
       0px 1px 3px rgba(0, 0, 0, 0.15), 0px 10px 24px -3px rgba(0, 0, 0, 0.3);
   }
 
-    :focus-visible {
-        outline: var(--focus-outline-default);
-        outline-offset: 0px;
-    }
+  :focus-visible {
+    outline: var(--focus-outline-default);
+    outline-offset: 0px;
+  }
 }
