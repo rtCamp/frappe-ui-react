@@ -194,7 +194,9 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
   const handleComboboxChange = useCallback(
     (val: InternalSelection) => {
-      updateQuery("");
+      if (!multiple) {
+        updateQuery("");
+      }
 
       const nextSelectedOptionCache = getNextSelectedOptionCache(val, multiple);
 
@@ -260,7 +262,6 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   const clearAll = useCallback(() => {
     if (multiple) {
       handleComboboxChange([]);
-      return;
     }
 
     updateQuery("");
@@ -269,9 +270,10 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   const handleClearClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      clearAll();
+      updateQuery("");
+      searchInputRef.current?.focus();
     },
-    [clearAll]
+    [updateQuery]
   );
 
   useEffect(() => {
@@ -358,6 +360,12 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
         onOpenChange={(nextOpen) => setPopupOpen(nextOpen)}
         onInputValueChange={(nextQuery, details) => {
           if (details.reason === "item-press") {
+            return;
+          }
+
+          // Base-ui Combobox clears the input on item selection, but we want to keep
+          // the query for multi-select so more values can be picked from the same result set.
+          if (multiple && popupOpen && details.reason === "input-clear") {
             return;
           }
 
