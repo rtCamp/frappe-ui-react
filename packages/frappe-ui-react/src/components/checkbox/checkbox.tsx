@@ -33,8 +33,8 @@ const Checkbox: React.FC<CheckboxProps> = ({
     const interactionClasses = disabled
       ? ""
       : padding
-        ? "focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
-        : "hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3 active:bg-surface-gray-2";
+        ? ""
+        : "hover:shadow-sm active:bg-surface-gray-2";
 
     const sizeClasses: string = {
       sm: "w-3.5 h-3.5",

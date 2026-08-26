@@ -65,10 +65,10 @@ const Button = ({
   }[theme];
 
   const focusClasses = {
-    gray: "focus-visible:ring focus-visible:ring-outline-gray-3",
-    blue: "focus-visible:ring focus-visible:ring-blue-400",
-    green: "focus-visible:ring focus-visible:ring-outline-green-2",
-    red: "focus-visible:ring focus-visible:ring-outline-red-2",
+    gray: "focus-visible:[outline:var(--focus-outline-default)]",
+    blue: "focus-visible:[outline:var(--focus-outline-blue)]",
+    green: "focus-visible:[outline:var(--focus-outline-green)]",
+    red: "focus-visible:[outline:var(--focus-outline-red)]",
   }[theme];
 
   const variantClasses = {
@@ -140,7 +140,7 @@ const Button = ({
   }[size];
 
   const buttonClasses = cn(
-    "inline-flex items-center justify-center gap-2 transition-colors focus:outline-none",
+    "inline-flex items-center justify-center gap-2 transition-colors",
     isDisabled ? disabledClasses : variantClasses,
     focusClasses,
     sizeClasses,
