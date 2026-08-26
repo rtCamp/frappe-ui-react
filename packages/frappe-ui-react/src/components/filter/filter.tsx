@@ -171,8 +171,7 @@ export const Filter: React.FC<FilterProps> = ({
                   onClick={handleAddFilter}
                   className={cn(
                     "flex items-center gap-1.5 text-base text-ink-gray-5 px-2 py-1.5",
-                    "hover:text-ink-gray-7 mt-2 py-1 transition-colors rounded",
-                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
+                    "hover:text-ink-gray-7 mt-2 py-1 transition-colors rounded"
                   )}
                 >
                   <Plus className="w-4 h-4" />
