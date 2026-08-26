@@ -336,5 +336,24 @@ export const ControlledSearchLoading: Story = {
     });
 
     expect(trigger).toHaveTextContent("John Doe, Jane Doe, John Smith");
+
+    await userEvent.type(search, "smith");
+
+    await waitFor(() => {
+      expect(page.queryByTestId("loading-indicator")).not.toBeInTheDocument();
+    });
+
+    // Dismissing with an active query still resets it, so a reopen starts fresh.
+    await userEvent.click(trigger);
+    await userEvent.click(trigger);
+
+    const reopenedSearch = await page.findByPlaceholderText("Search");
+    expect(reopenedSearch).toHaveValue("");
+
+    await waitFor(() => {
+      expect(page.getByText("Bob Johnson")).toBeInTheDocument();
+    });
+
+    expect(trigger).toHaveTextContent("John Doe, Jane Doe, John Smith");
   },
 };
