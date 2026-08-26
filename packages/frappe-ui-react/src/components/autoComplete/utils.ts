@@ -285,9 +285,7 @@ export const getNextSelectedOptionCache = (
   multiple: boolean
 ) => {
   if (multiple) {
-    return Array.isArray(selection) && selection.length > 0
-      ? selection
-      : undefined;
+    return Array.isArray(selection) ? selection : undefined;
   }
 
   return selection && !Array.isArray(selection) ? selection : undefined;
