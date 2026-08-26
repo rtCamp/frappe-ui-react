@@ -306,5 +306,35 @@ export const ControlledSearchLoading: Story = {
 
     expect(page.getByText("John Doe")).toBeInTheDocument();
     expect(page.getByText("Jane Doe")).toBeInTheDocument();
+
+    await userEvent.clear(search);
+    await userEvent.type(search, "smith");
+
+    await waitFor(() => {
+      expect(page.queryByTestId("loading-indicator")).not.toBeInTheDocument();
+    });
+
+    expect(page.getByText("John Smith")).toBeInTheDocument();
+
+    // Picking an option must not wipe the query or the results behind it.
+    await userEvent.click(page.getByText("John Smith"));
+
+    expect(search).toHaveValue("smith");
+    expect(page.getByText("John Smith")).toBeInTheDocument();
+    expect(page.queryByText("Bob Johnson")).not.toBeInTheDocument();
+    expect(trigger).toHaveTextContent("John Smith");
+
+    // The search clear button drops the query only, never the selection.
+    await userEvent.click(page.getByRole("button", { name: "Clear" }));
+
+    await waitFor(() => {
+      expect(search).toHaveValue("");
+    });
+
+    await waitFor(() => {
+      expect(page.getByText("Bob Johnson")).toBeInTheDocument();
+    });
+
+    expect(trigger).toHaveTextContent("John Doe, Jane Doe, John Smith");
   },
 };
