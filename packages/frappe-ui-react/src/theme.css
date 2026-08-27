@@ -781,6 +781,6 @@ input {
   :focus-visible {
     outline: var(--focus-outline-default);
     outline-offset: 0px;
-    transition: none !important;
+    transition: outline-color 0s !important;
   }
 }
