@@ -199,36 +199,42 @@ export const SearchOptions: Story = {
 
     // Find search input
     const searchInput = await screen.findByPlaceholderText("Search for...");
-    expect(searchInput).toBeInTheDocument();
-
-    // Type in search
     await userEvent.type(searchInput, "ber");
 
-    // Elderberry should be visible
-    const elderberryOption = screen.getByText("Elderberry");
-    expect(elderberryOption).toBeInTheDocument();
+    const elderberryOption = await screen.findByRole("option", {
+      name: "Elderberry",
+    });
+    expect(
+      screen.queryByRole("option", { name: "Apple" })
+    ).not.toBeInTheDocument();
 
-    // Apple should not be visible
-    const appleOption = screen.queryByText("Apple");
-    expect(appleOption).not.toBeInTheDocument();
+    // Picking an option must not wipe the query or the results behind it
+    await userEvent.click(elderberryOption);
+
+    expect(searchInput).toHaveValue("ber");
+    expect(
+      screen.queryByRole("option", { name: "Apple" })
+    ).not.toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(trigger).toHaveTextContent("Elderberry");
+    });
 
     // Type search that has no results
     await userEvent.type(searchInput, "xyz123");
 
-    // Verify "No results found" message appears
-    const noResultsMessage = await screen.findByText("No results found");
-    expect(noResultsMessage).toBeInTheDocument();
+    expect(await screen.findByText("No results found")).toBeInTheDocument();
 
-    // Find and click the clear button
-    const clearButton = await screen.findByRole("button", {
-      name: /clear search/i,
-    });
-    expect(clearButton).toBeInTheDocument();
+    // The clear button drops the query only, never the selection
+    await userEvent.click(
+      await screen.findByRole("button", { name: /clear search/i })
+    );
 
-    await userEvent.click(clearButton as HTMLElement);
-
-    // Verify search input is cleared
     expect(searchInput).toHaveValue("");
+    expect(
+      await screen.findByRole("option", { name: "Apple" })
+    ).toBeInTheDocument();
+    expect(trigger).toHaveTextContent("Elderberry");
   },
 };
 
