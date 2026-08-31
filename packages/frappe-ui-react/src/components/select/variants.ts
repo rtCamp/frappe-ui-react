@@ -11,11 +11,11 @@ export const selectTriggerVariants = cva(
       },
       variant: {
         subtle:
-          "border border-surface-gray-2 bg-surface-gray-2 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:border-outline-gray-4 focus-visible:outline-2 focus-visible:outline-default data-[placeholder]:text-ink-gray-4",
+          "border border-surface-gray-2 bg-surface-gray-2 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus-visible:outline-2 focus-visible:outline-default data-[placeholder]:text-ink-gray-4",
         outline:
-          "border border-outline-gray-2 bg-surface-white hover:border-outline-gray-3 focus:border-outline-gray-4 focus-visible:outline-2 focus-visible:outline-default",
+          "border border-outline-gray-2 bg-surface-white hover:border-outline-gray-3 focus-visible:outline-2 focus-visible:outline-default",
         ghost:
-          "bg-transparent border-transparent hover:bg-surface-gray-3 focus:bg-surface-gray-3 focus:border-outline-gray-4 focus-visible:outline-2 focus-visible:outline-default",
+          "bg-transparent border-transparent hover:bg-surface-gray-3 focus:bg-surface-gray-3 focus-visible:outline-2 focus-visible:outline-default",
       },
       disabled: {
         true: "text-ink-gray-4",
