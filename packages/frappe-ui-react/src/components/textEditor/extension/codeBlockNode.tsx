@@ -31,7 +31,7 @@ function CodeBlockComponent(props: NodeViewProps) {
       <div className="code-block-container">
         <select
           name="language-options"
-          className="language-selector h-7 rounded-[8px] border border-surface-gray-2 bg-surface-gray-2 py-1.5 pl-2 pr-2 text-base font-[420] leading-[1.15] tracking-[0.02em] text-ink-gray-8 transition-colors hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:bg-surface-white focus:shadow-sm focus-visible:outline-2 focus-visible:outline-default"
+          className="language-selector h-7 rounded-[8px] border border-surface-gray-2 bg-surface-gray-2 py-1.5 pl-2 pr-2 text-base font-[420] leading-[1.15] tracking-[0.02em] text-ink-gray-8 transition-colors hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:bg-surface-white focus:shadow-sm focus-visible:outline-2 focus-visible:outline-default"
           value={selectedLanguage || "null"}
           onChange={handleLanguageChange}
         >

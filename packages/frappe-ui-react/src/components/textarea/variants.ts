@@ -10,9 +10,9 @@ export const textareaVariants = cva("resize-y transition-colors w-full block", {
     },
     variant: {
       subtle:
-        "border border-surface-gray-2 bg-surface-gray-2 placeholder-ink-gray-4 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus-visible:outline-2 focus-visible:outline-default",
+        "border border-surface-gray-2 bg-surface-gray-2 placeholder-ink-gray-4 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:bg-surface-white focus:shadow-sm focus-visible:outline-2 focus-visible:outline-default",
       outline:
-        "border border-outline-gray-2 bg-surface-white placeholder-ink-gray-4 hover:border-outline-gray-3 hover:shadow-sm focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus-visible:outline-2 focus-visible:outline-default",
+        "border border-outline-gray-2 bg-surface-white placeholder-ink-gray-4 hover:border-outline-gray-3 hover:shadow-sm focus:bg-surface-white focus:shadow-sm focus-visible:outline-2 focus-visible:outline-default",
     },
     disabled: {
       true: "text-ink-gray-5",
