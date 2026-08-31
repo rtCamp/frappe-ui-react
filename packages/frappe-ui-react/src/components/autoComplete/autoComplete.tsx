@@ -301,7 +301,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
     <button
       type="button"
       className={cn(
-        "flex h-7 w-full max-w-md items-center justify-between gap-2 rounded border border-transparent bg-surface-gray-2 px-2 py-1 transition-colors hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:outline-none focus:ring-2 focus:ring-outline-gray-3 data-popup-open:bg-surface-gray-3",
+        "flex h-7 w-full max-w-md items-center justify-between gap-2 rounded border border-transparent bg-surface-gray-2 px-2 py-1 transition-[background-color,border-color,box-shadow] hover:bg-surface-gray-3 focus:outline-2 focus:outline-default data-popup-open:bg-surface-gray-3",
         triggerClassName
       )}
     >

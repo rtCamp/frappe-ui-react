@@ -33,8 +33,8 @@ const Checkbox: React.FC<CheckboxProps> = ({
     const interactionClasses = disabled
       ? ""
       : padding
-        ? "focus:ring-0"
-        : "hover:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 active:bg-surface-gray-2";
+        ? ""
+        : "hover:shadow-sm active:bg-surface-gray-2";
 
     const sizeClasses: string = {
       sm: "w-3.5 h-3.5",
@@ -56,7 +56,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
 
     const interactionClasses =
       padding && !disabled
-        ? "focus-within:bg-surface-gray-2 focus-within:ring-2 focus-within:ring-outline-gray-3 hover:bg-surface-gray-3 active:bg-surface-gray-4"
+        ? "focus-within:bg-surface-gray-2 focus-within:outline-2 focus-within:outline-default hover:bg-surface-gray-3 active:bg-surface-gray-4"
         : "";
 
     return `inline-flex space-x-2 rounded transition ${paddingClasses} ${interactionClasses}`;

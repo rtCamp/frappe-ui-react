@@ -28,6 +28,8 @@ export interface DurationInputClassNames {
 }
 
 export interface DurationInputProps {
+  /** Overrides the generated id used to link an external label to the input. */
+  id?: string;
   /** Label displayed above the input. */
   label?: string | false;
   /** If true, appends a required-field asterisk to the label. */

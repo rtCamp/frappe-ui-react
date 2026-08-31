@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 
 export const crumbVariants = cva(
-  "flex items-center rounded px-1.25 py-1 gap-1 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3",
+  "flex items-center rounded px-1.25 py-1 gap-1 font-medium focus-visible:outline-2 focus-visible:outline-default",
   {
     variants: {
       size: {

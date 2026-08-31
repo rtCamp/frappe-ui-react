@@ -28,7 +28,7 @@ import { Spinner } from "../spinner";
 type SliderValue = number | readonly number[];
 
 const durationControlVariants = cva(
-  "flex items-center rounded relative overflow-hidden has-focus-visible:border-outline-gray-4 has-focus-visible:shadow-sm has-focus-visible:ring-2 cursor-pointer data-dragging:cursor-grabbing data-disabled:cursor-not-allowed",
+  "flex items-center rounded relative overflow-hidden has-focus-visible:border-outline-gray-4 has-focus-visible:shadow-sm cursor-pointer data-dragging:cursor-grabbing data-disabled:cursor-not-allowed",
   {
     variants: {
       variant: {
@@ -36,8 +36,8 @@ const durationControlVariants = cva(
         outline: "ring-1 ring-outline-gray-2",
       },
       error: {
-        true: "has-focus-visible:ring-outline-red-2",
-        false: "has-focus-visible:ring-outline-gray-3",
+        true: "has-focus-visible:outline-2 has-focus-visible:outline-red",
+        false: "has-focus-visible:outline-2 has-focus-visible:outline-default",
       },
     },
     compoundVariants: [
@@ -113,7 +113,7 @@ const durationIndicatorVariants = cva(
 );
 
 const durationInputVariants = cva(
-  "absolute -translate-y-1/2 top-1/2 right-2.5 w-10 flex items-center justify-center tabular-nums rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1",
+  "absolute -translate-y-1/2 top-1/2 right-2.5 w-10 flex items-center justify-center tabular-nums rounded-sm focus-visible:outline-offset-1",
   {
     variants: {
       size: {
@@ -125,8 +125,8 @@ const durationInputVariants = cva(
         false: "text-ink-gray-8",
       },
       error: {
-        true: "focus-visible:ring-outline-red-2 focus-visible:ring-offset-surface-red-2",
-        false: "focus-visible:ring-outline-gray-3",
+        true: "focus-visible:outline-2 focus-visible:outline-red",
+        false: "focus-visible:outline-2 focus-visible:outline-default",
       },
     },
     defaultVariants: {
@@ -153,6 +153,7 @@ const durationSpinnerVariants = cva(
 );
 
 const DurationInput = ({
+  id,
   label,
   required = false,
   inlineLabel,
@@ -170,7 +171,8 @@ const DurationInput = ({
   classNames = {},
   onChange,
 }: DurationInputProps) => {
-  const sliderId = useId();
+  const generatedId = useId();
+  const sliderId = id ?? generatedId;
   const [draftValue, setDraftValue] = useState<string | null>(null);
   const [dragValue, setDragValue] = useState<number | null>(null);
 
