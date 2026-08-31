@@ -70,6 +70,9 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   }, [options, onChange]);
 
   const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      setQuery("");
+    }
     if (open === undefined) {
       setPopupOpen(nextOpen);
     }
@@ -86,7 +89,15 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       multiple
       open={resolvedOpen}
       value={selectedOptionObjects}
+      inputValue={query}
       onOpenChange={handleOpenChange}
+      onInputValueChange={(nextQuery, details) => {
+        // Only update the query if the change was triggered by user input.
+        if (details.reason !== "input-change") {
+          return;
+        }
+        setQuery(nextQuery);
+      }}
       onValueChange={handleChange}
       isItemEqualToValue={compareFn}
     >
@@ -118,7 +129,6 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
             {!hideSearch && (
               <div className="flex w-full items-center justify-between gap-2 rounded bg-surface-gray-2 px-2 py-1 ring-2 ring-outline-gray-2 transition-colors hover:bg-surface-gray-3 border border-transparent mb-2">
                 <Combobox.Input
-                  onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search for..."
                   className="bg-transparent p-0 focus:outline-0 border-0 focus:border-0 focus:ring-0 text-base text-ink-gray-8 h-full placeholder:text-ink-gray-4 w-full"
                 />
@@ -126,13 +136,16 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                   {loading && (
                     <LoadingIndicator className="size-4 text-ink-gray-5" />
                   )}
-                  <Combobox.Clear
-                    keepMounted={query !== ""}
-                    onClick={() => setQuery("")}
-                    aria-label="Clear search"
-                  >
-                    <X className="size-4 text-ink-gray-9" />
-                  </Combobox.Clear>
+                  {query !== "" && (
+                    <button
+                      type="button"
+                      aria-label="Clear search"
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => setQuery("")}
+                    >
+                      <X className="size-4 text-ink-gray-9" />
+                    </button>
+                  )}
                 </div>
               </div>
             )}
