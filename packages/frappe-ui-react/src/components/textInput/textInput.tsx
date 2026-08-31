@@ -11,7 +11,7 @@ import { cn } from "../../utils";
 import type { TextInputProps } from "./types";
 
 const inputVariants = cva(
-  "transition-colors w-full dark:[color-scheme:dark] outline-none appearance-none",
+  "transition-colors w-full dark:[color-scheme:dark] appearance-none",
   {
     variants: {
       size: {
@@ -22,9 +22,9 @@ const inputVariants = cva(
       },
       variant: {
         subtle:
-          "border border-surface-gray-2 bg-surface-gray-2 placeholder-ink-gray-4 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
+          "border border-surface-gray-2 bg-surface-gray-2 placeholder-ink-gray-4 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus-visible:outline-2 focus-visible:outline-default",
         outline:
-          "border border-outline-gray-2 bg-surface-white placeholder-ink-gray-4 hover:border-outline-gray-3 hover:shadow-sm focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
+          "border border-outline-gray-2 bg-surface-white placeholder-ink-gray-4 hover:border-outline-gray-3 hover:shadow-sm focus:bg-surface-white focus:border-outline-gray-4 focus:shadow-sm focus-visible:outline-2 focus-visible:outline-default",
         ghost: "border-0 focus:ring-0 focus-visible:ring-0",
       },
       disabled: {

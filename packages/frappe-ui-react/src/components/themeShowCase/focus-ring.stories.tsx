@@ -48,7 +48,7 @@ const FocusRing = () => {
         <p className="text-sm text-ink-gray-6 mb-4">
           Retheme a specific element with{" "}
           <code className="text-ink-gray-8">
-            {"focus-visible:[outline:var(--focus-outline-<color>)]"}
+            {"focus-visible:outline-2 focus-visible:outline-<color>"}
           </code>
           , e.g. red for a form error or green for a success state.
         </p>

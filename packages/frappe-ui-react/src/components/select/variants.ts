@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 
 export const selectTriggerVariants = cva(
-  "w-full inline-flex items-center justify-between gap-2 py-0 truncate appearance-none transition-colors focus:outline-none cursor-pointer disabled:cursor-not-allowed",
+  "w-full inline-flex items-center justify-between gap-2 py-0 truncate appearance-none transition-colors cursor-pointer disabled:cursor-not-allowed",
   {
     variants: {
       size: {
@@ -11,11 +11,11 @@ export const selectTriggerVariants = cva(
       },
       variant: {
         subtle:
-          "border border-surface-gray-2 bg-surface-gray-2 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 data-[placeholder]:text-ink-gray-4",
+          "border border-surface-gray-2 bg-surface-gray-2 hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:border-outline-gray-4 focus-visible:outline-2 focus-visible:outline-default data-[placeholder]:text-ink-gray-4",
         outline:
-          "border border-outline-gray-2 bg-surface-white hover:border-outline-gray-3 focus:border-outline-gray-4 focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
+          "border border-outline-gray-2 bg-surface-white hover:border-outline-gray-3 focus:border-outline-gray-4 focus-visible:outline-2 focus-visible:outline-default",
         ghost:
-          "bg-transparent border-transparent hover:bg-surface-gray-3 focus:bg-surface-gray-3 focus:border-outline-gray-4 focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3",
+          "bg-transparent border-transparent hover:bg-surface-gray-3 focus:bg-surface-gray-3 focus:border-outline-gray-4 focus-visible:outline-2 focus-visible:outline-default",
       },
       disabled: {
         true: "text-ink-gray-4",

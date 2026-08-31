@@ -859,6 +859,13 @@
       "gray-modals": "var(--color-outline-gray-modals)"
     }
   },
+  "outlineColor": {
+    "default": "var(--color-outline-gray-3)",
+    "red": "var(--color-outline-red-2)",
+    "green": "var(--color-outline-green-2)",
+    "amber": "var(--color-outline-amber-2)",
+    "blue": "var(--color-outline-blue-1)"
+  },
   "divideColor": {
     "outline": {
       "white": "var(--color-outline-white)",

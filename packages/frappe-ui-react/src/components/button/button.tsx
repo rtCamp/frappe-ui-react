@@ -65,10 +65,10 @@ const Button = ({
   }[theme];
 
   const focusClasses = {
-    gray: "focus-visible:[outline:var(--focus-outline-default)]",
-    blue: "focus-visible:[outline:var(--focus-outline-blue)]",
-    green: "focus-visible:[outline:var(--focus-outline-green)]",
-    red: "focus-visible:[outline:var(--focus-outline-red)]",
+    gray: "focus-visible:outline-2 focus-visible:outline-default",
+    blue: "focus-visible:outline-2 focus-visible:outline-blue",
+    green: "focus-visible:outline-2 focus-visible:outline-green",
+    red: "focus-visible:outline-2 focus-visible:outline-red",
   }[theme];
 
   const variantClasses = {
