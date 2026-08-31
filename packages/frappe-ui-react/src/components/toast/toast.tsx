@@ -44,10 +44,10 @@ const ToastComponent: React.FC<ToastProps> = ({ toast }) => {
           </div>
         </div>
         <div className="flex items-center gap-2 h-7">
-          <Toast.Action className="flex-shrink-0 rounded px-2 py-1 text-sm text-ink-blue-link dark:text-gray-300 hover:text-ink-gray-3 focus:outline-none focus-visible:ring focus-visible:ring-outline-gray-4" />
+          <Toast.Action className="flex-shrink-0 rounded px-2 py-1 text-sm text-ink-blue-link dark:text-gray-300 hover:text-ink-gray-3 focus-visible:outline-2 focus-visible:outline-default" />
           {closable && (
             <Toast.Close
-              className="flex-shrink-0 rounded p-1 text-ink-white dark:text-gray-300 hover:text-ink-gray-3 focus:outline-none focus-visible:ring focus-visible:ring-outline-gray-4"
+              className="flex-shrink-0 rounded p-1 text-ink-white dark:text-gray-300 hover:text-ink-gray-3 focus-visible:outline-2 focus-visible:outline-default"
               aria-label="Close"
             >
               <X className="size-4" />

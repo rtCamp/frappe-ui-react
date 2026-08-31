@@ -257,7 +257,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                           <button
                             type="button"
                             key={val}
-                            className={`flex h-8 w-8 items-center justify-center rounded cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                            className={`flex h-8 w-8 items-center justify-center rounded cursor-pointer text-sm focus-visible:outline-2 focus-visible:outline-default ${
                               inMonth ? "text-ink-gray-8" : "text-ink-gray-3"
                             } ${
                               isToday ? "font-extrabold text-ink-gray-9" : ""
@@ -291,7 +291,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                       <button
                         type="button"
                         key={m}
-                        className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                        className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus-visible:outline-2 focus-visible:outline-default ${
                           isSelected
                             ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
                             : ""
@@ -318,7 +318,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                       <button
                         type="button"
                         key={y}
-                        className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                        className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus-visible:outline-2 focus-visible:outline-default ${
                           isSelected
                             ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
                             : ""

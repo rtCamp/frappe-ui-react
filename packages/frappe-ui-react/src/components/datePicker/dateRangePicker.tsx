@@ -125,7 +125,6 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
       <Popover.Trigger
         disabled={disabled}
         nativeButton={false}
-        className="focus:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
         render={
           children ? (
             <span>
@@ -253,7 +252,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                             type="button"
                             key={val}
                             disabled={isDisallowed}
-                            className={`flex h-8 w-8 items-center justify-center text-sm rounded focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                            className={`flex h-8 w-8 items-center justify-center text-sm rounded focus-visible:outline-2 focus-visible:outline-default ${
                               isDisallowed
                                 ? "cursor-not-allowed"
                                 : "cursor-pointer hover:bg-surface-gray-2"
@@ -309,7 +308,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                       <button
                         type="button"
                         key={m}
-                        className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                        className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus-visible:outline-2 focus-visible:outline-default ${
                           isSelected
                             ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
                             : ""
@@ -336,7 +335,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                       <button
                         type="button"
                         key={y}
-                        className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus:outline-none focus:ring-2 focus:ring-outline-gray-2 ${
+                        className={`py-2 text-sm rounded cursor-pointer text-center hover:bg-surface-gray-2 focus-visible:outline-2 focus-visible:outline-default ${
                           isSelected
                             ? "bg-surface-gray-6 text-ink-white hover:bg-surface-gray-6"
                             : ""

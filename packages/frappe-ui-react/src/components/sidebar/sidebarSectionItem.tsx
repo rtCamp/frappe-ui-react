@@ -49,7 +49,7 @@ const SidebarSectionItem: React.FC<SidebarSectionItemProps> = ({
     props: {
       onClick: item.onClick,
       className: cn(
-        "inline-flex h-7 w-full cursor-pointer items-center gap-2 rounded justify-start py-1 text-base text-left text-ink-gray-6 no-underline transition-all ease-in-out focus:outline-none focus-visible:ring focus-visible:ring-outline-gray-3",
+        "inline-flex h-7 w-full cursor-pointer items-center gap-2 rounded justify-start py-1 text-base text-left text-ink-gray-6 no-underline transition-all ease-in-out focus-visible:outline-2 focus-visible:outline-default",
         indentClassName,
         {
           "!bg-surface-selected shadow-sm": item.isActive,

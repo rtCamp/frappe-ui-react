@@ -12,6 +12,7 @@ export type GroupedOption = { group: string; options: SimpleOption[] };
 export type ComboboxOption = SimpleOption | GroupedOption;
 
 export interface ComboboxProps {
+  id?: string;
   options: ComboboxOption[];
   value?: string | null;
   placeholder?: string;

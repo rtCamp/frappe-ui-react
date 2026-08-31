@@ -461,6 +461,13 @@ input {
   --color-outline-orange-1: var(--color-orange-400);
   --color-outline-gray-modals: var(--color-gray-200);
 
+  /* Focus Ring */
+  --focus-outline-default: 2px solid var(--color-outline-gray-3);
+  --focus-outline-red: 2px solid var(--color-outline-red-2);
+  --focus-outline-green: 2px solid var(--color-outline-green-2);
+  --focus-outline-amber: 2px solid var(--color-outline-amber-2);
+  --focus-outline-blue: 2px solid var(--color-outline-blue-1);
+
   /* Border Radius */
   --radius-none: 0px;
   --radius-sm: 0.25rem;
@@ -768,4 +775,10 @@ input {
     --shadow-2xl: 0px 0px 1px rgba(0, 0, 0, 0.6),
       0px 1px 3px rgba(0, 0, 0, 0.15), 0px 10px 24px -3px rgba(0, 0, 0, 0.3);
   }
+}
+
+:focus-visible {
+  outline: var(--focus-outline-default);
+  outline-offset: 0px;
+  transition: outline-color 0s !important;
 }
