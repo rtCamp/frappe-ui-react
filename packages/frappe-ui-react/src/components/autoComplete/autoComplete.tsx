@@ -113,6 +113,19 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
     [displayedGroups]
   );
 
+  const getLabel = useCallback((option: AutocompleteOption): string => {
+    return getOptionLabel(option);
+  }, []);
+
+  const selectedComboboxValue = useMemo<InternalSelection>(() => {
+    return resolveSelectedOptions({
+      value,
+      multiple,
+      currentOptions,
+      selectedOptionCache,
+    });
+  }, [value, multiple, currentOptions, selectedOptionCache]);
+
   const visibleGroups = useMemo(() => {
     const effectiveQuery = isSearchControlled && !loading ? "" : query;
     const filtered = filterGroups(displayedGroups, effectiveQuery, maxOptions);
@@ -120,10 +133,10 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
     if (!keepSelectedVisible) return filtered;
 
     // Ensure selected options are visible even if they don't match the query.
-    const selectionArray = Array.isArray(selectedOptionCache)
-      ? selectedOptionCache
-      : selectedOptionCache
-        ? [selectedOptionCache]
+    const selectionArray = Array.isArray(selectedComboboxValue)
+      ? selectedComboboxValue
+      : selectedComboboxValue
+        ? [selectedComboboxValue]
         : [];
 
     if (!selectionArray.length) return filtered;
@@ -149,26 +162,13 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
     loading,
     maxOptions,
     query,
-    selectedOptionCache,
+    selectedComboboxValue,
   ]);
 
   const renderedOptions = useMemo(
     () => flattenGroups(visibleGroups),
     [visibleGroups]
   );
-
-  const getLabel = useCallback((option: AutocompleteOption): string => {
-    return getOptionLabel(option);
-  }, []);
-
-  const selectedComboboxValue = useMemo<InternalSelection>(() => {
-    return resolveSelectedOptions({
-      value,
-      multiple,
-      currentOptions,
-      selectedOptionCache,
-    });
-  }, [value, multiple, currentOptions, selectedOptionCache]);
 
   const updateQuery = useCallback(
     (nextQuery: string) => {
@@ -183,19 +183,21 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
   const setPopupOpen = useCallback(
     (nextOpen: boolean) => {
+      if (!nextOpen && query) {
+        updateQuery("");
+      }
+
       if (!isOpenControlled) {
         setInternalOpen(nextOpen);
       }
 
       onOpenChange?.(nextOpen);
     },
-    [isOpenControlled, onOpenChange]
+    [isOpenControlled, onOpenChange, query, updateQuery]
   );
 
   const handleComboboxChange = useCallback(
     (val: InternalSelection) => {
-      updateQuery("");
-
       const nextSelectedOptionCache = getNextSelectedOptionCache(val, multiple);
 
       if (nextSelectedOptionCache !== undefined) {
@@ -213,7 +215,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
       onChange?.(emittedValue, val);
     },
-    [multiple, onChange, setPopupOpen, updateQuery]
+    [multiple, onChange, setPopupOpen]
   );
 
   const displayValue = useMemo<string>(() => {
@@ -260,7 +262,6 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   const clearAll = useCallback(() => {
     if (multiple) {
       handleComboboxChange([]);
-      return;
     }
 
     updateQuery("");
@@ -269,9 +270,10 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   const handleClearClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      clearAll();
+      updateQuery("");
+      searchInputRef.current?.focus();
     },
-    [clearAll]
+    [updateQuery]
   );
 
   useEffect(() => {
@@ -350,14 +352,16 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
         value={selectedComboboxValue}
         multiple={multiple}
         open={popupOpen}
+        inputValue={query}
         autoHighlight
         filter={null}
         highlightItemOnHover
         itemToStringLabel={(item) => item.label}
         isItemEqualToValue={isSameOption}
-        onOpenChange={(nextOpen) => setPopupOpen(nextOpen)}
+        onOpenChange={setPopupOpen}
         onInputValueChange={(nextQuery, details) => {
-          if (details.reason === "item-press") {
+          // Only update the query if the change was triggered by user input.
+          if (details.reason !== "input-change") {
             return;
           }
 
@@ -403,7 +407,6 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                       id={comboboxInputId}
                       ref={searchInputRef}
                       data-testid="autocomplete"
-                      value={query}
                       placeholder="Search"
                       autoComplete="off"
                       className={cn(
