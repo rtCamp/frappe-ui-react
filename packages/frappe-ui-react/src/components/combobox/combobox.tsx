@@ -200,7 +200,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
           <BaseCombobox.Input
             id={id}
             className={cn(
-              "min-h-6 w-full rounded border border-surface-gray-2 bg-surface-gray-2 py-1 text-base text-ink-gray-8 transition-colors placeholder-ink-gray-4 outline-none focus:border-outline-gray-4 focus:ring-2 focus:ring-outline-gray-3 disabled:bg-surface-gray-1 disabled:text-ink-gray-5",
+              "min-h-6 w-full rounded border border-surface-gray-2 bg-surface-gray-2 py-1 text-base text-ink-gray-8 transition-colors placeholder-ink-gray-4 focus:border-outline-gray-4 focus-visible:outline-2 focus-visible:outline-default disabled:bg-surface-gray-1 disabled:text-ink-gray-5",
               hasSelectedIcon ? "pl-8" : "pl-2",
               showClear
                 ? loading
