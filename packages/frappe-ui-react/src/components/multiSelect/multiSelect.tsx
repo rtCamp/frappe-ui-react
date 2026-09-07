@@ -62,11 +62,10 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   }, [selectedOptionObjects, placeholder, triggerLabel]);
 
   const resetSearch = useCallback(() => {
-    if (isSearchControlled) {
-      onSearchChange?.("");
-    } else {
+    if (!isSearchControlled) {
       setQuery("");
     }
+    onSearchChange?.("");
   }, [isSearchControlled, onSearchChange]);
 
   const clearAll = useCallback(() => {
@@ -103,6 +102,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       open={resolvedOpen}
       value={selectedOptionObjects}
       inputValue={activeQuery}
+      filter={isSearchControlled ? null : undefined}
       onOpenChange={handleOpenChange}
       onInputValueChange={(nextQuery, details) => {
         // Only update the query if the change was triggered by user input.
