@@ -32,11 +32,16 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   onChange,
   renderOption,
   renderFooter,
+  searchValue,
+  onSearchChange,
+  positionerClassName,
   popupClassName,
 }) => {
   const [query, setQuery] = useState("");
   const [popupOpen, setPopupOpen] = useState(false);
   const resolvedOpen = open ?? popupOpen;
+  const isSearchControlled = searchValue !== undefined;
+  const activeQuery = isSearchControlled ? (searchValue ?? "") : query;
 
   const optionsMap = useMemo(
     () => new Map(options.map((opt) => [opt.value, opt] as const)),
@@ -56,22 +61,30 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     return labels.join(", ");
   }, [selectedOptionObjects, placeholder, triggerLabel]);
 
+  const resetSearch = useCallback(() => {
+    if (isSearchControlled) {
+      onSearchChange?.("");
+    } else {
+      setQuery("");
+    }
+  }, [isSearchControlled, onSearchChange]);
+
   const clearAll = useCallback(() => {
-    setQuery("");
+    resetSearch();
     onChange?.([]);
-  }, [onChange]);
+  }, [resetSearch, onChange]);
 
   const selectAll = useCallback(() => {
-    setQuery("");
+    resetSearch();
     const allValues = options
       .filter((opt) => !opt.disabled)
       .map((opt) => opt.value);
     onChange?.(allValues);
-  }, [options, onChange]);
+  }, [resetSearch, options, onChange]);
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen) {
-      setQuery("");
+      resetSearch();
     }
     if (open === undefined) {
       setPopupOpen(nextOpen);
@@ -89,14 +102,18 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       multiple
       open={resolvedOpen}
       value={selectedOptionObjects}
-      inputValue={query}
+      inputValue={activeQuery}
       onOpenChange={handleOpenChange}
       onInputValueChange={(nextQuery, details) => {
         // Only update the query if the change was triggered by user input.
         if (details.reason !== "input-change") {
           return;
         }
-        setQuery(nextQuery);
+        if (isSearchControlled) {
+          onSearchChange?.(nextQuery);
+        } else {
+          setQuery(nextQuery);
+        }
       }}
       onValueChange={handleChange}
       isItemEqualToValue={compareFn}
@@ -118,7 +135,11 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       />
 
       <Combobox.Portal>
-        <Combobox.Positioner className="group" sideOffset={8} align="start">
+        <Combobox.Positioner
+          className={cn("group", positionerClassName)}
+          sideOffset={8}
+          align="start"
+        >
           <Combobox.Popup
             className={cn(
               "shadow-xl rounded-lg border border-outline-gray-1 bg-surface-modal p-2 w-(--anchor-width)",
@@ -136,12 +157,12 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                   {loading && (
                     <LoadingIndicator className="size-4 text-ink-gray-5" />
                   )}
-                  {query !== "" && (
+                  {activeQuery !== "" && (
                     <button
                       type="button"
                       aria-label="Clear search"
                       onMouseDown={(event) => event.preventDefault()}
-                      onClick={() => setQuery("")}
+                      onClick={() => resetSearch()}
                     >
                       <X className="size-4 text-ink-gray-9" />
                     </button>
