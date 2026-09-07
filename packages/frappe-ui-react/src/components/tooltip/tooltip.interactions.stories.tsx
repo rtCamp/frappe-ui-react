@@ -73,3 +73,52 @@ export const ShowWhenTruncated: Story = {
     });
   },
 };
+
+/**
+ * Base UI's hover interaction is `mouseOnly` and its focus interaction is gated
+ * on `:focus-visible`, which a tap never matches. A touch pointer is therefore
+ * the only signal a tooltip can open from on a phone, and it is dispatched
+ * directly here because neither `userEvent` nor a viewport resize can produce a
+ * touch `pointerType`.
+ */
+function pressWith(element: HTMLElement, pointerType: "mouse" | "touch") {
+  element.dispatchEvent(
+    new PointerEvent("pointerdown", { pointerType, bubbles: true })
+  );
+}
+
+export const OpensOnTouch: Story = {
+  render: () => <TruncationCases />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    pressWith(canvas.getByTestId("clipped-trigger"), "touch");
+
+    await waitFor(() => {
+      expect(screen.getByTestId("tooltip-popup")).toBeInTheDocument();
+    });
+    expect(screen.getByTestId("tooltip-popup")).toHaveTextContent(LABEL);
+  },
+};
+
+export const TouchRespectsTruncation: Story = {
+  render: () => <TruncationCases />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    pressWith(canvas.getByTestId("fitting-trigger"), "touch");
+
+    expect(screen.queryByTestId("tooltip-popup")).not.toBeInTheDocument();
+  },
+};
+
+export const MousePressDoesNotOpen: Story = {
+  render: () => <TruncationCases />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    pressWith(canvas.getByTestId("clipped-trigger"), "mouse");
+
+    expect(screen.queryByTestId("tooltip-popup")).not.toBeInTheDocument();
+  },
+};
