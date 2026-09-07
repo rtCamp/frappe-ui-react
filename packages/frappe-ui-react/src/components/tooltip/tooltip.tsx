@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useId, useMemo, useRef, useState } from "react";
 import { Tooltip } from "@base-ui/react/tooltip";
 import clsx from "clsx";
 
@@ -24,20 +24,46 @@ const TooltipComponent: React.FC<TooltipProps> = ({
 }) => {
   const delayDuration = useMemo(() => hoverDelay * 1000, [hoverDelay]);
   const triggerRef = useRef<HTMLElement | null>(null);
+  const triggerId = useId();
+  const [open, setOpen] = useState(false);
 
   const setTriggerRef = useCallback((node: HTMLElement | null) => {
     triggerRef.current = node;
   }, []);
 
-  const handleOpenChange = useCallback(
-    (open: boolean, eventDetails: Tooltip.Root.ChangeEventDetails) => {
-      const target = truncationRef?.current ?? triggerRef.current;
+  const shouldShow = useCallback(() => {
+    if (showWhen !== "truncated") {
+      return true;
+    }
 
-      if (open && !isTextTruncated(target)) {
+    return isTextTruncated(truncationRef?.current ?? triggerRef.current);
+  }, [showWhen, truncationRef]);
+
+  const handleOpenChange = useCallback(
+    (nextOpen: boolean, eventDetails: Tooltip.Root.ChangeEventDetails) => {
+      if (nextOpen && !shouldShow()) {
         eventDetails.cancel();
+        return;
       }
+
+      setOpen(nextOpen);
     },
-    [truncationRef]
+    [shouldShow]
+  );
+
+  // Touch fires no hover, and a tap never matches `:focus-visible`, so Base UI
+  // skips both of its open paths: hover is `mouseOnly` and focus is gated on
+  // focus-visible. Opening on the touch pointer is what makes a tooltip
+  // reachable without a mouse.
+  const handlePointerDown = useCallback(
+    (event: React.PointerEvent<HTMLElement>) => {
+      if (event.pointerType !== "touch" || !shouldShow()) {
+        return;
+      }
+
+      setOpen(true);
+    },
+    [shouldShow]
   );
 
   const tooltipContent = useMemo(() => {
@@ -63,10 +89,15 @@ const TooltipComponent: React.FC<TooltipProps> = ({
   return (
     <Tooltip.Provider delay={delayDuration}>
       <Tooltip.Root
-        onOpenChange={showWhen === "truncated" ? handleOpenChange : undefined}
+        open={open}
+        onOpenChange={handleOpenChange}
+        triggerId={triggerId}
       >
         <Tooltip.Trigger
+          id={triggerId}
           ref={setTriggerRef}
+          closeOnClick={false}
+          onPointerDown={handlePointerDown}
           render={children as React.ReactElement}
         />
         <Tooltip.Portal>
