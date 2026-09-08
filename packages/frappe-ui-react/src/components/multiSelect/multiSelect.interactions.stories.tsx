@@ -281,6 +281,58 @@ export const FooterButtons: Story = {
   },
 };
 
+export const ServerSearch: Story = {
+  name: "Server search",
+  args: {
+    options,
+    value: [],
+    placeholder: "Select fruits",
+  },
+  render: function Render(args) {
+    const [value, setValue] = useState<string[]>(args.value as string[]);
+    const [query, setQuery] = useState("");
+
+    const serverFiltered = options.filter((option) =>
+      option.label.toLowerCase().includes(query.trim().toLowerCase())
+    );
+
+    return (
+      <div className="w-112.5">
+        <MultiSelect
+          {...args}
+          options={serverFiltered}
+          value={value}
+          onChange={setValue}
+          searchValue={query}
+          onSearchChange={setQuery}
+          loading={false}
+        />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    const trigger = canvas.getByRole("combobox");
+    await userEvent.click(trigger);
+
+    const searchInput = await screen.findByPlaceholderText("Search for...");
+    await userEvent.type(searchInput, "ap");
+
+    const appleOption = await screen.findByRole("option", { name: "Apple" });
+    expect(appleOption).toBeInTheDocument();
+
+    const grapeOption = screen.queryByRole("option", { name: "Grape" });
+    expect(grapeOption).not.toBeInTheDocument();
+
+    await userEvent.click(appleOption);
+
+    await waitFor(() => {
+      expect(trigger).toHaveTextContent("Apple");
+    });
+  },
+};
+
 export const LoadingState: Story = {
   args: {
     options,
