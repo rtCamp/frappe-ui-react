@@ -13,6 +13,7 @@ overrides:
   brace-expansion@>=4.0.0 <5.0.7: ^5.0.7
   picomatch@>=4.0.0 <4.0.4: ^4.0.4
   yaml@>=2.0.0 <2.8.3: ^2.8.3
+<<<<<<< HEAD
   vite@>=7.0.0 <7.3.5: ^7.3.5
   postcss@<8.5.18: ^8.5.18
   vitest@<4.1.0: ^4.1.10
@@ -23,6 +24,10 @@ overrides:
   '@babel/core@<7.29.6': ^7.29.7
   esbuild@<0.28.1: ^0.28.1
   linkify-it@<=5.0.1: ^5.0.2
+=======
+  vite@>=7.0.0 <=7.3.1: ^7.3.2
+  postcss@<8.5.10: ^8.5.10
+>>>>>>> 279e172a (chore: update postcss version)
 
 importers:
 
@@ -4251,8 +4256,13 @@ packages:
     resolution: {integrity: sha512-IQ7TZdoaqbT+LCpShg46jnZVlhWD2w6iQYAcYXfHARZ7X1t/UGhhceQDs5X0cGqKvYlHNOuv7Oa1xmb0oQuA3w==}
     engines: {node: '>=4'}
 
+<<<<<<< HEAD
   postcss@8.5.23:
     resolution: {integrity: sha512-g50586zr4bZmwFiTlflMu8E0bDTb5I5gertgwAKmsdUlTQIhZtunzUlD1WSzwcVWPoAVpsrA6vlfCD7oXvRwgg==}
+=======
+  postcss@8.5.12:
+    resolution: {integrity: sha512-W62t/Se6rA0Az3DfCL0AqJwXuKwBeYg6nOaIgzP+xZ7N5BFCI7DYi1qs6ygUYT6rvfi6t9k65UMLJC+PHZpDAA==}
+>>>>>>> 279e172a (chore: update postcss version)
     engines: {node: ^10 || ^12 || >=14}
 
   prelude-ls@1.2.1:
@@ -9608,7 +9618,11 @@ snapshots:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
+<<<<<<< HEAD
   postcss@8.5.23:
+=======
+  postcss@8.5.12:
+>>>>>>> 279e172a (chore: update postcss version)
     dependencies:
       nanoid: 3.3.16
       picocolors: 1.1.1
@@ -10449,9 +10463,15 @@ snapshots:
       esbuild: 0.28.1
       fdir: 6.5.0(picomatch@4.0.4)
       picomatch: 4.0.4
+<<<<<<< HEAD
       postcss: 8.5.23
       rollup: 4.60.2
       tinyglobby: 0.2.16
+=======
+      postcss: 8.5.12
+      rollup: 4.59.0
+      tinyglobby: 0.2.15
+>>>>>>> 279e172a (chore: update postcss version)
     optionalDependencies:
       '@types/node': 24.12.2
       fsevents: 2.3.3
