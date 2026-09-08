@@ -1,3 +1,9 @@
+<!--
+⚠️ Adding a new component or feature?
+Please open an issue for discussion first and wait for it to be approved before
+starting work. PRs that add new components without a linked, approved issue may be closed.
+-->
+
 ## Description
 
 <!-- What do we want to achieve with this PR? -->
@@ -27,6 +33,7 @@ Please provide step-by-step instructions to test the changes.
 
 <!-- Check these after PR creation -->
 
+- [ ] If this PR adds a new component, it has a linked issue that was discussed and approved before I started work.
 - [ ] I have thoroughly tested this code to the best of my abilities.
 - [ ] I have reviewed the code myself before requesting a review.
 - [ ] This code is covered by unit tests to verify that it works as intended.
