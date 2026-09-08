@@ -41,6 +41,12 @@ export interface MultiSelectProps {
     clearAll: () => void;
     selectAll: () => void;
   }) => ReactNode;
+  /** Controlled search text. */
+  searchValue?: string;
+  /** Called when the search text changes. */
+  onSearchChange?: (value: string) => void;
+  /** Additional class names for the positioner */
+  positionerClassName?: string;
   /** Additional class names for the popup */
   popupClassName?: string;
 }
