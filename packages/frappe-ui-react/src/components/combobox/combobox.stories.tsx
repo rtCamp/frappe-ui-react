@@ -61,6 +61,11 @@ const meta: Meta<typeof Combobox> = {
       control: "text",
       description: "Additional CSS classes to apply to the combobox container",
     },
+    tooltipOnTruncate: {
+      control: "boolean",
+      description:
+        "Show a tooltip with the full option label on hover, only when the label is truncated",
+    },
   },
 };
 export default meta;
@@ -244,6 +249,34 @@ export const Grouped: Story = {
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">
           Grouped Options
+        </label>
+        <Combobox {...args} value={val} onChange={setVal} />
+        <div className="mt-2 text-sm text-gray-600">
+          Selected: {val || "None"}
+        </div>
+      </div>
+    );
+  },
+};
+
+export const TooltipOnTruncate: Story = {
+  name: "Tooltip on Truncated Options",
+  args: {
+    options: [
+      "A very long project name that will definitely get truncated in the dropdown list",
+      { label: "Short name", value: "short" },
+    ],
+    value: "",
+    placeholder: "Select a project...",
+    onChange: () => {},
+    tooltipOnTruncate: true,
+  },
+  render: (args) => {
+    const [val, setVal] = useState<string | null>("");
+    return (
+      <div className="flex w-80 flex-col">
+        <label className="mb-2 block text-sm font-medium">
+          Tooltip on Truncated Options
         </label>
         <Combobox {...args} value={val} onChange={setVal} />
         <div className="mt-2 text-sm text-gray-600">
