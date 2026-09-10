@@ -6,6 +6,7 @@ import { TaskRow, type TaskRowProps } from "./taskRow";
 
 const meta: Meta<TaskRowProps> = {
   title: "Components/Timesheet/TaskRow/Interactions",
+  tags: ["!dev"],
   component: TaskRow,
   parameters: { docs: { source: { type: "dynamic" } } },
   argTypes: {

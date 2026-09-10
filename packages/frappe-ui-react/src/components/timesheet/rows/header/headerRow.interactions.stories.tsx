@@ -5,6 +5,7 @@ import { HeaderRow, type HeaderRowProps } from "./headerRow";
 
 const meta: Meta<HeaderRowProps> = {
   title: "Components/Timesheet/HeaderRow/Interactions",
+  tags: ["!dev"],
   component: HeaderRow,
   parameters: { docs: { source: { type: "dynamic" } } },
   argTypes: {
