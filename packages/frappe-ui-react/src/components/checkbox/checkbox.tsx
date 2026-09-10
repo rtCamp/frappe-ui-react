@@ -1,6 +1,7 @@
 import React, { useMemo, useCallback } from "react";
 import type { CheckboxProps } from "./types";
 import type { SizeTypes } from "../../common/types";
+import { cn } from "../../utils";
 
 const Checkbox: React.FC<CheckboxProps> = ({
   size = "sm",
@@ -10,7 +11,9 @@ const Checkbox: React.FC<CheckboxProps> = ({
   value,
   onChange,
   htmlId,
-  extraClasses = "",
+  extraLabelClasses = "",
+  extraInputClasses = "",
+  extraWrapperClasses = "",
 }) => {
   const labelClasses = useMemo(() => {
     const sizeClasses: string = {
@@ -30,16 +33,16 @@ const Checkbox: React.FC<CheckboxProps> = ({
     const interactionClasses = disabled
       ? ""
       : padding
-        ? "focus:ring-0"
-        : "hover:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 active:bg-surface-gray-2";
+        ? ""
+        : "hover:shadow-sm active:bg-surface-gray-2";
 
     const sizeClasses: string = {
       sm: "w-3.5 h-3.5",
       md: "w-4 h-4",
     }[size as keyof SizeTypes];
 
-    return `rounded-sm mt-[1px] ${extraClasses} ${baseClasses} ${interactionClasses} ${sizeClasses}`;
-  }, [disabled, padding, size, extraClasses]);
+    return `rounded-sm mt-[1px] ${baseClasses} ${interactionClasses} ${sizeClasses}`;
+  }, [disabled, padding, size]);
 
   const wrapperClasses = useMemo(() => {
     let paddingClasses = "";
@@ -53,7 +56,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
 
     const interactionClasses =
       padding && !disabled
-        ? "focus-within:bg-surface-gray-2 focus-within:ring-2 focus-within:ring-outline-gray-3 hover:bg-surface-gray-3 active:bg-surface-gray-4"
+        ? "focus-within:bg-surface-gray-2 focus-within:outline-2 focus-within:outline-default hover:bg-surface-gray-3 active:bg-surface-gray-4"
         : "";
 
     return `inline-flex space-x-2 rounded transition ${paddingClasses} ${interactionClasses}`;
@@ -67,9 +70,9 @@ const Checkbox: React.FC<CheckboxProps> = ({
   );
 
   return (
-    <div className={wrapperClasses}>
+    <div className={cn(wrapperClasses, extraWrapperClasses)}>
       <input
-        className={inputClasses}
+        className={cn(inputClasses, extraInputClasses)}
         type="checkbox"
         disabled={disabled}
         id={htmlId}
@@ -78,7 +81,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
         data-testid="checkbox"
       />
       {label && (
-        <label className={labelClasses} htmlFor={htmlId}>
+        <label className={cn(labelClasses, extraLabelClasses)} htmlFor={htmlId}>
           {label}
         </label>
       )}

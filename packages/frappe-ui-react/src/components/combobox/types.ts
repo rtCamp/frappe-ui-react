@@ -3,6 +3,7 @@ export type SimpleOption =
   | {
       label: string;
       value: string;
+      description?: string;
       icon?: React.ReactNode;
       disabled?: boolean;
     };
@@ -11,13 +12,22 @@ export type GroupedOption = { group: string; options: SimpleOption[] };
 export type ComboboxOption = SimpleOption | GroupedOption;
 
 export interface ComboboxProps {
+  id?: string;
   options: ComboboxOption[];
   value?: string | null;
   placeholder?: string;
   disabled?: boolean;
+  clearable?: boolean;
+  openOnFocus?: boolean;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+  loading?: boolean;
+  emptyMessage?: string;
   onChange?: (
     value: string | null,
     selectedOption?: SimpleOption | null
   ) => void;
   className?: string;
+  inputClassName?: string;
+  popupClassName?: string;
 }

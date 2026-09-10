@@ -13,7 +13,7 @@ const meta: Meta<typeof Tabs> = {
       description: "Array of tab objects to display",
     },
     tabIndex: {
-      control: "number",
+      control: false,
       name: "Tab Index",
       description: "Currently selected tab index",
     },
@@ -79,7 +79,7 @@ export const WithoutIcon: Story = {
   argTypes: {
     tabs: { control: false, description: "Array of tab objects to display." },
     tabIndex: {
-      control: "number",
+      control: false,
       name: "Tab Index",
       description: "Currently selected tab index.",
     },
@@ -101,7 +101,7 @@ export const WithIcon: Story = {
       description: "Array of tab objects to display (with icon property).",
     },
     tabIndex: {
-      control: "number",
+      control: false,
       name: "Tab Index",
       description: "Currently selected tab index.",
     },
@@ -124,7 +124,7 @@ export const VerticalWithIcon: Story = {
       description: "Array of tab objects to display (with icon property).",
     },
     tabIndex: {
-      control: "number",
+      control: false,
       name: "Tab Index",
       description: "Currently selected tab index.",
     },

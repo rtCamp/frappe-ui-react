@@ -1,6 +1,10 @@
+import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import type { StorybookConfig } from "@storybook/react-vite";
 import path, { dirname, join } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const require = createRequire(import.meta.url);
 
@@ -24,6 +28,7 @@ const config: StorybookConfig = {
           getAbsolutePath("@storybook/addon-themes"),
         ]
       : [
+          getAbsolutePath("@storybook/addon-mcp"),
           getAbsolutePath("@storybook/addon-docs"),
           getAbsolutePath("@storybook/addon-a11y"),
           getAbsolutePath("@storybook/addon-themes"),

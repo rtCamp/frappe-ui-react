@@ -53,6 +53,14 @@ const meta: Meta<typeof Dialog> = {
       description:
         "Callback function called after the dialog has fully closed.",
     },
+    className: {
+      control: "text",
+      description: "Extra classes merged onto the popup box itself.",
+    },
+    classNames: {
+      control: "object",
+      description: "Classname overrides for the dialog's inner elements.",
+    },
   },
 };
 

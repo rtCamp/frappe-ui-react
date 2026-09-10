@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { Combobox } from "@base-ui/react";
 import { Check, ChevronDown, X } from "lucide-react";
 
@@ -22,14 +22,26 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   value = [],
   options,
   placeholder = "Select option",
+  triggerLabel,
+  triggerClassName,
   hideSearch = false,
+  open,
   loading = false,
+  onOpenChange,
   compareFn = defaultCompareFn,
   onChange,
   renderOption,
   renderFooter,
+  searchValue,
+  onSearchChange,
+  positionerClassName,
+  popupClassName,
 }) => {
   const [query, setQuery] = useState("");
+  const [popupOpen, setPopupOpen] = useState(false);
+  const resolvedOpen = open ?? popupOpen;
+  const isSearchControlled = searchValue !== undefined;
+  const activeQuery = isSearchControlled ? (searchValue ?? "") : query;
 
   const optionsMap = useMemo(
     () => new Map(options.map((opt) => [opt.value, opt] as const)),
@@ -43,22 +55,40 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   }, [value, optionsMap]);
 
   const selectedOptions = useMemo(() => {
+    if (triggerLabel) return triggerLabel;
     if (selectedOptionObjects.length === 0) return placeholder;
     const labels = selectedOptionObjects.map((opt) => opt.label);
     return labels.join(", ");
-  }, [selectedOptionObjects, placeholder]);
+  }, [selectedOptionObjects, placeholder, triggerLabel]);
 
-  const clearAll = () => {
-    setQuery("");
+  const resetSearch = useCallback(() => {
+    if (!isSearchControlled) {
+      setQuery("");
+    }
+    onSearchChange?.("");
+  }, [isSearchControlled, onSearchChange]);
+
+  const clearAll = useCallback(() => {
+    resetSearch();
     onChange?.([]);
-  };
+  }, [resetSearch, onChange]);
 
-  const selectAll = () => {
-    setQuery("");
+  const selectAll = useCallback(() => {
+    resetSearch();
     const allValues = options
       .filter((opt) => !opt.disabled)
       .map((opt) => opt.value);
     onChange?.(allValues);
+  }, [resetSearch, options, onChange]);
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      resetSearch();
+    }
+    if (open === undefined) {
+      setPopupOpen(nextOpen);
+    }
+    onOpenChange?.(nextOpen);
   };
 
   const handleChange = (newValue: MultiSelectOption[]) => {
@@ -69,7 +99,22 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     <Combobox.Root
       items={options}
       multiple
+      open={resolvedOpen}
       value={selectedOptionObjects}
+      inputValue={activeQuery}
+      filter={isSearchControlled ? null : undefined}
+      onOpenChange={handleOpenChange}
+      onInputValueChange={(nextQuery, details) => {
+        // Only update the query if the change was triggered by user input.
+        if (details.reason !== "input-change") {
+          return;
+        }
+        if (isSearchControlled) {
+          onSearchChange?.(nextQuery);
+        } else {
+          setQuery(nextQuery);
+        }
+      }}
       onValueChange={handleChange}
       isItemEqualToValue={compareFn}
     >
@@ -78,7 +123,8 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           <Button
             className={cn(
               "w-full justify-between!",
-              value.length === 0 && "text-ink-gray-4!"
+              !triggerLabel && value.length === 0 && "text-ink-gray-4",
+              triggerClassName
             )}
             iconRight={() => <ChevronDown className="w-4 h-4 shrink-0" />}
             aria-label="Select options"
@@ -89,15 +135,21 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       />
 
       <Combobox.Portal>
-        <Combobox.Positioner className="group" sideOffset={8} align="start">
+        <Combobox.Positioner
+          className={cn("group", positionerClassName)}
+          sideOffset={8}
+          align="start"
+        >
           <Combobox.Popup
-            className="shadow-xl rounded-lg border border-outline-gray-1 bg-surface-modal p-2 w-(--anchor-width)"
+            className={cn(
+              "shadow-xl rounded-lg border border-outline-gray-1 bg-surface-modal p-2 w-(--anchor-width)",
+              popupClassName
+            )}
             aria-label="Options"
           >
             {!hideSearch && (
               <div className="flex w-full items-center justify-between gap-2 rounded bg-surface-gray-2 px-2 py-1 ring-2 ring-outline-gray-2 transition-colors hover:bg-surface-gray-3 border border-transparent mb-2">
                 <Combobox.Input
-                  onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search for..."
                   className="bg-transparent p-0 focus:outline-0 border-0 focus:border-0 focus:ring-0 text-base text-ink-gray-8 h-full placeholder:text-ink-gray-4 w-full"
                 />
@@ -105,13 +157,16 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                   {loading && (
                     <LoadingIndicator className="size-4 text-ink-gray-5" />
                   )}
-                  <Combobox.Clear
-                    keepMounted={query !== ""}
-                    onClick={() => setQuery("")}
-                    aria-label="Clear search"
-                  >
-                    <X className="size-4 text-ink-gray-9" />
-                  </Combobox.Clear>
+                  {activeQuery !== "" && (
+                    <button
+                      type="button"
+                      aria-label="Clear search"
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => resetSearch()}
+                    >
+                      <X className="size-4 text-ink-gray-9" />
+                    </button>
+                  )}
                 </div>
               </div>
             )}
