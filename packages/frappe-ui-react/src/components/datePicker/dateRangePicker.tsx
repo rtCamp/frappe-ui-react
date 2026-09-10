@@ -135,7 +135,6 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 togglePopover: togglePicker,
                 openPicker,
                 closePicker,
-                togglePicker,
                 onTriggerKeyDown: handleTriggerKeyDown,
               })}
             </span>

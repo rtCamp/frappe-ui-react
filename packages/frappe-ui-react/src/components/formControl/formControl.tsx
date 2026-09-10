@@ -38,7 +38,7 @@ const FormControl: React.FC<FormControlProps> = ({
       case "select":
         return (
           <Select
-            id={htmlId}
+            htmlId={htmlId}
             {...controlAttrs}
             size={size}
             variant={variant}
@@ -67,7 +67,7 @@ const FormControl: React.FC<FormControlProps> = ({
       case "textarea":
         return (
           <Textarea
-            id={htmlId}
+            htmlId={htmlId}
             {...controlAttrs}
             size={size}
             variant={variant}

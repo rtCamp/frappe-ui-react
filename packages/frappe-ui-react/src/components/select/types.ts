@@ -14,7 +14,6 @@ export interface SelectProps {
   variant?: SelectVariant;
   placeholder?: string;
   disabled?: boolean;
-  id?: string;
   htmlId?: string;
   value?: string;
   options: (string | SelectOption)[];
@@ -26,5 +25,4 @@ export interface SelectProps {
   suffix?: () => ReactNode;
   option?: ({ option }: { option: SelectOption }) => ReactNode;
   onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  onValueChange?: (value: string | undefined) => void;
 }

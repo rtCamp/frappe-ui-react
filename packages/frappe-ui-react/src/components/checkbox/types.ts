@@ -9,6 +9,5 @@ export interface CheckboxProps {
   htmlId?: string;
   extraClasses?: string;
   extraLabelClasses?: string;
-  extraInputClasses?: string;
   extraWrapperClasses?: string;
 }

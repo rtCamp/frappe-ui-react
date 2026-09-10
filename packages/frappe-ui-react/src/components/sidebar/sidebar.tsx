@@ -6,7 +6,7 @@ import React, { useState, useCallback } from "react";
 /**
  * Internal dependencies.
  */
-import SidebarHeader from "./sidebarHeader";
+import SidebarHeader, { type SidebarMenuItems } from "./sidebarHeader";
 import SidebarSection, { type SidebarItem } from "./sidebarSection";
 import { useMediaQuery } from "./useMediaQuery";
 import { Divider } from "../divider";
@@ -14,13 +14,14 @@ import { Button } from "../button";
 import { cn } from "../../utils";
 import Tooltip from "../tooltip/tooltip";
 import { MenuCollapse } from "../../icons";
-import type { DropdownOptions } from "../dropdown";
+
+export type { SidebarMenuItems };
 
 export type SidebarHeaderProps = {
   title: string;
   subtitle?: string;
   logo?: React.ReactNode | string;
-  menuItems?: DropdownOptions;
+  menuItems?: SidebarMenuItems;
 };
 
 export type SidebarSectionType = {

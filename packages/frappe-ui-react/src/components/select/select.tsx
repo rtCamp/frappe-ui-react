@@ -25,7 +25,6 @@ const Select: React.FC<SelectProps> = ({
   variant = "subtle",
   placeholder,
   disabled = false,
-  id,
   htmlId,
   value,
   options,
@@ -33,7 +32,6 @@ const Select: React.FC<SelectProps> = ({
   suffix,
   option,
   onChange,
-  onValueChange,
   className,
   placeholderClassName,
   matchTriggerWidth = false,
@@ -49,12 +47,11 @@ const Select: React.FC<SelectProps> = ({
     [options]
   );
 
-  const handleValueChange = (val: string | undefined) => {
-    onValueChange?.(val);
+  const handleChange = (value: string) => {
     if (!onChange) {
       return;
     }
-    const target = { value: val ?? "" };
+    const target = { value };
     onChange({
       target,
       currentTarget: target,
@@ -66,10 +63,10 @@ const Select: React.FC<SelectProps> = ({
 
   return (
     <BaseSelect.Root
-      id={id ?? htmlId}
+      id={htmlId}
       items={selectOptions}
       value={value}
-      onValueChange={(val) => handleValueChange(val ?? undefined)}
+      onValueChange={(val) => handleChange(val ?? "")}
       disabled={disabled}
     >
       <BaseSelect.Trigger

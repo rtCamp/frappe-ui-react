@@ -25,17 +25,19 @@ export type SidebarItem = {
   [key: string]: unknown;
 };
 
-// forwardRef and memo components are objects rather than functions, so a
-// typeof check alone would let them fall through and React would be handed the
-// component object as a child.
-const isComponentType = (
-  icon: SidebarItem["icon"]
-): icon is React.ComponentType<{ className?: string }> =>
-  typeof icon === "function" ||
-  (typeof icon === "object" &&
-    icon !== null &&
-    "$$typeof" in icon &&
-    !React.isValidElement(icon));
+const renderIcon = (icon: SidebarItem["icon"]) => {
+  if (typeof icon === "string") {
+    return <span className="size-4 text-ink-gray-6">{icon}</span>;
+  }
+  if (React.isValidElement(icon)) {
+    return icon;
+  }
+  if (!icon || Array.isArray(icon)) {
+    return null;
+  }
+  const Icon = icon as React.ComponentType<{ className?: string }>;
+  return <Icon className="min-w-4 w-4 text-ink-gray-6" />;
+};
 
 export type SidebarSectionItemProps = {
   item: SidebarItem;
@@ -55,11 +57,7 @@ const SidebarSectionItem: React.FC<SidebarSectionItemProps> = ({
     collapsed: sidebarCollapsed,
   };
 
-  const icon = isComponentType(item.icon)
-    ? React.createElement(item.icon, {
-        className: "min-w-4 w-4 text-ink-gray-6",
-      })
-    : item.icon;
+  const icon = renderIcon(item.icon);
 
   return useRender({
     state,
@@ -84,7 +82,7 @@ const SidebarSectionItem: React.FC<SidebarSectionItemProps> = ({
               placement="right"
               disabled={!sidebarCollapsed}
             >
-              {icon}
+              <span className="inline-flex">{icon}</span>
             </Tooltip>
           )}
           {!sidebarCollapsed && (

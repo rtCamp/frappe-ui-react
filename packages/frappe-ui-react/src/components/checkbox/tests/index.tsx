@@ -12,12 +12,12 @@ describe("Checkbox", () => {
   });
 
   it("applies extra classes correctly", () => {
-    render(<Checkbox htmlId="test" extraInputClasses="test-class" />);
+    render(<Checkbox htmlId="test" extraClasses="test-class" />);
     const checkbox = screen.getByRole("checkbox");
     expect(checkbox).toHaveClass("test-class");
   });
 
-  it("handles empty extraInputClasses prop", () => {
+  it("handles empty extraClasses prop", () => {
     render(<Checkbox htmlId="test" />);
     const checkbox = screen.getByRole("checkbox");
     expect(checkbox.className).not.toContain("undefined");

@@ -17,13 +17,11 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       debounce: debounceTime,
       rows = 3,
       placeholder,
-      id,
       htmlId,
       className = "",
     },
     ref
   ) => {
-    const fieldId = id ?? htmlId;
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const setRefs = useCallback(
@@ -68,7 +66,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="space-y-1.5">
         {label && (
-          <label className={textareaLabelVariants({ size })} htmlFor={fieldId}>
+          <label className={textareaLabelVariants({ size })} htmlFor={htmlId}>
             {label}
           </label>
         )}
@@ -81,7 +79,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             className
           )}
           disabled={disabled}
-          id={fieldId}
+          id={htmlId}
           value={value}
           onChange={handleChange}
           data-testid="textarea"

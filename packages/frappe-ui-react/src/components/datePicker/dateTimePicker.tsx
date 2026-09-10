@@ -149,7 +149,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                 togglePopover: togglePicker,
                 openPicker,
                 closePicker,
-                togglePicker,
                 onTriggerKeyDown: handleChildTriggerKeyDown,
               })}
             </span>

@@ -45,23 +45,14 @@ export default {
       description:
         "Render function for an element after the selected value. Defaults to the chevron indicator",
     },
-    id: {
-      control: "text",
-      description: "HTML id attribute for the select input",
-    },
     htmlId: {
       control: "text",
-      description: "HTML id attribute for the select input. Alias of id",
+      description: "HTML id attribute for the select input",
     },
     onChange: {
       action: "changed",
       description:
         "Callback fired with a change event whose target.value is the selected value",
-    },
-    onValueChange: {
-      action: "valueChanged",
-      description:
-        "Callback fired with the selected value directly, for callers that do not need the event",
     },
     matchTriggerWidth: {
       control: "boolean",
@@ -116,26 +107,6 @@ export const Default: StoryObj<SelectProps> = {
       <Select
         {...args}
         value={value}
-        onValueChange={(value) => setValue(value ?? "")}
-      />
-    );
-  },
-};
-
-export const WithChangeEvent: StoryObj<SelectProps> = {
-  args: {
-    value: "",
-    options: ["Matcha Tiramisu", "Salted Caramel Tart"],
-    placeholder: "Select option",
-  },
-  render: (args) => {
-    const [value, setValue] = useState(args.value || "");
-
-    return (
-      <Select
-        {...args}
-        htmlId="dessert"
-        value={value}
         onChange={(event) => setValue(event.target.value)}
       />
     );
@@ -156,7 +127,7 @@ export const WithPrefix: StoryObj<SelectProps> = {
       <Select
         {...args}
         value={value}
-        onValueChange={(value) => setValue(value ?? "")}
+        onChange={(event) => setValue(event.target.value)}
       />
     );
   },
@@ -176,7 +147,7 @@ export const WithSuffix: StoryObj<SelectProps> = {
       <Select
         {...args}
         value={value}
-        onValueChange={(value) => setValue(value ?? "")}
+        onChange={(event) => setValue(event.target.value)}
       />
     );
   },
@@ -197,7 +168,7 @@ export const WithMatchTriggerWidth: StoryObj<SelectProps> = {
       <Select
         {...args}
         value={value}
-        onValueChange={(value) => setValue(value ?? "")}
+        onChange={(event) => setValue(event.target.value)}
       />
     );
   },
@@ -222,7 +193,7 @@ export const WithOptionSlot: StoryObj<SelectProps> = {
       <Select
         {...args}
         value={value}
-        onValueChange={(value) => setValue(value ?? "")}
+        onChange={(event) => setValue(event.target.value)}
       />
     );
   },

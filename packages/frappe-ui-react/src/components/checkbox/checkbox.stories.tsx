@@ -47,11 +47,6 @@ export default {
       control: "text",
       description: "Additional classes applied to the checkbox input.",
     },
-    extraInputClasses: {
-      control: "text",
-      description:
-        "Additional classes applied to the checkbox input, merged after extraClasses.",
-    },
     extraLabelClasses: {
       control: "text",
       description: "Additional classes applied to the label.",
