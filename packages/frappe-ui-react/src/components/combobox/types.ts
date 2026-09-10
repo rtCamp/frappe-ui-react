@@ -30,4 +30,5 @@ export interface ComboboxProps {
   className?: string;
   inputClassName?: string;
   popupClassName?: string;
+  tooltipOnTruncate?: boolean;
 }
