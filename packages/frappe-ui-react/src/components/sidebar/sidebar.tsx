@@ -24,9 +24,10 @@ export type SidebarHeaderProps = {
 };
 
 export type SidebarSectionType = {
-  label: string;
+  label?: string;
   items: SidebarItem[];
   collapsible?: boolean;
+  defaultOpen?: boolean;
 };
 
 export type SidebarProps = {
@@ -37,6 +38,7 @@ export type SidebarProps = {
   children?: React.ReactNode;
   className?: string;
   activeItemClassName?: string;
+  sectionDividers?: boolean;
 };
 const Sidebar: React.FC<SidebarProps> = ({
   header,
@@ -46,6 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   children,
   className = "",
   activeItemClassName,
+  sectionDividers = false,
 }) => {
   // Responsive behavior - auto-collapse on small screens
   const isMobile = useMediaQuery("(max-width: 640px)");
@@ -102,7 +105,9 @@ const Sidebar: React.FC<SidebarProps> = ({
             activeItemClassName={activeItemClassName}
             {...section}
           />
-          {index !== sections.length - 1 && <Divider className="h-1 mt-2" />}
+          {sectionDividers && index !== sections.length - 1 && (
+            <Divider className="h-1 mt-2" />
+          )}
         </React.Fragment>
       ))}
       <div className="mt-auto flex flex-col gap-2">
@@ -119,7 +124,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           className={cn("w-full justify-start py-1 px-4 text-ink-gray-6", {
             "px-2": isCollapsed,
           })}
-          onClick={() => setCollapsed(!isCollapsed)}
+          onClick={() => !isMobile && setCollapsed(!isCollapsed)}
           variant="ghost"
           iconLeft={() => (
             <Tooltip text="Collapse" placement="right" disabled={!isCollapsed}>

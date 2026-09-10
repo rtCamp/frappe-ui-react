@@ -43,6 +43,23 @@ export default {
       control: "text",
       description: "The HTML id attribute for the checkbox input",
     },
+    extraClasses: {
+      control: "text",
+      description: "Additional classes applied to the checkbox input.",
+    },
+    extraInputClasses: {
+      control: "text",
+      description:
+        "Additional classes applied to the checkbox input, merged after extraClasses.",
+    },
+    extraLabelClasses: {
+      control: "text",
+      description: "Additional classes applied to the label.",
+    },
+    extraWrapperClasses: {
+      control: "text",
+      description: "Additional classes applied to the wrapper element.",
+    },
   },
   tags: ["autodocs"],
 } as Meta<typeof Checkbox>;

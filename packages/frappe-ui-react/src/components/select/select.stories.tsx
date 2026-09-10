@@ -11,11 +11,11 @@ export default {
   tags: ["autodocs"],
   argTypes: {
     size: {
-      control: { type: "select", options: ["sm", "md", "lg"] },
+      control: { type: "select", options: ["sm", "md", "lg", "xl"] },
       description: "Size of the select input",
     },
     variant: {
-      control: { type: "select", options: ["outline", "subtle"] },
+      control: { type: "select", options: ["subtle", "outline", "ghost"] },
       description: "Visual variant of the select input",
     },
     disabled: {
@@ -33,19 +33,35 @@ export default {
     options: {
       control: "object",
       description:
-        "Array of options to display in the dropdown, each with a label and value",
+        "Options to display in the dropdown. Accepts either an object with a label and value, or a plain string used as both",
     },
-    Prefix: {
+    prefix: {
       control: false,
-      description: "Element to display before the selected value",
+      description:
+        "Render function for an element before the selected value. Receives the current size",
+    },
+    suffix: {
+      control: false,
+      description:
+        "Render function for an element after the selected value. Defaults to the chevron indicator",
     },
     id: {
       control: "text",
       description: "HTML id attribute for the select input",
     },
+    htmlId: {
+      control: "text",
+      description: "HTML id attribute for the select input. Alias of id",
+    },
     onChange: {
       action: "changed",
-      description: "Callback function when the selected value changes",
+      description:
+        "Callback fired with a change event whose target.value is the selected value",
+    },
+    onValueChange: {
+      action: "valueChanged",
+      description:
+        "Callback fired with the selected value directly, for callers that do not need the event",
     },
     matchTriggerWidth: {
       control: "boolean",
@@ -100,7 +116,27 @@ export const Default: StoryObj<SelectProps> = {
       <Select
         {...args}
         value={value}
-        onChange={(value) => setValue(value ?? "")}
+        onValueChange={(value) => setValue(value ?? "")}
+      />
+    );
+  },
+};
+
+export const WithChangeEvent: StoryObj<SelectProps> = {
+  args: {
+    value: "",
+    options: ["Matcha Tiramisu", "Salted Caramel Tart"],
+    placeholder: "Select option",
+  },
+  render: (args) => {
+    const [value, setValue] = useState(args.value || "");
+
+    return (
+      <Select
+        {...args}
+        htmlId="dessert"
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
       />
     );
   },
@@ -120,7 +156,7 @@ export const WithPrefix: StoryObj<SelectProps> = {
       <Select
         {...args}
         value={value}
-        onChange={(value) => setValue(value ?? "")}
+        onValueChange={(value) => setValue(value ?? "")}
       />
     );
   },
@@ -140,7 +176,7 @@ export const WithSuffix: StoryObj<SelectProps> = {
       <Select
         {...args}
         value={value}
-        onChange={(value) => setValue(value ?? "")}
+        onValueChange={(value) => setValue(value ?? "")}
       />
     );
   },
@@ -161,7 +197,7 @@ export const WithMatchTriggerWidth: StoryObj<SelectProps> = {
       <Select
         {...args}
         value={value}
-        onChange={(value) => setValue(value ?? "")}
+        onValueChange={(value) => setValue(value ?? "")}
       />
     );
   },
@@ -186,7 +222,7 @@ export const WithOptionSlot: StoryObj<SelectProps> = {
       <Select
         {...args}
         value={value}
-        onChange={(value) => setValue(value ?? "")}
+        onValueChange={(value) => setValue(value ?? "")}
       />
     );
   },

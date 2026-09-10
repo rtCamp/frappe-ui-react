@@ -141,6 +141,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 isOpen: open,
                 displayValue,
                 disabled,
+                togglePopover: togglePicker,
                 openPicker,
                 closePicker,
                 togglePicker,

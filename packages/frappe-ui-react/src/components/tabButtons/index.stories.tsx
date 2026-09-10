@@ -13,11 +13,20 @@ const meta: Meta<typeof TabButtons> = {
     },
     value: {
       control: "text",
-      description: "Currently selected tab value.",
+      description: "Currently selected tab value. Accepts a string or number.",
     },
     onChange: {
       action: "changed",
-      description: "Function called when the selected tab changes.",
+      description:
+        "Function called with the newly selected value, typed to match the item values as a string or number.",
+    },
+    className: {
+      control: "text",
+      description: "Additional classes applied to the tab group.",
+    },
+    buttonClassName: {
+      control: "text",
+      description: "Additional classes applied to each tab item.",
     },
   },
   parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },

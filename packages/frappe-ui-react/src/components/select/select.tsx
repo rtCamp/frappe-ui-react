@@ -1,7 +1,7 @@
 /**
  * External dependencies.
  */
-import React from "react";
+import React, { useMemo } from "react";
 import { Select as BaseSelect } from "@base-ui/react/select";
 import { ChevronDown, Check } from "lucide-react";
 
@@ -11,10 +11,6 @@ import { ChevronDown, Check } from "lucide-react";
 import type { SelectOption, SelectProps } from "./types";
 import { selectTriggerVariants } from "./variants";
 import { cn } from "../../utils";
-
-const DefaultPrefix = () => {
-  return <></>;
-};
 
 const DefaultSuffix = () => {
   return <ChevronDown className="h-4 w-4" />;
@@ -30,29 +26,46 @@ const Select: React.FC<SelectProps> = ({
   placeholder,
   disabled = false,
   id,
+  htmlId,
   value,
   options,
   prefix,
   suffix,
   option,
   onChange,
+  onValueChange,
   className,
   placeholderClassName,
   matchTriggerWidth = false,
 }) => {
-  const Prefix = prefix ?? DefaultPrefix;
   const Suffix = suffix ?? DefaultSuffix;
   const Option = option ?? DefaultOption;
 
+  const selectOptions = useMemo(
+    () =>
+      options.map((opt) =>
+        typeof opt === "string" ? { label: opt, value: opt } : opt
+      ),
+    [options]
+  );
+
+  const handleValueChange = (val: string | undefined) => {
+    onValueChange?.(val);
+    onChange?.({
+      target: { value: val ?? "" },
+    } as React.ChangeEvent<HTMLSelectElement>);
+  };
+
   return (
     <BaseSelect.Root
-      id={id}
-      items={options}
+      id={id ?? htmlId}
+      items={selectOptions}
       value={value}
-      onValueChange={(val) => onChange?.(val ?? undefined)}
+      onValueChange={(val) => handleValueChange(val ?? undefined)}
       disabled={disabled}
     >
       <BaseSelect.Trigger
+        data-testid="select"
         className={cn(
           selectTriggerVariants({
             size,
@@ -63,7 +76,7 @@ const Select: React.FC<SelectProps> = ({
         )}
       >
         <span className="inline-flex items-center gap-2 min-w-0 flex-1">
-          <Prefix />
+          {prefix?.(size)}
           <BaseSelect.Value
             placeholder={placeholder}
             className={cn("truncate text-left", placeholderClassName)}
@@ -82,7 +95,7 @@ const Select: React.FC<SelectProps> = ({
             )}
           >
             <BaseSelect.List className="max-h-60 overflow-auto">
-              {options.map((option) => (
+              {selectOptions.map((option) => (
                 <BaseSelect.Item
                   key={option.value}
                   value={option.value}

@@ -7,7 +7,7 @@ import type { SizeTypes } from "../../common/types";
 import FormLabel from "../formLabel";
 import Textarea from "../textarea/textarea";
 import { Select, type SelectOption } from "../select";
-import type { AutocompleteOption } from "../autoComplete";
+import type { AutocompleteOption, AutocompleteProps } from "../autoComplete";
 
 const FormControl: React.FC<FormControlProps> = ({
   label,
@@ -42,20 +42,25 @@ const FormControl: React.FC<FormControlProps> = ({
             {...controlAttrs}
             size={size}
             variant={variant}
-            options={controlAttrs.options as SelectOption[]}
-            onChange={(val) => {
-              controlAttrs.onChange?.(val);
+            options={controlAttrs.options as (string | SelectOption)[]}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              controlAttrs.onChange?.(e.target.value);
             }}
           />
         );
-      case "autocomplete":
+      case "autocomplete": {
+        const { children: autocompleteChildren, ...autocompleteAttrs } =
+          controlAttrs;
         return (
           <Autocomplete
             options={controlAttrs.options as AutocompleteOption[]}
             value={controlAttrs.modelValue}
-            {...controlAttrs}
-          />
+            {...autocompleteAttrs}
+          >
+            {autocompleteChildren as AutocompleteProps["children"]}
+          </Autocomplete>
         );
+      }
       case "textarea":
         return (
           <Textarea

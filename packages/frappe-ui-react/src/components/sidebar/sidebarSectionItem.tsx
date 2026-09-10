@@ -11,7 +11,8 @@ export type SidebarItemState = {
 
 export type SidebarItem = {
   label: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon?: React.ComponentType<{ className?: string }> | React.ReactNode;
+  suffix?: React.ReactNode;
   to?: string;
   isActive?: boolean;
   onClick?: () => void;
@@ -21,7 +22,20 @@ export type SidebarItem = {
    * merged props (`className`, `onClick`, `children`) and its `state`.
    */
   render?: useRender.RenderProp<SidebarItemState>;
+  [key: string]: unknown;
 };
+
+// forwardRef and memo components are objects rather than functions, so a
+// typeof check alone would let them fall through and React would be handed the
+// component object as a child.
+const isComponentType = (
+  icon: SidebarItem["icon"]
+): icon is React.ComponentType<{ className?: string }> =>
+  typeof icon === "function" ||
+  (typeof icon === "object" &&
+    icon !== null &&
+    "$$typeof" in icon &&
+    !React.isValidElement(icon));
 
 export type SidebarSectionItemProps = {
   item: SidebarItem;
@@ -41,7 +55,11 @@ const SidebarSectionItem: React.FC<SidebarSectionItemProps> = ({
     collapsed: sidebarCollapsed,
   };
 
-  const Icon = item.icon;
+  const icon = isComponentType(item.icon)
+    ? React.createElement(item.icon, {
+        className: "min-w-4 w-4 text-ink-gray-6",
+      })
+    : item.icon;
 
   return useRender({
     state,
@@ -60,13 +78,15 @@ const SidebarSectionItem: React.FC<SidebarSectionItemProps> = ({
       ),
       children: (
         <>
-          <Tooltip
-            text={item.label}
-            placement="right"
-            disabled={!sidebarCollapsed}
-          >
-            <Icon className="min-w-4 w-4 text-ink-gray-6" />
-          </Tooltip>
+          {icon && (
+            <Tooltip
+              text={item.label}
+              placement="right"
+              disabled={!sidebarCollapsed}
+            >
+              {icon}
+            </Tooltip>
+          )}
           {!sidebarCollapsed && (
             <Tooltip text={item.label} placement="right" hoverDelay={1.5}>
               <span className="flex-1 flex-shrink-0 truncate text-base transition-all ease-in-out">
@@ -74,6 +94,7 @@ const SidebarSectionItem: React.FC<SidebarSectionItemProps> = ({
               </span>
             </Tooltip>
           )}
+          {item.suffix}
         </>
       ),
     },

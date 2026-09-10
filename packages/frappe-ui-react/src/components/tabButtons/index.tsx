@@ -11,7 +11,7 @@ import { cn } from "../../utils";
 
 interface TabButtonItem {
   label: string;
-  value: string;
+  value: string | number;
   disabled?: boolean;
   hideLabel?: boolean;
   onClick?: () => void;
@@ -21,8 +21,8 @@ interface TabButtonItem {
 
 interface TabButtonsProps {
   buttons: TabButtonItem[];
-  value: string;
-  onChange: (value: string) => void;
+  value: string | number;
+  onChange: (value: string | number) => void;
   className?: string;
   buttonClassName?: string;
 }
@@ -36,35 +36,45 @@ const TabButtons = ({
 }: TabButtonsProps) => {
   return (
     <ToggleGroup
-      value={[value]}
+      value={[String(value)]}
       onValueChange={(val) => {
-        if (val[0]) {
-          onChange(val[0]);
+        const next = val[0];
+        if (next === undefined) {
+          return;
         }
+        // Toggle values are strings, so map back to the caller's original type.
+        const matched = buttons.find((button) => String(button.value) === next);
+        onChange(matched ? matched.value : next);
       }}
       className={cn(
         "flex space-x-0.5 rounded-md bg-surface-gray-2 h-7 items-center text-base border border-outline-gray-2",
         className
       )}
     >
-      {buttons.map((button) => {
-        return (
-          <Toggle
-            className={cn(
-              "rounded-md px-2 outline-black group flex-1 h-6.5 w-full border border-transparent text-nowrap text-center",
-              "hover:bg-surface-gray-3",
-              "data-pressed:bg-surface-white data-pressed:border-outline-gray-2 data-pressed:hover:bg-surface-gray-4",
-              "disabled:text-ink-gray-5 disabled:hover:bg-surface-gray-2",
-              buttonClassName
-            )}
-            aria-label={button.label}
-            value={button.value}
-            disabled={button.disabled}
-          >
-            <p className="h-4 text-center">{button.label}</p>
-          </Toggle>
-        );
-      })}
+      {buttons.map(
+        ({ label, value: buttonValue, disabled, hideLabel, onClick }) => {
+          const toggleValue = String(buttonValue);
+
+          return (
+            <Toggle
+              key={toggleValue}
+              className={cn(
+                "rounded-md px-2 outline-black group flex-1 h-6.5 w-full border border-transparent text-nowrap text-center",
+                "hover:bg-surface-gray-3",
+                "data-pressed:bg-surface-white data-pressed:border-outline-gray-2 data-pressed:hover:bg-surface-gray-4",
+                "disabled:text-ink-gray-5 disabled:hover:bg-surface-gray-2",
+                buttonClassName
+              )}
+              aria-label={label}
+              value={toggleValue}
+              disabled={disabled}
+              onClick={onClick}
+            >
+              {!hideLabel && <p className="h-4 text-center">{label}</p>}
+            </Toggle>
+          );
+        }
+      )}
     </ToggleGroup>
   );
 };

@@ -21,6 +21,17 @@ const meta: Meta = {
       autodocs: true,
     },
   },
+  argTypes: {
+    variant: {
+      control: { type: "select", options: ["subtle", "outline", "ghost"] },
+      description:
+        "Visual variant of the default trigger input. Ignored when children supplies a custom trigger.",
+    },
+    children: {
+      control: false,
+      description: "Render function for a custom trigger.",
+    },
+  },
 };
 export default meta;
 

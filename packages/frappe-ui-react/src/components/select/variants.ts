@@ -8,6 +8,7 @@ export const selectTriggerVariants = cva(
         sm: "rounded h-7 text-base px-2",
         md: "rounded h-8 text-base px-2",
         lg: "rounded-md h-10 text-lg px-3",
+        xl: "rounded-md h-10 text-xl px-3",
       },
       variant: {
         subtle:
