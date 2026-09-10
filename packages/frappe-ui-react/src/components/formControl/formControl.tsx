@@ -51,13 +51,16 @@ const FormControl: React.FC<FormControlProps> = ({
       case "autocomplete": {
         const { children: autocompleteChildren, ...autocompleteAttrs } =
           controlAttrs;
+        const child = Array.isArray(autocompleteChildren)
+          ? undefined
+          : (autocompleteChildren as AutocompleteProps["children"]);
         return (
           <Autocomplete
             options={controlAttrs.options as AutocompleteOption[]}
             value={controlAttrs.modelValue}
             {...autocompleteAttrs}
           >
-            {autocompleteChildren as AutocompleteProps["children"]}
+            {child}
           </Autocomplete>
         );
       }

@@ -49,7 +49,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
     <Collapsible.Root
       className="flex flex-col mt-2"
       open={open || sidebarCollapsed}
-      onOpenChange={() => setOpen(!open)}
+      onOpenChange={setOpen}
     >
       <Collapsible.Trigger
         className={cn(

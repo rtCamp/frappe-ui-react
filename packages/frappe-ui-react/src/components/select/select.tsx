@@ -10,7 +10,7 @@ import { ChevronDown, Check } from "lucide-react";
  */
 import type { SelectOption, SelectProps } from "./types";
 import { selectTriggerVariants } from "./variants";
-import { cn } from "../../utils";
+import { cn, noop } from "../../utils";
 
 const DefaultSuffix = () => {
   return <ChevronDown className="h-4 w-4" />;
@@ -51,9 +51,17 @@ const Select: React.FC<SelectProps> = ({
 
   const handleValueChange = (val: string | undefined) => {
     onValueChange?.(val);
-    onChange?.({
-      target: { value: val ?? "" },
-    } as React.ChangeEvent<HTMLSelectElement>);
+    if (!onChange) {
+      return;
+    }
+    const target = { value: val ?? "" };
+    onChange({
+      target,
+      currentTarget: target,
+      type: "change",
+      preventDefault: noop,
+      stopPropagation: noop,
+    } as unknown as React.ChangeEvent<HTMLSelectElement>);
   };
 
   return (
