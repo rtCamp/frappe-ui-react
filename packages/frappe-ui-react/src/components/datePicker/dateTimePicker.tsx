@@ -146,9 +146,9 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                 isOpen: open,
                 displayValue: formattedDisplayValue,
                 disabled,
+                togglePopover: togglePicker,
                 openPicker,
                 closePicker,
-                togglePicker,
                 onTriggerKeyDown: handleChildTriggerKeyDown,
               })}
             </span>
@@ -365,6 +365,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                     side="bottom"
                     align="start"
                     sideOffset={4}
+                    className="z-101"
                   >
                     <Popover.Popup className="overflow-y-auto p-1 w-44 max-h-48 text-base rounded-lg border border-gray-200 shadow-2xl bg-surface-modal z-100">
                       {timeOptions.map((time) => {

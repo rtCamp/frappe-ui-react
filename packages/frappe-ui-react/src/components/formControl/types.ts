@@ -15,7 +15,7 @@ export interface FormControlProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   suffix?: (args?: any) => ReactNode;
   placeholder?: string;
-  children?: AutocompleteProps["children"];
+  children?: AutocompleteProps["children"] | ReactNode[];
   htmlId?: string;
   options?: (SelectOption | AutocompleteOption | string)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -8,11 +8,12 @@ import SidebarSectionItem, { type SidebarItem } from "./sidebarSectionItem";
 export type { SidebarItem, SidebarItemState } from "./sidebarSectionItem";
 
 export type SidebarSectionProps = {
-  label: string;
+  label?: string;
   items: SidebarItem[];
   collapsible?: boolean;
   sidebarCollapsed: boolean;
   activeItemClassName?: string;
+  defaultOpen?: boolean;
 };
 
 const SidebarSection: React.FC<SidebarSectionProps> = ({
@@ -21,28 +22,34 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
   collapsible,
   sidebarCollapsed,
   activeItemClassName,
+  defaultOpen = true,
 }) => {
-  const [collapsed, setCollapsed] = useState(
-    items.some((item) => item.isActive)
-  );
+  const [open, setOpen] = useState(defaultOpen);
 
   if (!collapsible) {
-    return items.map((item) => (
-      <SidebarSectionItem
-        key={item.label}
-        item={item}
-        sidebarCollapsed={sidebarCollapsed}
-        activeItemClassName={activeItemClassName}
-        indentClassName="px-2"
-      />
-    ));
+    return (
+      <div className="flex flex-col mt-2">
+        {label && !sidebarCollapsed && (
+          <h3 className="px-4 py-1.5 text-sm text-ink-gray-6">{label}</h3>
+        )}
+        {items.map((item) => (
+          <SidebarSectionItem
+            key={item.label}
+            item={item}
+            sidebarCollapsed={sidebarCollapsed}
+            activeItemClassName={activeItemClassName}
+            indentClassName="px-2"
+          />
+        ))}
+      </div>
+    );
   }
 
   return (
     <Collapsible.Root
       className="flex flex-col mt-2"
-      open={collapsed || sidebarCollapsed}
-      onOpenChange={() => setCollapsed(!collapsed)}
+      open={open || sidebarCollapsed}
+      onOpenChange={setOpen}
     >
       <Collapsible.Trigger
         className={cn(
@@ -55,7 +62,7 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
         {!sidebarCollapsed && (
           <span
             className={`w-4 h-4 transition-all duration-300 ease-in-out ${
-              collapsed ? "" : "-rotate-90"
+              open ? "" : "-rotate-90"
             }`}
           >
             <LucideChevronDown size={16} color="currentColor" />

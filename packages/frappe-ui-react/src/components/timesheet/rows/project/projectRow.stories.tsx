@@ -6,6 +6,7 @@ import { ProjectRow, type ProjectRowProps } from "./projectRow";
 
 const meta: Meta<ProjectRowProps> = {
   title: "Components/Timesheet/ProjectRow",
+  tags: ["!dev"],
   component: ProjectRow,
   parameters: { docs: { source: { type: "dynamic" } } },
   argTypes: {

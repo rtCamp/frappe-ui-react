@@ -25,7 +25,13 @@ const meta: Meta<typeof Sidebar> = {
     },
     sections: {
       control: "object",
-      description: "Sections configuration for the sidebar.",
+      description:
+        "Sections configuration for the sidebar. Each takes optional label, items, collapsible, and defaultOpen, which controls whether a collapsible section starts expanded.",
+    },
+    sectionDividers: {
+      control: "boolean",
+      description:
+        "If true, renders a divider between sections. Off by default.",
     },
     collapsed: {
       control: "boolean",
@@ -43,6 +49,10 @@ const meta: Meta<typeof Sidebar> = {
     className: {
       control: "text",
       description: "Custom CSS class name for the sidebar.",
+    },
+    activeItemClassName: {
+      control: "text",
+      description: "Additional classes applied to the active section item.",
     },
   },
   component: Sidebar,

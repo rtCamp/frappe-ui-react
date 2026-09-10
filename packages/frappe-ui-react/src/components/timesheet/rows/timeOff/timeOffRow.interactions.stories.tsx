@@ -6,6 +6,7 @@ import { TimeOffRow, type TimeOffRowProps } from "./timeOffRow";
 
 const meta: Meta<TimeOffRowProps> = {
   title: "Components/Timesheet/TimeOffRow/Interactions",
+  tags: ["!dev"],
   component: TimeOffRow,
   parameters: { docs: { source: { type: "dynamic" } } },
   argTypes: {

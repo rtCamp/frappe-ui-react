@@ -7,6 +7,7 @@ import { WeekRow, type WeekRowProps } from "./weekRow";
 
 const meta: Meta<WeekRowProps> = {
   title: "Components/Timesheet/WeekRow",
+  tags: ["!dev"],
   component: WeekRow,
   parameters: { docs: { source: { type: "dynamic" } } },
   argTypes: {

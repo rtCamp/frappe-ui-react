@@ -10,9 +10,9 @@ export interface DatePickerChildrenProps {
   isOpen: boolean;
   displayValue: string;
   disabled?: boolean;
+  togglePopover: () => void;
   openPicker: () => void;
   closePicker: () => void;
-  togglePicker: () => void;
   onTriggerKeyDown: KeyboardEventHandler<HTMLElement>;
 }
 

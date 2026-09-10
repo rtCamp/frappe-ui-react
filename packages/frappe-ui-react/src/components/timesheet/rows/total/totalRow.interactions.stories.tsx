@@ -6,6 +6,7 @@ import { TotalRow, type TotalRowProps } from "./totalRow";
 
 const meta: Meta<TotalRowProps> = {
   title: "Components/Timesheet/TotalRow/Interactions",
+  tags: ["!dev"],
   component: TotalRow,
   parameters: { docs: { source: { type: "dynamic" } } },
   argTypes: {

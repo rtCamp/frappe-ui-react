@@ -7,6 +7,7 @@ import { MemberRow, type MemberRowProps } from "./memberRow";
 
 const meta: Meta<MemberRowProps> = {
   title: "Components/Timesheet/MemberRow",
+  tags: ["!dev"],
   component: MemberRow,
   parameters: { docs: { source: { type: "dynamic" } } },
   argTypes: {

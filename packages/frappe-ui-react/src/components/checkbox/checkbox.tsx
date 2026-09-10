@@ -11,8 +11,8 @@ const Checkbox: React.FC<CheckboxProps> = ({
   value,
   onChange,
   htmlId,
+  extraClasses = "",
   extraLabelClasses = "",
-  extraInputClasses = "",
   extraWrapperClasses = "",
 }) => {
   const labelClasses = useMemo(() => {
@@ -72,7 +72,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   return (
     <div className={cn(wrapperClasses, extraWrapperClasses)}>
       <input
-        className={cn(inputClasses, extraInputClasses)}
+        className={cn(inputClasses, extraClasses)}
         type="checkbox"
         disabled={disabled}
         id={htmlId}

@@ -11,7 +11,8 @@ export type SidebarItemState = {
 
 export type SidebarItem = {
   label: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon?: React.ComponentType<{ className?: string }> | React.ReactNode;
+  suffix?: React.ReactNode;
   to?: string;
   isActive?: boolean;
   onClick?: () => void;
@@ -21,6 +22,21 @@ export type SidebarItem = {
    * merged props (`className`, `onClick`, `children`) and its `state`.
    */
   render?: useRender.RenderProp<SidebarItemState>;
+  [key: string]: unknown;
+};
+
+const renderIcon = (icon: SidebarItem["icon"]) => {
+  if (typeof icon === "string") {
+    return <span className="size-4 text-ink-gray-6">{icon}</span>;
+  }
+  if (React.isValidElement(icon)) {
+    return icon;
+  }
+  if (!icon || Array.isArray(icon)) {
+    return null;
+  }
+  const Icon = icon as React.ComponentType<{ className?: string }>;
+  return <Icon className="min-w-4 w-4 text-ink-gray-6" />;
 };
 
 export type SidebarSectionItemProps = {
@@ -41,7 +57,7 @@ const SidebarSectionItem: React.FC<SidebarSectionItemProps> = ({
     collapsed: sidebarCollapsed,
   };
 
-  const Icon = item.icon;
+  const icon = renderIcon(item.icon);
 
   return useRender({
     state,
@@ -60,13 +76,15 @@ const SidebarSectionItem: React.FC<SidebarSectionItemProps> = ({
       ),
       children: (
         <>
-          <Tooltip
-            text={item.label}
-            placement="right"
-            disabled={!sidebarCollapsed}
-          >
-            <Icon className="min-w-4 w-4 text-ink-gray-6" />
-          </Tooltip>
+          {icon && (
+            <Tooltip
+              text={item.label}
+              placement="right"
+              disabled={!sidebarCollapsed}
+            >
+              <span className="inline-flex">{icon}</span>
+            </Tooltip>
+          )}
           {!sidebarCollapsed && (
             <Tooltip text={item.label} placement="right" hoverDelay={1.5}>
               <span className="flex-1 flex-shrink-0 truncate text-base transition-all ease-in-out">
@@ -74,6 +92,7 @@ const SidebarSectionItem: React.FC<SidebarSectionItemProps> = ({
               </span>
             </Tooltip>
           )}
+          {item.suffix}
         </>
       ),
     },
