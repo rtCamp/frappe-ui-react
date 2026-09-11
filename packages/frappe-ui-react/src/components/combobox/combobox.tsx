@@ -14,6 +14,7 @@ import { Combobox as BaseCombobox } from "@base-ui/react";
  * Internal dependencies.
  */
 import LoadingIndicator from "../loadingIndicator";
+import { Tooltip } from "../tooltip";
 import type {
   ComboboxOption as ComboboxItem,
   ComboboxProps,
@@ -32,6 +33,63 @@ import {
 import { cn } from "../../utils";
 import { Check, SmallClose, SmallDown } from "../../icons";
 
+const ComboboxOptionItem: React.FC<{
+  option: SimpleOption;
+  tooltipOnTruncate?: boolean;
+}> = ({ option, tooltipOnTruncate }) => {
+  const description = getDescription(option);
+  const label = getLabel(option);
+
+  const labelNode = (
+    <span
+      className={cn(
+        description ? "truncate font-medium" : "flex-1 w-full truncate"
+      )}
+    >
+      {label}
+    </span>
+  );
+
+  return (
+    <BaseCombobox.Item
+      value={option}
+      disabled={isDisabled(option)}
+      className={cn(
+        "relative flex cursor-pointer select-none items-center gap-2 rounded px-2.5 py-1.5 pr-8 text-base text-ink-gray-8 focus:outline-none",
+        !description && "truncate",
+        "data-disabled:pointer-events-none data-disabled:opacity-50",
+        "data-highlighted:bg-surface-gray-3 data-highlighted:outline-none",
+        "data-selected:bg-surface-gray-3"
+      )}
+    >
+      {getIcon(option) && <span className="mr-1">{getIcon(option)}</span>}
+      {description ? (
+        <div className="min-w-0 flex-1 flex flex-col">
+          {tooltipOnTruncate ? (
+            <Tooltip text={label} showWhen="truncated">
+              {labelNode}
+            </Tooltip>
+          ) : (
+            labelNode
+          )}
+          <span className="truncate text-sm text-ink-gray-5">
+            {description}
+          </span>
+        </div>
+      ) : tooltipOnTruncate ? (
+        <Tooltip text={label} showWhen="truncated">
+          {labelNode}
+        </Tooltip>
+      ) : (
+        labelNode
+      )}
+      <BaseCombobox.ItemIndicator className="absolute right-2 inline-flex items-center justify-center text-ink-gray-5">
+        <Check className="size-4" />
+      </BaseCombobox.ItemIndicator>
+    </BaseCombobox.Item>
+  );
+};
+
 export const Combobox: React.FC<ComboboxProps> = ({
   id,
   options,
@@ -48,6 +106,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
   className,
   inputClassName,
   popupClassName,
+  tooltipOnTruncate = false,
 }) => {
   const [open, setOpen] = useState(false);
   const [internalQuery, setInternalQuery] = useState("");
@@ -260,84 +319,20 @@ export const Combobox: React.FC<ComboboxProps> = ({
                         <div className="p-2 text-xs font-semibold text-ink-gray-5">
                           {opt.group}
                         </div>
-                        {opt.options.map((option) => {
-                          const description = getDescription(option);
-                          return (
-                            <BaseCombobox.Item
-                              key={getValue(option)}
-                              value={option}
-                              disabled={isDisabled(option)}
-                              className={cn(
-                                "relative flex cursor-pointer select-none items-center gap-2 rounded px-2.5 py-1.5 pr-8 text-base text-ink-gray-8 focus:outline-none",
-                                !description && "truncate",
-                                "data-disabled:pointer-events-none data-disabled:opacity-50",
-                                "data-highlighted:bg-surface-gray-3 data-highlighted:outline-none",
-                                "data-selected:bg-surface-gray-3"
-                              )}
-                            >
-                              {getIcon(option) && (
-                                <span className="mr-1">{getIcon(option)}</span>
-                              )}
-                              {description ? (
-                                <div className="min-w-0 flex-1 flex flex-col">
-                                  <span className="truncate font-medium">
-                                    {getLabel(option)}
-                                  </span>
-                                  <span className="truncate text-sm text-ink-gray-5">
-                                    {description}
-                                  </span>
-                                </div>
-                              ) : (
-                                <span className="flex-1 w-full truncate">
-                                  {getLabel(option)}
-                                </span>
-                              )}
-                              <BaseCombobox.ItemIndicator className="absolute right-2 inline-flex items-center justify-center text-ink-gray-5">
-                                <Check className="size-4" />
-                              </BaseCombobox.ItemIndicator>
-                            </BaseCombobox.Item>
-                          );
-                        })}
+                        {opt.options.map((option) => (
+                          <ComboboxOptionItem
+                            key={getValue(option)}
+                            option={option}
+                            tooltipOnTruncate={tooltipOnTruncate}
+                          />
+                        ))}
                       </div>
                     ) : (
-                      (() => {
-                        const description = getDescription(opt);
-                        return (
-                          <BaseCombobox.Item
-                            key={getValue(opt)}
-                            value={opt}
-                            disabled={isDisabled(opt)}
-                            className={cn(
-                              "relative flex cursor-pointer select-none items-center gap-2 rounded px-2.5 py-1.5 pr-8 text-base text-ink-gray-8 focus:outline-none",
-                              !description && "truncate",
-                              "data-disabled:pointer-events-none data-disabled:opacity-50",
-                              "data-highlighted:bg-surface-gray-3 data-highlighted:outline-none",
-                              "data-selected:bg-surface-gray-3"
-                            )}
-                          >
-                            {getIcon(opt) && (
-                              <span className="mr-1">{getIcon(opt)}</span>
-                            )}
-                            {description ? (
-                              <div className="min-w-0 flex-1 flex flex-col">
-                                <span className="truncate font-medium">
-                                  {getLabel(opt)}
-                                </span>
-                                <span className="truncate text-sm text-ink-gray-5">
-                                  {description}
-                                </span>
-                              </div>
-                            ) : (
-                              <span className="flex-1 w-full truncate">
-                                {getLabel(opt)}
-                              </span>
-                            )}
-                            <BaseCombobox.ItemIndicator className="absolute right-2 inline-flex items-center justify-center text-ink-gray-5">
-                              <Check className="size-4" />
-                            </BaseCombobox.ItemIndicator>
-                          </BaseCombobox.Item>
-                        );
-                      })()
+                      <ComboboxOptionItem
+                        key={getValue(opt)}
+                        option={opt}
+                        tooltipOnTruncate={tooltipOnTruncate}
+                      />
                     )
                   )}
                 </BaseCombobox.List>
