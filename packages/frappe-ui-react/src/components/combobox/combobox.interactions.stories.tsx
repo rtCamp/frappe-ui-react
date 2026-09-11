@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, fn, userEvent, waitFor, within } from "storybook/test";
+import { expect, fn, screen, userEvent, waitFor, within } from "storybook/test";
 
 import { Combobox } from "./index";
 
@@ -232,6 +232,43 @@ export const Clearable: Story = {
 
     await waitFor(() => {
       expect(input).toHaveValue("");
+    });
+  },
+};
+
+export const TooltipOnTruncate: Story = {
+  args: {
+    options: [
+      "A very long option label that gets truncated in the dropdown list",
+      { label: "Short", value: "short" },
+    ],
+    value: "",
+    placeholder: "Select an item",
+    openOnFocus: true,
+    tooltipOnTruncate: true,
+  },
+  render: function Render(args) {
+    const [value, setValue] = React.useState<string | null>("");
+    return (
+      <div className="w-80">
+        <Combobox {...args} value={value} onChange={setValue} />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox");
+
+    await userEvent.click(input);
+
+    const option = await screen.findByText(
+      "A very long option label that gets truncated in the dropdown list"
+    );
+
+    await userEvent.hover(option);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("tooltip-popup")).toBeInTheDocument();
     });
   },
 };
