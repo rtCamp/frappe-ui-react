@@ -52,7 +52,14 @@ const TabButtons = ({
       )}
     >
       {buttons.map(
-        ({ label, value: buttonValue, disabled, hideLabel, onClick }) => {
+        ({
+          label,
+          value: buttonValue,
+          disabled,
+          hideLabel,
+          onClick,
+          ...props
+        }) => {
           const toggleValue = String(buttonValue);
 
           return (
@@ -69,6 +76,7 @@ const TabButtons = ({
               value={toggleValue}
               disabled={disabled}
               onClick={onClick}
+              {...props}
             >
               {!hideLabel && <p className="h-4 text-center">{label}</p>}
             </Toggle>
