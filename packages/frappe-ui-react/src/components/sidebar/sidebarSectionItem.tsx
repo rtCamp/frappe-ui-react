@@ -61,7 +61,9 @@ const SidebarSectionItem: React.FC<SidebarSectionItemProps> = ({
 
   return useRender({
     state,
-    render: item.render ?? <button type="button" />,
+    render:
+      item.render ??
+      (item.to ? <a href={item.to} /> : <button type="button" />),
     props: {
       onClick: item.onClick,
       className: cn(
