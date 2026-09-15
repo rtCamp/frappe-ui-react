@@ -194,7 +194,7 @@ export const CustomHeader: Story = {
         <Select
           className="w-auto"
           value={activeView}
-          onChange={(val) => updateActiveView(val)}
+          onChange={(event) => updateActiveView(event.target.value)}
           options={enabledModes.map((mode: { id: string; label: string }) => ({
             value: mode.id,
             label: mode.label,
