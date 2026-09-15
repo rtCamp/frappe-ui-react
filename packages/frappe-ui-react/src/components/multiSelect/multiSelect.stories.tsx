@@ -39,6 +39,14 @@ const meta: Meta<typeof MultiSelect> = {
       action: "changed",
       description: "Callback when selection changes",
     },
+    open: {
+      control: "boolean",
+      description: "Control the open state of the dropdown",
+    },
+    onOpenChange: {
+      action: "open state changed",
+      description: "Callback when dropdown open state changes",
+    },
     renderOption: {
       control: false,
       description: "Custom render function for each option",

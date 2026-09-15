@@ -2,6 +2,7 @@ import { Meta, IconGallery, IconItem } from '@storybook/addon-docs/blocks';
 
 import * as lineIcons from './line';
 import * as SolidIcons from './solid';
+import * as ExtraIcons from './extras';
 
 <Meta title="Theme/Iconography" />
 
@@ -23,6 +24,18 @@ import * as SolidIcons from './solid';
 
 <IconGallery>
   {Object.entries(SolidIcons)
+  .sort(([iconNameA], [iconNameB]) => iconNameA.localeCompare(iconNameB))
+  .map(([iconName,Icon]) => (
+    <IconItem key={iconName} name={iconName}>
+      <Icon className="text-ink-gray-4" />
+    </IconItem>
+  ))}
+</IconGallery>
+
+## Extra - {Object.keys(ExtraIcons).length} icons
+
+<IconGallery>
+  {Object.entries(ExtraIcons)
   .sort(([iconNameA], [iconNameB]) => iconNameA.localeCompare(iconNameB))
   .map(([iconName,Icon]) => (
     <IconItem key={iconName} name={iconName}>

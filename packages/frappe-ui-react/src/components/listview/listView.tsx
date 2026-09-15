@@ -7,6 +7,7 @@ import ListGroups from "./listGroups";
 import ListSelectBanner from "./listSelectBanner";
 import { type ListOptionsProps } from "./listContext";
 import { ListProvider } from "./listprovider";
+import { cn } from "../../utils";
 
 interface ListProps extends HTMLAttributes<HTMLDivElement> {
   columns: any[];
@@ -22,6 +23,8 @@ const ListView: React.FC<ListProps> = ({
   rowKey,
   options,
   children,
+  className,
+  style,
   ...attrs
 }) => {
   const showGroupedRows = useMemo(
@@ -65,10 +68,12 @@ const ListView: React.FC<ListProps> = ({
     >
       <div className="relative flex w-full flex-1 flex-col overflow-x-auto">
         <div
-          className={`flex w-max min-w-full flex-col overflow-y-hidden ${
-            attrs.className || ""
-          }`}
-          style={attrs.style}
+          {...attrs}
+          className={cn(
+            "flex w-max min-w-full flex-col overflow-y-hidden",
+            className
+          )}
+          style={style}
         >
           {children ? children : defaultContent}
         </div>
