@@ -201,6 +201,13 @@ export const DisallowAfter: Story = {
     await userEvent.click(disallowedDate);
     expect(args.onChange).not.toHaveBeenCalled();
 
+    // The Today shortcut obeys the same boundary as the calendar cells.
+    const todayButton = screen.getByRole("button", { name: "Today" });
+    expect(todayButton).toBeDisabled();
+
+    await userEvent.click(todayButton, { pointerEventsCheck: 0 });
+    expect(args.onChange).not.toHaveBeenCalled();
+
     // The boundary date itself stays selectable.
     const boundaryDate = findGridCell("15");
     expect(boundaryDate).toBeEnabled();

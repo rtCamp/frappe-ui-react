@@ -93,13 +93,19 @@ export function useDateRangePicker({
     [commitRange, fromDate, isDateDisallowed, syncCalendarToValue, toDate]
   );
 
+  const isTodayDisallowed = isDateDisallowed(today);
+
   const handleToday = useCallback(() => {
     const d = new Date(today);
     d.setHours(0, 0, 0, 0);
+    if (isDateDisallowed(d)) {
+      return false;
+    }
     const todayStr = getDateValue(d);
     syncCalendarToValue(todayStr);
     commitRange(todayStr, todayStr);
-  }, [commitRange, syncCalendarToValue, today]);
+    return true;
+  }, [commitRange, isDateDisallowed, syncCalendarToValue, today]);
 
   const clearDates = useCallback(() => {
     syncCalendarToValue("");
@@ -155,5 +161,6 @@ export function useDateRangePicker({
     applyRange,
     isInRange,
     isDateDisallowed,
+    isTodayDisallowed,
   };
 }

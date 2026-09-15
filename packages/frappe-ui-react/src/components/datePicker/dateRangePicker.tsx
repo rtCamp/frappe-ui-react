@@ -53,6 +53,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
     applyRange,
     isInRange,
     isDateDisallowed,
+    isTodayDisallowed,
   } = useDateRangePicker({
     value: Array.isArray(value) ? value : undefined,
     onChange,
@@ -197,9 +198,11 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 <Button
                   className="text-xs"
                   variant="ghost"
+                  disabled={isTodayDisallowed}
                   onClick={() => {
-                    handleToday();
-                    setOpen(false);
+                    if (handleToday()) {
+                      setOpen(false);
+                    }
                   }}
                 >
                   Today
