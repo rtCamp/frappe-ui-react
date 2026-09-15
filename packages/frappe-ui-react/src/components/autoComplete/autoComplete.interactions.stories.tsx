@@ -331,9 +331,12 @@ export const ControlledSearchLoading: Story = {
       expect(search).toHaveValue("");
     });
 
-    await waitFor(() => {
-      expect(page.getByText("Bob Johnson")).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(page.getByText("Bob Johnson")).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
 
     expect(trigger).toHaveTextContent("John Doe, Jane Doe, John Smith");
 
@@ -345,14 +348,20 @@ export const ControlledSearchLoading: Story = {
 
     // Dismissing with an active query still resets it, so a reopen starts fresh.
     await userEvent.click(trigger);
+    await waitFor(() => {
+      expect(page.queryByPlaceholderText("Search")).not.toBeInTheDocument();
+    });
     await userEvent.click(trigger);
 
     const reopenedSearch = await page.findByPlaceholderText("Search");
     expect(reopenedSearch).toHaveValue("");
 
-    await waitFor(() => {
-      expect(page.getByText("Bob Johnson")).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(page.getByText("Bob Johnson")).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
 
     expect(trigger).toHaveTextContent("John Doe, Jane Doe, John Smith");
   },

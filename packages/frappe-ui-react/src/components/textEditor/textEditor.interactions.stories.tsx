@@ -381,6 +381,15 @@ export const EditorMentions: Story = {
     );
   },
   play: async ({ canvasElement }) => {
+    const editorEl = await waitFor(() => {
+      const el = canvasElement.querySelector<HTMLElement>(
+        "[contenteditable='true']"
+      );
+      expect(el).not.toBeNull();
+      return el as HTMLElement;
+    });
+    await userEvent.click(editorEl);
+
     // Typing the trigger character should open the suggestion list with all
     // users. The popup is appended to document.body, outside the canvas.
     await userEvent.keyboard("@");

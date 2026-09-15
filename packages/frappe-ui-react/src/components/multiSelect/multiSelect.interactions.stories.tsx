@@ -537,7 +537,7 @@ export const CompareFn: Story = {
     await userEvent.click(trigger);
 
     // Select Banana
-    const bananaOption = screen.getByText("Banana");
+    const bananaOption = await screen.findByText("Banana");
     await userEvent.click(bananaOption);
 
     await waitFor(() => {

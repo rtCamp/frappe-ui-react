@@ -59,9 +59,11 @@ export const NestedDropdownClosesBothMenus: Story = {
     onActionSelect.mockClear();
 
     await userEvent.click(canvas.getByRole("button", { name: "Views" }));
-    await userEvent.click(await screen.findByRole("button", { name: "Actions for Kanban" }));
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Actions for Kanban" })
+    );
 
-    await expect(screen.getAllByRole("menu")).toHaveLength(2);
+    await waitFor(() => expect(screen.getAllByRole("menu")).toHaveLength(2));
 
     await userEvent.click(await screen.findByText("Duplicate"));
 
