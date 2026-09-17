@@ -2,10 +2,10 @@ import type { ColumnSelectorLabels, SelectorColumn } from "./types";
 
 export const DEFAULT_MIN_COLUMNS = 1;
 
-export const DEFAULT_PINNED_ROW_KEYS = ["name"];
-
 export const DEFAULT_LABELS: ColumnSelectorLabels = {
   trigger: "Columns",
+  addColumn: "Add Column",
+  noColumnsAvailable: "All columns added",
   resetToDefault: "Reset to Default",
   remove: "Remove column",
 };
@@ -34,13 +34,20 @@ export function removeColumn<T extends SelectorColumn>(
   return columns.filter((column) => column.value !== value);
 }
 
-export function removeRow(
-  rows: string[],
-  value: string,
-  pinnedRowKeys: string[] = DEFAULT_PINNED_ROW_KEYS
-): string[] {
-  if (pinnedRowKeys.includes(value)) {
-    return rows;
+export function unusedColumns(
+  availableColumns: SelectorColumn[],
+  columns: SelectorColumn[]
+): SelectorColumn[] {
+  const used = new Set(columns.map((column) => column.value));
+  return availableColumns.filter((column) => !used.has(column.value));
+}
+
+export function addColumn<T extends SelectorColumn>(
+  columns: T[],
+  column: T
+): T[] {
+  if (columns.some((existing) => existing.value === column.value)) {
+    return columns;
   }
-  return rows.filter((row) => row !== value);
+  return [...columns, column];
 }

@@ -12,28 +12,29 @@ const ticketColumns: SelectorColumn[] = [
   { label: "Customer", value: "customer" },
 ];
 
+const ticketFields: SelectorColumn[] = [
+  ...ticketColumns,
+  { label: "Description", value: "description" },
+  { label: "Team", value: "agent_group" },
+  { label: "Type", value: "ticket_type" },
+  { label: "Total Hold Time", value: "total_hold_time" },
+];
+
 function StatefulColumnSelector(props: ColumnSelectorProps) {
   const [columns, setColumns] = useState(props.columns);
-  const [rows, setRows] = useState(props.rows);
 
   return (
     <ColumnSelector
       {...props}
       columns={columns}
-      rows={rows}
       onColumnsChange={(next) => {
         setColumns(next);
         props.onColumnsChange(next);
-      }}
-      onRowsChange={(next) => {
-        setRows(next);
-        props.onRowsChange?.(next);
       }}
       onReset={
         props.onReset &&
         (() => {
           setColumns(props.columns);
-          setRows(props.rows);
           props.onReset?.();
         })
       }
@@ -47,15 +48,8 @@ const meta: Meta<typeof ColumnSelector> = {
   tags: ["autodocs"],
   parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   argTypes: {
-    columns: { description: "Active columns, in display order. Controlled." },
-    minColumns: {
-      control: "number",
-      description: "Removal is refused below this count.",
-    },
-    hideLabel: {
-      control: "boolean",
-      description: "Render the trigger as an icon-only button.",
-    },
+    minColumns: { control: "number" },
+    hideLabel: { control: "boolean" },
     disabled: { control: "boolean" },
   },
   render: (args) => <StatefulColumnSelector {...args} />,
@@ -67,6 +61,7 @@ type Story = StoryObj<typeof ColumnSelector>;
 export const Default: Story = {
   args: {
     columns: ticketColumns,
+    availableColumns: ticketFields,
     onColumnsChange: () => {},
     onReset: () => {},
   },
@@ -83,6 +78,10 @@ export const AtMinimumColumns: Story = {
   },
 };
 
+export const AllColumnsAdded: Story = {
+  args: { ...Default.args, columns: ticketFields },
+};
+
 export const WithoutReset: Story = {
   args: { ...Default.args, onReset: undefined },
 };
@@ -96,6 +95,8 @@ export const TranslatedLabels: Story = {
     ...Default.args,
     labels: {
       trigger: "Colonnes",
+      addColumn: "Ajouter une colonne",
+      noColumnsAvailable: "Toutes les colonnes sont ajoutées",
       resetToDefault: "Réinitialiser",
       remove: "Supprimer la colonne",
     },
