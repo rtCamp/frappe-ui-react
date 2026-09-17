@@ -8,6 +8,7 @@ export * from "./calendar";
 export * from "./charts";
 export * from "./checkbox";
 export * from "./circularProgressBar";
+export * from "./columnSelector";
 export * from "./combobox";
 export * from "./commandPalette";
 export * from "./datePicker";
