@@ -8,6 +8,7 @@ export const DEFAULT_LABELS: ColumnSelectorLabels = {
   noColumnsAvailable: "All columns added",
   resetToDefault: "Reset to Default",
   remove: "Remove column",
+  reorder: "Reorder column",
 };
 
 export function resolveLabels(

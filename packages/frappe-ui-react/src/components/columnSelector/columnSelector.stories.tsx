@@ -49,6 +49,7 @@ const meta: Meta<typeof ColumnSelector> = {
   parameters: { docs: { source: { type: "dynamic" } }, layout: "centered" },
   argTypes: {
     minColumns: { control: "number" },
+    reorderable: { control: "boolean" },
     hideLabel: { control: "boolean" },
     disabled: { control: "boolean" },
   },
@@ -86,6 +87,10 @@ export const WithoutReset: Story = {
   args: { ...Default.args, onReset: undefined },
 };
 
+export const NotReorderable: Story = {
+  args: { ...Default.args, reorderable: false },
+};
+
 export const Disabled: Story = {
   args: { ...Default.args, disabled: true },
 };
@@ -99,6 +104,7 @@ export const TranslatedLabels: Story = {
       noColumnsAvailable: "Toutes les colonnes sont ajoutées",
       resetToDefault: "Réinitialiser",
       remove: "Supprimer la colonne",
+      reorder: "Réordonner la colonne",
     },
   },
 };

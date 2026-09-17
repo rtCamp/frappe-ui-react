@@ -1,5 +1,21 @@
 import { useCallback, useMemo } from "react";
 import { Popover } from "@base-ui/react/popover";
+import {
+  DndContext,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 import { Autocomplete } from "../autoComplete";
 import type { AutocompleteChangeSelection } from "../autoComplete";
@@ -28,6 +44,7 @@ export default function ColumnSelector({
   onColumnsChange,
   availableColumns,
   minColumns = DEFAULT_MIN_COLUMNS,
+  reorderable = true,
   onReset,
   hideLabel = false,
   disabled = false,
@@ -47,6 +64,26 @@ export default function ColumnSelector({
       onColumnsChange(next);
     },
     [columns, minColumns, onColumnsChange]
+  );
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 200, tolerance: 5 },
+    }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
+  const columnIds = useMemo(() => columns.map((c) => c.value), [columns]);
+
+  const handleDragEnd = useCallback(
+    ({ active, over }: DragEndEvent) => {
+      if (!over || active.id === over.id) return;
+      const from = columnIds.indexOf(String(active.id));
+      const to = columnIds.indexOf(String(over.id));
+      if (from < 0 || to < 0) return;
+      onColumnsChange(arrayMove(columns, from, to));
+    },
+    [columnIds, columns, onColumnsChange]
   );
 
   const handleAdd = useCallback(
@@ -88,18 +125,30 @@ export default function ColumnSelector({
             initialFocus={false}
             className="z-100 min-w-40 rounded-lg bg-surface-modal p-1.5 shadow-2xl ring-1 ring-black/5"
           >
-            <div role="list">
-              {columns.map((column) => (
-                <div role="listitem" key={column.value}>
-                  <ColumnSelectorRow
-                    column={column}
-                    labels={labels}
-                    removable={removable}
-                    onRemove={handleRemove}
-                  />
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={columnIds}
+                strategy={verticalListSortingStrategy}
+              >
+                <div role="list">
+                  {columns.map((column) => (
+                    <div role="listitem" key={column.value}>
+                      <ColumnSelectorRow
+                        column={column}
+                        labels={labels}
+                        reorderable={reorderable}
+                        removable={removable}
+                        onRemove={handleRemove}
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </SortableContext>
+            </DndContext>
             <div className="mt-1.5 flex flex-col gap-1 border-t border-outline-gray-1 pt-1.5">
               <Autocomplete
                 value={null}

@@ -18,6 +18,8 @@ export type ColumnSelectorLabels = {
   resetToDefault: string;
   /** Prefix of each row's remove-button `aria-label`, followed by the column label. */
   remove: string;
+  /** Prefix of each row's drag-handle `aria-label`, followed by the column label. */
+  reorder: string;
 };
 
 /** Props for `ColumnSelector`. */
@@ -32,6 +34,12 @@ export interface ColumnSelectorProps {
    */
   availableColumns: SelectorColumn[];
 
+  /**
+   * Show a drag handle on each row and allow reordering by pointer or
+   * keyboard (focus the handle, Space to lift, arrows to move, Space to drop).
+   * @default true
+   */
+  reorderable?: boolean;
   /**
    * Remove buttons are hidden once `columns.length` reaches this count.
    * @default 1
