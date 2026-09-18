@@ -9,6 +9,8 @@ export const DEFAULT_LABELS: ColumnSelectorLabels = {
   resetToDefault: "Reset to Default",
   remove: "Remove column",
   reorder: "Reorder column",
+  pin: "Pin column",
+  unpin: "Unpin column",
 };
 
 export function resolveLabels(
@@ -51,4 +53,28 @@ export function addColumn<T extends SelectorColumn>(
     return columns;
   }
   return [...columns, column];
+}
+
+export function groupPinned<T extends SelectorColumn>(columns: T[]): T[] {
+  return [
+    ...columns.filter((column) => column.pinned),
+    ...columns.filter((column) => !column.pinned),
+  ];
+}
+
+export function togglePinned<T extends SelectorColumn>(
+  columns: T[],
+  value: string
+): T[] {
+  const column = columns.find((existing) => existing.value === value);
+  if (!column) {
+    return columns;
+  }
+  const rest = columns.filter((existing) => existing.value !== value);
+  const toggled = { ...column, pinned: !column.pinned };
+  return [
+    ...rest.filter((existing) => existing.pinned),
+    toggled,
+    ...rest.filter((existing) => !existing.pinned),
+  ];
 }

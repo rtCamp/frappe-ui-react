@@ -4,6 +4,11 @@ export type SelectorColumn = {
   label: string;
   /** Stable identifier; used for keys and de-duplication. */
   value: string;
+  /**
+   * Keeps the column in the pinned group at the top of the list. Only
+   * meaningful when `ColumnSelectorProps.pinnable` is set.
+   */
+  pinned?: boolean;
 };
 
 /** Every user-facing string, overridable for i18n via `ColumnSelectorProps.labels`. */
@@ -20,6 +25,10 @@ export type ColumnSelectorLabels = {
   remove: string;
   /** Prefix of each row's drag-handle `aria-label`, followed by the column label. */
   reorder: string;
+  /** Pin toggle tooltip and `aria-label` prefix for an unpinned column. */
+  pin: string;
+  /** Pin toggle tooltip and `aria-label` prefix for a pinned column. */
+  unpin: string;
 };
 
 /** Props for `ColumnSelector`. */
@@ -40,6 +49,14 @@ export interface ColumnSelectorProps {
    * @default true
    */
   reorderable?: boolean;
+  /**
+   * Show a pin toggle on each row. Pinned columns are listed first, above a
+   * divider, and can only be reordered within their group. Toggling emits the
+   * next `columns` through `onColumnsChange` with the column's `pinned` flag
+   * flipped and the column moved to the group boundary.
+   * @default false
+   */
+  pinnable?: boolean;
   /**
    * Remove buttons are hidden once `columns.length` reaches this count.
    * @default 1

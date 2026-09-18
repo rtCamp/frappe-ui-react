@@ -2,7 +2,8 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 import { Button } from "../button";
-import { Close, DragVertical } from "../../icons";
+import { Tooltip } from "../tooltip";
+import { Close, DragVertical, Pin, Unpin } from "../../icons";
 import { cn } from "../../utils";
 import type { ColumnSelectorLabels, SelectorColumn } from "./types";
 
@@ -11,7 +12,9 @@ export interface ColumnSelectorRowProps {
   labels: ColumnSelectorLabels;
   reorderable?: boolean;
   removable?: boolean;
+  pinnable?: boolean;
   onRemove?: (column: SelectorColumn) => void;
+  onTogglePinned?: (column: SelectorColumn) => void;
 }
 
 export default function ColumnSelectorRow({
@@ -19,8 +22,11 @@ export default function ColumnSelectorRow({
   labels,
   reorderable = false,
   removable = true,
+  pinnable = false,
   onRemove,
+  onTogglePinned,
 }: ColumnSelectorRowProps) {
+  const pinLabel = column.pinned ? labels.unpin : labels.pin;
   const {
     attributes,
     listeners,
@@ -55,16 +61,38 @@ export default function ColumnSelectorRow({
         )}
         <div className="truncate">{column.label}</div>
       </div>
-      {removable && (
-        <Button
-          variant="ghost"
-          className="h-5! w-5 p-1!"
-          aria-label={`${labels.remove}: ${column.label}`}
-          onClick={() => onRemove?.(column)}
-        >
-          <Close aria-hidden className="h-3.5 w-3.5" />
-        </Button>
-      )}
+      <div className="flex shrink-0 items-center gap-1">
+        {pinnable && (
+          <Tooltip text={pinLabel}>
+            <Button
+              variant="ghost"
+              className={cn(
+                "h-5! w-5 p-1!",
+                column.pinned ? "text-ink-gray-8!" : "text-ink-gray-4!"
+              )}
+              aria-label={`${pinLabel}: ${column.label}`}
+              aria-pressed={!!column.pinned}
+              onClick={() => onTogglePinned?.(column)}
+            >
+              {column.pinned ? (
+                <Unpin aria-hidden className="h-3.5 w-3.5" />
+              ) : (
+                <Pin aria-hidden className="h-3.5 w-3.5" />
+              )}
+            </Button>
+          </Tooltip>
+        )}
+        {removable && (
+          <Button
+            variant="ghost"
+            className="h-5! w-5 p-1!"
+            aria-label={`${labels.remove}: ${column.label}`}
+            onClick={() => onRemove?.(column)}
+          >
+            <Close aria-hidden className="h-3.5 w-3.5" />
+          </Button>
+        )}
+      </div>
     </div>
   );
 }

@@ -50,6 +50,7 @@ const meta: Meta<typeof ColumnSelector> = {
   argTypes: {
     minColumns: { control: "number" },
     reorderable: { control: "boolean" },
+    pinnable: { control: "boolean" },
     hideLabel: { control: "boolean" },
     disabled: { control: "boolean" },
   },
@@ -87,6 +88,17 @@ export const WithoutReset: Story = {
   args: { ...Default.args, onReset: undefined },
 };
 
+export const Pinnable: Story = {
+  args: {
+    ...Default.args,
+    pinnable: true,
+    columns: ticketColumns.map((column, index) => ({
+      ...column,
+      pinned: index < 2,
+    })),
+  },
+};
+
 export const NotReorderable: Story = {
   args: { ...Default.args, reorderable: false },
 };
@@ -105,6 +117,8 @@ export const TranslatedLabels: Story = {
       resetToDefault: "Réinitialiser",
       remove: "Supprimer la colonne",
       reorder: "Réordonner la colonne",
+      pin: "Épingler la colonne",
+      unpin: "Désépingler la colonne",
     },
   },
 };

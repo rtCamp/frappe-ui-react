@@ -20,15 +20,17 @@ import {
 import { Autocomplete } from "../autoComplete";
 import type { AutocompleteChangeSelection } from "../autoComplete";
 import { Button } from "../button";
-import { AddSm, HeaderColumn, Reset } from "../../icons";
+import { AddSm, Reset, VerticalColumn } from "../../icons";
 import ColumnSelectorRow from "./columnSelectorRow";
 import type { ColumnSelectorProps, SelectorColumn } from "./types";
 import {
   DEFAULT_MIN_COLUMNS,
   addColumn,
   canRemoveColumn,
+  groupPinned,
   removeColumn,
   resolveLabels,
+  togglePinned,
   unusedColumns,
 } from "./utils";
 
@@ -40,17 +42,25 @@ import {
  * `onColumnsChange` for the consumer to store and persist.
  */
 export default function ColumnSelector({
-  columns,
+  columns: unorderedColumns,
   onColumnsChange,
   availableColumns,
   minColumns = DEFAULT_MIN_COLUMNS,
   reorderable = true,
+  pinnable = false,
   onReset,
   hideLabel = false,
   disabled = false,
   labels: labelOverrides,
 }: ColumnSelectorProps) {
   const labels = useMemo(() => resolveLabels(labelOverrides), [labelOverrides]);
+  const columns = useMemo(
+    () => (pinnable ? groupPinned(unorderedColumns) : unorderedColumns),
+    [pinnable, unorderedColumns]
+  );
+  const pinnedCount = pinnable
+    ? columns.filter((column) => column.pinned).length
+    : 0;
   const removable = canRemoveColumn(columns, minColumns);
   const addable = useMemo(
     () => unusedColumns(availableColumns, columns),
@@ -81,9 +91,16 @@ export default function ColumnSelector({
       const from = columnIds.indexOf(String(active.id));
       const to = columnIds.indexOf(String(over.id));
       if (from < 0 || to < 0) return;
+      if (pinnable && !!columns[from].pinned !== !!columns[to].pinned) return;
       onColumnsChange(arrayMove(columns, from, to));
     },
-    [columnIds, columns, onColumnsChange]
+    [columnIds, columns, onColumnsChange, pinnable]
+  );
+
+  const handleTogglePinned = useCallback(
+    (column: SelectorColumn) =>
+      onColumnsChange(togglePinned(columns, column.value)),
+    [columns, onColumnsChange]
   );
 
   const handleAdd = useCallback(
@@ -109,11 +126,11 @@ export default function ColumnSelector({
             iconLeft={
               hideLabel
                 ? undefined
-                : () => <HeaderColumn aria-hidden className="h-4 w-4" />
+                : () => <VerticalColumn aria-hidden className="h-4 w-4" />
             }
             icon={
               hideLabel
-                ? () => <HeaderColumn aria-hidden className="h-4 w-4" />
+                ? () => <VerticalColumn aria-hidden className="h-4 w-4" />
                 : undefined
             }
           />
@@ -135,14 +152,22 @@ export default function ColumnSelector({
                 strategy={verticalListSortingStrategy}
               >
                 <div role="list">
-                  {columns.map((column) => (
+                  {columns.map((column, index) => (
                     <div role="listitem" key={column.value}>
+                      {pinnedCount > 0 && index === pinnedCount && (
+                        <div
+                          aria-hidden
+                          className="my-1.5 border-t border-outline-gray-1"
+                        />
+                      )}
                       <ColumnSelectorRow
                         column={column}
                         labels={labels}
                         reorderable={reorderable}
                         removable={removable}
+                        pinnable={pinnable}
                         onRemove={handleRemove}
+                        onTogglePinned={handleTogglePinned}
                       />
                     </div>
                   ))}
