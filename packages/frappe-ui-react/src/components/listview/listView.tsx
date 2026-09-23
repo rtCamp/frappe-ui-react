@@ -15,6 +15,7 @@ interface ListProps extends HTMLAttributes<HTMLDivElement> {
   rowKey: string;
   options?: ListOptionsProps;
   children?: ReactNode;
+  containerClassName?: string;
 }
 
 const ListView: React.FC<ListProps> = ({
@@ -24,6 +25,7 @@ const ListView: React.FC<ListProps> = ({
   options,
   children,
   className,
+  containerClassName,
   style,
   ...attrs
 }) => {
@@ -66,7 +68,12 @@ const ListView: React.FC<ListProps> = ({
         ...options,
       }}
     >
-      <div className="relative flex w-full flex-1 flex-col overflow-x-auto">
+      <div
+        className={cn(
+          "relative flex w-full flex-1 flex-col overflow-x-auto",
+          containerClassName
+        )}
+      >
         <div
           {...attrs}
           className={cn(
