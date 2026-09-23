@@ -11,6 +11,7 @@ export const DEFAULT_LABELS: ColumnSelectorLabels = {
   reorder: "Reorder column",
   pin: "Pin column",
   unpin: "Unpin column",
+  pinLimit: "Pin limit reached",
 };
 
 export function resolveLabels(

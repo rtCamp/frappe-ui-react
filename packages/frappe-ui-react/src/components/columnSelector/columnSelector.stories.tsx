@@ -51,6 +51,7 @@ const meta: Meta<typeof ColumnSelector> = {
     minColumns: { control: "number" },
     reorderable: { control: "boolean" },
     pinnable: { control: "boolean" },
+    maxPinned: { control: "number" },
     hideLabel: { control: "boolean" },
     disabled: { control: "boolean" },
   },
@@ -99,6 +100,13 @@ export const Pinnable: Story = {
   },
 };
 
+export const PinLimitReached: Story = {
+  args: {
+    ...Pinnable.args,
+    maxPinned: 2,
+  },
+};
+
 export const NotReorderable: Story = {
   args: { ...Default.args, reorderable: false },
 };
@@ -119,6 +127,7 @@ export const TranslatedLabels: Story = {
       reorder: "Réordonner la colonne",
       pin: "Épingler la colonne",
       unpin: "Désépingler la colonne",
+      pinLimit: "Limite d'épinglage atteinte",
     },
   },
 };

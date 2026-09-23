@@ -48,6 +48,7 @@ export default function ColumnSelector({
   minColumns = DEFAULT_MIN_COLUMNS,
   reorderable = true,
   pinnable = false,
+  maxPinned,
   onReset,
   hideLabel = false,
   disabled = false,
@@ -61,6 +62,7 @@ export default function ColumnSelector({
   const pinnedCount = pinnable
     ? columns.filter((column) => column.pinned).length
     : 0;
+  const canPin = maxPinned === undefined || pinnedCount < maxPinned;
   const removable = canRemoveColumn(columns, minColumns);
   const addable = useMemo(
     () => unusedColumns(availableColumns, columns),
@@ -166,6 +168,7 @@ export default function ColumnSelector({
                         reorderable={reorderable}
                         removable={removable}
                         pinnable={pinnable}
+                        pinDisabled={!column.pinned && !canPin}
                         onRemove={handleRemove}
                         onTogglePinned={handleTogglePinned}
                       />
