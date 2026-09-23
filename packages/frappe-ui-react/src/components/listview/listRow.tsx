@@ -11,6 +11,7 @@ interface ListRowProps extends React.HTMLAttributes<HTMLDivElement> {
   isLastRow?: boolean;
   children?: React.ReactNode;
   className?: string;
+  separatorClassName?: string;
 }
 
 const ListRow: React.FC<ListRowProps> = ({
@@ -18,6 +19,7 @@ const ListRow: React.FC<ListRowProps> = ({
   isLastRow = false,
   children,
   className,
+  separatorClassName,
   ...attrs
 }) => {
   const { options: list } = useContext(ListContext);
@@ -162,7 +164,8 @@ const ListRow: React.FC<ListRowProps> = ({
               "h-px border-t",
               roundedClass === "rounded" || roundedClass.includes("rounded-b")
                 ? "mx-2 border-outline-gray-1"
-                : "border-t-[--surface-gray-2]"
+                : "border-t-[--surface-gray-2]",
+              separatorClassName
             )}
           />
         )}
