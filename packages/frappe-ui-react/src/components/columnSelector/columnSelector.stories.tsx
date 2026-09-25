@@ -113,7 +113,6 @@ export const TranslatedLabels: Story = {
     labels: {
       trigger: "Colonnes",
       addColumn: "Ajouter une colonne",
-      noColumnsAvailable: "Toutes les colonnes sont ajoutées",
       resetToDefault: "Réinitialiser",
       remove: "Supprimer la colonne",
       reorder: "Réordonner la colonne",
