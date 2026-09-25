@@ -5,7 +5,6 @@ export const DEFAULT_MIN_COLUMNS = 1;
 export const DEFAULT_LABELS: ColumnSelectorLabels = {
   trigger: "Columns",
   addColumn: "Add Column",
-  noColumnsAvailable: "All columns added",
   resetToDefault: "Reset to Default",
   remove: "Remove column",
   reorder: "Reorder column",

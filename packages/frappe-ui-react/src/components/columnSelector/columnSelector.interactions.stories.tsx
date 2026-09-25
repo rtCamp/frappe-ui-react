@@ -133,17 +133,15 @@ export const HidesRemoveAtMinimum: Story = {
   },
 };
 
-export const ReportsWhenEveryColumnIsAdded: Story = {
+export const HidesAddColumnWhenEveryColumnIsAdded: Story = {
   args: { columns: ticketFields },
   play: async ({ canvas }) => {
     await openSelector(canvas);
 
-    await userEvent.click(addColumnTrigger());
-
     await expect(
-      await screen.findByText("All columns added")
-    ).toBeInTheDocument();
-    await expect(screen.queryAllByRole("option")).toHaveLength(0);
+      screen.queryByRole("combobox", { name: /toggle options/i })
+    ).not.toBeInTheDocument();
+    await expect(screen.queryByText("Add Column")).not.toBeInTheDocument();
   },
 };
 

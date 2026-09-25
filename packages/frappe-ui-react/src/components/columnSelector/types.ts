@@ -17,8 +17,6 @@ export type ColumnSelectorLabels = {
   trigger: string;
   /** Footer action that opens the Add Column search. */
   addColumn: string;
-  /** Shown in the Add Column search when every available column is already active. */
-  noColumnsAvailable: string;
   /** Footer action wired to `onReset`. */
   resetToDefault: string;
   /** Prefix of each row's remove-button `aria-label`, followed by the column label. */

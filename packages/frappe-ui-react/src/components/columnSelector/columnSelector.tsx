@@ -177,31 +177,34 @@ export default function ColumnSelector({
                 </div>
               </SortableContext>
             </DndContext>
-            <div className="mt-1.5 flex flex-col gap-1 border-t border-outline-gray-1 pt-1.5">
-              <Autocomplete
-                value={null}
-                options={addable}
-                placement="bottom-start"
-                emptyMessage={labels.noColumnsAvailable}
-                onChange={(_, selection) => handleAdd(selection)}
-              >
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start! text-ink-gray-5!"
-                  label={labels.addColumn}
-                  iconLeft={() => <AddSm aria-hidden className="h-4 w-4" />}
-                />
-              </Autocomplete>
-              {onReset && (
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start! text-ink-gray-5!"
-                  label={labels.resetToDefault}
-                  iconLeft={() => <Reset aria-hidden className="h-4 w-4" />}
-                  onClick={onReset}
-                />
-              )}
-            </div>
+            {(addable.length > 0 || onReset) && (
+              <div className="mt-1.5 flex flex-col gap-1 border-t border-outline-gray-1 pt-1.5">
+                {addable.length > 0 && (
+                  <Autocomplete
+                    value={null}
+                    options={addable}
+                    placement="bottom-start"
+                    onChange={(_, selection) => handleAdd(selection)}
+                  >
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start! text-ink-gray-5!"
+                      label={labels.addColumn}
+                      iconLeft={() => <AddSm aria-hidden className="h-4 w-4" />}
+                    />
+                  </Autocomplete>
+                )}
+                {onReset && (
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start! text-ink-gray-5!"
+                    label={labels.resetToDefault}
+                    iconLeft={() => <Reset aria-hidden className="h-4 w-4" />}
+                    onClick={onReset}
+                  />
+                )}
+              </div>
+            )}
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>
