@@ -1,8 +1,15 @@
+/**
+ * External dependencies.
+ */
 import React from "react";
 
+/**
+ * Internal dependencies.
+ */
 import FeatherIcon, { type FeatherIconProps } from "../featherIcon";
 import LoadingIndicator from "../loadingIndicator";
 import type { ButtonProps, ButtonThemeVariant } from "./types";
+import { cn } from "../../utils";
 
 const Button = ({
   theme = "gray",
@@ -58,10 +65,10 @@ const Button = ({
   }[theme];
 
   const focusClasses = {
-    gray: "focus-visible:ring focus-visible:ring-outline-gray-3",
-    blue: "focus-visible:ring focus-visible:ring-blue-400",
-    green: "focus-visible:ring focus-visible:ring-outline-green-2",
-    red: "focus-visible:ring focus-visible:ring-outline-red-2",
+    gray: "focus-visible:outline-2 focus-visible:outline-default",
+    blue: "focus-visible:outline-2 focus-visible:outline-blue",
+    green: "focus-visible:outline-2 focus-visible:outline-green",
+    red: "focus-visible:outline-2 focus-visible:outline-red",
   }[theme];
 
   const variantClasses = {
@@ -132,15 +139,13 @@ const Button = ({
     "2xl": "h-4.5 w-4.5",
   }[size];
 
-  const buttonClasses = [
-    "inline-flex items-center justify-center gap-2 transition-colors focus:outline-none",
+  const buttonClasses = cn(
+    "inline-flex items-center justify-center gap-2 transition-colors",
     isDisabled ? disabledClasses : variantClasses,
     focusClasses,
     sizeClasses,
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+    className
+  );
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (link) {
@@ -191,7 +196,9 @@ const Button = ({
       ) : isIconButton && !loading ? (
         renderIcon(icon, label)
       ) : (
-        <span className={isIconButton ? "sr-only" : "truncate"}>
+        <span
+          className={isIconButton ? "sr-only" : "flex items-center truncate"}
+        >
           {children || label}
         </span>
       )}

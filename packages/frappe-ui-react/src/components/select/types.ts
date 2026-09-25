@@ -12,12 +12,17 @@ export interface SelectOption {
 export interface SelectProps {
   size?: SelectSize;
   variant?: SelectVariant;
-  disabled?: boolean;
-  value?: string;
   placeholder?: string;
+  disabled?: boolean;
+  htmlId?: string;
+  value?: string;
   options: (string | SelectOption)[];
+  className?: string;
+  placeholderClassName?: string;
+  matchTriggerWidth?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   prefix?: (args?: any) => ReactNode;
-  htmlId?: string;
+  suffix?: () => ReactNode;
+  option?: ({ option }: { option: SelectOption }) => ReactNode;
   onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }

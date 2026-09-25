@@ -1,34 +1,38 @@
+import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import type { StorybookConfig } from "@storybook/react-vite";
 import path, { dirname, join } from "path";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const require = createRequire(import.meta.url);
+const isProduction = process.env.NODE_ENV === "production";
 
 const config: StorybookConfig = {
-  stories:
-    process.env.NODE_ENV === "production"
-      ? [
-          "../*.mdx",
-          "../**/src/**/*.mdx",
-          "../**/src/**/!(*.interactions).stories.@(js|jsx|mjs|ts|tsx)",
-        ]
-      : [
-          "../*.mdx",
-          "../**/src/**/*.mdx",
-          "../**/src/**/*.stories.@(js|jsx|mjs|ts|tsx)",
-        ],
-  addons:
-    process.env.NODE_ENV === "production"
-      ? [
-          getAbsolutePath("@storybook/addon-docs"),
-          getAbsolutePath("@storybook/addon-themes"),
-        ]
-      : [
-          getAbsolutePath("@storybook/addon-docs"),
-          getAbsolutePath("@storybook/addon-a11y"),
-          getAbsolutePath("@storybook/addon-themes"),
-          getAbsolutePath("@storybook/addon-vitest"),
-        ],
+  stories: isProduction
+    ? [
+        "../*.mdx",
+        "../**/src/**/*.mdx",
+        "../**/src/**/!(*.interactions|*.dev).stories.@(js|jsx|mjs|ts|tsx)",
+      ]
+    : [
+        "../*.mdx",
+        "../**/src/**/*.mdx",
+        "../**/src/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+      ],
+  addons: isProduction
+    ? [
+        getAbsolutePath("@storybook/addon-docs"),
+        getAbsolutePath("@storybook/addon-themes"),
+      ]
+    : [
+        getAbsolutePath("@storybook/addon-mcp"),
+        getAbsolutePath("@storybook/addon-docs"),
+        getAbsolutePath("@storybook/addon-a11y"),
+        getAbsolutePath("@storybook/addon-themes"),
+        getAbsolutePath("@storybook/addon-vitest"),
+      ],
   framework: {
     name: getAbsolutePath("@storybook/react-vite"),
     options: {},
@@ -57,7 +61,7 @@ const config: StorybookConfig = {
     },
   },
   features: {
-    interactions: process.env.NODE_ENV !== "production",
+    interactions: !isProduction,
   },
 };
 export default config;
