@@ -13,6 +13,7 @@ export interface ColumnSelectorRowProps {
   reorderable?: boolean;
   removable?: boolean;
   pinnable?: boolean;
+  pinDisabled?: boolean;
   onRemove?: (column: SelectorColumn) => void;
   onTogglePinned?: (column: SelectorColumn) => void;
 }
@@ -23,10 +24,15 @@ export default function ColumnSelectorRow({
   reorderable = false,
   removable = true,
   pinnable = false,
+  pinDisabled = false,
   onRemove,
   onTogglePinned,
 }: ColumnSelectorRowProps) {
-  const pinLabel = column.pinned ? labels.unpin : labels.pin;
+  const pinLabel = pinDisabled
+    ? labels.pinLimit
+    : column.pinned
+      ? labels.unpin
+      : labels.pin;
   const {
     attributes,
     listeners,
@@ -68,11 +74,13 @@ export default function ColumnSelectorRow({
               variant="ghost"
               className={cn(
                 "h-5! w-5 p-1!",
-                column.pinned ? "text-ink-gray-8!" : "text-ink-gray-4!"
+                column.pinned ? "text-ink-gray-8!" : "text-ink-gray-4!",
+                pinDisabled && "cursor-not-allowed opacity-50"
               )}
               aria-label={`${pinLabel}: ${column.label}`}
               aria-pressed={!!column.pinned}
-              onClick={() => onTogglePinned?.(column)}
+              aria-disabled={pinDisabled}
+              onClick={() => !pinDisabled && onTogglePinned?.(column)}
             >
               {column.pinned ? (
                 <Unpin aria-hidden className="h-3.5 w-3.5" />

@@ -29,6 +29,8 @@ export type ColumnSelectorLabels = {
   pin: string;
   /** Pin toggle tooltip and `aria-label` prefix for a pinned column. */
   unpin: string;
+  /** Pin toggle tooltip once `ColumnSelectorProps.maxPinned` is reached. */
+  pinLimit: string;
 };
 
 /** Props for `ColumnSelector`. */
@@ -57,6 +59,11 @@ export interface ColumnSelectorProps {
    * @default false
    */
   pinnable?: boolean;
+  /**
+   * Pin toggles on unpinned rows are disabled once this many columns are
+   * pinned. Unlimited when omitted.
+   */
+  maxPinned?: number;
   /**
    * Remove buttons are hidden once `columns.length` reaches this count.
    * @default 1
