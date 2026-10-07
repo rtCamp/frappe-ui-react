@@ -14,7 +14,7 @@ export const TabPanel = ({ tabs, className }: TabPanelProps) => {
         <BaseUITabs.Panel
           key={tab.label}
           value={tab.label}
-          className="flex flex-1 flex-col overflow-y-auto focus:outline-none"
+          className="flex flex-1 flex-col focus:outline-none"
         >
           {tab.content}
         </BaseUITabs.Panel>

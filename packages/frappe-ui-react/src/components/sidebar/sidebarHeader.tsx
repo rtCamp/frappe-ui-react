@@ -1,13 +1,16 @@
 import React from "react";
 import Dropdown from "../dropdown/dropdown";
 import FeatherIcon from "../featherIcon";
+import type { DropdownOption } from "../dropdown";
+
+export type SidebarMenuItems = (DropdownOption & Record<string, unknown>)[];
 
 export type SidebarHeaderProps = {
   isCollapsed: boolean;
   title: string;
   subtitle?: string;
   logo?: React.ReactNode | string;
-  menuItems?: any[];
+  menuItems?: SidebarMenuItems;
   children?: React.ReactNode;
 };
 

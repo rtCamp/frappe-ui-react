@@ -1,13 +1,14 @@
 import { useMemo } from "react";
-import clsx from "clsx";
 
 import { Button } from "../button";
 import type { DividerProps } from "./types";
+import { cn } from "../../utils";
 
 const Divider = ({
   orientation = "horizontal",
   position = "center",
   flexItem = false,
+  className = "",
   action,
 }: DividerProps) => {
   const alignmentClasses = useMemo(() => {
@@ -38,12 +39,13 @@ const Divider = ({
 
   return action ? (
     <div
-      className={clsx(
+      className={cn(
         "relative whitespace-nowrap border-0 border-outline-gray-2",
-        alignmentClasses
+        alignmentClasses,
+        className
       )}
     >
-      <span className={clsx("absolute", actionAlignmentClasses)}>
+      <span className={cn("absolute", actionAlignmentClasses)}>
         <Button
           label={action.label}
           loading={action.loading}
@@ -55,9 +57,10 @@ const Divider = ({
     </div>
   ) : (
     <hr
-      className={clsx(
+      className={cn(
         "relative whitespace-nowrap border-0 border-outline-gray-2",
-        alignmentClasses
+        alignmentClasses,
+        className
       )}
     />
   );

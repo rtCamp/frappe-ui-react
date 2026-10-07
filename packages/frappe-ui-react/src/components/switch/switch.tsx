@@ -35,7 +35,7 @@ const Switch: React.FC<SwitchProps> = ({
   // Classes
   const switchClasses = [
     "relative inline-flex flex-shrink-0 cursor-pointer rounded-full border-transparent transition-colors duration-100 ease-in-out items-center",
-    "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-outline-gray-3",
+    "focus-visible:outline-2 focus-visible:outline-default",
     "disabled:cursor-not-allowed disabled:bg-surface-gray-3",
     value
       ? "bg-surface-gray-7 enabled:hover:bg-surface-gray-6 active:bg-surface-gray-5"
@@ -76,7 +76,7 @@ const Switch: React.FC<SwitchProps> = ({
     const classes = ["flex justify-between"];
     if (switchType === SwitchVariant.ONLY_LABEL) {
       classes.push(
-        "group items-center space-x-3 cursor-pointer rounded focus-visible:bg-surface-gray-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-outline-gray-3"
+        "group items-center space-x-3 cursor-pointer rounded focus-visible:bg-surface-gray-2 focus-visible:outline-2 focus-visible:outline-default"
       );
       classes.push(
         disabled

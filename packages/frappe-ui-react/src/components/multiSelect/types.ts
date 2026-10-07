@@ -15,10 +15,18 @@ export interface MultiSelectProps {
   options: MultiSelectOption[];
   /** Placeholder text when no options are selected */
   placeholder?: string;
+  /** Fixed label always shown in the trigger button, overriding the selected values summary */
+  triggerLabel?: string;
+  /** Additional class names for the trigger button */
+  triggerClassName?: string;
   /** Hide the search input in the dropdown */
   hideSearch?: boolean;
+  /** Controlled open state for the popup */
+  open?: boolean;
   /** Show loading indicator */
   loading?: boolean;
+  /** Called when the popup open state changes */
+  onOpenChange?: (open: boolean) => void;
   /** Custom comparison function for option equality */
   compareFn?: (
     a: NoInfer<MultiSelectOption | null>,
@@ -33,4 +41,12 @@ export interface MultiSelectProps {
     clearAll: () => void;
     selectAll: () => void;
   }) => ReactNode;
+  /** Controlled search text. */
+  searchValue?: string;
+  /** Called when the search text changes. */
+  onSearchChange?: (value: string) => void;
+  /** Additional class names for the positioner */
+  positionerClassName?: string;
+  /** Additional class names for the popup */
+  popupClassName?: string;
 }

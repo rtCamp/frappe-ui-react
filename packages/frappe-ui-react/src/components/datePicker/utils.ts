@@ -1,4 +1,5 @@
 import { dayjs } from "../../utils/dayjs";
+import type { PopoverSide, PopoverAlign } from "./types";
 
 type DateConstructorParam = string | number | Date;
 
@@ -68,4 +69,17 @@ export function isLeapYear(year: number) {
   if (year % 100 === 0) return false;
   if (year % 4 === 0) return true;
   return false;
+}
+
+// Parses placement string like "bottom-end" into side and align.
+// This is for backwards compatibility, as older versions of date picker used popperjs.
+export function parsePlacement(placement?: string): {
+  side: PopoverSide;
+  align: PopoverAlign;
+} {
+  if (!placement) return { side: "bottom", align: "start" };
+  const parts = placement.split("-");
+  const side = (parts[0] as PopoverSide) || "bottom";
+  const align = (parts[1] as PopoverAlign) || "center";
+  return { side, align };
 }

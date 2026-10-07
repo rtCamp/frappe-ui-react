@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Combobox } from "./index";
@@ -32,6 +32,27 @@ const meta: Meta<typeof Combobox> = {
       control: "boolean",
       description: "Whether the combobox is disabled",
     },
+    openOnFocus: {
+      control: "boolean",
+      description:
+        "Whether the popup should open when the input receives focus",
+    },
+    searchValue: {
+      control: "text",
+      description: "Controlled search text shown in the combobox input",
+    },
+    onSearchChange: {
+      action: "searchChanged",
+      description: "Event handler called when the search text changes",
+    },
+    loading: {
+      control: "boolean",
+      description: "Whether externally managed options are still loading",
+    },
+    emptyMessage: {
+      control: "text",
+      description: "Custom message to show when no options are available",
+    },
     onChange: {
       action: "changed",
       description: "Event handler called when the selected value changes",
@@ -39,6 +60,11 @@ const meta: Meta<typeof Combobox> = {
     className: {
       control: "text",
       description: "Additional CSS classes to apply to the combobox container",
+    },
+    tooltipOnTruncate: {
+      control: "boolean",
+      description:
+        "Show a tooltip with the full option label on hover, only when the label is truncated",
     },
   },
 };
@@ -136,6 +162,13 @@ const complexObjects = [
   },
 ];
 
+const directoryOptions = [
+  { label: "John Doe", value: "john-doe" },
+  { label: "Jane Smith", value: "jane-smith" },
+  { label: "Bob Johnson", value: "bob-johnson" },
+  { label: "Alice Brown", value: "alice-brown" },
+];
+
 export const SimpleStringOptions: Story = {
   args: {
     options: simpleOptions,
@@ -144,7 +177,7 @@ export const SimpleStringOptions: Story = {
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState<string | null>("");
+    const [val, setVal] = useState<string | null>("");
     return (
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">Simple Options</label>
@@ -165,7 +198,7 @@ export const ObjectOptions: Story = {
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState<string | null>("");
+    const [val, setVal] = useState<string | null>("");
     return (
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">Object Options</label>
@@ -187,7 +220,7 @@ export const WithIcons: Story = {
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState<string | null>("");
+    const [val, setVal] = useState<string | null>("");
     return (
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">
@@ -211,11 +244,39 @@ export const Grouped: Story = {
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState<string | null>("");
+    const [val, setVal] = useState<string | null>("");
     return (
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">
           Grouped Options
+        </label>
+        <Combobox {...args} value={val} onChange={setVal} />
+        <div className="mt-2 text-sm text-gray-600">
+          Selected: {val || "None"}
+        </div>
+      </div>
+    );
+  },
+};
+
+export const TooltipOnTruncate: Story = {
+  name: "Tooltip on Truncated Options",
+  args: {
+    options: [
+      "A very long project name that will definitely get truncated in the dropdown list",
+      { label: "Short name", value: "short" },
+    ],
+    value: "",
+    placeholder: "Select a project...",
+    onChange: () => {},
+    tooltipOnTruncate: true,
+  },
+  render: (args) => {
+    const [val, setVal] = useState<string | null>("");
+    return (
+      <div className="flex w-80 flex-col">
+        <label className="mb-2 block text-sm font-medium">
+          Tooltip on Truncated Options
         </label>
         <Combobox {...args} value={val} onChange={setVal} />
         <div className="mt-2 text-sm text-gray-600">
@@ -253,7 +314,7 @@ export const PreselectedValue: Story = {
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState<string | null>("john-doe");
+    const [val, setVal] = useState<string | null>("john-doe");
     return (
       <div className="flex flex-col w-80">
         <label className="block text-sm font-medium mb-2">
@@ -293,7 +354,7 @@ export const ComplexObject: Story = {
     onChange: () => {},
   },
   render: (args) => {
-    const [val, setVal] = React.useState<string | null>("");
+    const [val, setVal] = useState<string | null>("");
     const selected = complexObjects.find((o) => o.value === val);
     return (
       <div className="flex flex-col w-80">
@@ -309,6 +370,73 @@ export const ComplexObject: Story = {
               <div>Role: {selected.role}</div>
             </div>
           )}
+        </div>
+      </div>
+    );
+  },
+};
+
+export const ControlledSearch: Story = {
+  args: {
+    options: directoryOptions,
+    value: "",
+    placeholder: "Search people...",
+    openOnFocus: true,
+    onChange: () => {},
+  },
+  render: (args) => {
+    const [value, setValue] = useState<string | null>("");
+    const [searchValue, setSearchValue] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [options, setOptions] =
+      useState<typeof directoryOptions>(directoryOptions);
+
+    useEffect(() => {
+      let cancelled = false;
+
+      setLoading(true);
+
+      const timeoutId = window.setTimeout(() => {
+        if (cancelled) {
+          return;
+        }
+
+        const normalizedSearch = searchValue.trim().toLowerCase();
+        setOptions(
+          normalizedSearch
+            ? directoryOptions.filter((option) =>
+                option.label.toLowerCase().includes(normalizedSearch)
+              )
+            : directoryOptions
+        );
+        setLoading(false);
+      }, 400);
+
+      return () => {
+        cancelled = true;
+        window.clearTimeout(timeoutId);
+      };
+    }, [searchValue]);
+
+    return (
+      <div className="flex w-80 flex-col">
+        <label className="mb-2 block text-sm font-medium">
+          Controlled Search
+        </label>
+        <Combobox
+          {...args}
+          options={options}
+          value={value}
+          searchValue={searchValue}
+          loading={loading}
+          onSearchChange={setSearchValue}
+          onChange={(nextValue) => {
+            setValue(nextValue);
+            args.onChange?.(nextValue);
+          }}
+        />
+        <div className="mt-2 text-sm text-gray-600">
+          Selected: {value || "None"}
         </div>
       </div>
     );

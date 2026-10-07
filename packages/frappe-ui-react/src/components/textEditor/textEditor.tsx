@@ -2,126 +2,171 @@
  * External dependencies.
  */
 import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { TaskItem, TaskList } from "@tiptap/extension-list";
-import TextAlign from "@tiptap/extension-text-align";
-import Blockquote from "@tiptap/extension-blockquote";
-import Highlight from "@tiptap/extension-highlight";
-import { TextStyleKit } from "@tiptap/extension-text-style";
-import HorizontalRule from "@tiptap/extension-horizontal-rule";
-import Strike from "@tiptap/extension-strike";
-import Placeholder from "@tiptap/extension-placeholder";
-import { TableKit } from "@tiptap/extension-table";
-import clsx from "clsx";
+import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
+import { forwardRef, useImperativeHandle } from "react";
 
 /**
  * Internal dependencies.
  */
 import "./textEditor.css";
-import { normalizeClasses } from "../../utils";
-import type { TextEditorProps } from "./types";
+import type { TextEditorHandle, TextEditorProps } from "./types";
 import FixedMenu from "./menu/fixedMenu";
-import { ExtendedCodeBlock } from "./extension/codeBlock";
+import { cn } from "../../utils";
+import {
+  DEFAULT_EDITOR_CLASS,
+  EMPTY_EXTENSIONS,
+  EMPTY_EXTENSION_OPTIONS,
+  EMPTY_STARTERKIT_OPTIONS,
+} from "./editorConfig";
+import { useTextEditorExtensions } from "./useTextEditorExtensions";
+import {
+  findIdentifiedBulletListEnd,
+  findListItemById,
+  isDocEmpty,
+} from "./extension/utils";
 
-const TextEditor = ({
-  content,
-  placeholder = "",
-  editorClass = "",
-  editable = true,
-  autofocus = false,
-  extensions = [],
-  starterkitOptions = {},
-  fixedMenu = false,
-  onChange,
-  onFocus,
-  onBlur,
-  onTransaction,
-  Top,
-  Editor,
-  Bottom,
-}: TextEditorProps) => {
-  const editor = useEditor(
+const TextEditor = forwardRef<TextEditorHandle, TextEditorProps>(
+  function TextEditor(
     {
       content,
-      editable,
-      autofocus,
-      editorProps: {
-        attributes: {
-          class: clsx(
-            "prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-outline-gray-2 prose-th:border-outline-gray-2 prose-td:relative prose-th:relative prose-th:bg-surface-gray-2 border-outline-gray-1",
-            normalizeClasses(editorClass)
-          ),
-        },
-      },
-      extensions: [
-        StarterKit.configure({
-          codeBlock: false,
-          horizontalRule: {
-            HTMLAttributes: {
-              class: "not-prose border-outline-gray-1 m-0",
-            },
-          },
-          ...starterkitOptions,
-        }),
-        Placeholder.configure({
-          placeholder:
-            typeof placeholder === "function" ? placeholder() : placeholder,
-        }),
-        TaskList,
-        TaskItem.configure({
-          nested: true,
-        }),
-        TextAlign.configure({
-          types: ["heading", "paragraph"],
-        }),
-        TextStyleKit,
-        Highlight.configure({ multicolor: true }),
-        Strike,
-        Blockquote,
-        TableKit,
-        HorizontalRule.configure({
-          HTMLAttributes: {
-            class: "not-prose border-outline-gray-1 m-0",
-          },
-        }),
-        ExtendedCodeBlock,
-        ...extensions,
-      ],
-      onUpdate: ({ editor }) => {
-        onChange?.(editor.getHTML());
-      },
-      onFocus: ({ event }) => {
-        onFocus?.(event);
-      },
-      onBlur: ({ event }) => {
-        onBlur?.(event);
-      },
-      onTransaction: ({ editor }) => {
-        onTransaction?.(editor);
-      },
-    },
-    [
-      content,
-      editable,
-      autofocus,
-      editorClass,
-      starterkitOptions,
-      extensions,
+      placeholder = "",
+      editorClass = "",
+      editable = true,
+      autofocus = false,
+      extensions = EMPTY_EXTENSIONS,
+      starterkitOptions = EMPTY_STARTERKIT_OPTIONS,
+      extensionOptions = EMPTY_EXTENSION_OPTIONS,
+      fixedMenu = false,
+      mentions,
+      mentionsItemRenderer,
       onChange,
       onFocus,
       onBlur,
       onTransaction,
-    ]
-  );
+      Top,
+      Editor,
+      Bottom,
+    },
+    ref
+  ) {
+    const editorExtensions = useTextEditorExtensions({
+      extensions,
+      starterkitOptions,
+      placeholder,
+      extensionOptions,
+      mentions,
+      mentionsItemRenderer,
+    });
 
-  return (
-    <EditorContext.Provider value={{ editor }}>
-      {Top && <Top />}
-      {fixedMenu && <FixedMenu />}
-      {Editor ? <Editor editor={editor} /> : <EditorContent editor={editor} />}
-      {Bottom && <Bottom />}
-    </EditorContext.Provider>
-  );
-};
+    const editor = useEditor(
+      {
+        content,
+        editable,
+        autofocus,
+        editorProps: {
+          attributes: {
+            class: cn(DEFAULT_EDITOR_CLASS, editorClass),
+          },
+          clipboardTextSerializer: (slice) =>
+            slice.content.textBetween(0, slice.content.size, "\n"),
+        },
+        extensions: editorExtensions,
+        onUpdate: ({ editor }) => {
+          onChange?.(editor.getHTML());
+        },
+        onFocus: ({ event }) => {
+          onFocus?.(event);
+        },
+        onBlur: ({ event }) => {
+          onBlur?.(event);
+        },
+        onTransaction: ({ editor }) => {
+          onTransaction?.(editor);
+        },
+      },
+      [editable, autofocus, editorClass, editorExtensions]
+    );
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        addListItem: (id, text) => {
+          if (!editor) return;
+
+          const listItemContent = {
+            type: "listItem",
+            attrs: { itemId: id },
+            content: [
+              {
+                type: "paragraph",
+                content: text ? [{ type: "text", text }] : [],
+              },
+            ],
+          };
+
+          const listEndPos = findIdentifiedBulletListEnd(editor);
+
+          if (listEndPos !== null) {
+            editor.chain().insertContentAt(listEndPos, listItemContent).run();
+          } else {
+            const { doc } = editor.state;
+
+            // On a blank editor, replace the placeholder paragraph instead of
+            // inserting after it - otherwise the list ends up under a stray
+            // leading blank line.
+            const range = isDocEmpty(editor)
+              ? { from: 0, to: doc.content.size }
+              : { from: doc.content.size, to: doc.content.size };
+
+            editor
+              .chain()
+              .insertContentAt(range, {
+                type: "bulletList",
+                content: [listItemContent],
+              })
+              .run();
+          }
+        },
+        removeListItem: (id) => {
+          if (!editor) return;
+
+          const found = findListItemById(editor, id);
+          if (!found) return;
+
+          const itemPos: number = found.pos;
+          const itemNode: ProseMirrorNode = found.node;
+          const parent = editor.state.doc.resolve(itemPos).parent;
+
+          if (parent.type.name === "bulletList" && parent.childCount === 1) {
+            const listStart = editor.state.doc.resolve(itemPos).before();
+            editor
+              .chain()
+              .deleteRange({ from: listStart, to: listStart + parent.nodeSize })
+              .run();
+          } else {
+            editor
+              .chain()
+              .deleteRange({ from: itemPos, to: itemPos + itemNode.nodeSize })
+              .run();
+          }
+        },
+      }),
+      [editor]
+    );
+
+    return (
+      <EditorContext.Provider value={{ editor }}>
+        {Top && <Top />}
+        {fixedMenu && <FixedMenu />}
+        {Editor ? (
+          <Editor editor={editor} />
+        ) : (
+          <EditorContent editor={editor} />
+        )}
+        {Bottom && <Bottom />}
+      </EditorContext.Provider>
+    );
+  }
+);
 
 export default TextEditor;

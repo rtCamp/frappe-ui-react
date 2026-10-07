@@ -199,36 +199,42 @@ export const SearchOptions: Story = {
 
     // Find search input
     const searchInput = await screen.findByPlaceholderText("Search for...");
-    expect(searchInput).toBeInTheDocument();
-
-    // Type in search
     await userEvent.type(searchInput, "ber");
 
-    // Elderberry should be visible
-    const elderberryOption = screen.getByText("Elderberry");
-    expect(elderberryOption).toBeInTheDocument();
+    const elderberryOption = await screen.findByRole("option", {
+      name: "Elderberry",
+    });
+    expect(
+      screen.queryByRole("option", { name: "Apple" })
+    ).not.toBeInTheDocument();
 
-    // Apple should not be visible
-    const appleOption = screen.queryByText("Apple");
-    expect(appleOption).not.toBeInTheDocument();
+    // Picking an option must not wipe the query or the results behind it
+    await userEvent.click(elderberryOption);
+
+    expect(searchInput).toHaveValue("ber");
+    expect(
+      screen.queryByRole("option", { name: "Apple" })
+    ).not.toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(trigger).toHaveTextContent("Elderberry");
+    });
 
     // Type search that has no results
     await userEvent.type(searchInput, "xyz123");
 
-    // Verify "No results found" message appears
-    const noResultsMessage = await screen.findByText("No results found");
-    expect(noResultsMessage).toBeInTheDocument();
+    expect(await screen.findByText("No results found")).toBeInTheDocument();
 
-    // Find and click the clear button
-    const clearButton = await screen.findByRole("button", {
-      name: /clear search/i,
-    });
-    expect(clearButton).toBeInTheDocument();
+    // The clear button drops the query only, never the selection
+    await userEvent.click(
+      await screen.findByRole("button", { name: /clear search/i })
+    );
 
-    await userEvent.click(clearButton as HTMLElement);
-
-    // Verify search input is cleared
     expect(searchInput).toHaveValue("");
+    expect(
+      await screen.findByRole("option", { name: "Apple" })
+    ).toBeInTheDocument();
+    expect(trigger).toHaveTextContent("Elderberry");
   },
 };
 
@@ -272,6 +278,58 @@ export const FooterButtons: Story = {
 
     // Verify all options are cleared
     expect(trigger).toHaveTextContent("Select fruits");
+  },
+};
+
+export const ServerSearch: Story = {
+  name: "Server search",
+  args: {
+    options,
+    value: [],
+    placeholder: "Select fruits",
+  },
+  render: function Render(args) {
+    const [value, setValue] = useState<string[]>(args.value as string[]);
+    const [query, setQuery] = useState("");
+
+    const serverFiltered = options.filter((option) =>
+      option.label.toLowerCase().includes(query.trim().toLowerCase())
+    );
+
+    return (
+      <div className="w-112.5">
+        <MultiSelect
+          {...args}
+          options={serverFiltered}
+          value={value}
+          onChange={setValue}
+          searchValue={query}
+          onSearchChange={setQuery}
+          loading={false}
+        />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    const trigger = canvas.getByRole("combobox");
+    await userEvent.click(trigger);
+
+    const searchInput = await screen.findByPlaceholderText("Search for...");
+    await userEvent.type(searchInput, "ap");
+
+    const appleOption = await screen.findByRole("option", { name: "Apple" });
+    expect(appleOption).toBeInTheDocument();
+
+    const grapeOption = screen.queryByRole("option", { name: "Grape" });
+    expect(grapeOption).not.toBeInTheDocument();
+
+    await userEvent.click(appleOption);
+
+    await waitFor(() => {
+      expect(trigger).toHaveTextContent("Apple");
+    });
   },
 };
 
@@ -479,7 +537,7 @@ export const CompareFn: Story = {
     await userEvent.click(trigger);
 
     // Select Banana
-    const bananaOption = screen.getByText("Banana");
+    const bananaOption = await screen.findByText("Banana");
     await userEvent.click(bananaOption);
 
     await waitFor(() => {

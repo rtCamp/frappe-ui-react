@@ -11,11 +11,11 @@ export default {
   tags: ["autodocs"],
   argTypes: {
     size: {
-      control: { type: "select", options: ["sm", "md", "lg"] },
+      control: { type: "select", options: ["sm", "md", "lg", "xl"] },
       description: "Size of the select input",
     },
     variant: {
-      control: { type: "select", options: ["outline", "subtle"] },
+      control: { type: "select", options: ["subtle", "outline", "ghost"] },
       description: "Visual variant of the select input",
     },
     disabled: {
@@ -33,11 +33,17 @@ export default {
     options: {
       control: "object",
       description:
-        "Array of options to display in the dropdown, each with a label and value",
+        "Options to display in the dropdown. Accepts either an object with a label and value, or a plain string used as both",
     },
     prefix: {
       control: false,
-      description: "Element to display before the selected value",
+      description:
+        "Render function for an element before the selected value. Receives the current size",
+    },
+    suffix: {
+      control: false,
+      description:
+        "Render function for an element after the selected value. Defaults to the chevron indicator",
     },
     htmlId: {
       control: "text",
@@ -45,46 +51,150 @@ export default {
     },
     onChange: {
       action: "changed",
-      description: "Callback function when the selected value changes",
+      description:
+        "Callback fired with a change event whose target.value is the selected value",
+    },
+    matchTriggerWidth: {
+      control: "boolean",
+      description:
+        "If true, constrains the dropdown width to match the trigger width",
     },
   },
 } as Meta<typeof Select>;
 
-const Template: StoryObj<SelectProps> = {
+const OPTIONS = [
+  {
+    label: "Matcha Tiramisu",
+    value: "matcha-tiramisu",
+  },
+  {
+    label: "Strawberry Cheesecake",
+    value: "strawberry-cheesecake",
+  },
+  {
+    label: "Chocolate Lava Cake",
+    value: "chocolate-lava-cake",
+  },
+  {
+    label: "Mango Sticky Rice",
+    value: "mango-sticky-rice",
+    disabled: true,
+  },
+  {
+    label: "Pistachio Baklava",
+    value: "pistachio-baklava",
+  },
+  {
+    label: "Ube Ice Cream",
+    value: "ube-ice-cream",
+  },
+  {
+    label: "Salted Caramel Tart",
+    value: "salted-caramel-tart",
+  },
+];
+
+export const Default: StoryObj<SelectProps> = {
   args: {
     value: "",
-    options: [
-      { label: "John Doe", value: "john-doe" },
-      { label: "Jane Doe", value: "jane-doe" },
-      { label: "John Smith", value: "john-smith" },
-      { label: "Jane Smith", value: "jane-smith", disabled: true },
-      { label: "John Wayne", value: "john-wayne" },
-      { label: "Jane Wayne", value: "jane-wayne" },
-    ],
+    options: OPTIONS,
+    placeholder: "Select option",
   },
   render: (args) => {
     const [value, setValue] = useState(args.value || "");
 
     return (
-      <div className="p-4 w-[300px]">
-        <Select
-          {...args}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
-      </div>
+      <Select
+        {...args}
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+      />
     );
   },
 };
 
-export const Default = {
-  ...Template,
+export const WithPrefix: StoryObj<SelectProps> = {
+  args: {
+    value: "",
+    options: OPTIONS,
+    placeholder: "Select option",
+    prefix: () => <User size={16} className="text-ink-gray-9" />,
+  },
+  render: (args) => {
+    const [value, setValue] = useState(args.value || "");
+
+    return (
+      <Select
+        {...args}
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+      />
+    );
+  },
 };
 
-export const WithPrefix = {
-  ...Template,
+export const WithSuffix: StoryObj<SelectProps> = {
   args: {
-    ...Template.args,
-    prefix: () => <User size={16} className="text-ink-gray-9" />,
+    value: "",
+    options: OPTIONS,
+    placeholder: "Select option",
+    suffix: () => <User size={16} className="text-ink-gray-9" />,
+  },
+  render: (args) => {
+    const [value, setValue] = useState(args.value || "");
+
+    return (
+      <Select
+        {...args}
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+      />
+    );
+  },
+};
+
+export const WithMatchTriggerWidth: StoryObj<SelectProps> = {
+  args: {
+    value: "",
+    options: OPTIONS,
+    placeholder: "Select option",
+    matchTriggerWidth: true,
+    className: "w-40",
+  },
+  render: (args) => {
+    const [value, setValue] = useState(args.value || "");
+
+    return (
+      <Select
+        {...args}
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+      />
+    );
+  },
+};
+
+export const WithOptionSlot: StoryObj<SelectProps> = {
+  args: {
+    value: "",
+    options: OPTIONS,
+    placeholder: "Select option",
+    option: ({ option }) => (
+      <div className="flex items-center gap-2">
+        <User size={16} className="text-ink-gray-9" />
+        <span>{option.label}</span>
+      </div>
+    ),
+  },
+  render: (args) => {
+    const [value, setValue] = useState(args.value || "");
+
+    return (
+      <Select
+        {...args}
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+      />
+    );
   },
 };

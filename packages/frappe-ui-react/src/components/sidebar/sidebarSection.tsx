@@ -1,12 +1,19 @@
 import React, { useState } from "react";
-import SidebarItem from "./sidebarItem";
 import { LucideChevronDown } from "lucide-react";
+import { Collapsible } from "@base-ui/react/collapsible";
+
+import { cn } from "../../utils";
+import SidebarSectionItem, { type SidebarItem } from "./sidebarSectionItem";
+
+export type { SidebarItem, SidebarItemState } from "./sidebarSectionItem";
 
 export type SidebarSectionProps = {
   label?: string;
-  items: any[];
+  items: SidebarItem[];
   collapsible?: boolean;
   sidebarCollapsed: boolean;
+  activeItemClassName?: string;
+  defaultOpen?: boolean;
 };
 
 const SidebarSection: React.FC<SidebarSectionProps> = ({
@@ -14,59 +21,88 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
   items,
   collapsible,
   sidebarCollapsed,
+  activeItemClassName,
+  defaultOpen = true,
 }) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
 
-  return (
-    <div className="flex flex-col mt-2">
-      {label && (
-        <div
-          className={`relative flex items-center gap-1 px-2 py-1.5 ${
-            collapsible ? "cursor-pointer" : ""
-          }`}
-          onClick={() => (collapsible ? setCollapsed(!collapsed) : undefined)}
-        >
-          <h3
-            className={`h-4 text-sm text-ink-gray-5 transition-all duration-300 ease-in-out ${
-              sidebarCollapsed
-                ? "w-0 overflow-hidden opacity-0"
-                : "w-auto opacity-100"
-            }`}
-          >
-            {label}
-          </h3>
-          {collapsible && !sidebarCollapsed && (
-            <span
-              className={`w-4 h-4 text-ink-gray-5 transition-all duration-300 ease-in-out ${
-                !collapsed ? "" : "-rotate-90"
-              }`}
-            >
-              <LucideChevronDown size={16} className="text-ink-gray-6" />
-            </span>
-          )}
-          {sidebarCollapsed && (
-            <div
-              className={`absolute top-0 left-0 flex h-full w-full items-center justify-center transition-all duration-300 ease-in-out ${
-                sidebarCollapsed ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              <hr className="w-full border-t border-gray-200" />
-            </div>
-          )}
-        </div>
-      )}
-      {/* Collapsible nav */}
-      <nav className="space-y-0.5 flex flex-col align-start justify-between">
-        {items.map((item: any) => (
-          <SidebarItem
+  if (!collapsible) {
+    return (
+      <div className="flex flex-col mt-2">
+        {label && !sidebarCollapsed && (
+          <h3 className="px-4 py-1.5 text-sm text-ink-gray-6">{label}</h3>
+        )}
+        {items.map((item) => (
+          <SidebarSectionItem
             key={item.label}
-            {...item}
-            isCollapsed={collapsed}
+            item={item}
             sidebarCollapsed={sidebarCollapsed}
+            activeItemClassName={activeItemClassName}
+            indentClassName="px-2"
           />
         ))}
-      </nav>
-    </div>
+      </div>
+    );
+  }
+
+  return (
+    <Collapsible.Root
+      className="flex flex-col mt-2"
+      open={open || sidebarCollapsed}
+      onOpenChange={setOpen}
+    >
+      <Collapsible.Trigger
+        className={cn(
+          "relative flex items-center gap-1 px-4 py-1.5 cursor-pointer rounded-md focus-visible:outline-2 focus-visible:outline-default text-ink-gray-6",
+          {
+            hidden: sidebarCollapsed,
+          }
+        )}
+      >
+        {!sidebarCollapsed && (
+          <span
+            className={`w-4 h-4 transition-all duration-300 ease-in-out ${
+              open ? "" : "-rotate-90"
+            }`}
+          >
+            <LucideChevronDown size={16} color="currentColor" />
+          </span>
+        )}
+        {sidebarCollapsed && (
+          <div
+            className={`absolute top-0 left-0 flex h-full w-full items-center justify-center transition-all duration-300 ease-in-out ${
+              sidebarCollapsed ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <hr className="w-full border-t border-gray-200" />
+          </div>
+        )}
+        <h3
+          className={`h-4 text-sm transition-all duration-300 ease-in-out ${
+            sidebarCollapsed
+              ? "w-0 overflow-hidden opacity-0"
+              : "w-auto opacity-100"
+          }`}
+        >
+          {label}
+        </h3>
+      </Collapsible.Trigger>
+      <Collapsible.Panel
+        className={cn(
+          "space-y-0.5 flex flex-col align-start justify-between transition-all duration-150"
+        )}
+      >
+        {items.map((item) => (
+          <SidebarSectionItem
+            key={item.label}
+            item={item}
+            sidebarCollapsed={sidebarCollapsed}
+            activeItemClassName={activeItemClassName}
+            indentClassName="pl-6 pr-2"
+          />
+        ))}
+      </Collapsible.Panel>
+    </Collapsible.Root>
   );
 };
 

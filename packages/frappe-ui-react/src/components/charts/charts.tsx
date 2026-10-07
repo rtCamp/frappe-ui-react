@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { init, type ECharts } from "echarts";
-import "echarts/theme/rainbow";
+import "echarts/theme/rainbow.js";
 
 import { debounce } from "../../utils/debounce";
 import type { ChartsWrapperProps } from "./types";

@@ -47,7 +47,7 @@ const ListViewFooter = ({ left, right, onLoadMore }: ListViewFooterProps) => {
       ) : (
         <TabButtons
           value={pageLength}
-          onChange={setPageLength as (value: string | number) => void}
+          onChange={(val) => setPageLength(Number(val))}
           buttons={pageLengthOptions}
         />
       )}

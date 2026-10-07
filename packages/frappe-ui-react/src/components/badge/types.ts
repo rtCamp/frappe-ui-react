@@ -8,4 +8,5 @@ export interface BadgeProps {
   prefix?: ReactNode;
   suffix?: ReactNode;
   children?: ReactNode;
+  className?: string;
 }

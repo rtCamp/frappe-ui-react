@@ -1,7 +1,15 @@
-import React, { useMemo } from "react";
-import type { TooltipProps } from "./types";
+/**
+ * External dependencies.
+ */
+import React, { useCallback, useId, useMemo, useRef, useState } from "react";
 import { Tooltip } from "@base-ui/react/tooltip";
 import clsx from "clsx";
+
+/**
+ * Internal dependencies.
+ */
+import type { TooltipProps } from "./types";
+import { isTextTruncated } from "./utils";
 
 const TooltipComponent: React.FC<TooltipProps> = ({
   children,
@@ -11,8 +19,52 @@ const TooltipComponent: React.FC<TooltipProps> = ({
   hoverDelay = 0.5,
   arrowClass = "fill-surface-gray-7",
   disabled = false,
+  showWhen = "always",
+  truncationRef,
 }) => {
   const delayDuration = useMemo(() => hoverDelay * 1000, [hoverDelay]);
+  const triggerRef = useRef<HTMLElement | null>(null);
+  const triggerId = useId();
+  const [open, setOpen] = useState(false);
+
+  const setTriggerRef = useCallback((node: HTMLElement | null) => {
+    triggerRef.current = node;
+  }, []);
+
+  const shouldShow = useCallback(() => {
+    if (showWhen !== "truncated") {
+      return true;
+    }
+
+    return isTextTruncated(truncationRef?.current ?? triggerRef.current);
+  }, [showWhen, truncationRef]);
+
+  const handleOpenChange = useCallback(
+    (nextOpen: boolean, eventDetails: Tooltip.Root.ChangeEventDetails) => {
+      if (nextOpen && !shouldShow()) {
+        eventDetails.cancel();
+        return;
+      }
+
+      setOpen(nextOpen);
+    },
+    [shouldShow]
+  );
+
+  // Touch fires no hover, and a tap never matches `:focus-visible`, so Base UI
+  // skips both of its open paths: hover is `mouseOnly` and focus is gated on
+  // focus-visible. Opening on the touch pointer is what makes a tooltip
+  // reachable without a mouse.
+  const handlePointerDown = useCallback(
+    (event: React.PointerEvent<HTMLElement>) => {
+      if (event.pointerType !== "touch" || !shouldShow()) {
+        return;
+      }
+
+      setOpen(true);
+    },
+    [shouldShow]
+  );
 
   const tooltipContent = useMemo(() => {
     if (body) {
@@ -36,11 +88,25 @@ const TooltipComponent: React.FC<TooltipProps> = ({
 
   return (
     <Tooltip.Provider delay={delayDuration}>
-      <Tooltip.Root>
-        <Tooltip.Trigger render={children as React.ReactElement} />
+      <Tooltip.Root
+        open={open}
+        onOpenChange={handleOpenChange}
+        triggerId={triggerId}
+      >
+        <Tooltip.Trigger
+          id={triggerId}
+          ref={setTriggerRef}
+          closeOnClick={false}
+          onPointerDown={handlePointerDown}
+          render={children as React.ReactElement}
+        />
         <Tooltip.Portal>
           {tooltipContent && (
-            <Tooltip.Positioner side={placement} sideOffset={4}>
+            <Tooltip.Positioner
+              side={placement}
+              sideOffset={4}
+              className="z-[100]"
+            >
               <Tooltip.Popup
                 data-testid="tooltip-popup"
                 className="z-[100] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade select-none rounded-lg shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] will-change-[transform,opacity]"

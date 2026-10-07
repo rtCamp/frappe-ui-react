@@ -3,12 +3,19 @@ import { ListContext } from "./listContext";
 import { Checkbox } from "../checkbox";
 import ListHeaderItem from "./listHeaderItem";
 import { getGridTemplateColumns } from "./utils";
+import { cn } from "../../utils";
 
-interface ListHeaderProps {
+interface ListHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
+  className?: string;
 }
 
-const ListHeader: React.FC<ListHeaderProps> = ({ children }) => {
+const ListHeader: React.FC<ListHeaderProps> = ({
+  children,
+  className,
+  style,
+  ...attrs
+}) => {
   const { options: list } = useContext(ListContext);
 
   if (!list) {
@@ -22,8 +29,12 @@ const ListHeader: React.FC<ListHeaderProps> = ({ children }) => {
 
   return (
     <div
-      className="mb-2 grid items-center rounded bg-surface-gray-2 p-2 gap-2"
-      style={{ gridTemplateColumns }}
+      {...attrs}
+      className={cn(
+        "mb-2 grid items-center rounded bg-surface-gray-2 p-2 gap-2",
+        className
+      )}
+      style={{ ...style, gridTemplateColumns }}
     >
       {list.options.selectable && (
         <Checkbox value={list.allRowsSelected} onChange={list.toggleAllRows} />

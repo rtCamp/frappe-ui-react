@@ -5,7 +5,7 @@ import ListView from "./listView";
 import { Avatar } from "../avatar";
 import { Badge } from "../badge";
 import { Button } from "../button";
-import FeatherIcon from "../featherIcon";
+import FeatherIcon, { type FeatherIconProps } from "../featherIcon";
 import ListHeader from "./listHeader";
 import ListHeaderItem from "./listHeaderItem";
 import ListRow from "./listRow";
@@ -18,8 +18,8 @@ const simple_columns = [
     label: "Name",
     key: "name",
     width: 3,
-    getLabel: ({ row }) => row.name,
-    prefix: ({ row }) => (
+    getLabel: ({ row }: { row: { name: string } }) => row.name,
+    prefix: ({ row }: { row: { user_image: string; name: string } }) => (
       <Avatar
         shape="circle"
         image={row.user_image}
@@ -323,7 +323,10 @@ export const CustomList: Story = {
                       index === 0 ? "ml-4" : ""
                     }`}
                   >
-                    <FeatherIcon name={column.icon} className="h-4 w-4" />
+                    <FeatherIcon
+                      name={column.icon as FeatherIconProps["name"]}
+                      className="h-4 w-4"
+                    />
                     <span>{column.label}</span>
                   </div>
                 </ListHeaderItem>

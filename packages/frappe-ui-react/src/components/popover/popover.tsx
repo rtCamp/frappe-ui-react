@@ -191,21 +191,23 @@ const Popover: React.FC<PopoverProps> = ({
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
       const clickedElement = event.target as HTMLElement;
+      // composedPath() is fixed at dispatch start, so it still holds the
+      // popover body when the click handler unmounted the clicked element
+      // before the event reached document.
+      const path = event.composedPath();
       const reference = referenceRef.current;
       const popoverBody = popperRef.current;
 
       const insideClick =
-        clickedElement === reference ||
-        clickedElement === popoverBody ||
-        reference?.contains(clickedElement) ||
-        popoverBody?.contains(clickedElement);
+        (reference && path.includes(reference)) ||
+        (popoverBody && path.includes(popoverBody));
 
       if (insideClick) {
         return;
       }
 
       const root = document.getElementById(popoverRootId);
-      const insidePopoverRoot = root?.contains(clickedElement);
+      const insidePopoverRoot = root && path.includes(root);
       if (!insidePopoverRoot) {
         close();
         return;

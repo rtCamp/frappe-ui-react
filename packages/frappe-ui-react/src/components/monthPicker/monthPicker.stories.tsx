@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 
+import { SmallDown } from "../../icons";
 import MonthPicker from "./monthPicker";
 import type { MonthPickerProps } from "./types";
 
@@ -21,6 +22,11 @@ export default {
     className: {
       control: "text",
       description: "CSS class names to apply to the button.",
+    },
+    inputIcon: {
+      control: false,
+      description:
+        "Icon rendered at the trigger's right edge. Defaults to a calendar icon.",
     },
     placement: {
       control: "select",
@@ -75,5 +81,21 @@ export const FitWidth: Story = {
   },
   args: {
     placeholder: "Select month",
+  },
+};
+
+export const InlineTrigger: Story = {
+  render: (args) => {
+    const [value, setValue] = useState<string>("January 2026");
+    return (
+      <div className="p-2 text-sm text-ink-gray-5">
+        <MonthPicker {...args} value={value} onChange={setValue} />
+      </div>
+    );
+  },
+  args: {
+    inputIcon: SmallDown,
+    className:
+      "h-auto! w-auto! justify-center! gap-0.5 bg-transparent! p-0! text-sm text-ink-gray-5! hover:bg-transparent!",
   },
 };

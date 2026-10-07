@@ -47,7 +47,12 @@ export default {
   },
 } as Meta<typeof TextArea>;
 
-const Template: StoryObj<TextareaProps> = {
+export const SubtleVariant: StoryObj<TextareaProps> = {
+  args: {
+    placeholder: "Placeholder",
+    variant: "subtle",
+    label: "label",
+  },
   render: (args) => {
     const [value, setValue] = useState(args.value || "");
 
@@ -63,20 +68,23 @@ const Template: StoryObj<TextareaProps> = {
   },
 };
 
-export const SubtleVariant = {
-  ...Template,
-  args: {
-    placeholder: "Placeholder",
-    variant: "subtle",
-    value: "",
-  },
-};
-
-export const OutlineVariant = {
-  ...Template,
+export const OutlineVariant: StoryObj<TextareaProps> = {
   args: {
     placeholder: "Placeholder",
     variant: "outline",
-    value: "",
+    label: "label",
+  },
+  render: (args) => {
+    const [value, setValue] = useState(args.value || "");
+
+    return (
+      <div className="p-4 w-[300px]">
+        <TextArea
+          {...args}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+      </div>
+    );
   },
 };
