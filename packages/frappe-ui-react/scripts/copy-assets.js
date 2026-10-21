@@ -30,7 +30,6 @@ function copyAssets() {
         walkDir(filePath);
       } else if (
         file.endsWith(".css") ||
-        file.endsWith(".svg") ||
         file.endsWith(".cjs") ||
         file.endsWith(".json")
       ) {
@@ -41,7 +40,7 @@ function copyAssets() {
     });
   }
 
-  console.log("Copying CSS and SVG assets...");
+  console.log("Copying CSS assets...");
   walkDir(srcDir);
   console.log("Asset copying complete!");
 }
