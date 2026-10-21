@@ -14,7 +14,7 @@
     "build": "pnpm --filter @rtcamp/frappe-ui-react build",
     "preview": "vite preview",
     "storybook": "pnpm --filter @rtcamp/frappe-ui-react generate-icons && storybook dev -p 6006",
-    "build-storybook": "storybook build; cp .storybook/public/favicon.svg storybook-static/",
+    "build-storybook": "pnpm --filter @rtcamp/frappe-ui-react generate-icons && storybook build; cp .storybook/public/favicon.svg storybook-static/",
     "test:unit": "jest --config=tests/unitTest.jest.config.cjs",
     "lint": "npm-run-all --parallel lint:*",
     "lint:js": "eslint .",
