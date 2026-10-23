@@ -13,8 +13,8 @@
     "dev": "pnpm --filter @rtcamp/frappe-ui-react dev",
     "build": "pnpm --filter @rtcamp/frappe-ui-react build",
     "preview": "vite preview",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build; cp .storybook/public/favicon.svg storybook-static/",
+    "storybook": "pnpm --filter @rtcamp/frappe-ui-react generate-icons && storybook dev -p 6006",
+    "build-storybook": "pnpm --filter @rtcamp/frappe-ui-react generate-icons && storybook build; cp .storybook/public/favicon.svg storybook-static/",
     "test:unit": "jest --config=tests/unitTest.jest.config.cjs",
     "lint": "npm-run-all --parallel lint:*",
     "lint:js": "eslint .",
@@ -73,7 +73,6 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.53.0",
     "vite": "^7.3.6",
-    "vite-plugin-svgr": "^4.3.0",
     "vitest": "^4.1.10"
   },
   "lint-staged": {
