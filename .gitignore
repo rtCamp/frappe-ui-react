@@ -27,4 +27,6 @@ dist-ssr
 *storybook.log
 storybook-static
 
+**/icons/*/generated/
+
 *.tsbuildinfo
